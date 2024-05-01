@@ -20,7 +20,7 @@ class TokenHolder(parent: ViewGroup): Holder<Item.Token>(parent, R.layout.view_c
     private val iconView = findViewById<FrescoView>(R.id.icon)
     private val titleView = findViewById<AppCompatTextView>(R.id.title)
     private val rateView = findViewById<AppCompatTextView>(R.id.rate)
-    private val balanceView = findViewById<AppCompatTextView>(R.id.balance)
+    private val balanceView = findViewById<AppCompatTextView>(R.id.send_balance)
     private val balanceFiatView = findViewById<AppCompatTextView>(R.id.balance_currency)
 
     override fun onBind(item: Item.Token) {

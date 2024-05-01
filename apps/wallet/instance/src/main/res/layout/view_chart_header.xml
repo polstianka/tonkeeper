@@ -14,7 +14,7 @@
         android:src="@drawable/ic_ton_with_bg"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/balance"
+        android:id="@+id/send_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -32,6 +32,6 @@
         android:textAppearance="@style/TextAppearance.Body2"
         android:textColor="?attr/textSecondaryColor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/balance" />
+        app:layout_constraintTop_toBottomOf="@+id/send_balance" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

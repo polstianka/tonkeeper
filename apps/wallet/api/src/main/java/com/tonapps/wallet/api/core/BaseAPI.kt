@@ -11,6 +11,7 @@ import io.tonapi.apis.LiteServerApi
 import io.tonapi.apis.NFTApi
 import io.tonapi.apis.RatesApi
 import io.tonapi.apis.StakingApi
+import io.tonapi.apis.StonFiApi
 import io.tonapi.apis.StorageApi
 import io.tonapi.apis.TracesApi
 import io.tonapi.apis.WalletApi
@@ -48,5 +49,7 @@ class BaseAPI(
     val traces: TracesApi by lazy { TracesApi(basePath, okHttpClient) }
 
     val wallet: WalletApi by lazy { WalletApi(basePath, okHttpClient) }
+
+    val stonfi: StonFiApi by lazy { StonFiApi() }
 
 }

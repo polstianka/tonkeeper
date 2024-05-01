@@ -1,12 +1,11 @@
 package com.tonapps.wallet.api
 
 import android.content.Context
+import android.net.Uri
 import android.util.ArrayMap
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -43,6 +42,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
+import java.math.BigDecimal
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -78,6 +78,25 @@ class API(
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
     fun rates() = provider.rates.get(false)
+
+    fun stonfi(testnet: Boolean) = provider.stonfi.get(testnet)
+
+    fun getAllTokens(walletAddress: String, testnet: Boolean): List<BalanceEntity> {
+        return stonfi(testnet).getAllTokens(walletAddress).result.assets.map {
+            BalanceEntity(
+                token = TokenEntity(
+                    address = it.contractAddress,
+                    name = it.displayName,
+                    symbol = it.symbol,
+                    imageUri = Uri.parse(it.imageUrl),
+                    decimals = it.decimals,
+                    verification = if (it.blacklisted) TokenEntity.Verification.blacklist else TokenEntity.Verification.whitelist
+                ),
+                value = BigDecimal(it.balance ?: "0").movePointLeft(it.decimals).toFloat(),
+                walletAddress = it.walletAddress.orEmpty()
+            )
+        }
+    }
 
     fun getEvents(
         accountId: String,
@@ -182,7 +201,8 @@ class API(
             config.tonapiMainnetHost
         }
         // val mempool = okHttpClient.sse("$endpoint/v2/sse/mempool?accounts=${accountId}")
-        val tx = tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
+        val tx =
+            tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
         // return merge(mempool, tx)
         return tx
     }

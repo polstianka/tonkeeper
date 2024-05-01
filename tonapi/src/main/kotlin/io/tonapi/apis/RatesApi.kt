@@ -15,29 +15,22 @@
 
 package io.tonapi.apis
 
-import java.io.IOException
-import okhttp3.OkHttpClient
-import okhttp3.HttpUrl
-
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
-import io.tonapi.models.GetChartRates200Response
-import io.tonapi.models.GetRates200Response
-
-import com.squareup.moshi.Json
-
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
-import io.tonapi.infrastructure.ClientException
 import io.tonapi.infrastructure.ClientError
-import io.tonapi.infrastructure.ServerException
-import io.tonapi.infrastructure.ServerError
+import io.tonapi.infrastructure.ClientException
 import io.tonapi.infrastructure.MultiValueMap
-import io.tonapi.infrastructure.PartConfig
 import io.tonapi.infrastructure.RequestConfig
 import io.tonapi.infrastructure.RequestMethod
 import io.tonapi.infrastructure.ResponseType
+import io.tonapi.infrastructure.ServerError
+import io.tonapi.infrastructure.ServerException
 import io.tonapi.infrastructure.Success
-import io.tonapi.infrastructure.toMultiValue
+import io.tonapi.models.GetChartRates200Response
+import io.tonapi.models.GetRates200Response
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import java.io.IOException
 
 class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient = ApiClient.defaultClient) : ApiClient(basePath, client) {
     companion object {

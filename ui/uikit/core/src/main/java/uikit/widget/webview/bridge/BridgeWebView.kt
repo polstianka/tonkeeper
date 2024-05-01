@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Message
 import android.util.AttributeSet
 import android.util.Log
-import android.webkit.ConsoleMessage
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
@@ -52,9 +51,11 @@ class BridgeWebView @JvmOverloads constructor(
     private val clientCallbacks = mutableListOf<WebViewClient>()
     private val jsExecuteQueue = LinkedList<String>()
     private val scope: CoroutineScope
-        get() = findViewTreeLifecycleOwner()?.lifecycleScope ?: throw IllegalStateException("No lifecycle owner")
+        get() = findViewTreeLifecycleOwner()?.lifecycleScope
+            ?: throw IllegalStateException("No lifecycle owner")
 
     init {
+        setWebContentsDebuggingEnabled(true)
         addJavascriptInterface(this, "ReactNativeWebView")
         webViewClient = object : WebViewClient() {
 
@@ -72,6 +73,16 @@ class BridgeWebView @JvmOverloads constructor(
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 clientCallbacks.forEach { it.onPageFinished(view, url) }
+            }
+
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                if (request != null) {
+                    Log.d("@@@", "request.getRequestHeaders()::" + request.requestHeaders)
+                };
+                return super.shouldInterceptRequest(view, request)
             }
         }
     }
@@ -131,16 +142,20 @@ class BridgeWebView @JvmOverloads constructor(
         val bridge = jsBridge ?: return
         try {
             val data = bridge.invokeFunction(message.name, message.args) ?: return
-            postMessage(FunctionResponseBridgeMessage(
-                invocationId = message.invocationId,
-                status = "fulfilled",
-                data = data,
-            ))
+            postMessage(
+                FunctionResponseBridgeMessage(
+                    invocationId = message.invocationId,
+                    status = "fulfilled",
+                    data = data,
+                )
+            )
         } catch (e: Throwable) {
-            postMessage(FunctionResponseBridgeMessage(
-                invocationId = message.invocationId,
-                error = e,
-            ))
+            postMessage(
+                FunctionResponseBridgeMessage(
+                    invocationId = message.invocationId,
+                    error = e,
+                )
+            )
         }
     }
 }

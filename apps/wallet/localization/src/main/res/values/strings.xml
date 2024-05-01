@@ -155,6 +155,10 @@
     <string name="receive">Receive</string>
     <string name="log_out">Log out</string>
     <string name="amount">Amount</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="choose_token">Choose Token</string>
+    <string name="suggested">Suggested</string>
+    <string name="other">Other</string>
 
     <string name="recipient">Recipient</string>
     <string name="recipient_address">Recipient address</string>
@@ -239,6 +243,7 @@
     <string name="to_address">To: %1$s</string>
     <string name="remaining_balance">Remaining: %1$s</string>
     <string name="wallet_balance">Wallet balance</string>
+    <string name="balance_total">Balance: %1$s</string>
     <string name="rate">Rate</string>
     <string name="widget_updated">Updated at %1$s</string>
     <string name="set_up_wallet">Set up wallet</string>
@@ -256,6 +261,7 @@
     <string name="signer_description">Open Signer » Select the required key » Scan QR code</string>
     <string name="signer_open">Open Signer on this device</string>
     <string name="signer" translatable="false">Signer</string>
+    <string name="choose">Choose</string>
     <string name="choose_wallet_title">Choose wallet</string>
     <string name="choose_wallet_subtitle">Choose wallets you want to add.</string>
 

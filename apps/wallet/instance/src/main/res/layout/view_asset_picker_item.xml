@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <uikit.widget.FrescoView
+        android:id="@+id/asset_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/asset_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        app:layout_constraintStart_toEndOf="@id/asset_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TON" />
+
+    <TextView
+        android:id="@+id/asset_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textSecondaryColor"
+        app:layout_constraintStart_toStartOf="@id/asset_code"
+        app:layout_constraintTop_toBottomOf="@id/asset_code"
+        tools:text="Toncoin" />
+
+    <TextView
+        android:id="@+id/asset_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="100,000.01" />
+
+    <TextView
+        android:id="@+id/asset_fiat_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textSecondaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/asset_balance"
+        tools:text="$ 601,000.01" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

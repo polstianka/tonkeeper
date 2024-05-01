@@ -141,6 +141,8 @@
     <string name="log_out">Выйти</string>
     <string name="amount">Сумма</string>
 
+    <string name="enter_amount">Введите сумму</string>
+    <string name="choose_token">Выберите токен</string>
     <string name="recipient">Получатель</string>
     <string name="recipient_address">Адрес получателя</string>
 
@@ -224,6 +226,7 @@
     <string name="to_address">Кому: %1$s</string>
     <string name="remaining_balance">Останется: %1$s</string>
     <string name="wallet_balance">Баланс кошелька</string>
+    <string name="balance_total">Баланс: %1$s</string>
     <string name="rate">Курс</string>
     <string name="widget_updated">Обновлено в %1$s</string>
     <string name="set_up_wallet">Добавить</string>
@@ -257,10 +260,13 @@
     <string name="customize_wallet_title">Персонализируйте кошелек</string>
     <string name="customize_wallet_subtitle">Имя и значок кошелька хранятся локально на вашем устройстве.</string>
 
+    <string name="choose">Выбрать</string>
     <string name="choose_wallet_title">Выбери кошелек</string>
     <string name="choose_wallet_subtitle">Выберите кошельки, которые хотите добавить.</string>
     <string name="search_browser">Поиск</string>
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+    <string name="suggested">Рекомендуемые</string>
+    <string name="other">Другие</string>
 </resources>
