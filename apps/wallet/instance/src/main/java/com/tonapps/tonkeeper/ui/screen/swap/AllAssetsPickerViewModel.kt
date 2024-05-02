@@ -30,13 +30,14 @@ class AllAssetsPickerViewModel(
         this.isSend = isSend
         viewModelScope.launch(Dispatchers.IO) {
             walletRepository.activeWalletFlow.collect {
-                val allTokens = api.getAllTokens(it.address, it.testnet)
+                val allTokens = api.getWalletAssets(it.address, it.testnet)
                 _assets.value = allTokens.mapIndexed { index, asset ->
                     AssetModel(
                         token = asset.token,
                         balance = asset.value,
                         walletAddress = asset.walletAddress,
-                        position = ListCell.getPosition(allTokens.size, index)
+                        position = ListCell.getPosition(allTokens.size, index),
+                        fiatBalance = asset.value * asset.usdPrice
                     )
                 }
                 localAssets.clear()

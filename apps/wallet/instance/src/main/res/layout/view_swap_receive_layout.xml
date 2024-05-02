@@ -21,16 +21,19 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/receive_balance"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:paddingHorizontal="8dp"
         android:singleLine="true"
         android:text="@string/balance_total"
+        android:textAlignment="viewEnd"
         android:textAppearance="@style/TextAppearance.Body2"
         android:textColor="?attr/textSecondaryColor"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/receive_title"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/receive_title"
         app:layout_constraintTop_toTopOf="@id/receive_title" />
 
     <com.tonapps.tonkeeper.ui.screen.swap.SmallTokenView

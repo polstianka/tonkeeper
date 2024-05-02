@@ -40,7 +40,8 @@ class SwapViewModel(
                                 token = TokenEntity.TON,
                                 balance = token.balance.value,
                                 walletAddress = it.address,
-                                position = ListCell.Position.SINGLE
+                                position = ListCell.Position.SINGLE,
+                                fiatBalance = 0f
                             )
                         )
                     }

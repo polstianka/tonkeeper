@@ -56,7 +56,7 @@ class AllAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
 
         searchInput.doOnTextChanged = {
             pickerViewModel.search((it ?: "").toString())
-            listView.smoothScrollToPosition(0)
+            listView.scrollToPosition(0)
         }
 
         listView = view.findViewById<SimpleRecyclerView>(R.id.list)

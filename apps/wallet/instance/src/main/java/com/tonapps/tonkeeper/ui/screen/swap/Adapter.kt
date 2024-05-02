@@ -43,15 +43,18 @@ class AssetHolder(
         code.text = item.token.symbol
         name.text = item.token.name
         balance.text = CurrencyFormatter.format("", item.balance, item.token.decimals)
+        if (item.fiatBalance != 0f) {
+            fiatBalance.text = CurrencyFormatter.formatFiat("USD", item.fiatBalance)
+        }
         itemView.setOnClickListener { onClick(item) }
         itemView.background = item.position.drawable(context)
     }
-
 }
 
 data class AssetModel(
     val token: TokenEntity,
     val balance: Float,
     val walletAddress: String,
+    val fiatBalance: Float,
     override val position: ListCell.Position
 ) : BaseListItem(), ListCell

@@ -9,38 +9,28 @@ import io.tonapi.infrastructure.ResponseType
 import io.tonapi.infrastructure.ServerError
 import io.tonapi.infrastructure.ServerException
 import io.tonapi.infrastructure.Success
-import io.tonapi.models.GetAllTokensRequestBody
-import io.tonapi.models.GetAllTokensResponse
+import io.tonapi.models.GetWalletAssetsResponse
 import okhttp3.OkHttpClient
 
 class StonFiApi(
-    basePath: kotlin.String = "https://app.ston.fi",
+    basePath: String = "https://api.ston.fi",
     client: OkHttpClient = defaultClient
 ) : ApiClient(basePath, client) {
 
-    fun getAllTokens(walletAddress: String): GetAllTokensResponse {
-        val localVariableBody = GetAllTokensRequestBody(
-            jsonrpc = "2.0",
-            id = 37,
-            method = "asset.balance_list",
-            params = GetAllTokensRequestBody.Params(
-                walletAddress = walletAddress,
-                loadCommunity = false
-            )
-        )
+    fun getWalletAssets(walletAddress: String): GetWalletAssetsResponse {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
-        localVariableHeaders["Content-Type"] = "application/json"
-        val cfg = RequestConfig(
-            method = RequestMethod.POST,
-            path = "/rpc",
+        localVariableHeaders["accept"] = "application/json"
+        val cfg = RequestConfig<Unit>(
+            method = RequestMethod.GET,
+            path = "/v1/wallets/$walletAddress/assets",
             query = mutableMapOf(),
             headers = localVariableHeaders,
             requiresAuthentication = false,
-            body = localVariableBody
+            body = null
         )
-        val localVarResponse = request<GetAllTokensRequestBody, GetAllTokensResponse>(cfg)
+        val localVarResponse = request<Unit, GetWalletAssetsResponse>(cfg)
         return when (localVarResponse.responseType) {
-            ResponseType.Success -> (localVarResponse as Success<*>).data as GetAllTokensResponse
+            ResponseType.Success -> (localVarResponse as Success<*>).data as GetWalletAssetsResponse
             ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
             ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
             ResponseType.ClientError -> {

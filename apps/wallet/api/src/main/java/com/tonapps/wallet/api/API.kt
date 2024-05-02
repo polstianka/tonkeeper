@@ -16,6 +16,7 @@ import com.tonapps.network.post
 import com.tonapps.network.postJSON
 import com.tonapps.network.sse
 import com.tonapps.wallet.api.entity.AccountDetailsEntity
+import com.tonapps.wallet.api.entity.AssetEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
@@ -81,21 +82,31 @@ class API(
 
     fun stonfi(testnet: Boolean) = provider.stonfi.get(testnet)
 
-    fun getAllTokens(walletAddress: String, testnet: Boolean): List<BalanceEntity> {
-        return stonfi(testnet).getAllTokens(walletAddress).result.assets.map {
-            BalanceEntity(
-                token = TokenEntity(
-                    address = it.contractAddress,
-                    name = it.displayName,
-                    symbol = it.symbol,
-                    imageUri = Uri.parse(it.imageUrl),
-                    decimals = it.decimals,
-                    verification = if (it.blacklisted) TokenEntity.Verification.blacklist else TokenEntity.Verification.whitelist
-                ),
-                value = BigDecimal(it.balance ?: "0").movePointLeft(it.decimals).toFloat(),
-                walletAddress = it.walletAddress.orEmpty()
+    fun getWalletAssets(walletAddress: String, testnet: Boolean): List<AssetEntity> {
+        val entityList = mutableListOf<AssetEntity>()
+        val assetList = stonfi(testnet).getWalletAssets(walletAddress).assetList
+        for (asset in assetList) {
+            if (asset.blacklisted || asset.community || asset.deprecated) {
+                continue
+            }
+            entityList.add(
+                AssetEntity(
+                    token = TokenEntity(
+                        address = asset.contractAddress,
+                        name = asset.displayName,
+                        symbol = asset.symbol,
+                        imageUri = Uri.parse(asset.imageUrl),
+                        decimals = asset.decimals,
+                        verification = TokenEntity.Verification.whitelist
+                    ),
+                    value = BigDecimal(asset.balance ?: "0").movePointLeft(asset.decimals)
+                        .toFloat(),
+                    walletAddress = asset.walletAddress.orEmpty(),
+                    usdPrice = asset.dexPriceUsd?.toFloatOrNull() ?: 0f
+                )
             )
         }
+        return entityList
     }
 
     fun getEvents(

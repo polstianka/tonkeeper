@@ -23,15 +23,18 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/send_balance"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:paddingHorizontal="8dp"
         android:singleLine="true"
         android:text="@string/balance_total"
+        android:textAlignment="viewEnd"
         android:textAppearance="@style/TextAppearance.Body2"
         android:textColor="?attr/textSecondaryColor"
         app:layout_constraintBottom_toBottomOf="@id/max_button"
         app:layout_constraintEnd_toStartOf="@id/max_button"
+        app:layout_constraintStart_toEndOf="@id/send_title"
         app:layout_constraintTop_toTopOf="@id/max_button" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -48,8 +51,8 @@
     <com.tonapps.tonkeeper.ui.screen.swap.SmallTokenView
         android:id="@+id/send_token_view"
         android:layout_width="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@id/send_title"
         app:layout_constraintTop_toBottomOf="@id/send_title" />
 
@@ -70,8 +73,8 @@
         android:textColor="?attr/textPrimaryColor"
         android:textColorHint="?attr/textSecondaryColor"
         android:textCursorDrawable="@drawable/cursor"
-        app:layout_constraintStart_toEndOf="@id/send_token_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/send_token_view"
         app:layout_constraintTop_toTopOf="@id/send_token_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
