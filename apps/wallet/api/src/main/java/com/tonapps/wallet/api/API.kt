@@ -19,6 +19,7 @@ import com.tonapps.wallet.api.entity.AccountDetailsEntity
 import com.tonapps.wallet.api.entity.AssetEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
+import com.tonapps.wallet.api.entity.SwapDataEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
@@ -107,6 +108,44 @@ class API(
             )
         }
         return entityList
+    }
+
+    fun simulateSwap(
+        offerAddress: String,
+        askAddress: String,
+        units: String,
+        testnet: Boolean
+    ): SwapDataEntity {
+        val response = stonfi(testnet).simulateSwap(offerAddress, askAddress, units)
+        return SwapDataEntity(
+            offerUnits = response.offerUnits,
+            askUnits = response.askUnits,
+            priceImpact = response.priceImpact,
+            minReceived = response.minAskUnits,
+            routerAddress = response.routerAddress,
+            poolAddress = response.poolAddress,
+            providerFeeUnits = response.feeUnits,
+            feeAddress = response.feeAddress
+        )
+    }
+
+    fun simulateReverseSwap(
+        offerAddress: String,
+        askAddress: String,
+        units: String,
+        testnet: Boolean
+    ): SwapDataEntity {
+        val response = stonfi(testnet).simulateReverseSwap(offerAddress, askAddress, units)
+        return SwapDataEntity(
+            offerUnits = response.offerUnits,
+            askUnits = response.askUnits,
+            priceImpact = response.priceImpact,
+            minReceived = response.minAskUnits,
+            routerAddress = response.routerAddress,
+            poolAddress = response.poolAddress,
+            providerFeeUnits = response.feeUnits,
+            feeAddress = response.feeAddress
+        )
     }
 
     fun getEvents(

@@ -39,6 +39,9 @@ class SwapView @JvmOverloads constructor(
     private var sendModel: AssetModel? = null
     private var receiveModel: AssetModel? = null
 
+    private var sendTextWatcher: SwapTextWatcher? = null
+    private var receiveTextWatcher: SwapTextWatcher? = null
+
     init {
         inflate(context, R.layout.view_swap_full_layout, this)
 
@@ -85,31 +88,13 @@ class SwapView @JvmOverloads constructor(
     }
 
     fun addSendTextChangeListener(onChange: (String) -> Unit) {
-        sendInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                onChange(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) = Unit
-
-        })
+        sendTextWatcher = SwapTextWatcher(onChange)
+        sendInput.addTextChangedListener(sendTextWatcher)
     }
 
     fun addReceiveTextChangeListener(onChange: (String) -> Unit) {
-        receiveInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                onChange(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) = Unit
-
-        })
+        receiveTextWatcher = SwapTextWatcher(onChange)
+        receiveInput.addTextChangedListener(receiveTextWatcher)
     }
 
     fun setSendToken(model: AssetModel?) {
@@ -136,6 +121,24 @@ class SwapView @JvmOverloads constructor(
         receiveTokenLayout.setAsset(model)
     }
 
+    fun updateBottomButton(state: BottomButtonState) {
+        val (textId, backgroundId) = when (state) {
+            Select -> com.tonapps.wallet.localization.R.string.choose_token to uikit.R.drawable.bg_button_secondary
+            Amount -> com.tonapps.wallet.localization.R.string.enter_amount to uikit.R.drawable.bg_button_secondary
+            Continue -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_primary
+        }
+        button.setText(textId)
+        button.setBackgroundResource(backgroundId)
+    }
+
+    fun setSendText(s: String) {
+        sendInput.updateText(s, sendTextWatcher)
+    }
+
+    fun setReceivedText(s: String) {
+        receiveInput.updateText(s, receiveTextWatcher)
+    }
+
     private fun getBalance(model: AssetModel) =
         context.getString(
             com.tonapps.wallet.localization.R.string.balance_total,
@@ -146,14 +149,21 @@ class SwapView @JvmOverloads constructor(
             ).toString()
         )
 
-    fun updateBottomButton(state: BottomButtonState) {
-        val (textId, backgroundId) = when (state) {
-            Select -> com.tonapps.wallet.localization.R.string.choose_token to uikit.R.drawable.bg_button_secondary
-            Amount -> com.tonapps.wallet.localization.R.string.enter_amount to uikit.R.drawable.bg_button_secondary
-            Continue -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_primary
+    private fun AmountInput.updateText(text: String, watcher: TextWatcher?) {
+        removeTextChangedListener(watcher)
+        setText(text)
+        addTextChangedListener(watcher)
+    }
+
+    private class SwapTextWatcher(private val onChange: (String) -> Unit) : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
+        override fun afterTextChanged(s: Editable?) {
+            onChange(s.toString())
         }
-        button.setText(textId)
-        button.setBackgroundResource(backgroundId)
+
     }
 
 }

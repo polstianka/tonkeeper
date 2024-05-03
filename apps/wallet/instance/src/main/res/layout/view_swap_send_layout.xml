@@ -63,6 +63,7 @@
         android:layout_marginStart="4dp"
         android:background="@null"
         android:digits="0123456789."
+        android:ellipsize="end"
         android:fontFamily="@font/montserrat_semi_bold"
         android:gravity="end"
         android:hint="0"

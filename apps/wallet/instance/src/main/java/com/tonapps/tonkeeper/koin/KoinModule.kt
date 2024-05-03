@@ -62,7 +62,7 @@ val koinModel = module {
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
     single { HistoryHelper(get()) }
-    single { SwapRepository(get(), get()) }
+    single { SwapRepository(get(), get(), get()) }
     single { AssetsRepository(get(), get(), get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }

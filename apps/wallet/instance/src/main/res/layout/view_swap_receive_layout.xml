@@ -46,21 +46,24 @@
 
     <com.tonapps.tonkeeper.fragment.send.view.AmountInput
         android:id="@+id/receive_amount_input"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:background="@null"
         android:digits="0123456789."
         android:fontFamily="@font/montserrat_semi_bold"
-        android:gravity="center_vertical"
         android:hint="0"
         android:inputType="numberDecimal"
         android:singleLine="true"
+        android:ellipsize="end"
         android:text="0"
+        android:textAlignment="viewEnd"
         android:textAppearance="@style/TextAppearance.NUM2"
         android:textColor="?attr/textPrimaryColor"
         android:textColorHint="?attr/textSecondaryColor"
         android:textCursorDrawable="@drawable/cursor"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/receive_token_view"
         app:layout_constraintTop_toTopOf="@id/receive_token_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

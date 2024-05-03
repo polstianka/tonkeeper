@@ -15,9 +15,6 @@ class SwapViewModel(
     private val swapRepository: SwapRepository
 ) : ViewModel() {
 
-    private val sendInputFlow = MutableStateFlow("")
-    private val receiveInputFlow = MutableStateFlow("")
-
     private val _uiModel = MutableStateFlow(SwapUiModel())
     val uiModel: StateFlow<SwapUiModel> = _uiModel
 
@@ -30,10 +27,11 @@ class SwapViewModel(
             combine(
                 swapRepository.sendToken,
                 swapRepository.receiveToken,
-                sendInputFlow,
-                receiveInputFlow,
-            ) { send, receive, sendInput, receiveInput ->
+                swapRepository.swapData
+            ) { send, receive, data ->
                 _uiModel.update {
+                    val sendInput = data?.offerUnits ?: it.sendInput
+                    val receiveInput = data?.askUnits ?: it.receiveInput
                     it.copy(
                         sendToken = send,
                         receiveToken = receive,
@@ -42,7 +40,9 @@ class SwapViewModel(
                             send,
                             sendInput,
                             receiveInput
-                        )
+                        ),
+                        sendInput = sendInput,
+                        receiveInput = receiveInput
                     )
                 }
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
@@ -50,15 +50,35 @@ class SwapViewModel(
     }
 
     fun onSendTextChange(s: String) {
-        sendInputFlow.value = s
+        swapRepository.sendTextChanged(s)
+        if (s == "0") {
+            resetInput()
+            return
+        }
+        _uiModel.update {
+            it.copy(sendInput = s)
+        }
     }
 
     fun onReceiveTextChange(s: String) {
-        receiveInputFlow.value = s
+        swapRepository.receiveTextChanged(s)
+        if (s == "0") {
+            resetInput()
+            return
+        }
+        _uiModel.update {
+            it.copy(receiveInput = s)
+        }
     }
 
     fun swap() {
         swapRepository.swap()
+    }
+
+    private fun resetInput() {
+        _uiModel.update {
+            it.copy(sendInput = "0", receiveInput = "0")
+        }
     }
 
     private fun getBottomButtonState(
@@ -67,14 +87,16 @@ class SwapViewModel(
         sendInput: String,
         receiveInput: String
     ) = if (receive == null || send == null) SwapUiModel.BottomButtonState.Select
-    else if (sendInput.isEmpty() && sendInput != "0" || receiveInput.isEmpty()) SwapUiModel.BottomButtonState.Amount
+    else if (sendInput.isEmpty() || sendInput == "0" || receiveInput.isEmpty() || receiveInput == "0") SwapUiModel.BottomButtonState.Amount
     else SwapUiModel.BottomButtonState.Continue
 }
 
 data class SwapUiModel(
     val sendToken: AssetModel? = null,
     val receiveToken: AssetModel? = null,
-    val bottomButtonState: BottomButtonState = BottomButtonState.Amount
+    val bottomButtonState: BottomButtonState = BottomButtonState.Amount,
+    val sendInput: String = "0",
+    val receiveInput: String = "0"
 ) {
     enum class BottomButtonState {
         Select, Amount, Continue
