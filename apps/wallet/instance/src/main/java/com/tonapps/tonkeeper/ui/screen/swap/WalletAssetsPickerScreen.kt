@@ -20,10 +20,10 @@ import uikit.widget.RowLayout
 import uikit.widget.SearchInput
 import uikit.widget.SimpleRecyclerView
 
-class AllAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
+class WalletAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
     BaseFragment.Modal {
 
-    private val pickerViewModel: AllAssetsPickerViewModel by viewModel()
+    private val pickerViewModel: WalletAssetsPickerViewModel by viewModel()
     private val adapter = Adapter { item ->
         pickerViewModel.setAsset(item)
         finish()
@@ -38,7 +38,10 @@ class AllAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pickerViewModel.init(arguments?.getBoolean("IS_SEND_KEY") ?: true)
+        pickerViewModel.init(
+            arguments?.getBoolean("IS_SEND_KEY") ?: true,
+            arguments?.getString("OPP_SYMBOL_KEY").orEmpty()
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,8 +95,14 @@ class AllAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
     }
 
     companion object {
-        fun newInstance(isSend: Boolean) = AllAssetsPickerScreen().apply {
-            arguments = bundleOf("IS_SEND_KEY" to isSend)
+        fun newInstance(
+            isSend: Boolean,
+            oppositeSelectedSymbol: String
+        ) = WalletAssetsPickerScreen().apply {
+            arguments = bundleOf(
+                "IS_SEND_KEY" to isSend,
+                "OPP_SYMBOL_KEY" to oppositeSelectedSymbol
+            )
         }
     }
 }

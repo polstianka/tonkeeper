@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
@@ -33,8 +34,10 @@ class SwapView @JvmOverloads constructor(
     private val receiveBalance: TextView
 
     private val button: Button
+    private val swapButton: ImageButton
 
     private var sendModel: AssetModel? = null
+    private var receiveModel: AssetModel? = null
 
     init {
         inflate(context, R.layout.view_swap_full_layout, this)
@@ -48,6 +51,7 @@ class SwapView @JvmOverloads constructor(
         receiveInput = findViewById(R.id.receive_amount_input)
         receiveBalance = findViewById(R.id.receive_balance)
 
+        swapButton = findViewById(R.id.swap_button)
         button = findViewById(R.id.enter_button)
 
         sendTokenLayout.setText(TokenEntity.TON.symbol)
@@ -63,12 +67,21 @@ class SwapView @JvmOverloads constructor(
         }
     }
 
-    fun setOnSendTokenClickListener(click: () -> Unit) {
-        sendTokenLayout.setOnClickListener { click() }
+    fun setOnSendTokenClickListener(click: (AssetModel?) -> Unit) {
+        sendTokenLayout.setOnClickListener { click(receiveModel) }
     }
 
-    fun setOnReceiveTokenClickListener(click: () -> Unit) {
-        receiveTokenLayout.setOnClickListener { click() }
+    fun setOnReceiveTokenClickListener(click: (AssetModel?) -> Unit) {
+        receiveTokenLayout.setOnClickListener { click(sendModel) }
+    }
+
+    fun setOnSwapClickListener(click: () -> Unit) {
+        swapButton.setOnClickListener {
+            val tempReceiveText = receiveInput.text
+            receiveInput.text = sendInput.text
+            sendInput.text = tempReceiveText
+            click()
+        }
     }
 
     fun addSendTextChangeListener(onChange: (String) -> Unit) {
@@ -102,8 +115,10 @@ class SwapView @JvmOverloads constructor(
     fun setSendToken(model: AssetModel?) {
         sendModel = model
         if (model == null) {
+            max.isVisible = false
             sendBalance.isVisible = false
         } else {
+            max.isVisible = true
             sendBalance.isVisible = true
             sendBalance.text = getBalance(model)
         }
@@ -111,6 +126,7 @@ class SwapView @JvmOverloads constructor(
     }
 
     fun setReceiveToken(model: AssetModel?) {
+        receiveModel = model
         if (model == null) {
             receiveBalance.isVisible = false
         } else {

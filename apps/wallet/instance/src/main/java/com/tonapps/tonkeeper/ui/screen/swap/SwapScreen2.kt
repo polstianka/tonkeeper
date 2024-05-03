@@ -22,13 +22,19 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
 
         swapView = view.findViewById(R.id.swap_view_1)
         swapView.setOnSendTokenClickListener {
-            navigation?.add(AllAssetsPickerScreen.newInstance(true))
+            navigation?.add(WalletAssetsPickerScreen.newInstance(true, it?.token?.symbol.orEmpty()))
         }
         swapView.setOnReceiveTokenClickListener {
-            navigation?.add(AllAssetsPickerScreen.newInstance(false))
+            navigation?.add(
+                WalletAssetsPickerScreen.newInstance(
+                    false,
+                    it?.token?.symbol.orEmpty()
+                )
+            )
         }
         swapView.addSendTextChangeListener(swapViewModel::onSendTextChange)
         swapView.addReceiveTextChangeListener(swapViewModel::onReceiveTextChange)
+        swapView.setOnSwapClickListener { swapViewModel.swap() }
 
         collectFlow(swapViewModel.uiModel) {
             swapView.setSendToken(it.sendToken)

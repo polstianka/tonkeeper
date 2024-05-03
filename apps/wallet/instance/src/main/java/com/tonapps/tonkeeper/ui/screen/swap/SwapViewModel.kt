@@ -2,12 +2,6 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tonapps.uikit.list.ListCell
-import com.tonapps.wallet.api.API
-import com.tonapps.wallet.api.entity.TokenEntity
-import com.tonapps.wallet.data.account.WalletRepository
-import com.tonapps.wallet.data.core.WalletCurrency
-import com.tonapps.wallet.data.token.TokenRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,9 +12,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SwapViewModel(
-    private val walletRepository: WalletRepository,
-    private val tokenRepository: TokenRepository,
-    private val api: API,
     private val swapRepository: SwapRepository
 ) : ViewModel() {
 
@@ -32,20 +23,7 @@ class SwapViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            walletRepository.activeWalletFlow.collect {
-                tokenRepository.get(WalletCurrency.TON, it.accountId, it.testnet).firstOrNull()
-                    ?.let { token ->
-                        swapRepository.setSendToken(
-                            AssetModel(
-                                token = TokenEntity.TON,
-                                balance = token.balance.value,
-                                walletAddress = it.address,
-                                position = ListCell.Position.SINGLE,
-                                fiatBalance = 0f
-                            )
-                        )
-                    }
-            }
+            swapRepository.init()
         }
 
         viewModelScope.launch {
@@ -79,13 +57,17 @@ class SwapViewModel(
         receiveInputFlow.value = s
     }
 
+    fun swap() {
+        swapRepository.swap()
+    }
+
     private fun getBottomButtonState(
         receive: AssetModel?,
         send: AssetModel?,
         sendInput: String,
         receiveInput: String
     ) = if (receive == null || send == null) SwapUiModel.BottomButtonState.Select
-    else if (sendInput.isEmpty() || receiveInput.isEmpty()) SwapUiModel.BottomButtonState.Amount
+    else if (sendInput.isEmpty() && sendInput != "0" || receiveInput.isEmpty()) SwapUiModel.BottomButtonState.Amount
     else SwapUiModel.BottomButtonState.Continue
 }
 

@@ -33,9 +33,10 @@ import com.tonapps.tonkeeper.ui.screen.picker.list.WalletPickerAdapter
 import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
-import com.tonapps.tonkeeper.ui.screen.swap.AllAssetsPickerViewModel
+import com.tonapps.tonkeeper.ui.screen.swap.AssetsRepository
 import com.tonapps.tonkeeper.ui.screen.swap.SwapRepository
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
+import com.tonapps.tonkeeper.ui.screen.swap.WalletAssetsPickerViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.list.WalletAdapter
 import com.tonapps.wallet.data.push.PushManager
@@ -61,7 +62,8 @@ val koinModel = module {
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
     single { HistoryHelper(get()) }
-    single { SwapRepository() }
+    single { SwapRepository(get(), get()) }
+    single { AssetsRepository(get(), get(), get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
     viewModel { parameters -> InitViewModel(parameters.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
@@ -91,6 +93,6 @@ val koinModel = module {
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
     viewModel { BrowserMainViewModel() }
-    viewModel { SwapViewModel(get(), get(), get(), get()) }
-    viewModel { AllAssetsPickerViewModel(get(), get(), get()) }
+    viewModel { SwapViewModel(get()) }
+    viewModel { WalletAssetsPickerViewModel(get(), get()) }
 }
