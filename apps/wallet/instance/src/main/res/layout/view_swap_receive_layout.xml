@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/offsetMedium"
     android:background="@drawable/bg_wallet_bubble_no_ripple"
+    android:animateLayoutChanges="true"
     android:padding="@dimen/offsetMedium">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -40,7 +41,7 @@
         android:id="@+id/receive_token_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="@id/receive_title"
         app:layout_constraintTop_toBottomOf="@id/receive_title" />
 
@@ -51,19 +52,28 @@
         android:layout_marginStart="4dp"
         android:background="@null"
         android:digits="0123456789."
+        android:ellipsize="end"
         android:fontFamily="@font/montserrat_semi_bold"
         android:hint="0"
         android:inputType="numberDecimal"
         android:singleLine="true"
-        android:ellipsize="end"
         android:text="0"
         android:textAlignment="viewEnd"
         android:textAppearance="@style/TextAppearance.NUM2"
         android:textColor="?attr/textPrimaryColor"
         android:textColorHint="?attr/textSecondaryColor"
         android:textCursorDrawable="@drawable/cursor"
+        app:layout_constraintBottom_toBottomOf="@id/receive_token_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/receive_token_view"
         app:layout_constraintTop_toTopOf="@id/receive_token_view" />
+
+
+    <uikit.widget.ColumnLayout
+        android:id="@+id/details_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/receive_amount_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

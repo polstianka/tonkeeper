@@ -52,7 +52,7 @@
         android:id="@+id/send_token_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="@id/send_title"
         app:layout_constraintTop_toBottomOf="@id/send_title" />
 
@@ -75,6 +75,7 @@
         android:textColorHint="?attr/textSecondaryColor"
         android:textCursorDrawable="@drawable/cursor"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/send_token_view"
         app:layout_constraintStart_toEndOf="@id/send_token_view"
         app:layout_constraintTop_toTopOf="@id/send_token_view" />
 

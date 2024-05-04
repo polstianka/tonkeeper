@@ -4,19 +4,35 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.Gravity
+import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Amount
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Continue
+import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Loading
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Select
+import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.color.textPrimaryColor
+import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.api.entity.TokenEntity
+import uikit.extensions.dp
+import uikit.extensions.setPaddingVertical
+import uikit.extensions.withAnimation
+import uikit.widget.ColumnLayout
+import uikit.widget.DividerView
+import uikit.widget.LoaderView
+import uikit.widget.RowLayout
 
 class SwapView @JvmOverloads constructor(
     context: Context,
@@ -35,6 +51,8 @@ class SwapView @JvmOverloads constructor(
 
     private val button: Button
     private val swapButton: ImageButton
+    private val detailsLayout: ColumnLayout
+    private val loadingView: LoaderView
 
     private var sendModel: AssetModel? = null
     private var receiveModel: AssetModel? = null
@@ -56,6 +74,8 @@ class SwapView @JvmOverloads constructor(
 
         swapButton = findViewById(R.id.swap_button)
         button = findViewById(R.id.enter_button)
+        detailsLayout = findViewById(R.id.details_layout)
+        loadingView = findViewById(R.id.loading_view)
 
         sendTokenLayout.setText(TokenEntity.TON.symbol)
         sendTokenLayout.setIcon(TokenEntity.TON.imageUri)
@@ -67,6 +87,23 @@ class SwapView @JvmOverloads constructor(
             sendModel?.let { model ->
                 sendInput.setText(model.balance.toString())
             }
+        }
+
+        receiveInput.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                receiveInput.setSelection(receiveInput.text.toString().length)
+            }
+        }
+        receiveInput.doAfterTextChanged {
+            receiveInput.setSelection(receiveInput.text.toString().length)
+        }
+        sendInput.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                sendInput.setSelection(sendInput.text.toString().length)
+            }
+        }
+        sendInput.doAfterTextChanged {
+            sendInput.setSelection(sendInput.text.toString().length)
         }
     }
 
@@ -80,9 +117,9 @@ class SwapView @JvmOverloads constructor(
 
     fun setOnSwapClickListener(click: () -> Unit) {
         swapButton.setOnClickListener {
-            val tempReceiveText = receiveInput.text
-            receiveInput.text = sendInput.text
-            sendInput.text = tempReceiveText
+            val tempReceiveText = receiveInput.text.toString()
+            receiveInput.updateText(sendInput.text.toString(), receiveTextWatcher)
+            sendInput.updateText(tempReceiveText, sendTextWatcher)
             click()
         }
     }
@@ -126,8 +163,17 @@ class SwapView @JvmOverloads constructor(
             Select -> com.tonapps.wallet.localization.R.string.choose_token to uikit.R.drawable.bg_button_secondary
             Amount -> com.tonapps.wallet.localization.R.string.enter_amount to uikit.R.drawable.bg_button_secondary
             Continue -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_primary
+            Loading -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_secondary
         }
-        button.setText(textId)
+        if (state == Loading) {
+            button.text = ""
+            loadingView.isVisible = true
+            loadingView.startAnimation()
+        } else {
+            loadingView.isVisible = false
+            loadingView.stopAnimation()
+            button.setText(textId)
+        }
         button.setBackgroundResource(backgroundId)
     }
 
@@ -137,6 +183,80 @@ class SwapView @JvmOverloads constructor(
 
     fun setReceivedText(s: String) {
         receiveInput.updateText(s, receiveTextWatcher)
+    }
+
+    fun setDetails(details: List<Details>?) {
+        if (details == null) {
+            withAnimation(300) {
+                detailsLayout.removeAllViews()
+            }
+            return
+        }
+        val needAnimation = detailsLayout.childCount == 0
+        detailsLayout.removeAllViews()
+        detailsLayout.isVisible = !needAnimation
+        val lpText = LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        details.forEach {
+            val row = RowLayout(context).apply {
+                layoutParams = LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+            }
+            if (it is Details.DetailUiModel) {
+                val title = AppCompatTextView(context).apply {
+                    layoutParams = lpText
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    text = context.getString(it.title)
+                    setPaddingVertical(8.dp)
+                    setTextAppearance(uikit.R.style.TextAppearance_Body2)
+                    setTextColor(context.textSecondaryColor)
+                }
+                val value = AppCompatTextView(context).apply {
+                    layoutParams = lpText
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_END
+                    text = it.value
+                    setPaddingVertical(8.dp)
+                    setTextAppearance(uikit.R.style.TextAppearance_Body2)
+                    setTextColor(context.textPrimaryColor)
+                }
+                row.addView(title)
+                row.addView(value)
+                detailsLayout.addView(row)
+            } else if (it is Details.Header) {
+                val title = AppCompatTextView(context).apply {
+                    layoutParams = lpText
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    text = it.swapRate
+                    setPaddingVertical(14.dp)
+                    setTextAppearance(uikit.R.style.TextAppearance_Body2)
+                    setTextColor(context.textSecondaryColor)
+                }
+                val loading = LoaderView(context).apply {
+                    layoutParams = LinearLayoutCompat.LayoutParams(16.dp, 16.dp).apply {
+                        gravity = Gravity.CENTER_VERTICAL or Gravity.END
+                    }
+                    isVisible = it.loading
+                    startAnimation()
+                }
+                row.addView(title)
+                row.addView(loading)
+                val divider1 = DividerView(context)
+                val divider2 = DividerView(context)
+                detailsLayout.addView(divider1)
+                detailsLayout.addView(row)
+                detailsLayout.addView(divider2)
+            }
+        }
+        if (needAnimation) {
+            withAnimation(300) {
+                detailsLayout.isVisible = true
+            }
+        }
     }
 
     private fun getBalance(model: AssetModel) =
@@ -163,7 +283,5 @@ class SwapView @JvmOverloads constructor(
         override fun afterTextChanged(s: Editable?) {
             onChange(s.toString())
         }
-
     }
-
 }

@@ -8,5 +8,6 @@ data class AssetEntity(
     val token: TokenEntity,
     val value: Float,
     val walletAddress: String,
-    val usdPrice: Float
+    val usdPrice: Float,
+    val kind: String
 ) : Parcelable

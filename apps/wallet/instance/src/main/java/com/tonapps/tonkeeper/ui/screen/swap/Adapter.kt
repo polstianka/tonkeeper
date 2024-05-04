@@ -56,5 +56,6 @@ data class AssetModel(
     val balance: Float,
     val walletAddress: String,
     val fiatBalance: Float,
+    val isTon: Boolean,
     override val position: ListCell.Position
 ) : BaseListItem(), ListCell

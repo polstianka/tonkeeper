@@ -273,4 +273,10 @@
     <string name="other">Другие</string>
     <string name="expert_mode">Режим эксперта</string>
     <string name="expert_mode_description">Позволяет совершать сделки с высоким ценовым воздействием. Используйте на свой страх и риск.</string>
+    <string name="price_impact">Влияние на цену</string>
+    <string name="min_received">Минимальное получение</string>
+    <string name="liquidity_provider_fee">Комиссия ликвидности</string>
+    <string name="blockchain_fee">Комиссия блокчейна</string>
+    <string name="route">Маршрут</string>
+    <string name="provider">Провайдер</string>
 </resources>

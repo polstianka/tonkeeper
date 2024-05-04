@@ -43,4 +43,14 @@
         android:textAppearance="@style/TextAppearance.Label1"
         app:layout_constraintTop_toBottomOf="@id/receive_layout" />
 
+    <uikit.widget.LoaderView
+        android:id="@+id/loading_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/enter_button"
+        app:layout_constraintEnd_toEndOf="@id/enter_button"
+        app:layout_constraintStart_toStartOf="@id/enter_button"
+        app:layout_constraintTop_toTopOf="@id/enter_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

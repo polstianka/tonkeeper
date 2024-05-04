@@ -43,6 +43,7 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
             swapView.updateBottomButton(it.bottomButtonState)
             swapView.setSendText(it.sendInput)
             swapView.setReceivedText(it.receiveInput)
+            swapView.setDetails(it.details)
         }
     }
 }

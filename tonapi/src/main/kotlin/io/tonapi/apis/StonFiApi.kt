@@ -10,6 +10,7 @@ import io.tonapi.infrastructure.ServerError
 import io.tonapi.infrastructure.ServerException
 import io.tonapi.infrastructure.Success
 import io.tonapi.models.GetWalletAssetsResponse
+import io.tonapi.models.JettonAddressResponse
 import io.tonapi.models.SimulateSwapResponse
 import okhttp3.OkHttpClient
 
@@ -59,12 +60,14 @@ class StonFiApi(
         askAddress: String,
         units: String,
         tolerance: String,
+        reverse: Boolean
     ): SimulateSwapResponse {
+        val path = if (reverse) "/v1/reverse_swap/simulate" else "/v1/swap/simulate"
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["accept"] = "application/json"
         val cfg = RequestConfig<Unit>(
             method = RequestMethod.POST,
-            path = "/v1/swap/simulate",
+            path = path,
             query = mutableMapOf(
                 "offer_address" to listOf(offerAddress),
                 "ask_address" to listOf(askAddress),
@@ -100,30 +103,20 @@ class StonFiApi(
         }
     }
 
-    fun simulateReverseSwap(
-        offerAddress: String,
-        askAddress: String,
-        units: String,
-        tolerance: String,
-    ): SimulateSwapResponse {
+    fun getJettonAddress(ownerAddress: String, address: String): JettonAddressResponse {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["accept"] = "application/json"
         val cfg = RequestConfig<Unit>(
             method = RequestMethod.POST,
-            path = "/v1/reverse_swap/simulate",
-            query = mutableMapOf(
-                "offer_address" to listOf(offerAddress),
-                "ask_address" to listOf(askAddress),
-                "units" to listOf(units),
-                "slippage_tolerance" to listOf(tolerance),
-            ),
+            path = "/v1/jetton/$address/address",
+            query = mutableMapOf("owner_address" to listOf(ownerAddress)),
             headers = localVariableHeaders,
             requiresAuthentication = false,
             body = null
         )
-        val localVarResponse = request<Unit, SimulateSwapResponse>(cfg)
+        val localVarResponse = request<Unit, JettonAddressResponse>(cfg)
         return when (localVarResponse.responseType) {
-            ResponseType.Success -> (localVarResponse as Success<*>).data as SimulateSwapResponse
+            ResponseType.Success -> (localVarResponse as Success<*>).data as JettonAddressResponse
             ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
             ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
             ResponseType.ClientError -> {
@@ -145,4 +138,5 @@ class StonFiApi(
             }
         }
     }
+
 }

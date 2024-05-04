@@ -33,7 +33,8 @@ class WalletAssetsPickerViewModel(
                     balance = asset.value,
                     walletAddress = asset.walletAddress,
                     position = ListCell.getPosition(allTokens.size, index),
-                    fiatBalance = asset.value * asset.usdPrice
+                    fiatBalance = asset.value * asset.usdPrice,
+                    isTon = asset.kind == "TON"
                 )
             }
             localAssets.clear()

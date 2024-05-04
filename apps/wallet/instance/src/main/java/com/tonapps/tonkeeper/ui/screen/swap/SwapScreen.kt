@@ -62,8 +62,8 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
             address: String,
             fromToken: String,
             toToken: String? = null
-        ): SwapScreen2 {
-            val fragment = SwapScreen2()
+        ): SwapScreen {
+            val fragment = SwapScreen()
             fragment.arguments = SwapArgs(uri, address, fromToken, toToken).toBundle()
             return fragment
         }

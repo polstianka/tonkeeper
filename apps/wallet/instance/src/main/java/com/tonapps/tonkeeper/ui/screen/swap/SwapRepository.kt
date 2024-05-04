@@ -1,51 +1,45 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
-import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
-import com.tonapps.wallet.api.entity.SwapDataEntity
+import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
+//router address == owner address
+//then use ask address and EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
+
+private const val PROXY_TON = "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"
+
 class SwapRepository(
     private val walletManager: WalletManager,
-    private val assetsRepository: AssetsRepository,
     private val api: API,
 ) {
-    private val _swapData = MutableStateFlow<SwapDataEntity?>(null)
-    val swapData: StateFlow<SwapDataEntity?> = _swapData
-
-    private var _sendToken = MutableStateFlow<AssetModel?>(null)
-    val sendToken: StateFlow<AssetModel?> = _sendToken
-
-    private var _receiveToken = MutableStateFlow<AssetModel?>(null)
-    val receiveToken: StateFlow<AssetModel?> = _receiveToken
+    private val _swapState = MutableStateFlow(SwapState())
+    val swapState: StateFlow<SwapState> = _swapState
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var simulateJob: Job? = null
     private var sendInput: String = "0"
     private var receiveInput: String = "0"
     private var tolerance: Float = 0.05f
+    private var isSwapped: Boolean = false
+    private var testnet: Boolean = false
 
-    suspend fun init() {
-        assetsRepository.get().firstOrNull()?.let {
-            setSendToken(
-                AssetModel(
-                    token = it.token,
-                    balance = it.value,
-                    walletAddress = it.token.address,
-                    position = ListCell.Position.SINGLE,
-                    fiatBalance = 0f
-                )
-            )
+    init {
+        scope.launch {
+            testnet = walletManager.getWalletInfo()?.testnet ?: false
         }
     }
 
@@ -60,72 +54,127 @@ class SwapRepository(
     }
 
     fun setSendToken(model: AssetModel) {
-        _sendToken.value = model
-        reset()
+        _swapState.update {
+            it.copy(send = model)
+        }
+        runSimulateSwapConditionally()
     }
 
     fun setReceiveToken(model: AssetModel) {
-        _receiveToken.value = model
-        reset()
+        receiveInput = "0"
+        _swapState.update {
+            it.copy(receive = model)
+        }
+        runSimulateSwapConditionally()
     }
 
     fun swap() {
-        val tempReceive = _receiveToken.value
-        _receiveToken.value = _sendToken.value
-        _sendToken.value = tempReceive
-        debounce { simulateSwap(sendInput) }
+        _swapState.update {
+            it.copy(
+                send = it.receive,
+                receive = it.send,
+                details = null
+            )
+        }
+
+        val tempReceiveInput = receiveInput
+        receiveInput = sendInput
+        sendInput = tempReceiveInput
+
+        isSwapped = !isSwapped
+        runSimulateSwapConditionally()
+    }
+
+    fun onContinueSwapClick() {
+        scope.launch {
+            val routerAddress = _swapState.value.details?.routerAddress
+            if (routerAddress != null) {
+
+                val address1Req = async {
+                    api.getJettonAddress(
+                        ownerAddress = routerAddress,
+                        address = PROXY_TON,
+                        testnet = testnet
+                    )
+                }
+                val address2Req = async {
+                    api.getJettonAddress(
+                        ownerAddress = routerAddress,
+                        address = _swapState.value.receive?.token?.address.orEmpty(),
+                        testnet = testnet
+                    )
+                }
+
+                val (addr1, addr2) = Pair(address1Req.await(), address2Req.await())
+            }
+        }
     }
 
     fun setSlippageTolerance(tolerance: Float) {
         this.tolerance = tolerance
     }
 
-    private fun reset() {
+    fun clear() {
         simulateJob?.cancel()
         sendInput = "0"
         receiveInput = "0"
-        _swapData.update {
-            it?.copy(askUnits = "0", offerUnits = "0")
+        _swapState.value = SwapState()
+        tolerance = 0.05f
+        isSwapped = false
+    }
+
+    private fun runSimulateSwapConditionally() {
+        val units = if (isSwapped) receiveInput else sendInput
+        debounce {
+            simulateSwap(units, isSwapped)
         }
     }
 
-    private suspend fun simulateSwap(units: String) = simulateSwap(units, false)
+    private suspend fun simulateSwap(units: String) =
+        coroutineScope { simulateSwap(units, false) }
 
-    private suspend fun simulateReverseSwap(units: String) = simulateSwap(units, true)
+    private suspend fun simulateReverseSwap(units: String) =
+        coroutineScope { simulateSwap(units, true) }
 
-    private suspend fun simulateSwap(units: String, reverse: Boolean) {
-        val send = _sendToken.value
-        val ask = _receiveToken.value
+    private suspend fun CoroutineScope.simulateSwap(units: String, reverse: Boolean) {
+        val send = _swapState.value.send
+        val ask = _swapState.value.receive
+
         if (send != null && ask != null && units.isNotEmpty()) {
             val unitsBd = BigDecimal(units)
             if (unitsBd <= BigDecimal.ZERO) {
-                _swapData.value = null
+                _swapState.update { it.copy(details = null) }
                 return
             }
 
             val unitsConverted = unitsBd.movePointRight(send.token.decimals).toPlainString()
-            walletManager.getWalletInfo()?.let {
-
-                while (true) {
-                    val data = if (reverse) api.simulateReverseSwap(
+            while (isActive) {
+                try {
+                    _swapState.update { it.copy(isLoading = true) }
+                    val data = api.simulateSwap(
                         offerAddress = send.token.address,
                         askAddress = ask.token.address,
                         units = unitsConverted,
-                        testnet = it.testnet,
-                        tolerance = tolerance.toString()
-                    ) else api.simulateSwap(
-                        offerAddress = send.token.address,
-                        askAddress = ask.token.address,
-                        units = unitsConverted,
-                        testnet = it.testnet,
-                        tolerance = tolerance.toString()
+                        testnet = testnet,
+                        tolerance = tolerance.toString(),
+                        reverse = reverse
                     )
-                    _swapData.value = data.copy(
-                        offerUnits = data.offerUnits.movePointLeft(send.token.decimals),
-                        askUnits = data.askUnits.movePointLeft(ask.token.decimals)
-                    )
+                    _swapState.update {
+                        it.copy(
+                            details = data.copy(
+                                offerUnits = data.offerUnits.movePointLeft(send.token.decimals),
+                                askUnits = data.askUnits.movePointLeft(ask.token.decimals),
+                                minReceived = data.minReceived.movePointLeft(ask.token.decimals),
+                                providerFeeUnits = data.providerFeeUnits.movePointLeft(ask.token.decimals)
+                            ),
+                            isLoading = false
+                        )
+                    }
                     delay(5000)
+                } catch (e: Exception) {
+                    println(e.message)
                 }
+
             }
         }
     }
@@ -134,11 +183,18 @@ class SwapRepository(
         return BigDecimal(this).movePointLeft(decimals).stripTrailingZeros().toPlainString()
     }
 
-    private fun debounce(millis: Long = 300L, block: suspend () -> Unit) {
+    private fun debounce(millis: Long = 300L, block: suspend CoroutineScope.() -> Unit) {
         simulateJob?.cancel()
         simulateJob = scope.launch {
             delay(millis)
-            block()
+            block(this)
         }
     }
 }
+
+data class SwapState(
+    val send: AssetModel? = null,
+    val receive: AssetModel? = null,
+    val isLoading: Boolean = false,
+    val details: SwapDetailsEntity? = null
+)

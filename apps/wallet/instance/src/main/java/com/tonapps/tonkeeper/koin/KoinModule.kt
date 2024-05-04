@@ -63,7 +63,7 @@ val koinModel = module {
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
     single { HistoryHelper(get()) }
-    single { SwapRepository(get(), get(), get()) }
+    single { SwapRepository(get(), get()) }
     single { AssetsRepository(get(), get(), get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
@@ -94,7 +94,7 @@ val koinModel = module {
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
     viewModel { BrowserMainViewModel() }
-    viewModel { SwapViewModel(get()) }
+    viewModel { SwapViewModel(get(), get()) }
     viewModel { WalletAssetsPickerViewModel(get(), get()) }
     viewModel { SwapSettingsViewModel(get()) }
 }

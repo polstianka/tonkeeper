@@ -21,7 +21,7 @@ import uikit.widget.SearchInput
 import uikit.widget.SimpleRecyclerView
 
 class WalletAssetsPickerScreen : BaseFragment(R.layout.fragment_all_assets_picker),
-    BaseFragment.Modal {
+    BaseFragment.BottomSheet {
 
     private val pickerViewModel: WalletAssetsPickerViewModel by viewModel()
     private val adapter = Adapter { item ->

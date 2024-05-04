@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SwapDataEntity(
+data class SwapDetailsEntity(
     val offerUnits: String,
     val askUnits: String,
     val priceImpact: String,
@@ -13,4 +13,5 @@ data class SwapDataEntity(
     val poolAddress: String,
     val providerFeeUnits: String,
     val feeAddress: String,
+    val swapRate: String
 ) : Parcelable
