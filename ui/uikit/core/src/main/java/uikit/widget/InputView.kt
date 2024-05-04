@@ -4,9 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.text.Editable
 import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -15,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.tonapps.uikit.color.accentBlueColor
 import com.tonapps.uikit.color.accentRedColor
 import uikit.R
@@ -26,6 +25,7 @@ import uikit.extensions.hideKeyboard
 import uikit.extensions.range
 import uikit.extensions.scale
 import uikit.extensions.setCursorColor
+import uikit.extensions.setPaddingTop
 import uikit.extensions.useAttributes
 
 class InputView @JvmOverloads constructor(
@@ -91,14 +91,21 @@ class InputView @JvmOverloads constructor(
         addUpdateListener(this@InputView)
     }
 
+    val editText: AppCompatEditText
     private val inputDrawable = InputDrawable(context)
     private val hintView: AppCompatTextView
-    private val editText: AppCompatEditText
     private val optionsView: View
     private val actionView: AppCompatTextView
     private val iconView: AppCompatImageView
     private val clearView: AppCompatImageView
     private val loaderView: LoaderView
+
+    var isHintVisible: Boolean
+        get() = hintView.isVisible
+        set(value) {
+            hintView.isVisible = value
+            editText.setPaddingTop(10.dp)
+        }
 
     var error: Boolean
         get() = inputDrawable.error
@@ -181,7 +188,8 @@ class InputView @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                editText.filters = if (value > 0) arrayOf(InputFilter.LengthFilter(value)) else emptyArray()
+                editText.filters =
+                    if (value > 0) arrayOf(InputFilter.LengthFilter(value)) else emptyArray()
             }
         }
 
@@ -244,6 +252,10 @@ class InputView @JvmOverloads constructor(
         editText.setOnEditorActionListener(listener)
     }
 
+    fun clear() {
+        editText.text = null
+    }
+
     fun setOnDoneActionListener(listener: () -> Unit) {
         onEditorAction(EditorInfo.IME_ACTION_DONE)
         setOnEditorActionListener { _, actionId, _ ->
@@ -273,8 +285,12 @@ class InputView @JvmOverloads constructor(
     override fun onAnimationUpdate(animation: ValueAnimator) {
         val progress = animation.animatedValue as Float
         hintView.scale = progress.range(expandHintConfig.hintScale, reduceHintConfig.hintScale)
-        hintView.translationY = progress.range(expandHintConfig.hintTranslationY, reduceHintConfig.hintTranslationY)
-        editText.translationY = progress.range(expandHintConfig.editTextTranslationY, reduceHintConfig.editTextTranslationY)
+        hintView.translationY =
+            progress.range(expandHintConfig.hintTranslationY, reduceHintConfig.hintTranslationY)
+        editText.translationY = progress.range(
+            expandHintConfig.editTextTranslationY,
+            reduceHintConfig.editTextTranslationY
+        )
     }
 
     private data class HintConfig(
@@ -295,5 +311,4 @@ class InputView @JvmOverloads constructor(
         hintReduced = !s.isNullOrBlank()
         doOnTextChange?.invoke(s.toString())
     }
-
 }

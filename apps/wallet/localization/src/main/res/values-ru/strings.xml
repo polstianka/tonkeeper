@@ -143,6 +143,8 @@
 
     <string name="enter_amount">Введите сумму</string>
     <string name="choose_token">Выберите токен</string>
+    <string name="slippage">Скольжение</string>
+    <string name="slippage_description">Величина, на которую цена может измениться в неблагоприятную сторону до возврата сделки</string>
     <string name="recipient">Получатель</string>
     <string name="recipient_address">Адрес получателя</string>
 
@@ -269,4 +271,6 @@
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
     <string name="suggested">Рекомендуемые</string>
     <string name="other">Другие</string>
+    <string name="expert_mode">Режим эксперта</string>
+    <string name="expert_mode_description">Позволяет совершать сделки с высоким ценовым воздействием. Используйте на свой страх и риск.</string>
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/offsetLarge">
+
+    <uikit.widget.ModalHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tolerance_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:text="@string/slippage"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tolerance_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:text="@string/slippage_description"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textSecondaryColor" />
+
+    <uikit.widget.InputView
+        android:id="@+id/tolerance_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="12dp"
+        android:hint="Custom %" />
+
+    <uikit.widget.RowLayout
+        android:id="@+id/suggested_tolerance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="12dp">
+
+    </uikit.widget.RowLayout>
+
+    <uikit.widget.item.ItemSwitchViewExtended
+        android:id="@+id/custom_tolerance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:subtitle="@string/expert_mode_description"
+        android:text="@string/expert_mode" />
+
+</uikit.widget.ColumnLayout>

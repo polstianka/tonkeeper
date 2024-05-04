@@ -33,6 +33,7 @@ class SwapRepository(
     private var simulateJob: Job? = null
     private var sendInput: String = "0"
     private var receiveInput: String = "0"
+    private var tolerance: Float = 0.05f
 
     suspend fun init() {
         assetsRepository.get().firstOrNull()?.let {
@@ -75,6 +76,10 @@ class SwapRepository(
         debounce { simulateSwap(sendInput) }
     }
 
+    fun setSlippageTolerance(tolerance: Float) {
+        this.tolerance = tolerance
+    }
+
     private fun reset() {
         simulateJob?.cancel()
         sendInput = "0"
@@ -106,12 +111,14 @@ class SwapRepository(
                         offerAddress = send.token.address,
                         askAddress = ask.token.address,
                         units = unitsConverted,
-                        testnet = it.testnet
+                        testnet = it.testnet,
+                        tolerance = tolerance.toString()
                     ) else api.simulateSwap(
                         offerAddress = send.token.address,
                         askAddress = ask.token.address,
                         units = unitsConverted,
-                        testnet = it.testnet
+                        testnet = it.testnet,
+                        tolerance = tolerance.toString()
                     )
                     _swapData.value = data.copy(
                         offerUnits = data.offerUnits.movePointLeft(send.token.decimals),

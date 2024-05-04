@@ -19,6 +19,7 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         headerView = view.findViewById(R.id.header)
         headerView.doOnActionClick = { finish() }
+        headerView.doOnCloseClick = { navigation?.add(SwapSettingsScreen.newInstance()) }
 
         swapView = view.findViewById(R.id.swap_view_1)
         swapView.setOnSendTokenClickListener {

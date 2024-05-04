@@ -114,9 +114,10 @@ class API(
         offerAddress: String,
         askAddress: String,
         units: String,
+        tolerance: String,
         testnet: Boolean
     ): SwapDataEntity {
-        val response = stonfi(testnet).simulateSwap(offerAddress, askAddress, units)
+        val response = stonfi(testnet).simulateSwap(offerAddress, askAddress, units, tolerance)
         return SwapDataEntity(
             offerUnits = response.offerUnits,
             askUnits = response.askUnits,
@@ -133,9 +134,11 @@ class API(
         offerAddress: String,
         askAddress: String,
         units: String,
+        tolerance: String,
         testnet: Boolean
     ): SwapDataEntity {
-        val response = stonfi(testnet).simulateReverseSwap(offerAddress, askAddress, units)
+        val response =
+            stonfi(testnet).simulateReverseSwap(offerAddress, askAddress, units, tolerance)
         return SwapDataEntity(
             offerUnits = response.offerUnits,
             askUnits = response.askUnits,

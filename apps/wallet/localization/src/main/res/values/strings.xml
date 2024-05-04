@@ -160,6 +160,11 @@
     <string name="suggested">Suggested</string>
     <string name="other">Other</string>
 
+    <string name="slippage">Slippage</string>
+    <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="expert_mode">Expert Mode</string>
+    <string name="expert_mode_description">Allows high price impact trades. Use at your own risk.</string>
+
     <string name="recipient">Recipient</string>
     <string name="recipient_address">Recipient address</string>
 

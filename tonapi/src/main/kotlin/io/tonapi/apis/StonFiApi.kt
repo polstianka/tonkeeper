@@ -57,7 +57,8 @@ class StonFiApi(
     fun simulateSwap(
         offerAddress: String,
         askAddress: String,
-        units: String
+        units: String,
+        tolerance: String,
     ): SimulateSwapResponse {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["accept"] = "application/json"
@@ -68,7 +69,7 @@ class StonFiApi(
                 "offer_address" to listOf(offerAddress),
                 "ask_address" to listOf(askAddress),
                 "units" to listOf(units),
-                "slippage_tolerance" to listOf("0.005"),
+                "slippage_tolerance" to listOf(tolerance),
             ),
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -102,7 +103,8 @@ class StonFiApi(
     fun simulateReverseSwap(
         offerAddress: String,
         askAddress: String,
-        units: String
+        units: String,
+        tolerance: String,
     ): SimulateSwapResponse {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["accept"] = "application/json"
@@ -113,7 +115,7 @@ class StonFiApi(
                 "offer_address" to listOf(offerAddress),
                 "ask_address" to listOf(askAddress),
                 "units" to listOf(units),
-                "slippage_tolerance" to listOf("0.005"),
+                "slippage_tolerance" to listOf(tolerance),
             ),
             headers = localVariableHeaders,
             requiresAuthentication = false,
