@@ -38,6 +38,7 @@ class ModalView @JvmOverloads constructor(
     companion object {
         private const val parentScale = .92f
         private const val parentAlpha = .8f
+        const val animationDuration = 200L
     }
 
     var doOnHide: (() -> Unit)? = null
