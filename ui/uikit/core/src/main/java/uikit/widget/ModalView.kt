@@ -1,20 +1,15 @@
 package uikit.widget
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.WindowInsets
-import android.view.animation.PathInterpolator
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateMargins
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import uikit.R
@@ -143,7 +138,6 @@ class ModalView @JvmOverloads constructor(
     }
 
     fun hide(force: Boolean) {
-        Log.d("ModalViewLog", "hide!")
         if (force) {
             behavior.isHideable = true
         }

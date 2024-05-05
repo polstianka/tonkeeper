@@ -107,7 +107,7 @@ class StonFiApi(
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["accept"] = "application/json"
         val cfg = RequestConfig<Unit>(
-            method = RequestMethod.POST,
+            method = RequestMethod.GET,
             path = "/v1/jetton/$address/address",
             query = mutableMapOf("owner_address" to listOf(ownerAddress)),
             headers = localVariableHeaders,

@@ -1,7 +1,16 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
+import com.tonapps.blockchain.Coin
+import com.tonapps.extensions.toByteArray
+import com.tonapps.security.Security
+import com.tonapps.security.hex
+import com.tonapps.tonkeeper.api.totalFees
+import com.tonapps.tonkeeper.extensions.emulate
+import com.tonapps.tonkeeper.extensions.getSeqno
+import com.tonapps.tonkeeper.extensions.sendToBlockchain
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
+import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +24,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.ton.block.Coins
+import org.ton.block.MsgAddressInt
+import org.ton.block.StateInit
+import org.ton.cell.Cell
+import org.ton.contract.wallet.WalletTransfer
+import org.ton.contract.wallet.WalletTransferBuilder
+import ton.SendMode
+import ton.transfer.Transfer
 import java.math.BigDecimal
+import java.math.BigInteger
 
 //router address == owner address
 //then use ask address and EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
@@ -36,6 +54,7 @@ class SwapRepository(
     private var tolerance: Float = 0.05f
     private var isSwapped: Boolean = false
     private var testnet: Boolean = false
+    private var lastSeqno = -1
 
     init {
         scope.launch {
@@ -89,24 +108,102 @@ class SwapRepository(
         scope.launch {
             val routerAddress = _swapState.value.details?.routerAddress
             if (routerAddress != null) {
-
-                val address1Req = async {
+                val proxyTonAddress = async {
                     api.getJettonAddress(
                         ownerAddress = routerAddress,
-                        address = PROXY_TON,
+                        jettonAddress = PROXY_TON,
                         testnet = testnet
                     )
-                }
-                val address2Req = async {
+                }.await()
+                val askJettonAddress = async {
                     api.getJettonAddress(
                         ownerAddress = routerAddress,
-                        address = _swapState.value.receive?.token?.address.orEmpty(),
+                        jettonAddress = _swapState.value.receive?.token?.address.orEmpty(),
                         testnet = testnet
                     )
-                }
+                }.await()
 
-                val (addr1, addr2) = Pair(address1Req.await(), address2Req.await())
+                val userWallet = walletManager.getWalletInfo()!!
+                val swapPayload = Transfer.swap(
+                    askAddress = MsgAddressInt.parse(askJettonAddress),
+                    userAddressInt = MsgAddressInt.parse(userWallet.address),
+                    coins = Coins.Companion.ofNano(
+                        BigDecimal(_swapState.value.details?.minReceived).toLong()
+                    )
+                )
+                val transferPayload = Transfer.jetton(
+                    coins = Coins.Companion.ofNano(
+                        BigDecimal(sendInput).movePointRight(9).toLong()
+                    ),
+                    toAddress = MsgAddressInt.parse(routerAddress),
+                    responseAddress = null,
+                    forwardAmount = 215000000L,
+                    queryId = getWalletQueryId(),
+                    body = swapPayload
+                )
+
+                lastSeqno = getSeqno(userWallet)
+                val gift = buildWalletTransfer(
+                    destination = MsgAddressInt.parse(proxyTonAddress),
+                    stateInit = getStateInitIfNeed(userWallet),
+                    body = transferPayload,
+                    coins = Coins.Companion.ofNano(BigDecimal(sendInput).movePointRight(9).toLong())
+                )
+
+                val emulate = userWallet.emulate(api, gift)
+                val feeInTon = emulate.totalFees
+                val amount = Coin.toCoins(feeInTon)
+                println("@@@ $amount")
+                val privateKey = walletManager.getPrivateKey(userWallet.id)
+                userWallet.sendToBlockchain(api, privateKey, gift)
+                    ?: throw Exception("failed to send to blockchain")
+                println("@@@ success")
             }
+        }
+    }
+
+    fun buildWalletTransfer(
+        destination: MsgAddressInt,
+        stateInit: StateInit?,
+        body: Cell,
+        coins: Coins
+    ): WalletTransfer {
+        val builder = WalletTransferBuilder()
+        builder.bounceable = true
+        builder.destination = destination
+        builder.body = body
+        builder.sendMode = SendMode.PAY_GAS_SEPARATELY.value + SendMode.IGNORE_ERRORS.value
+        builder.coins = coins
+        builder.stateInit = stateInit
+        return builder.build()
+    }
+
+    private suspend fun getStateInitIfNeed(wallet: WalletLegacy): StateInit? {
+        if (lastSeqno == -1) {
+            lastSeqno = getSeqno(wallet)
+        }
+        if (lastSeqno == 0) {
+            return wallet.contract.stateInit
+        }
+        return null
+    }
+
+    private suspend fun getSeqno(wallet: WalletLegacy): Int {
+        if (lastSeqno == 0) {
+            lastSeqno = wallet.getSeqno(api)
+        }
+        return lastSeqno
+    }
+
+    fun getWalletQueryId(): BigInteger {
+        try {
+            val tonkeeperSignature = 0x546de4ef.toByteArray()
+            val randomBytes = Security.randomBytes(4)
+            val value = tonkeeperSignature + randomBytes
+            val hexString = hex(value)
+            return BigInteger(hexString, 16)
+        } catch (e: Throwable) {
+            return BigInteger.ZERO
         }
     }
 

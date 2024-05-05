@@ -135,8 +135,8 @@ class API(
         )
     }
 
-    fun getJettonAddress(ownerAddress: String, address: String, testnet: Boolean): String {
-        return stonfi(testnet).getJettonAddress(ownerAddress, address).address
+    fun getJettonAddress(ownerAddress: String, jettonAddress: String, testnet: Boolean): String {
+        return stonfi(testnet).getJettonAddress(ownerAddress, jettonAddress).address
     }
 
     fun getEvents(

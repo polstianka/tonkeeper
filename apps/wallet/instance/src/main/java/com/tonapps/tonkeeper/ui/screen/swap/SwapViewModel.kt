@@ -96,6 +96,10 @@ class SwapViewModel(
         swapRepository.swap()
     }
 
+    fun onContinueClick() {
+        swapRepository.onContinueSwapClick()
+    }
+
     private fun getUiDetails(
         send: AssetModel?,
         receive: AssetModel?,

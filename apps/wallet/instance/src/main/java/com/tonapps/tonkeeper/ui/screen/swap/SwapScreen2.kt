@@ -36,6 +36,7 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
         swapView.addSendTextChangeListener(swapViewModel::onSendTextChange)
         swapView.addReceiveTextChangeListener(swapViewModel::onReceiveTextChange)
         swapView.setOnSwapClickListener { swapViewModel.swap() }
+        swapView.doOnClick = { swapViewModel.onContinueClick() }
 
         collectFlow(swapViewModel.uiModel) {
             swapView.setSendToken(it.sendToken)

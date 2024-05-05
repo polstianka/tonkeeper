@@ -1,6 +1,8 @@
 package ton.transfer
 
+import org.ton.block.AddrNone
 import org.ton.block.Coins
+import org.ton.block.MsgAddress
 import org.ton.block.MsgAddressInt
 import org.ton.cell.Cell
 import org.ton.cell.buildCell
@@ -37,7 +39,7 @@ object Transfer {
     fun jetton(
         coins: Coins,
         toAddress: MsgAddressInt,
-        responseAddress: MsgAddressInt,
+        responseAddress: MsgAddressInt?,
         queryId: BigInteger = BigInteger.ZERO,
         forwardAmount: Long = 1L,
         body: Any? = null,
@@ -49,7 +51,7 @@ object Transfer {
             storeUInt(queryId, 64)
             storeTlb(Coins, coins)
             storeTlb(MsgAddressInt, toAddress)
-            storeTlb(MsgAddressInt, responseAddress)
+            storeTlb(MsgAddress, responseAddress ?: AddrNone)
             storeBit(false)
             storeTlb(Coins, Coins.ofNano(forwardAmount))
             if (payload == null) {
@@ -58,6 +60,16 @@ object Transfer {
                 storeBit(true)
                 storeRef(AnyTlbConstructor, CellRef(payload))
             }
+        }
+    }
+
+    fun swap(askAddress: MsgAddressInt, userAddressInt: MsgAddressInt, coins: Coins): Cell {
+        return buildCell {
+            storeUInt(0x25938561, 32)
+            storeTlb(MsgAddressInt, askAddress)
+            storeTlb(Coins, coins)
+            storeTlb(MsgAddressInt, userAddressInt)
+            storeBit(false)
         }
     }
 

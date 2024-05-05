@@ -60,6 +60,8 @@ class SwapView @JvmOverloads constructor(
     private var sendTextWatcher: SwapTextWatcher? = null
     private var receiveTextWatcher: SwapTextWatcher? = null
 
+    var doOnClick: (() -> Unit) = {}
+
     init {
         inflate(context, R.layout.view_swap_full_layout, this)
 
@@ -173,6 +175,11 @@ class SwapView @JvmOverloads constructor(
             loadingView.isVisible = false
             loadingView.stopAnimation()
             button.setText(textId)
+        }
+        if (state == Continue) {
+            button.setOnClickListener { doOnClick() }
+        } else {
+            button.setOnClickListener { }
         }
         button.setBackgroundResource(backgroundId)
     }
