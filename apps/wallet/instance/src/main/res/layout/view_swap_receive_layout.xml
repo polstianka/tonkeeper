@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/offsetMedium"
     android:background="@drawable/bg_wallet_bubble_no_ripple"
-    android:animateLayoutChanges="true"
     android:padding="@dimen/offsetMedium">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -51,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:background="@null"
-        android:digits="0123456789."
+        android:digits="0123456789.,"
         android:ellipsize="end"
         android:fontFamily="@font/montserrat_semi_bold"
         android:hint="0"
@@ -68,9 +67,8 @@
         app:layout_constraintStart_toEndOf="@id/receive_token_view"
         app:layout_constraintTop_toTopOf="@id/receive_token_view" />
 
-
     <uikit.widget.ColumnLayout
-        android:id="@+id/details_layout"
+        android:id="@+id/receive_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

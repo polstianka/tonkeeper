@@ -6,12 +6,14 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.tonapps.icu.CurrencyFormatter
@@ -19,6 +21,7 @@ import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Amount
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Continue
+import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Insufficient
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Loading
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Select
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details
@@ -38,20 +41,22 @@ class SwapView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
+) : ConstraintLayout(context, attrs, defStyle) {
 
     private val sendTokenLayout: SmallTokenView
     private val sendBalance: TextView
     private val sendInput: AmountInput
-    private val max: TextView
+    private val sendTitle: TextView
+    private val sendMaxButton: TextView
 
     private val receiveTokenLayout: SmallTokenView
     private val receiveInput: AmountInput
     private val receiveBalance: TextView
+    private val receiveTitle: TextView
 
     private val button: Button
     private val swapButton: ImageButton
-    private val detailsLayout: ColumnLayout
+    private val receiveDetailsLayout: ColumnLayout
     private val loadingView: LoaderView
 
     private var sendModel: AssetModel? = null
@@ -60,7 +65,9 @@ class SwapView @JvmOverloads constructor(
     private var sendTextWatcher: SwapTextWatcher? = null
     private var receiveTextWatcher: SwapTextWatcher? = null
 
-    var doOnClick: (() -> Unit) = {}
+    private var isReversed: Boolean = false
+
+    var doOnClick: ((BottomButtonState) -> Unit) = {}
 
     init {
         inflate(context, R.layout.view_swap_full_layout, this)
@@ -68,15 +75,17 @@ class SwapView @JvmOverloads constructor(
         sendTokenLayout = findViewById(R.id.send_token_view)
         sendBalance = findViewById(R.id.send_balance)
         sendInput = findViewById(R.id.send_amount_input)
-        max = findViewById(R.id.max_button)
+        sendTitle = findViewById(R.id.send_title)
+        sendMaxButton = findViewById(R.id.send_max_button)
 
         receiveTokenLayout = findViewById(R.id.receive_token_view)
         receiveInput = findViewById(R.id.receive_amount_input)
         receiveBalance = findViewById(R.id.receive_balance)
+        receiveTitle = findViewById(R.id.receive_title)
 
         swapButton = findViewById(R.id.swap_button)
         button = findViewById(R.id.enter_button)
-        detailsLayout = findViewById(R.id.details_layout)
+        receiveDetailsLayout = findViewById(R.id.receive_details_layout)
         loadingView = findViewById(R.id.loading_view)
 
         sendTokenLayout.setText(TokenEntity.TON.symbol)
@@ -85,7 +94,7 @@ class SwapView @JvmOverloads constructor(
         receiveTokenLayout.setIconVisibility(false)
         receiveTokenLayout.setText(context.resources.getString(com.tonapps.wallet.localization.R.string.choose))
 
-        max.setOnClickListener {
+        sendMaxButton.setOnClickListener {
             sendModel?.let { model ->
                 sendInput.setText(model.balance.toString())
             }
@@ -119,9 +128,13 @@ class SwapView @JvmOverloads constructor(
 
     fun setOnSwapClickListener(click: () -> Unit) {
         swapButton.setOnClickListener {
-            val tempReceiveText = receiveInput.text.toString()
-            receiveInput.updateText(sendInput.text.toString(), receiveTextWatcher)
-            sendInput.updateText(tempReceiveText, sendTextWatcher)
+            it.animate()
+                .rotationBy(180f)
+                .setDuration(300)
+                .setInterpolator(LinearInterpolator())
+                .withStartAction { it.isEnabled = false }
+                .withEndAction { it.isEnabled = true }
+
             click()
         }
     }
@@ -139,10 +152,10 @@ class SwapView @JvmOverloads constructor(
     fun setSendToken(model: AssetModel?) {
         sendModel = model
         if (model == null) {
-            max.isVisible = false
+            sendMaxButton.isVisible = false
             sendBalance.isVisible = false
         } else {
-            max.isVisible = true
+            sendMaxButton.isVisible = true
             sendBalance.isVisible = true
             sendBalance.text = getBalance(model)
         }
@@ -161,11 +174,15 @@ class SwapView @JvmOverloads constructor(
     }
 
     fun updateBottomButton(state: BottomButtonState) {
-        val (textId, backgroundId) = when (state) {
-            Select -> com.tonapps.wallet.localization.R.string.choose_token to uikit.R.drawable.bg_button_secondary
-            Amount -> com.tonapps.wallet.localization.R.string.enter_amount to uikit.R.drawable.bg_button_secondary
-            Continue -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_primary
-            Loading -> com.tonapps.wallet.localization.R.string.continue_action to uikit.R.drawable.bg_button_secondary
+        val (text, backgroundId) = when (state) {
+            Select -> context.getString(com.tonapps.wallet.localization.R.string.choose_token) to uikit.R.drawable.bg_button_secondary
+            Amount -> context.getString(com.tonapps.wallet.localization.R.string.enter_amount) to uikit.R.drawable.bg_button_secondary
+            Continue -> context.getString(com.tonapps.wallet.localization.R.string.continue_action) to uikit.R.drawable.bg_button_primary
+            Loading -> context.getString(com.tonapps.wallet.localization.R.string.continue_action) to uikit.R.drawable.bg_button_secondary
+            Insufficient -> context.getString(
+                com.tonapps.wallet.localization.R.string.insufficient_balance_buy,
+                sendModel?.token?.symbol.orEmpty()
+            ) to uikit.R.drawable.bg_button_secondary
         }
         if (state == Loading) {
             button.text = ""
@@ -174,34 +191,38 @@ class SwapView @JvmOverloads constructor(
         } else {
             loadingView.isVisible = false
             loadingView.stopAnimation()
-            button.setText(textId)
+            button.text = text
         }
-        if (state == Continue) {
-            button.setOnClickListener { doOnClick() }
-        } else {
-            button.setOnClickListener { }
-        }
+        button.setOnClickListener { doOnClick(state) }
         button.setBackgroundResource(backgroundId)
     }
 
     fun setSendText(s: String) {
-        sendInput.updateText(s, sendTextWatcher)
+        if (isReversed) {
+            receiveInput.updateText(s, receiveTextWatcher)
+        } else {
+            sendInput.updateText(s, sendTextWatcher)
+        }
     }
 
     fun setReceivedText(s: String) {
-        receiveInput.updateText(s, receiveTextWatcher)
+        if (isReversed) {
+            sendInput.updateText(s, sendTextWatcher)
+        } else {
+            receiveInput.updateText(s, receiveTextWatcher)
+        }
     }
 
     fun setDetails(details: List<Details>?) {
         if (details == null) {
             withAnimation(300) {
-                detailsLayout.removeAllViews()
+                receiveDetailsLayout.removeAllViews()
             }
             return
         }
-        val needAnimation = detailsLayout.childCount == 0
-        detailsLayout.removeAllViews()
-        detailsLayout.isVisible = !needAnimation
+        val needAnimation = receiveDetailsLayout.childCount == 0
+        receiveDetailsLayout.removeAllViews()
+        receiveDetailsLayout.isVisible = !needAnimation
         val lpText = LinearLayoutCompat.LayoutParams(
             LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
             LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
@@ -229,11 +250,15 @@ class SwapView @JvmOverloads constructor(
                     text = it.value
                     setPaddingVertical(8.dp)
                     setTextAppearance(uikit.R.style.TextAppearance_Body2)
-                    setTextColor(context.textPrimaryColor)
+                    if (it.valueTint != null) {
+                        setTextColor(ContextCompat.getColor(context, it.valueTint))
+                    } else {
+                        setTextColor(context.textPrimaryColor)
+                    }
                 }
                 row.addView(title)
                 row.addView(value)
-                detailsLayout.addView(row)
+                receiveDetailsLayout.addView(row)
             } else if (it is Details.Header) {
                 val title = AppCompatTextView(context).apply {
                     layoutParams = lpText
@@ -241,7 +266,11 @@ class SwapView @JvmOverloads constructor(
                     text = it.swapRate
                     setPaddingVertical(14.dp)
                     setTextAppearance(uikit.R.style.TextAppearance_Body2)
-                    setTextColor(context.textSecondaryColor)
+                    if (it.tint != null) {
+                        setTextColor(ContextCompat.getColor(context, it.tint))
+                    } else {
+                        setTextColor(context.textPrimaryColor)
+                    }
                 }
                 val loading = LoaderView(context).apply {
                     layoutParams = LinearLayoutCompat.LayoutParams(16.dp, 16.dp).apply {
@@ -254,14 +283,14 @@ class SwapView @JvmOverloads constructor(
                 row.addView(loading)
                 val divider1 = DividerView(context)
                 val divider2 = DividerView(context)
-                detailsLayout.addView(divider1)
-                detailsLayout.addView(row)
-                detailsLayout.addView(divider2)
+                receiveDetailsLayout.addView(divider1)
+                receiveDetailsLayout.addView(row)
+                receiveDetailsLayout.addView(divider2)
             }
         }
         if (needAnimation) {
             withAnimation(300) {
-                detailsLayout.isVisible = true
+                receiveDetailsLayout.isVisible = true
             }
         }
     }

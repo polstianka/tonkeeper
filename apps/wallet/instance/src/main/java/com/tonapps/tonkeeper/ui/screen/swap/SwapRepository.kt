@@ -17,8 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -52,7 +52,6 @@ class SwapRepository(
     private var sendInput: String = "0"
     private var receiveInput: String = "0"
     private var tolerance: Float = 0.05f
-    private var isSwapped: Boolean = false
     private var testnet: Boolean = false
     private var lastSeqno = -1
 
@@ -76,7 +75,7 @@ class SwapRepository(
         _swapState.update {
             it.copy(send = model)
         }
-        runSimulateSwapConditionally()
+        runSimulateSwapConditionally(sendInput)
     }
 
     fun setReceiveToken(model: AssetModel) {
@@ -84,24 +83,14 @@ class SwapRepository(
         _swapState.update {
             it.copy(receive = model)
         }
-        runSimulateSwapConditionally()
+        runSimulateSwapConditionally(sendInput)
     }
 
     fun swap() {
         _swapState.update {
-            it.copy(
-                send = it.receive,
-                receive = it.send,
-                details = null
-            )
+            it.copy(details = null, send = it.receive, receive = it.send, reversed = !it.reversed)
         }
-
-        val tempReceiveInput = receiveInput
-        receiveInput = sendInput
-        sendInput = tempReceiveInput
-
-        isSwapped = !isSwapped
-        runSimulateSwapConditionally()
+        runSimulateSwapConditionally(if (_swapState.value.reversed) sendInput else receiveInput)
     }
 
     fun onContinueSwapClick() {
@@ -153,11 +142,9 @@ class SwapRepository(
                 val emulate = userWallet.emulate(api, gift)
                 val feeInTon = emulate.totalFees
                 val amount = Coin.toCoins(feeInTon)
-                println("@@@ $amount")
                 val privateKey = walletManager.getPrivateKey(userWallet.id)
                 userWallet.sendToBlockchain(api, privateKey, gift)
                     ?: throw Exception("failed to send to blockchain")
-                println("@@@ success")
             }
         }
     }
@@ -195,7 +182,7 @@ class SwapRepository(
         return lastSeqno
     }
 
-    fun getWalletQueryId(): BigInteger {
+    private fun getWalletQueryId(): BigInteger {
         try {
             val tonkeeperSignature = 0x546de4ef.toByteArray()
             val randomBytes = Security.randomBytes(4)
@@ -217,34 +204,33 @@ class SwapRepository(
         receiveInput = "0"
         _swapState.value = SwapState()
         tolerance = 0.05f
-        isSwapped = false
     }
 
-    private fun runSimulateSwapConditionally() {
-        val units = if (isSwapped) receiveInput else sendInput
+    private fun runSimulateSwapConditionally(units: String) {
         debounce {
-            simulateSwap(units, isSwapped)
+            simulateSwap(units, _swapState.value.reversed)
         }
     }
 
-    private suspend fun simulateSwap(units: String) =
-        coroutineScope { simulateSwap(units, false) }
+    private suspend fun CoroutineScope.simulateSwap(units: String) =
+        simulateSwap(units, false)
 
-    private suspend fun simulateReverseSwap(units: String) =
-        coroutineScope { simulateSwap(units, true) }
+    private suspend fun CoroutineScope.simulateReverseSwap(units: String) =
+        simulateSwap(units, true)
 
     private suspend fun CoroutineScope.simulateSwap(units: String, reverse: Boolean) {
         val send = _swapState.value.send
         val ask = _swapState.value.receive
+        val unitsPrepared = Coin.prepareValue(units)
 
-        if (send != null && ask != null && units.isNotEmpty()) {
-            val unitsBd = BigDecimal(units)
+        if (send != null && ask != null && unitsPrepared.isNotEmpty()) {
+            val unitsBd = BigDecimal(unitsPrepared)
             if (unitsBd <= BigDecimal.ZERO) {
                 _swapState.update { it.copy(details = null) }
                 return
             }
-
-            val unitsConverted = unitsBd.movePointRight(send.token.decimals).toPlainString()
+            val decimals = if (reverse) ask.token.decimals else send.token.decimals
+            val unitsConverted = Coin.toNano(unitsBd.toFloat(), decimals).toString()
             while (isActive) {
                 try {
                     _swapState.update { it.copy(isLoading = true) }
@@ -256,13 +242,26 @@ class SwapRepository(
                         tolerance = tolerance.toString(),
                         reverse = reverse
                     )
+                    ensureActive()
                     _swapState.update {
+                        val offerUnits =
+                            Coin.toCoins(data.offerUnits.toLong(), send.token.decimals).toString()
+                        val askUnits =
+                            Coin.toCoins(data.askUnits.toLong(), ask.token.decimals).toString()
+
+                        sendInput = offerUnits
+                        receiveInput = askUnits
+
                         it.copy(
                             details = data.copy(
-                                offerUnits = data.offerUnits.movePointLeft(send.token.decimals),
-                                askUnits = data.askUnits.movePointLeft(ask.token.decimals),
-                                minReceived = data.minReceived.movePointLeft(ask.token.decimals),
-                                providerFeeUnits = data.providerFeeUnits.movePointLeft(ask.token.decimals)
+                                offerUnits = offerUnits,
+                                askUnits = askUnits,
+                                minReceived = Coin.toCoins(
+                                    data.minReceived.toLong(),
+                                    ask.token.decimals
+                                ).toString(),
+                                providerFeeUnits = Coin.toCoins(data.providerFeeUnits.toLong())
+                                    .toString()
                             ),
                             isLoading = false
                         )
@@ -274,10 +273,6 @@ class SwapRepository(
 
             }
         }
-    }
-
-    private fun String.movePointLeft(decimals: Int): String {
-        return BigDecimal(this).movePointLeft(decimals).stripTrailingZeros().toPlainString()
     }
 
     private fun debounce(millis: Long = 300L, block: suspend CoroutineScope.() -> Unit) {
@@ -293,5 +288,6 @@ data class SwapState(
     val send: AssetModel? = null,
     val receive: AssetModel? = null,
     val isLoading: Boolean = false,
-    val details: SwapDetailsEntity? = null
+    val details: SwapDetailsEntity? = null,
+    val reversed: Boolean = false
 )

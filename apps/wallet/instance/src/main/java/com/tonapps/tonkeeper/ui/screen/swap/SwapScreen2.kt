@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import android.os.Bundle
 import android.view.View
+import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeperx.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -36,7 +37,13 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
         swapView.addSendTextChangeListener(swapViewModel::onSendTextChange)
         swapView.addReceiveTextChangeListener(swapViewModel::onReceiveTextChange)
         swapView.setOnSwapClickListener { swapViewModel.swap() }
-        swapView.doOnClick = { swapViewModel.onContinueClick() }
+        swapView.doOnClick = {
+            when (it) {
+                SwapUiModel.BottomButtonState.Continue -> swapViewModel.onContinueClick()
+                SwapUiModel.BottomButtonState.Insufficient -> FiatDialog.open(requireContext())
+                else -> {}
+            }
+        }
 
         collectFlow(swapViewModel.uiModel) {
             swapView.setSendToken(it.sendToken)

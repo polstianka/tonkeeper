@@ -165,6 +165,7 @@
     <string name="blockchain_fee">Blockchain fee</string>
     <string name="route">Route</string>
     <string name="provider">Provider</string>
+    <string name="insufficient_balance_buy">Insufficient Balance. Buy %s</string>
 
     <string name="slippage">Slippage</string>
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>

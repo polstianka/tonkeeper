@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -63,7 +64,8 @@ class SwapViewModel(
                         ),
                         sendInput = sendInput,
                         receiveInput = receiveInput,
-                        details = details
+                        details = details,
+                        reversed = it.reversed
                     )
                 }
             }
@@ -105,43 +107,55 @@ class SwapViewModel(
         receive: AssetModel?,
         entity: SwapDetailsEntity,
         state: SwapState
-    ) = listOf(
-        Header(
-            swapRate = "1 ${send?.token?.symbol} ≈ ${
-                CurrencyFormatter.format(
+    ): List<SwapUiModel.Details> {
+        return listOf(
+            Header(
+                swapRate = "1 ${send?.token?.symbol} ≈ ${
+                    CurrencyFormatter.format(
+                        receive?.token?.symbol.orEmpty(),
+                        entity.swapRate.toFloat()
+                    )
+                }",
+                loading = state.isLoading,
+                tint = when (entity.priceImpact.toFloat()) {
+                    in 0f..1f -> null
+                    in 1f..5f -> com.tonapps.uikit.color.R.color.accentOrangeLight
+                    else -> com.tonapps.uikit.color.R.color.accentRedLight
+                }
+            ),
+            DetailUiModel(
+                title = LocalizationR.string.price_impact,
+                value = df.format(entity.priceImpact.toFloat()) + " %",
+                valueTint = when (entity.priceImpact.toFloat()) {
+                    in 0f..1f -> com.tonapps.uikit.color.R.color.accentGreenLight
+                    in 1f..5f -> com.tonapps.uikit.color.R.color.accentOrangeLight
+                    else -> com.tonapps.uikit.color.R.color.accentRedLight
+                }
+            ),
+            DetailUiModel(
+                title = LocalizationR.string.min_received,
+                value = CurrencyFormatter.format(
                     receive?.token?.symbol.orEmpty(),
-                    entity.swapRate.toFloat()
-                )
-            }",
-            loading = state.isLoading,
-        ),
-        DetailUiModel(
-            title = LocalizationR.string.price_impact,
-            value = df.format(entity.priceImpact.toFloat()) + "%"
-        ),
-        DetailUiModel(
-            title = LocalizationR.string.min_received,
-            value = CurrencyFormatter.format(
-                receive?.token?.symbol.orEmpty(),
-                entity.minReceived.toFloat()
-            ).toString()
-        ),
-        DetailUiModel(
-            title = LocalizationR.string.liquidity_provider_fee,
-            value = CurrencyFormatter.format(
-                receive?.token?.symbol.orEmpty(),
-                entity.providerFeeUnits.toFloat()
-            ).toString()
-        ),
-        DetailUiModel(
-            title = LocalizationR.string.route,
-            value = "${send?.token?.symbol.orEmpty()} » ${receive?.token?.symbol.orEmpty()}"
-        ),
-        DetailUiModel(
-            title = LocalizationR.string.provider,
-            value = "STON.fi"
-        ),
-    )
+                    entity.minReceived.toFloat()
+                ).toString()
+            ),
+            DetailUiModel(
+                title = LocalizationR.string.liquidity_provider_fee,
+                value = CurrencyFormatter.format(
+                    receive?.token?.symbol.orEmpty(),
+                    entity.providerFeeUnits.toFloat()
+                ).toString()
+            ),
+            DetailUiModel(
+                title = LocalizationR.string.route,
+                value = "${send?.token?.symbol.orEmpty()} » ${receive?.token?.symbol.orEmpty()}"
+            ),
+            DetailUiModel(
+                title = LocalizationR.string.provider,
+                value = "STON.fi"
+            ),
+        )
+    }
 
     private fun resetInput() {
         _uiModel.update {
@@ -158,6 +172,7 @@ class SwapViewModel(
     ) = when {
         loading -> SwapUiModel.BottomButtonState.Loading
         receive == null || send == null -> SwapUiModel.BottomButtonState.Select
+        sendInput.toFloat() > send.balance -> SwapUiModel.BottomButtonState.Insufficient
         sendInput.isEmpty() || sendInput == "0" -> SwapUiModel.BottomButtonState.Amount
         !sendInput.isEmptyOrZero() && !receiveInput.isEmptyOrZero() -> SwapUiModel.BottomButtonState.Continue
         else -> SwapUiModel.BottomButtonState.Amount
@@ -174,18 +189,24 @@ data class SwapUiModel(
     val receiveInput: String = "0",
     val details: List<Details>? = null,
     val loadingDetails: Boolean = false,
+    val reversed: Boolean = false
 ) {
     enum class BottomButtonState {
-        Select, Amount, Continue, Loading
+        Select, Amount, Continue, Loading, Insufficient
     }
 
     sealed class Details {
 
-        data class Header(val swapRate: String, val loading: Boolean) : Details()
+        data class Header(
+            val swapRate: String,
+            @ColorRes val tint: Int?,
+            val loading: Boolean
+        ) : Details()
 
         data class DetailUiModel(
             @StringRes val title: Int,
-            val value: String
+            val value: String,
+            @ColorRes val valueTint: Int? = null
         ) : Details()
     }
 }
