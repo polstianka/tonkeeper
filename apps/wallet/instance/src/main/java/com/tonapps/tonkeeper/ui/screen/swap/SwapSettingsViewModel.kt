@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class SwapSettingsViewModel(
-    private val swapRepository: SwapRepository
+    private val swapRepository: com.tonapps.wallet.data.swap.SwapRepository
 ) : ViewModel() {
 
     private val _suggestedTolerance = MutableStateFlow(emptyList<Int>())
@@ -33,8 +33,3 @@ class SwapSettingsViewModel(
         private val suggestedToleranceList = listOf(1, 3, 5)
     }
 }
-
-data class SuggestData(
-    val percent: Int,
-    val selected: Boolean
-)

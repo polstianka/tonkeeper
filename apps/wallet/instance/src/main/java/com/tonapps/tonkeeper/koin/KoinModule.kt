@@ -33,8 +33,6 @@ import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
-import com.tonapps.tonkeeper.ui.screen.swap.AssetsRepository
-import com.tonapps.tonkeeper.ui.screen.swap.SwapRepository
 import com.tonapps.tonkeeper.ui.screen.swap.SwapSettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.WalletAssetsPickerViewModel
@@ -63,8 +61,6 @@ val koinModel = module {
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
     single { HistoryHelper(get(), get()) }
-    single { SwapRepository(get(), get()) }
-    single { AssetsRepository(get(), get(), get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
     viewModel { parameters -> InitViewModel(parameters.get(), get(), get(), get(), get(), get(), get(), get(), get()) }

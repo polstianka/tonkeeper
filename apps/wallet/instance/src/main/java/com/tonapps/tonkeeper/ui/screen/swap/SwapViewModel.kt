@@ -6,21 +6,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details.DetailUiModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details.Header
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
+import com.tonapps.wallet.data.swap.AssetModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import com.tonapps.wallet.localization.R as LocalizationR
 
 class SwapViewModel(
-    private val swapRepository: SwapRepository,
-    private val assetsRepository: AssetsRepository,
+    private val swapRepository: com.tonapps.wallet.data.swap.SwapRepository,
+    private val assetsRepository: com.tonapps.wallet.data.swap.WalletAssetsRepository,
 ) : ViewModel() {
 
     private val df = DecimalFormat("#.##")
@@ -28,7 +31,16 @@ class SwapViewModel(
     private val _uiModel = MutableStateFlow(SwapUiModel())
     val uiModel: StateFlow<SwapUiModel> = _uiModel
 
-    val signRequestEntity = swapRepository.signRequestEntity
+    val signRequestEntity = swapRepository.signRequestEntity.map {
+        it?.let {
+            SignRequestEntity(
+                fromValue = it.fromValue,
+                validUntil = it.validUntil,
+                messages = emptyList(),
+                network = it.network
+            ).apply { transfers = listOf(it.walletTransfer) }
+        }
+    }
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -128,7 +140,7 @@ class SwapViewModel(
         send: AssetModel?,
         receive: AssetModel?,
         entity: SwapDetailsEntity,
-        state: SwapState
+        state: com.tonapps.wallet.data.swap.SwapState
     ): List<SwapUiModel.Details> {
         return listOf(
             Header(

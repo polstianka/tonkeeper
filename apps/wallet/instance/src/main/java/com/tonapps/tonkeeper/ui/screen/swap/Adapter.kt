@@ -8,8 +8,7 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.list.BaseListAdapter
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.uikit.list.BaseListItem
-import com.tonapps.uikit.list.ListCell
-import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.data.swap.AssetModel
 import uikit.extensions.drawable
 import uikit.widget.FrescoView
 
@@ -50,12 +49,3 @@ class AssetHolder(
         itemView.background = item.position.drawable(context)
     }
 }
-
-data class AssetModel(
-    val token: TokenEntity,
-    val balance: Float,
-    val walletAddress: String,
-    val fiatBalance: Float,
-    val isTon: Boolean,
-    override val position: ListCell.Position
-) : BaseListItem(), ListCell

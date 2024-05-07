@@ -3,14 +3,15 @@ package com.tonapps.tonkeeper.ui.screen.swap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.uikit.list.ListCell
+import com.tonapps.wallet.data.swap.AssetModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class WalletAssetsPickerViewModel(
-    private val assetsRepository: AssetsRepository,
-    private val swapRepository: SwapRepository
+    private val assetsRepository: com.tonapps.wallet.data.swap.WalletAssetsRepository,
+    private val swapRepository: com.tonapps.wallet.data.swap.SwapRepository
 ) : ViewModel() {
 
     private val localAssets = mutableListOf<AssetModel>()

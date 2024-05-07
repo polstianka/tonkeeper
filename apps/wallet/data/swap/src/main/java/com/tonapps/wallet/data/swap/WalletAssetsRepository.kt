@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.wallet.data.swap
 
 import android.content.Context
 import com.tonapps.wallet.api.API
@@ -7,7 +7,7 @@ import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AssetsRepository(
+class WalletAssetsRepository(
     private val context: Context,
     private val api: API,
     private val walletManager: WalletManager,

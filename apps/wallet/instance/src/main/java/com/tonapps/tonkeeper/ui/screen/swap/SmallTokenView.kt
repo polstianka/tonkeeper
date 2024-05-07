@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.facebook.drawee.generic.RoundingParams
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.data.swap.AssetModel
 import uikit.extensions.dp
 import uikit.widget.FrescoView
 import uikit.widget.RowLayout

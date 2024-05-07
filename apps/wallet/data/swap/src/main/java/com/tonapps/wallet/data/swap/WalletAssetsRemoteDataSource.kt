@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.wallet.data.swap
 
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.AssetEntity

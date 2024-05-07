@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.wallet.data.swap
 
 import android.content.Context
 import com.tonapps.extensions.toByteArray

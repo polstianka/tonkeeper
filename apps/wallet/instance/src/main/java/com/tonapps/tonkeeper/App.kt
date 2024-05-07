@@ -13,21 +13,22 @@ import com.tonapps.tonkeeper.core.fiat.Fiat
 import com.tonapps.tonkeeper.koin.koinModel
 import com.tonapps.wallet.api.apiModule
 import com.tonapps.wallet.data.account.accountModule
-import com.tonapps.wallet.data.rates.ratesModule
-import com.tonapps.wallet.data.settings.SettingsRepository
-import com.tonapps.wallet.data.token.tokenModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.browser.browserModule
 import com.tonapps.wallet.data.collectibles.collectiblesModule
 import com.tonapps.wallet.data.core.dataModule
 import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
+import com.tonapps.wallet.data.rates.ratesModule
+import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.swap.swapModule
+import com.tonapps.wallet.data.token.tokenModule
 import com.tonapps.wallet.data.tonconnect.tonConnectModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
+import org.koin.core.context.startKoin
 
-class App: Application(), CameraXConfig.Provider, KoinComponent {
+class App : Application(), CameraXConfig.Provider, KoinComponent {
 
     companion object {
 
@@ -53,7 +54,20 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
+            modules(
+                koinModel,
+                dataModule,
+                browserModule,
+                pushModule,
+                tonConnectModule,
+                apiModule,
+                accountModule,
+                ratesModule,
+                tokenModule,
+                eventsModule,
+                collectiblesModule,
+                swapModule
+            )
         }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

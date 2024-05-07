@@ -1,12 +1,10 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.wallet.data.swap
 
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.TonNetwork
 import com.tonapps.extensions.toByteArray
 import com.tonapps.security.Security
 import com.tonapps.security.hex
-import com.tonapps.tonkeeper.extensions.getSeqno
-import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
@@ -45,14 +43,13 @@ private const val Commission = 215000000L
 
 class SwapRepository(
     private val walletManager: WalletManager,
-    private val api: API,
-
-    ) {
+    private val api: API
+) {
     private val _swapState = MutableStateFlow(SwapState())
     val swapState: StateFlow<SwapState> = _swapState
 
-    private val _signRequestEntity = MutableStateFlow<SignRequestEntity?>(null)
-    val signRequestEntity: StateFlow<SignRequestEntity?> = _signRequestEntity
+    private val _signRequestEntity = MutableStateFlow<SwapSignRequestEntity?>(null)
+    val signRequestEntity: StateFlow<SwapSignRequestEntity?> = _signRequestEntity
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var simulateJob: Job? = null
@@ -145,14 +142,12 @@ class SwapRepository(
                     coins = Coins.Companion.ofNano(outputValue + Commission)
                 )
 
-                val signRequestEntity = SignRequestEntity(
+                val signRequestEntity = SwapSignRequestEntity(
                     fromValue = "",
                     validUntil = (Clock.System.now() + 60.seconds).epochSeconds,
-                    messages = emptyList(),
+                    walletTransfer = gift,
                     network = if (userWallet.testnet) TonNetwork.TESTNET else TonNetwork.MAINNET
-                ).apply {
-                    transfers = listOf(gift)
-                }
+                )
 
                 _signRequestEntity.value = signRequestEntity
 
@@ -201,6 +196,14 @@ class SwapRepository(
             lastSeqno = wallet.getSeqno(api)
         }
         return lastSeqno
+    }
+
+    private suspend fun WalletLegacy.getSeqno(api: API): Int {
+        return try {
+            api.getAccountSeqno(accountId, testnet)
+        } catch (e: Throwable) {
+            0
+        }
     }
 
     private fun getWalletQueryId(): BigInteger {

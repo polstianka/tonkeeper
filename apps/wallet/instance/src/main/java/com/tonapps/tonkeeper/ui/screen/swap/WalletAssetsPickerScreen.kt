@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.data.swap.AssetModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.HapticHelper
 import uikit.base.BaseFragment

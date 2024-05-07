@@ -31,6 +31,7 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.textPrimaryColor
 import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.data.swap.AssetModel
 import uikit.extensions.dp
 import uikit.extensions.setPaddingVertical
 import uikit.extensions.withAnimation
