@@ -85,6 +85,7 @@
     <string name="buy_or_sell">Торговля</string>
     <string name="fiat_open_description">Вы открываете внешнее приложение, которым не управляет Tonkeeper.</string>
     <string name="buy">Купить</string>
+    <string name="sell">Продать</string>
     <string name="search">Поиск</string>
     <string name="country_title">Выберите вашу страну</string>
     <string name="intro_description">Создайте новый кошелек или добавьте существующий</string>

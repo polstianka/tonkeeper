@@ -83,6 +83,7 @@
     <string name="buy_or_sell">Buy or sell</string>
     <string name="fiat_open_description">You are opening an external app not operated by Tonkeeper.</string>
     <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
     <string name="search">Search</string>
     <string name="add_wallet">Add wallet</string>
     <string name="wallets">Wallets</string>
