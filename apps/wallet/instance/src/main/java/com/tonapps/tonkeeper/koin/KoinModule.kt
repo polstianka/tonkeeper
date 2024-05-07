@@ -12,6 +12,7 @@ import com.tonapps.tonkeeper.fragment.send.amount.AmountScreenFeature
 import com.tonapps.tonkeeper.fragment.send.confirm.ConfirmScreenFeature
 import com.tonapps.tonkeeper.fragment.send.recipient.RecipientScreenFeature
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthViewModel
+import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeper.password.PasscodeDataStore
 import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.wallet.data.push.PushManager
@@ -85,4 +86,5 @@ val koinModel = module {
     viewModel { ChartScreenFeature(get(), get(), get()) }
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
+    viewModel { BuySellViewModel() }
 }
