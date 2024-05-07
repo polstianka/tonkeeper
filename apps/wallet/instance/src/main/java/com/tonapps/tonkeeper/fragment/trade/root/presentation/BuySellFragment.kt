@@ -1,13 +1,17 @@
-package com.tonapps.tonkeeper.fragment.trade.root
+package com.tonapps.tonkeeper.fragment.trade.root.presentation
 
 import android.os.Bundle
 import android.util.Log
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeperx.R
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import uikit.base.BaseFragment
 import uikit.widget.TabLayoutEx
 import com.tonapps.wallet.localization.R as LocalizationR
@@ -24,15 +28,28 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         get() = view?.findViewById(R.id.close_button_clickable_area)
     private val tabLayout: TabLayoutEx?
         get() = view?.findViewById(R.id.tab_layout)
+    private val viewPager: ViewPager2?
+        get() = view?.findViewById(R.id.trade_view_pager)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         closeButton?.setOnClickListener { finish() }
+        prepareTabs()
+    }
+
+    private fun prepareTabs() {
         tabLayout?.let { tl ->
             BuySellTabs.entries
                 .map { it.toTab(tl) }
                 .forEach { tl.addTab(it) }
             tl.addOnTabSelectedListener(this)
+        }
+        viewPager?.adapter = BuySellPagerAdapter(this)
+        viewPager?.isUserInputEnabled = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentTab.collectLatest { tab ->
+                viewPager?.currentItem = tab.ordinal
+            }
         }
     }
 
@@ -41,7 +58,8 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
     }
 
     override fun onTabSelected(p0: TabLayout.Tab) {
-        Log.wtf("###", "onTabSelected: ${p0.text}")
+        val tab = BuySellTabs.entries[p0.id]
+        viewModel.onTabSelected(tab)
     }
 
     override fun onTabUnselected(p0: TabLayout.Tab) {
