@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundPageColor"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <uikit.widget.TabLayoutEx
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            app:tabTextAppearance="@style/TabItemTextAppearance">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buy" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sell" />
+        </uikit.widget.TabLayoutEx>
+
+        <FrameLayout
+            android:id="@+id/close_button_clickable_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="8dp"
+            android:layout_gravity="end|center_vertical"
+            >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_oval_button_secondary"
+                android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_close_16"
+                android:tint="?attr/buttonSecondaryForegroundColor" />
+
+        </FrameLayout>
+    </FrameLayout>
+
+
+</uikit.widget.ColumnLayout>
