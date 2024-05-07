@@ -16,10 +16,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.transition.TransitionManager
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Amount
+import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Confirm
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Continue
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Insufficient
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.BottomButtonState.Loading
@@ -58,6 +60,7 @@ class SwapView @JvmOverloads constructor(
     private val swapButton: ImageButton
     private val receiveDetailsLayout: ColumnLayout
     private val loadingView: LoaderView
+    private val cancelButton: Button
 
     private var sendModel: AssetModel? = null
     private var receiveModel: AssetModel? = null
@@ -68,6 +71,7 @@ class SwapView @JvmOverloads constructor(
     private var isReversed: Boolean = false
 
     var doOnClick: ((BottomButtonState) -> Unit) = {}
+    var doOnCancel: () -> Unit = {}
 
     init {
         inflate(context, R.layout.view_swap_full_layout, this)
@@ -87,6 +91,7 @@ class SwapView @JvmOverloads constructor(
         button = findViewById(R.id.enter_button)
         receiveDetailsLayout = findViewById(R.id.receive_details_layout)
         loadingView = findViewById(R.id.loading_view)
+        cancelButton = findViewById(R.id.cancel_button)
 
         sendTokenLayout.setText(TokenEntity.TON.symbol)
         sendTokenLayout.setIcon(TokenEntity.TON.imageUri)
@@ -100,22 +105,13 @@ class SwapView @JvmOverloads constructor(
             }
         }
 
-        receiveInput.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                receiveInput.setSelection(receiveInput.text.toString().length)
-            }
-        }
         receiveInput.doAfterTextChanged {
             receiveInput.setSelection(receiveInput.text.toString().length)
-        }
-        sendInput.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                sendInput.setSelection(sendInput.text.toString().length)
-            }
         }
         sendInput.doAfterTextChanged {
             sendInput.setSelection(sendInput.text.toString().length)
         }
+        cancelButton.setOnClickListener { doOnCancel() }
     }
 
     fun setOnSendTokenClickListener(click: (AssetModel?) -> Unit) {
@@ -173,11 +169,29 @@ class SwapView @JvmOverloads constructor(
         receiveTokenLayout.setAsset(model)
     }
 
+    fun setConfirmState(confirm: Boolean) {
+        sendBalance.isVisible = !confirm && sendModel != null
+        receiveBalance.isVisible = !confirm && receiveModel != null
+        swapButton.isVisible = !confirm
+        sendInput.isEnabled = !confirm
+        receiveInput.isEnabled = !confirm
+        sendMaxButton.isVisible = !confirm && sendModel != null
+        sendTokenLayout.isEnabled = !confirm
+        receiveTokenLayout.isEnabled = !confirm
+        cancelButton.isVisible = confirm
+        if (receiveDetailsLayout.childCount > 0) {
+            receiveDetailsLayout.getChildAt(0).isVisible = !confirm
+            receiveDetailsLayout.getChildAt(1).isVisible = !confirm
+        }
+        TransitionManager.beginDelayedTransition(this)
+    }
+
     fun updateBottomButton(state: BottomButtonState) {
         val (text, backgroundId) = when (state) {
             Select -> context.getString(com.tonapps.wallet.localization.R.string.choose_token) to uikit.R.drawable.bg_button_secondary
             Amount -> context.getString(com.tonapps.wallet.localization.R.string.enter_amount) to uikit.R.drawable.bg_button_secondary
             Continue -> context.getString(com.tonapps.wallet.localization.R.string.continue_action) to uikit.R.drawable.bg_button_primary
+            Confirm -> context.getString(com.tonapps.wallet.localization.R.string.confirm) to uikit.R.drawable.bg_button_primary
             Loading -> context.getString(com.tonapps.wallet.localization.R.string.continue_action) to uikit.R.drawable.bg_button_secondary
             Insufficient -> context.getString(
                 com.tonapps.wallet.localization.R.string.insufficient_balance_buy,

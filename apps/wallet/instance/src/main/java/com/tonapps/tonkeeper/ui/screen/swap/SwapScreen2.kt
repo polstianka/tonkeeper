@@ -2,8 +2,12 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.transition.TransitionManager
 import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeperx.R
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
@@ -13,6 +17,7 @@ import uikit.widget.HeaderView
 class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomSheet {
 
     private val swapViewModel: SwapViewModel by viewModel()
+    private val rootViewModel: RootViewModel by activityViewModel()
 
     private lateinit var headerView: HeaderView
     private lateinit var swapView: SwapView
@@ -41,17 +46,36 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
             when (it) {
                 SwapUiModel.BottomButtonState.Continue -> swapViewModel.onContinueClick()
                 SwapUiModel.BottomButtonState.Insufficient -> FiatDialog.open(requireContext())
+                SwapUiModel.BottomButtonState.Confirm -> swapViewModel.onConfirmClick()
                 else -> {}
             }
         }
+        swapView.doOnCancel = { swapViewModel.onCancelClick() }
 
         collectFlow(swapViewModel.uiModel) {
-            swapView.setSendToken(it.sendToken)
-            swapView.setReceiveToken(it.receiveToken)
+            if (!it.confirmState) {
+                swapView.setSendToken(it.sendToken)
+                swapView.setReceiveToken(it.receiveToken)
+            }
             swapView.updateBottomButton(it.bottomButtonState)
             swapView.setSendText(it.sendInput)
             swapView.setReceivedText(it.receiveInput)
             swapView.setDetails(it.details)
+            swapView.setConfirmState(it.confirmState)
+            val headerText = if (it.confirmState) {
+                com.tonapps.wallet.localization.R.string.confirm_swap
+            } else {
+                com.tonapps.wallet.localization.R.string.swap
+            }
+            headerView.titleView.setText(headerText)
+            headerView.closeView.isVisible = !it.confirmState
+            TransitionManager.beginDelayedTransition(headerView)
+        }
+
+        collectFlow(swapViewModel.signRequestEntity) {
+            it?.let {
+                rootViewModel.requestSign(requireContext(), it)
+            }
         }
     }
 }

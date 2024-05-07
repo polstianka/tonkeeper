@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/offsetMedium"
+    android:animateLayoutChanges="true"
     android:background="@drawable/bg_wallet_bubble_no_ripple"
     android:paddingStart="@dimen/offsetMedium"
     android:paddingTop="@dimen/offsetMedium"
@@ -74,8 +75,8 @@
         android:textColor="?attr/textPrimaryColor"
         android:textColorHint="?attr/textSecondaryColor"
         android:textCursorDrawable="@drawable/cursor"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/send_token_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/send_token_view"
         app:layout_constraintTop_toTopOf="@id/send_token_view" />
 

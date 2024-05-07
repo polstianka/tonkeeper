@@ -1,13 +1,12 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
 import com.tonapps.blockchain.Coin
+import com.tonapps.blockchain.ton.TonNetwork
 import com.tonapps.extensions.toByteArray
 import com.tonapps.security.Security
 import com.tonapps.security.hex
-import com.tonapps.tonkeeper.api.totalFees
-import com.tonapps.tonkeeper.extensions.emulate
 import com.tonapps.tonkeeper.extensions.getSeqno
-import com.tonapps.tonkeeper.extensions.sendToBlockchain
+import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.ton.block.Coins
 import org.ton.block.MsgAddressInt
 import org.ton.block.StateInit
@@ -34,18 +34,25 @@ import ton.SendMode
 import ton.transfer.Transfer
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.time.Duration.Companion.seconds
 
 //router address == owner address
 //then use ask address and EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
 
 private const val PROXY_TON = "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"
 
+private const val Commission = 215000000L
+
 class SwapRepository(
     private val walletManager: WalletManager,
     private val api: API,
-) {
+
+    ) {
     private val _swapState = MutableStateFlow(SwapState())
     val swapState: StateFlow<SwapState> = _swapState
+
+    private val _signRequestEntity = MutableStateFlow<SignRequestEntity?>(null)
+    val signRequestEntity: StateFlow<SignRequestEntity?> = _signRequestEntity
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var simulateJob: Job? = null
@@ -93,7 +100,7 @@ class SwapRepository(
         runSimulateSwapConditionally(if (_swapState.value.reversed) sendInput else receiveInput)
     }
 
-    fun onContinueSwapClick() {
+    fun onConfirmSwapClick() {
         scope.launch {
             val routerAddress = _swapState.value.details?.routerAddress
             if (routerAddress != null) {
@@ -120,13 +127,12 @@ class SwapRepository(
                         BigDecimal(_swapState.value.details?.minReceived).toLong()
                     )
                 )
+                val outputValue = BigDecimal(sendInput).movePointRight(9).toLong()
                 val transferPayload = Transfer.jetton(
-                    coins = Coins.Companion.ofNano(
-                        BigDecimal(sendInput).movePointRight(9).toLong()
-                    ),
+                    coins = Coins.Companion.ofNano(outputValue + Commission),
                     toAddress = MsgAddressInt.parse(routerAddress),
                     responseAddress = null,
-                    forwardAmount = 215000000L,
+                    forwardAmount = Commission, //commission?
                     queryId = getWalletQueryId(),
                     body = swapPayload
                 )
@@ -136,20 +142,35 @@ class SwapRepository(
                     destination = MsgAddressInt.parse(proxyTonAddress),
                     stateInit = getStateInitIfNeed(userWallet),
                     body = transferPayload,
-                    coins = Coins.Companion.ofNano(BigDecimal(sendInput).movePointRight(9).toLong())
+                    coins = Coins.Companion.ofNano(outputValue + Commission)
                 )
 
-                val emulate = userWallet.emulate(api, gift)
-                val feeInTon = emulate.totalFees
-                val amount = Coin.toCoins(feeInTon)
-                val privateKey = walletManager.getPrivateKey(userWallet.id)
-                userWallet.sendToBlockchain(api, privateKey, gift)
+                val signRequestEntity = SignRequestEntity(
+                    fromValue = "",
+                    validUntil = (Clock.System.now() + 60.seconds).epochSeconds,
+                    messages = emptyList(),
+                    network = if (userWallet.testnet) TonNetwork.TESTNET else TonNetwork.MAINNET
+                ).apply {
+                    transfers = listOf(gift)
+                }
+
+                _signRequestEntity.value = signRequestEntity
+
+                /*                val emulate = userWallet.emulate(api, gift)
+                                val feeInTon = emulate.totalFees
+                                val amount = Coin.toCoins(feeInTon)
+                                println("@@@ $amount")
+                                val privateKey = walletManager.getPrivateKey(userWallet.id)
+                                val details = historyHelper.create(userWallet, emulate, RatesEntity.empty(settingsRepository.currency))
+                                println(details)*/
+                /*userWallet.sendToBlockchain(api, privateKey, gift)
                     ?: throw Exception("failed to send to blockchain")
+                println("@@@ success")*/
             }
         }
     }
 
-    fun buildWalletTransfer(
+    private fun buildWalletTransfer(
         destination: MsgAddressInt,
         stateInit: StateInit?,
         body: Cell,
@@ -204,6 +225,8 @@ class SwapRepository(
         receiveInput = "0"
         _swapState.value = SwapState()
         tolerance = 0.05f
+        _signRequestEntity.value = null
+        lastSeqno = 0
     }
 
     private fun runSimulateSwapConditionally(units: String) {

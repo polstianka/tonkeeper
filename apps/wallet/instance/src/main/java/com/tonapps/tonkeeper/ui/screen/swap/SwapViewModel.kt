@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details.DetailUiModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details.Header
@@ -26,6 +27,8 @@ class SwapViewModel(
 
     private val _uiModel = MutableStateFlow(SwapUiModel())
     val uiModel: StateFlow<SwapUiModel> = _uiModel
+
+    val signRequestEntity = swapRepository.signRequestEntity
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,7 +63,8 @@ class SwapViewModel(
                             send = send,
                             sendInput = sendInput,
                             receiveInput = receiveInput,
-                            loading = details.isNullOrEmpty() && state.isLoading
+                            loading = details.isNullOrEmpty() && state.isLoading,
+                            confirmState = it.confirmState
                         ),
                         sendInput = sendInput,
                         receiveInput = receiveInput,
@@ -99,7 +103,25 @@ class SwapViewModel(
     }
 
     fun onContinueClick() {
-        swapRepository.onContinueSwapClick()
+        _uiModel.update {
+            it.copy(
+                confirmState = true,
+                bottomButtonState = SwapUiModel.BottomButtonState.Confirm
+            )
+        }
+    }
+
+    fun onCancelClick() {
+        _uiModel.update {
+            it.copy(
+                confirmState = false,
+                bottomButtonState = SwapUiModel.BottomButtonState.Continue
+            )
+        }
+    }
+
+    fun onConfirmClick() {
+        swapRepository.onConfirmSwapClick()
     }
 
     private fun getUiDetails(
@@ -168,11 +190,15 @@ class SwapViewModel(
         send: AssetModel?,
         sendInput: String,
         receiveInput: String,
-        loading: Boolean
+        loading: Boolean,
+        confirmState: Boolean
     ) = when {
+        confirmState -> SwapUiModel.BottomButtonState.Confirm
         loading -> SwapUiModel.BottomButtonState.Loading
         receive == null || send == null -> SwapUiModel.BottomButtonState.Select
-        sendInput.toFloat() > send.balance -> SwapUiModel.BottomButtonState.Insufficient
+        Coin.prepareValue(sendInput)
+            .toFloat() > send.balance -> SwapUiModel.BottomButtonState.Insufficient
+
         sendInput.isEmpty() || sendInput == "0" -> SwapUiModel.BottomButtonState.Amount
         !sendInput.isEmptyOrZero() && !receiveInput.isEmptyOrZero() -> SwapUiModel.BottomButtonState.Continue
         else -> SwapUiModel.BottomButtonState.Amount
@@ -189,10 +215,11 @@ data class SwapUiModel(
     val receiveInput: String = "0",
     val details: List<Details>? = null,
     val loadingDetails: Boolean = false,
-    val reversed: Boolean = false
+    val reversed: Boolean = false,
+    val confirmState: Boolean = false
 ) {
     enum class BottomButtonState {
-        Select, Amount, Continue, Loading, Insufficient
+        Select, Amount, Continue, Loading, Insufficient, Confirm
     }
 
     sealed class Details {

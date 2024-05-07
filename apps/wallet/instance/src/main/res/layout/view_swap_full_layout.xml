@@ -39,12 +39,28 @@
     <Button
         android:id="@+id/enter_button"
         style="@style/Widget.App.Button.Secondary"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/offsetMedium"
         android:layout_marginTop="@dimen/offsetLarge"
         android:text="@string/enter_amount"
         android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cancel_button"
+        app:layout_constraintTop_toBottomOf="@id/receive_layout" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        style="@style/Widget.App.Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:text="@string/cancel"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/enter_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/receive_layout" />
 
     <uikit.widget.LoaderView

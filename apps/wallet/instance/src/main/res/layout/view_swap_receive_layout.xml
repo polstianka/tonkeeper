@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/offsetMedium"
+    android:animateLayoutChanges="true"
     android:background="@drawable/bg_wallet_bubble_no_ripple"
     android:padding="@dimen/offsetMedium">
 

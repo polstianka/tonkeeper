@@ -280,4 +280,5 @@
     <string name="route">Маршрут</string>
     <string name="provider">Провайдер</string>
     <string name="insufficient_balance_buy">Недостаточный баланс. Купите %s</string>
+    <string name="confirm_swap">Подтвердить обмен</string>
 </resources>
