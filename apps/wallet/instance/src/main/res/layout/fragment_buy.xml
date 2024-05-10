@@ -3,79 +3,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <uikit.widget.ColumnLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/bg_content"
-        android:orientation="vertical"
-        android:padding="@dimen/offsetMedium">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_content"
+            android:padding="@dimen/offsetMedium">
 
-            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
-                android:imeOptions="actionDone"
-                android:id="@+id/value"
-                android:layout_width="wrap_content"
-                android:layout_height="48.76dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="12dp"
-                android:background="@null"
-                android:digits="0123456789."
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center_vertical"
-                android:hint="0"
-                android:inputType="numberDecimal"
-                android:singleLine="true"
-                android:textColor="?attr/textPrimaryColor"
-                android:textCursorDrawable="@drawable/cursor" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/value_currency"
+            <uikit.widget.RowLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
-                android:text="@string/ton"
-                android:textAppearance="@style/TextAppearance.NUM2"
+                android:layout_gravity="center">
+
+                <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                    android:id="@+id/value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48.76dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="12dp"
+                    android:background="@null"
+                    android:digits="0123456789."
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="center_vertical"
+                    android:hint="0"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textCursorDrawable="@drawable/cursor" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/value_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/ton"
+                    android:textAppearance="@style/TextAppearance.NUM2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+            </uikit.widget.RowLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_island_border"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:paddingVertical="12dp"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:textColor="?attr/textSecondaryColor" />
 
-        </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/min_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Min. amount: 50 TON"
+                android:textAlignment="center"
+                android:textColor="?attr/textTertiaryColor"
+                android:textSize="14sp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_island_border"
-            android:paddingHorizontal="@dimen/offsetMedium"
-            android:paddingVertical="12dp"
-            android:textAppearance="@style/TextAppearance.Body1"
-            android:textColor="?attr/textSecondaryColor" />
+        </uikit.widget.ColumnLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/min_amount"
+        <uikit.widget.SimpleRecyclerView
+            android:id="@+id/fragment_buy_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="Min. amount: 50 TON"
-            android:textAlignment="center"
-            android:textColor="?attr/textTertiaryColor"
-            android:textSize="14sp" />
+            android:background="@drawable/bg_content" />
+    </uikit.widget.ColumnLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <uikit.widget.SimpleRecyclerView
-        android:id="@+id/fragment_buy_rv"
+    <Button
+        android:id="@+id/next"
+        style="@style/Widget.App.Button"
         android:layout_width="match_parent"
+        android:layout_marginBottom="48dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/bg_content" />
-
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:text="@string/continue_action"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
 </uikit.widget.ColumnLayout>

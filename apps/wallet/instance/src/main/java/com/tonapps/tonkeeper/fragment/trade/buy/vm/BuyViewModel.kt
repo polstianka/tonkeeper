@@ -54,6 +54,7 @@ class BuyViewModel(
         val totalAmount = amount * rate
         CurrencyFormatter.format(currency.code, totalAmount)
     }
+    val isButtonActive = MutableStateFlow(false)
 
     fun onAmountChanged(amount: String) {
         val oldAmount = this.amount.value
@@ -69,5 +70,9 @@ class BuyViewModel(
 
     fun onTradeMethodClicked(it: TradeMethodListItem) {
         Log.wtf("###", "onItemClicked: $it")
+    }
+
+    fun onButtonClicked() {
+        Log.wtf("###", "onButtonClicked")
     }
 }

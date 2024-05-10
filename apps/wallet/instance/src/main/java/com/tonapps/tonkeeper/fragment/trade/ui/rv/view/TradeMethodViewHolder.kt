@@ -7,6 +7,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.list.BaseListHolder
+import uikit.extensions.setThrottleClickListener
 
 class TradeMethodViewHolder(
     parent: ViewGroup,
@@ -21,6 +22,6 @@ class TradeMethodViewHolder(
         radioButton.isChecked = item.isChecked
         titleTextView.text = item.title
         draweeView.setImageURI(item.iconUrl)
-        itemView.setOnClickListener { onItemClicked(item) }
+        itemView.setThrottleClickListener { onItemClicked(item) }
     }
 }
