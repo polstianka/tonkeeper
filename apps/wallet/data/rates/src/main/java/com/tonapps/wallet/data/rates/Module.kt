@@ -2,6 +2,6 @@ package com.tonapps.wallet.data.rates
 
 import org.koin.dsl.module
 
-val ratesModule = module {
+val ratesDataModule = module {
     single { RatesRepository(get(), get()) }
 }
