@@ -1,97 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_content"
         android:orientation="vertical"
         android:padding="@dimen/offsetMedium">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_content"
-            android:orientation="vertical"
-            android:padding="@dimen/offsetMedium">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                android:imeOptions="actionDone"
+                android:id="@+id/value"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <com.tonapps.tonkeeper.fragment.send.view.AmountInput
-                    android:id="@+id/value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48.76dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="@null"
-                    android:digits="0123456789."
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:gravity="center_vertical"
-                    android:hint="0"
-                    android:inputType="numberDecimal"
-                    android:singleLine="true"
-                    android:textColor="?attr/textPrimaryColor"
-                    android:textCursorDrawable="@drawable/cursor"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/value_currency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@string/ton"
-                    android:textAppearance="@style/TextAppearance.NUM2"
-                    android:textColor="?attr/textSecondaryColor"
-                    app:layout_constraintBottom_toBottomOf="@id/value"
-                    app:layout_constraintStart_toEndOf="@id/value"
-                    app:layout_constraintTop_toTopOf="@id/value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="48.76dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="12dp"
+                android:background="@null"
+                android:digits="0123456789."
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center_vertical"
+                android:hint="0"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:textColor="?attr/textPrimaryColor"
+                android:textCursorDrawable="@drawable/cursor" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/rate"
+                android:id="@+id/value_currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_island_border"
-                android:paddingHorizontal="@dimen/offsetMedium"
-                android:paddingVertical="12dp"
-                android:textAppearance="@style/TextAppearance.Body1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:text="@string/ton"
+                android:textAppearance="@style/TextAppearance.NUM2"
                 android:textColor="?attr/textSecondaryColor" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/min_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Min. amount: 50 TON"
-                android:textAlignment="center"
-                android:textColor="?attr/textTertiaryColor"
-                android:textSize="14sp" />
+        </LinearLayout>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_island_border"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingVertical="12dp"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/min_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Min. amount: 50 TON"
+            android:textAlignment="center"
+            android:textColor="?attr/textTertiaryColor"
+            android:textSize="14sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <FrameLayout
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/fragment_buy_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_content">
-
-        <uikit.widget.SimpleRecyclerView
-            android:id="@+id/fragment_buy_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:background="@drawable/bg_content" />
 
 </uikit.widget.ColumnLayout>
