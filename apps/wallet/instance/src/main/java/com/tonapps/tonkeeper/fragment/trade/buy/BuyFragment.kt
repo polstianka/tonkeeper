@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.trade.buy
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
@@ -11,6 +12,7 @@ import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.round
 import uikit.widget.SimpleRecyclerView
 
 class BuyFragment : BaseFragment(R.layout.fragment_buy) {
@@ -35,5 +37,7 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         recyclerView?.adapter = adapter
         observeFlow(viewModel.totalFiat) { rateTextView?.text = it }
         observeFlow(viewModel.methods) { adapter.submitList(it) }
+        // clip children ripple effect
+        recyclerView?.round(resources.getDimensionPixelSize(uikit.R.dimen.cornerMedium))
     }
 }
