@@ -15,6 +15,7 @@ import core.extensions.observeFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uikit.base.BaseFragment
+import uikit.drawable.HeaderDrawable
 import uikit.widget.TabLayoutEx
 import com.tonapps.wallet.localization.R as LocalizationR
 
@@ -32,9 +33,12 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         get() = view?.findViewById(R.id.tab_layout)
     private val viewPager: ViewPager2?
         get() = view?.findViewById(R.id.trade_view_pager)
+    private val header: View?
+        get() = view?.findViewById(R.id.fragment_trade_header)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        header?.background = HeaderDrawable(view.context)
         closeButton?.setOnClickListener { finish() }
         prepareTabs()
     }
