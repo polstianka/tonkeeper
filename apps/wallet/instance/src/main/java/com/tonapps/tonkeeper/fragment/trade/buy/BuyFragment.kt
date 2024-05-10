@@ -1,12 +1,14 @@
 package com.tonapps.tonkeeper.fragment.trade.buy
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyEvent
 import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyViewModel
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
 import com.tonapps.tonkeeperx.R
@@ -42,8 +44,15 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         observeFlow(viewModel.totalFiat) { rateTextView?.text = it }
         observeFlow(viewModel.methods) { adapter.submitList(it) }
         observeFlow(viewModel.isButtonActive) { button?.isEnabled = it }
+        observeFlow(viewModel.events) { handleEvent(it) }
         // clip children ripple effect
         recyclerView?.round(resources.getDimensionPixelSize(uikit.R.dimen.cornerMedium))
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
+    }
+
+    private fun handleEvent(event: BuyEvent) {
+        when (event) {
+            is BuyEvent.PickOperator -> Log.wtf("###", "pickOperator: $event")
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.trade.buy.vm
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.trade.domain.GetBuyMethodsCase
@@ -9,11 +10,15 @@ import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class BuyViewModel(
     getRateFlowCase: GetRateFlowCase,
@@ -29,6 +34,10 @@ class BuyViewModel(
     private val currency = settingsRepository.currencyFlow
     private val methodsDomain = country.map { getBuyMethodsCase.execute(it) }
     val methods = buyListHolder.items
+    private val _events = MutableSharedFlow<BuyEvent>()
+    val events: Flow<BuyEvent>
+        get() = _events
+
 
     init {
         observeFlow(methodsDomain) { buyListHolder.submitItems(it) }
@@ -61,7 +70,12 @@ class BuyViewModel(
     }
 
     fun onTradeMethodClicked(it: TradeMethodListItem) {
-        Log.wtf("###", "onItemClicked: $it")
+        val event = BuyEvent.PickOperator(
+            methodId = it.id,
+            methodName = it.title,
+            country = country.value
+        )
+        viewModelScope.launch { _events.emit(event) }
     }
 
     fun onButtonClicked() {
