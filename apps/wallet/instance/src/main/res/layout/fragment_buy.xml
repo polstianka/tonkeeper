@@ -34,7 +34,6 @@
                     android:hint="0"
                     android:inputType="numberDecimal"
                     android:singleLine="true"
-                    android:text="0"
                     android:textColor="?attr/textPrimaryColor"
                     android:textCursorDrawable="@drawable/cursor"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="TON"
+                    android:text="@string/ton"
                     android:textAppearance="@style/TextAppearance.NUM2"
                     android:textColor="?attr/textSecondaryColor"
                     app:layout_constraintBottom_toBottomOf="@id/value"
@@ -63,7 +62,6 @@
                 android:background="@drawable/bg_island_border"
                 android:paddingHorizontal="@dimen/offsetMedium"
                 android:paddingVertical="12dp"
-                android:text="300.01 USD"
                 android:textAppearance="@style/TextAppearance.Body1"
                 android:textColor="?attr/textSecondaryColor" />
 
