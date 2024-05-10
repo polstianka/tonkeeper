@@ -33,6 +33,8 @@ import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakeOptionsViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakeViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapSettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.WalletAssetsPickerViewModel
@@ -63,7 +65,20 @@ val koinModel = module {
     single { HistoryHelper(get(), get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
-    viewModel { parameters -> InitViewModel(parameters.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { parameters ->
+        InitViewModel(
+            parameters.get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
     viewModel { MainViewModel(get(), get()) }
     viewModel { RootViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RecipientScreenFeature(get()) }
@@ -93,4 +108,6 @@ val koinModel = module {
     viewModel { SwapViewModel(get(), get()) }
     viewModel { WalletAssetsPickerViewModel(get(), get()) }
     viewModel { SwapSettingsViewModel(get()) }
+    viewModel { StakeViewModel(get(), get(), get(), get(), get()) }
+    viewModel { StakeOptionsViewModel(get()) }
 }

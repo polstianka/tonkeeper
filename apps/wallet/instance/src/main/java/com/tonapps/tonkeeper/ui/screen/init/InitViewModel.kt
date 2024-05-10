@@ -4,11 +4,9 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.contract.WalletV4R2Contract
@@ -31,6 +29,7 @@ import com.tonapps.wallet.data.account.entities.WalletLabel
 import com.tonapps.wallet.data.collectibles.CollectiblesRepository
 import com.tonapps.wallet.data.collectibles.entities.NftEntity
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.swap.WalletAssetsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import kotlinx.coroutines.Deferred
@@ -64,6 +63,7 @@ class InitViewModel(
     private val tokenRepository: TokenRepository,
     private val collectiblesRepository: CollectiblesRepository,
     private val settingsRepository: SettingsRepository,
+    private val walletAssetsRepository: WalletAssetsRepository,
     private val api: API,
     savedStateHandle: SavedStateHandle
 ): AndroidViewModel(application) {
@@ -212,6 +212,8 @@ class InitViewModel(
         for (account in accounts) {
             deferredCollectibles.add(async { collectiblesRepository.getRemoteNftItems(account.address, testnet) })
         }
+
+        walletAssetsRepository.getRemote()
 
         val items = mutableListOf<AccountItem>()
         for ((index, account) in accounts.withIndex()) {

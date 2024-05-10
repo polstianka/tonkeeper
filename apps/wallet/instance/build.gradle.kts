@@ -70,6 +70,7 @@ dependencies {
     implementation(project(Dependence.Wallet.Data.push))
     implementation(project(Dependence.Wallet.Data.browser))
     implementation(project(Dependence.Wallet.Data.swap))
+    implementation(project(Dependence.Wallet.Data.stake))
 
     implementation(project(Dependence.UIKit.core))
 

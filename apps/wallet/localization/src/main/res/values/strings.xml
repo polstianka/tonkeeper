@@ -168,6 +168,9 @@
     <string name="insufficient_balance_buy">Insufficient Balance. Buy %s</string>
     <string name="confirm_swap">Confirm swap</string>
 
+    <string name="options">Options</string>
+    <string name="liquid_staking">Liquid Staking</string>
+
     <string name="slippage">Slippage</string>
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
     <string name="expert_mode">Expert Mode</string>

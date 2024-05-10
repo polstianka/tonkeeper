@@ -131,6 +131,7 @@ object Dependence {
             const val push = ":apps:wallet:data:push"
             const val browser = ":apps:wallet:data:browser"
             const val swap = ":apps:wallet:data:swap"
+            const val stake = ":apps:wallet:data:stake"
         }
     }
 }

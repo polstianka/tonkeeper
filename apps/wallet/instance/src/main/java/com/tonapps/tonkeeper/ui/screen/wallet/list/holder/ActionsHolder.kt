@@ -6,6 +6,7 @@ import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
+import com.tonapps.tonkeeper.ui.screen.stake.StakeScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
@@ -21,11 +22,13 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
     private val swapView = findViewById<View>(R.id.swap)
     private val scanView = findViewById<View>(R.id.scan)
     private val navigation = Navigation.from(context)
+    private val stakeView = findViewById<View>(R.id.stake)
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
         buyOrSellView.setOnClickListener { FiatDialog.open(context) }
         scanView.setOnClickListener { navigation?.openCamera() }
+        stakeView.setOnClickListener { navigation?.add(StakeScreen()) }
     }
 
     override fun onBind(item: Item.Actions) {

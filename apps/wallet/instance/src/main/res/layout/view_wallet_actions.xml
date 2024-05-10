@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_staking_outline_28"
             android:title="@string/stake"
-            android:enabled="false"/>
+            android:enabled="true" />
 
     </uikit.widget.ButtonsLayout>
 </FrameLayout>

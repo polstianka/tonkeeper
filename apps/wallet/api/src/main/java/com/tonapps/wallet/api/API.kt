@@ -19,6 +19,7 @@ import com.tonapps.wallet.api.entity.AccountDetailsEntity
 import com.tonapps.wallet.api.entity.AssetEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
+import com.tonapps.wallet.api.entity.StakePoolsEntity
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
@@ -81,7 +82,43 @@ class API(
 
     fun rates() = provider.rates.get(false)
 
+    fun stake(testnet: Boolean) = provider.staking.get(testnet)
+
     fun stonfi(testnet: Boolean) = provider.stonfi.get(testnet)
+
+    fun getStakingPools(walletAddress: String, testnet: Boolean): StakePoolsEntity {
+        return stake(testnet).getStakingPools(walletAddress, false).let {
+            StakePoolsEntity(
+                pools = it.pools.map {
+                    StakePoolsEntity.PoolInfo(
+                        address = it.address,
+                        name = it.name,
+                        totalAmount = it.totalAmount,
+                        implementation = StakePoolsEntity.PoolImplementationType.find(it.implementation.value),
+                        apy = it.apy,
+                        minStake = it.minStake,
+                        cycleStart = it.cycleStart,
+                        cycleEnd = it.cycleEnd,
+                        verified = it.verified,
+                        currentNominators = it.currentNominators,
+                        maxNominators = it.maxNominators,
+                        nominatorsStake = it.nominatorsStake,
+                        validatorStake = it.validatorStake,
+                        liquidJettonMaster = it.liquidJettonMaster,
+                        cycleLength = it.cycleLength
+                    )
+                },
+                implementations = it.implementations.entries.associate {
+                    it.key to StakePoolsEntity.PoolImplementation(
+                        name = it.value.name,
+                        description = it.value.description,
+                        url = it.value.url,
+                        socials = it.value.socials
+                    )
+                },
+            )
+        }
+    }
 
     fun getWalletAssets(walletAddress: String, testnet: Boolean): List<AssetEntity> {
         val entityList = mutableListOf<AssetEntity>()

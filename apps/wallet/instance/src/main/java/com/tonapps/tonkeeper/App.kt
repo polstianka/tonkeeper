@@ -21,6 +21,7 @@ import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
 import com.tonapps.wallet.data.rates.ratesModule
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.stake.stakeModule
 import com.tonapps.wallet.data.swap.swapModule
 import com.tonapps.wallet.data.token.tokenModule
 import com.tonapps.wallet.data.tonconnect.tonConnectModule
@@ -66,7 +67,8 @@ class App : Application(), CameraXConfig.Provider, KoinComponent {
                 tokenModule,
                 eventsModule,
                 collectiblesModule,
-                swapModule
+                swapModule,
+                stakeModule
             )
         }
 
