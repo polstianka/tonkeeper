@@ -88,5 +88,5 @@ val koinModel = module {
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
     viewModel { BuySellViewModel() }
-    viewModel { BuyViewModel(get()) }
+    viewModel { BuyViewModel(get(), get()) }
 }
