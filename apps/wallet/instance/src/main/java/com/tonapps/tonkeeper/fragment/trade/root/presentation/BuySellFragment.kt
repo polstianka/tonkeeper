@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeperx.R
+import core.extensions.observeFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uikit.base.BaseFragment
@@ -46,11 +47,7 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         }
         viewPager?.adapter = BuySellPagerAdapter(this)
         viewPager?.isUserInputEnabled = false
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentTab.collectLatest { tab ->
-                viewPager?.currentItem = tab.ordinal
-            }
-        }
+        observeFlow(viewModel.currentTab) { viewPager?.currentItem = it.ordinal }
     }
 
     override fun onTabReselected(p0: TabLayout.Tab) {
