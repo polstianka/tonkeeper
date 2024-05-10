@@ -28,15 +28,22 @@ class BuyViewModel(
         listOf(
             TradeMethodListItem(
                 id = "1",
-                isChecked = true,
-                title = "Hehe",
+                isChecked = false,
+                title = "Credit Card",
                 iconUrl = ""
             ),
             TradeDividerListItem,
             TradeMethodListItem(
                 id = "2",
                 isChecked = false,
-                title = "Haha",
+                title = "Cryptocurrency",
+                iconUrl = ""
+            ),
+            TradeDividerListItem,
+            TradeMethodListItem(
+                id = "3",
+                isChecked = false,
+                title = "Google Pay",
                 iconUrl = ""
             )
         )
