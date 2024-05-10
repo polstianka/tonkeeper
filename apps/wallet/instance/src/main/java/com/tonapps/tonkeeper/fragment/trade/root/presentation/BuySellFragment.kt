@@ -5,6 +5,7 @@ import android.util.Log
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
@@ -45,8 +46,11 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
                 .forEach { tl.addTab(it) }
             tl.addOnTabSelectedListener(this)
         }
-        viewPager?.adapter = BuySellPagerAdapter(this)
-        viewPager?.isUserInputEnabled = false
+        viewPager?.let { vp ->
+            vp.adapter = BuySellPagerAdapter(this)
+            vp.isUserInputEnabled = false
+            vp.disableNestedScrolling()
+        }
         observeFlow(viewModel.currentTab) { viewPager?.currentItem = it.ordinal }
     }
 
@@ -76,6 +80,14 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         return tabLayout.newTab().apply {
             id = ordinal
             text = this@toTab.text
+        }
+    }
+
+    // that's the hack that allows the container bottomsheet to be swiped down
+    private fun ViewPager2.disableNestedScrolling() {
+        (getChildAt(0) as? RecyclerView)?.apply {
+            isNestedScrollingEnabled = false
+            overScrollMode = View.OVER_SCROLL_NEVER
         }
     }
 }
