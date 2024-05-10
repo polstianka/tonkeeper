@@ -3,8 +3,9 @@ package com.tonapps.tonkeeper.fragment.trade.buy.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.core.observeFlow
+import com.tonapps.tonkeeper.fragment.trade.domain.GetBuyMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
-import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeDividerListItem
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.map
 
 class BuyViewModel(
     getRateFlowCase: GetRateFlowCase,
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
+    getBuyMethodsCase: GetBuyMethodsCase,
+    private val buyListHolder: BuyListHolder
 ) : ViewModel() {
 
     companion object {
@@ -24,29 +27,11 @@ class BuyViewModel(
     }
     private val country = MutableStateFlow(settingsRepository.country)
     private val currency = settingsRepository.currencyFlow
-    val methods = country.map {
-        listOf(
-            TradeMethodListItem(
-                id = "1",
-                isChecked = false,
-                title = "Credit Card",
-                iconUrl = ""
-            ),
-            TradeDividerListItem,
-            TradeMethodListItem(
-                id = "2",
-                isChecked = false,
-                title = "Cryptocurrency",
-                iconUrl = ""
-            ),
-            TradeDividerListItem,
-            TradeMethodListItem(
-                id = "3",
-                isChecked = false,
-                title = "Google Pay",
-                iconUrl = ""
-            )
-        )
+    private val methodsDomain = country.map { getBuyMethodsCase.execute(it) }
+    val methods = buyListHolder.items
+
+    init {
+        observeFlow(methodsDomain) { buyListHolder.submitItems(it) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
