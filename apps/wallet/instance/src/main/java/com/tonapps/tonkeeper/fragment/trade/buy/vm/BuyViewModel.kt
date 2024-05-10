@@ -1,9 +1,11 @@
 package com.tonapps.tonkeeper.fragment.trade.buy.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
-import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeDividerListItem
+import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,23 @@ class BuyViewModel(
     }
     private val country = MutableStateFlow(settingsRepository.country)
     private val currency = settingsRepository.currencyFlow
+    val methods = country.map {
+        listOf(
+            TradeMethodListItem(
+                id = "1",
+                isChecked = true,
+                title = "Hehe",
+                iconUrl = ""
+            ),
+            TradeDividerListItem,
+            TradeMethodListItem(
+                id = "2",
+                isChecked = false,
+                title = "Haha",
+                iconUrl = ""
+            )
+        )
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val rate = currency.flatMapLatest { getRateFlowCase.execute(it) }
@@ -46,5 +65,9 @@ class BuyViewModel(
 
     private fun String.getValue(): Float {
         return toFloatOrNull() ?: 0f
+    }
+
+    fun onTradeMethodClicked(it: TradeMethodListItem) {
+        Log.wtf("###", "onItemClicked: $it")
     }
 }
