@@ -1,5 +1,6 @@
-package com.tonapps.tonkeeper.fragment.trade.ui
+package com.tonapps.tonkeeper.fragment.trade.ui.rv.model
 
+import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
 import com.tonapps.uikit.list.BaseListItem
 
 data class TradeMethodListItem(
@@ -7,4 +8,4 @@ data class TradeMethodListItem(
     val isChecked: Boolean,
     val title: String,
     val iconUrl: String
-) : BaseListItem(1)
+) : BaseListItem(TradeAdapter.TYPE_TRADE_METHOD)
