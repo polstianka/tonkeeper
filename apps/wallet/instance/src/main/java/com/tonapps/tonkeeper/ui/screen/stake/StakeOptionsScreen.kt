@@ -7,6 +7,8 @@ import com.tonapps.tonkeeperx.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
+import uikit.navigation.Navigation.Companion.navigation
+import uikit.widget.ActionCellRadioView
 import uikit.widget.ActionCellView
 import uikit.widget.HeaderView
 
@@ -25,23 +27,35 @@ class StakeOptionsScreen : BaseFragment(R.layout.fragment_stake_options), BaseFr
         otherLayout = view.findViewById(R.id.other_items)
 
         collectFlow(optionsViewModel.uiState) { state ->
-            state.info.forEach {
-                when (it) {
+            state.info.forEach { info ->
+                when (info) {
                     is StakeOptionsUiState.StakeInfo.Liquid -> {
-                        liquidStakingLayout.addView(ActionCellView(requireContext()).apply {
-                            title = it.name
-                            subtitle = it.description
-                            titleBadgeText = if (it.isMaxApy) "max apy" else null
-                            position = it.position
+                        liquidStakingLayout.addView(ActionCellRadioView(requireContext()).apply {
+                            title = info.name
+                            subtitle = info.description
+                            titleBadgeText = if (info.isMaxApy) "max apy" else null
+                            position = info.position
+                            checked = info.selected
+                            setOnClickListener {
+                                val args = DetailsArgs(
+                                    name = info.name,
+                                    isApyMax = info.isMaxApy,
+                                    value = info.maxApyFormatted,
+                                    minDeposit = 0f,
+                                    currency = "TON",
+                                    links = info.links
+                                )
+                                navigation?.add(PoolDetailsScreen.newInstance(args))
+                            }
                         })
                     }
 
                     is StakeOptionsUiState.StakeInfo.Other -> {
                         otherLayout.addView(ActionCellView(requireContext()).apply {
-                            title = it.name
-                            subtitle = it.description
-                            titleBadgeText = if (it.isMaxApy) "max apy" else null
-                            position = it.position
+                            title = info.name
+                            subtitle = info.description
+                            titleBadgeText = if (info.isMaxApy) "max apy" else null
+                            position = info.position
                         })
                     }
                 }

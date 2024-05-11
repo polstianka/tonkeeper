@@ -66,8 +66,16 @@ val koinModel = module {
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
     viewModel { parameters ->
-        InitViewModel(
-            parameters.get(),
+        InitViewModel(parameters.get(), get(), get(), get(), get(), get(), get(), get(), get())
+    }
+    viewModel { MainViewModel(get(), get()) }
+    viewModel {
+        RootViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
             get(),
             get(),
             get(),
@@ -79,8 +87,6 @@ val koinModel = module {
             get()
         )
     }
-    viewModel { MainViewModel(get(), get()) }
-    viewModel { RootViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RecipientScreenFeature(get()) }
     viewModel { PickerViewModel(get()) }
     viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }

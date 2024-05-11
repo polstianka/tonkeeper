@@ -170,6 +170,8 @@
 
     <string name="options">Options</string>
     <string name="liquid_staking">Liquid Staking</string>
+    <string name="pool_details_disclaimer">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
+    <string name="links">Links</string>
 
     <string name="slippage">Slippage</string>
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>

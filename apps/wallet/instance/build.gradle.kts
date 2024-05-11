@@ -87,6 +87,7 @@ dependencies {
     implementation(Dependence.guava)
 
     implementation(Dependence.UI.material)
+    implementation(Dependence.UI.flexLayout)
 
     implementation(Dependence.Squareup.moshi)
     implementation(Dependence.Squareup.moshiAdapters)

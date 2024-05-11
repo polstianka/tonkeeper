@@ -12,7 +12,6 @@
         android:icon="@drawable/ic_chevron_left_16"
         android:title="@string/options" />
 
-
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TextAppearance.H3"
         android:layout_width="wrap_content"
@@ -24,8 +23,8 @@
     <uikit.widget.ColumnLayout
         android:id="@+id/liquid_staking_items"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/offsetMedium" />
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TextAppearance.H3"
@@ -38,6 +37,7 @@
     <uikit.widget.ColumnLayout
         android:id="@+id/other_items"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/offsetMedium" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

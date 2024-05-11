@@ -37,16 +37,21 @@ class StakeOptionsViewModel(
             val other = mutableListOf<StakeInfo.Other>()
             pools.implementations.forEach {
                 when (it.key) {
-                    PoolImplementationType.liquidTF.value -> liquid.add(
-                        StakeInfo.Liquid(
-                            name = it.value.name,
-                            description = it.value.description,
-                            maxApyFormatted = df.format(maxApyByType[PoolImplementationType.liquidTF]),
-                            isMaxApy = maxApy.implementation == PoolImplementationType.liquidTF,
-                            type = PoolImplementationType.liquidTF,
-                            selected = false
+                    PoolImplementationType.liquidTF.value -> {
+                        val isMaxApy = maxApy.implementation == PoolImplementationType.liquidTF
+                        liquid.add(
+                            StakeInfo.Liquid(
+                                name = it.value.name,
+                                description = it.value.description,
+                                maxApyFormatted = df.format(maxApyByType[PoolImplementationType.liquidTF]),
+                                isMaxApy = isMaxApy,
+                                type = PoolImplementationType.liquidTF,
+                                selected = isMaxApy,
+                                minDeposit = 0f,
+                                links = it.value.socials
+                            )
                         )
-                    )
+                    }
 
                     PoolImplementationType.whales.value -> other.add(
                         StakeInfo.Other(
@@ -56,6 +61,8 @@ class StakeOptionsViewModel(
                             isMaxApy = maxApy.implementation == PoolImplementationType.whales,
                             type = PoolImplementationType.whales,
                             expandable = true,
+                            minDeposit = 0f,
+                            links = it.value.socials
                         )
                     )
 
@@ -67,6 +74,8 @@ class StakeOptionsViewModel(
                             isMaxApy = maxApy.implementation == PoolImplementationType.tf,
                             type = PoolImplementationType.tf,
                             expandable = true,
+                            minDeposit = 0f,
+                            links = it.value.socials
                         )
                     )
                 }
@@ -94,7 +103,9 @@ data class StakeOptionsUiState(
         open val maxApyFormatted: String,
         open val isMaxApy: Boolean,
         open val type: PoolImplementationType,
-        open val position: ListCell.Position
+        open val position: ListCell.Position,
+        open val minDeposit: Float,
+        open val links: List<String>,
     ) {
         data class Liquid(
             override val name: String,
@@ -103,8 +114,19 @@ data class StakeOptionsUiState(
             override val isMaxApy: Boolean,
             override val type: PoolImplementationType,
             override val position: ListCell.Position = ListCell.Position.SINGLE,
+            override val minDeposit: Float,
+            override val links: List<String>,
             val selected: Boolean
-        ) : StakeInfo(name, description, maxApyFormatted, isMaxApy, type, position)
+        ) : StakeInfo(
+            name = name,
+            description = description,
+            maxApyFormatted = maxApyFormatted,
+            isMaxApy = isMaxApy,
+            type = type,
+            position = position,
+            minDeposit = minDeposit,
+            links = links
+        )
 
         data class Other(
             override val name: String,
@@ -113,8 +135,19 @@ data class StakeOptionsUiState(
             override val isMaxApy: Boolean,
             override val type: PoolImplementationType,
             override val position: ListCell.Position = ListCell.Position.SINGLE,
+            override val minDeposit: Float,
+            override val links: List<String>,
             val expandable: Boolean
-        ) : StakeInfo(name, description, maxApyFormatted, isMaxApy, type, position)
+        ) : StakeInfo(
+            name = name,
+            description = description,
+            maxApyFormatted = maxApyFormatted,
+            isMaxApy = isMaxApy,
+            type = type,
+            position = position,
+            minDeposit = minDeposit,
+            links = links
+        )
     }
 
 }
