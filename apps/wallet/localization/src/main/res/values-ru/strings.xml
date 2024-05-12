@@ -264,4 +264,5 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+    <string name="operator">Оператор</string>
 </resources>
