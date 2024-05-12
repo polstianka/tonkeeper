@@ -20,15 +20,15 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             id: String,
             name: String,
             country: String,
-            requestCode: Int,
-            selectedCurrencyCode: String?
+            selectedCurrencyCode: String,
+            amount: Float
         ): PickOperatorFragment {
             val argument = PickOperatorFragmentArgs(
                 id = id,
                 name = name,
                 country = country,
                 selectedCurrencyCode = selectedCurrencyCode,
-                requestCode = requestCode,
+                amount = amount
             )
             return PickOperatorFragment().apply { setArgs(argument) }
         }

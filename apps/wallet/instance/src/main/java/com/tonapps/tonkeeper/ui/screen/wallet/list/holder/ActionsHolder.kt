@@ -12,6 +12,7 @@ import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
+import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation
 
 class ActionsHolder(parent: ViewGroup) :
@@ -27,10 +28,8 @@ class ActionsHolder(parent: ViewGroup) :
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
         scanView.setOnClickListener { navigation?.openCamera() }
-//        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
-        buyOrSellView.setOnClickListener { navigation?.toBuySell() }
+        buyOrSellView.setThrottleClickListener { navigation?.toBuySell() }
         findViewById<View>(R.id.scan).setOnClickListener { navigation?.openCamera() }
     }
 

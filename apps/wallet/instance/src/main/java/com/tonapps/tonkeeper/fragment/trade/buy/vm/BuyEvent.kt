@@ -1,10 +1,11 @@
 package com.tonapps.tonkeeper.fragment.trade.buy.vm
 
 sealed class BuyEvent {
-    data class PickOperator(
-        val methodId: String,
-        val methodName: String,
+    data class NavigateToPickOperator(
+        val paymentMethodId: String,
+        val paymentMethodName: String,
         val country: String,
-        val selectedCurrencyCode: String?
+        val currencyCode: String,
+        val amount: Float
     ) : BuyEvent()
 }

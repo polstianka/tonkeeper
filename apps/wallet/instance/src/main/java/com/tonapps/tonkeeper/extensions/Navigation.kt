@@ -63,15 +63,15 @@ fun Navigation.pickOperator(
     id: String,
     name: String,
     country: String,
-    requestCode: Int,
-    selectedCurrencyCode: String?
+    selectedCurrencyCode: String,
+    amount: Float
 ) {
     val fragment = PickOperatorFragment.newInstance(
         id = id,
         name = name,
         country = country,
-        requestCode = requestCode,
-        selectedCurrencyCode = selectedCurrencyCode
+        selectedCurrencyCode = selectedCurrencyCode,
+        amount = amount
     )
     add(fragment)
 }

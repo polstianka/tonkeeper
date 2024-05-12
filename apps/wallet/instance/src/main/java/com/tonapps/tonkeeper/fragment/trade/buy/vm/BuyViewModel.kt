@@ -1,9 +1,8 @@
 package com.tonapps.tonkeeper.fragment.trade.buy.vm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.trade.domain.GetBuyMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 class BuyViewModel(
     getRateFlowCase: GetRateFlowCase,
@@ -37,9 +35,18 @@ class BuyViewModel(
     val events: Flow<BuyEvent>
         get() = _events
 
+    private var currencyValue = ""
+    private var paymentMethodId = ""
+    private var paymentMethodName = ""
+
 
     init {
         observeFlow(methodsDomain) { buyListHolder.submitItems(it) }
+        observeFlow(currency) { currencyValue = it.code }
+        observeFlow(buyListHolder.pickedItem) {
+            paymentMethodId = it.id
+            paymentMethodName = it.title
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -54,7 +61,9 @@ class BuyViewModel(
         val totalAmount = amount * rate
         CurrencyFormatter.format(currency.code, totalAmount)
     }
-    val isButtonActive = MutableStateFlow(false)
+    val isButtonActive = combine(amount, buyListHolder.pickedItem) { currentAmount, _ ->
+        !currentAmount.isNaN() && currentAmount != 0f
+    }
 
     fun onAmountChanged(amount: String) {
         val oldAmount = this.amount.value
@@ -69,16 +78,19 @@ class BuyViewModel(
     }
 
     fun onTradeMethodClicked(it: TradeMethodListItem) {
-        val event = BuyEvent.PickOperator(
-            methodId = it.id,
-            methodName = it.title,
-            country = country.value,
-            selectedCurrencyCode = null // todo
-        )
-        viewModelScope.launch { _events.emit(event) }
+        buyListHolder.onMethodClicked(it.id)
     }
 
     fun onButtonClicked() {
-        Log.wtf("###", "onButtonClicked")
+        emit(
+            _events,
+            BuyEvent.NavigateToPickOperator(
+                paymentMethodId = paymentMethodId,
+                paymentMethodName = paymentMethodName,
+                country = country.value,
+                currencyCode = currencyValue,
+                amount = amount.value
+            )
+        )
     }
 }

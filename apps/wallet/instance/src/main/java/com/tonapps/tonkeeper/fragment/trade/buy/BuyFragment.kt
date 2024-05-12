@@ -1,11 +1,12 @@
 package com.tonapps.tonkeeper.fragment.trade.buy
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
+import com.tonapps.tonkeeper.extensions.pickOperator
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyEvent
 import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyViewModel
@@ -14,13 +15,13 @@ import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.cornerMedium
+import uikit.extensions.dp
 import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
-import uikit.widget.SimpleRecyclerView
-import com.tonapps.tonkeeper.extensions.pickOperator
-import uikit.extensions.cornerMedium
 import uikit.navigation.Navigation
-import kotlin.random.Random
+import uikit.widget.SimpleRecyclerView
 
 class BuyFragment : BaseFragment(R.layout.fragment_buy) {
     companion object {
@@ -39,7 +40,8 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         get() = view?.findViewById(R.id.next)
     private val navigation
         get() = context?.let { Navigation.from(it) }
-    private val requestCode = Random.nextInt()
+    private val footer: View?
+        get() = view?.findViewById(R.id.footer)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,21 +56,22 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         // clip children ripple effect
         recyclerView?.round(requireContext().cornerMedium)
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
+        footer?.applyNavBottomPadding(16f.dp.toInt())
     }
 
     private fun handleEvent(event: BuyEvent) {
         when (event) {
-            is BuyEvent.PickOperator -> event.handle()
+            is BuyEvent.NavigateToPickOperator -> event.handle()
         }
     }
 
-    private fun BuyEvent.PickOperator.handle() {
+    private fun BuyEvent.NavigateToPickOperator.handle() {
         navigation?.pickOperator(
-            id = methodId,
-            name = methodName,
+            id = paymentMethodId,
+            name = paymentMethodName,
             country = country,
-            requestCode = requestCode,
-            selectedCurrencyCode = selectedCurrencyCode
+            selectedCurrencyCode = currencyCode,
+            amount = amount
         )
     }
 }
