@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickOperatorViewModel : ViewModel() {
 
+    private val paymentMethodId = MutableStateFlow("")
     private val _events = MutableSharedFlow<PickOperatorEvents>()
     val events: Flow<PickOperatorEvents>
         get() = _events
@@ -24,6 +25,8 @@ class PickOperatorViewModel : ViewModel() {
 
     fun provideArguments(arguments: PickOperatorFragmentArgs) {
         _subtitleText.value = arguments.name
+        paymentMethodId.value = arguments.id
+        arguments.selectedCurrencyCode?.let { _currencyCode.value = it }
     }
 
     fun onChevronClicked() {
@@ -35,6 +38,12 @@ class PickOperatorViewModel : ViewModel() {
     }
 
     fun onCurrencyDropdownClicked() {
-        emit(_events, PickOperatorEvents.PickCurrency(_currencyCode.value))
+        emit(
+            _events,
+            PickOperatorEvents.PickCurrency(
+                paymentMethodId.value,
+                _currencyCode.value
+            )
+        )
     }
 }

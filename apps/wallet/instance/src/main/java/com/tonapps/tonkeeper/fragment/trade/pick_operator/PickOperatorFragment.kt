@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation
 import uikit.widget.DropdownButton
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
@@ -45,6 +47,8 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     private val viewModel: PickOperatorViewModel by viewModel()
     private val currencyDropdown: DropdownButton?
         get() = view?.findViewById(R.id.fragment_pick_operator_currency_dropdown)
+    private val navigation
+        get() = context?.let { Navigation.from(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +78,11 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         when (it) {
             PickOperatorEvents.CloseFlow -> Log.wtf("###", "close flow")
             PickOperatorEvents.NavigateBack -> finish()
-            is PickOperatorEvents.PickCurrency -> Log.wtf("###", "pickCurrency: $it")
+            is PickOperatorEvents.PickCurrency -> it.handle()
         }
+    }
+
+    private fun PickOperatorEvents.PickCurrency.handle() {
+        navigation?.add(PickCurrencyFragment.newInstance(paymentMethodId, pickedCurrencyCode))
     }
 }
