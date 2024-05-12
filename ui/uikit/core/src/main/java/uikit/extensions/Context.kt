@@ -75,10 +75,10 @@ val Context.activity: ComponentActivity?
 val Context.window: Window?
     get() = activity?.window
 
-fun Context.useAttributes(
+inline fun Context.useAttributes(
     set: AttributeSet?,
     @StyleableRes attrs: IntArray,
-    block: (TypedArray) -> Unit) {
+    crossinline block: (TypedArray) -> Unit) {
     theme.obtainStyledAttributes(set, attrs, 0, 0).apply {
         try {
             block(this)

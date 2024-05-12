@@ -115,4 +115,7 @@
         <attr name="dropdownIcon" format="reference"/>
         <attr name="dropdownIconTint" format="color"/>
     </declare-styleable>
+    <declare-styleable name="BaseItemView">
+        <attr name="isHeightHardcoded" format="boolean"/>
+    </declare-styleable>
 </resources>

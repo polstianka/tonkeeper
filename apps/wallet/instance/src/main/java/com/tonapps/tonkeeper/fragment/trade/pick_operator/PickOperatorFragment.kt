@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
+import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,6 +50,9 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         get() = view?.findViewById(R.id.fragment_pick_operator_currency_dropdown)
     private val navigation
         get() = context?.let { Navigation.from(it) }
+    private val recyclerView: RecyclerView?
+        get() = view?.findViewById(R.id.fragment_pick_operator_recycler_view)
+    private val adapter = PaymentOperatorAdapter { viewModel.onPaymentOperatorClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +74,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         header?.setIcon(UIKitIcon.ic_chevron_left_16)
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
         currencyDropdown?.setThrottleClickListener { viewModel.onCurrencyDropdownClicked() }
+        recyclerView?.adapter = adapter
         observeFlows()
     }
 
@@ -77,6 +83,9 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.currencyCode) { currencyTitle?.text = it }
         observeFlow(viewModel.currencyName) { currencyDescription?.setText(it) }
+        observeFlow(viewModel.paymentOperators) { list ->
+            adapter.submitList(list)
+        }
     }
 
     private fun handleEvent(it: PickOperatorEvents) {

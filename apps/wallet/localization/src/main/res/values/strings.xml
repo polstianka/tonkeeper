@@ -269,4 +269,5 @@
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
     <string name="operator">Operator</string>
+    <string name="best">Best</string>
 </resources>

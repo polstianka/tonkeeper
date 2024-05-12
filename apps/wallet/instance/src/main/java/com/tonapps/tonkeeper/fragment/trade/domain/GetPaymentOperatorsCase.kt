@@ -17,7 +17,8 @@ class GetPaymentOperatorsCase {
                     description = it.description,
                     iconUrl = it.iconUrl,
                     url = it.actionButton.url,
-                    successUrlPattern = it.successUrlPattern
+                    successUrlPattern = it.successUrlPattern,
+                    rate = "2.333 $currencyCode for 1 TON" // todo replace with real data
                 )
             }
     }

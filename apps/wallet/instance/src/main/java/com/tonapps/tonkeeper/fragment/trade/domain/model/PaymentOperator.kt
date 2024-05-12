@@ -8,5 +8,6 @@ data class PaymentOperator(
     val description: String,
     val iconUrl: String,
     val url: String,
-    val successUrlPattern: FiatSuccessUrlPattern?
+    val successUrlPattern: FiatSuccessUrlPattern?,
+    val rate: String
 )

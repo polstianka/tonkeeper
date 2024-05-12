@@ -7,10 +7,10 @@
     android:background="?backgroundPageColor">
 
     <uikit.widget.HeaderView
+        android:id="@+id/fragment_pick_operator_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="@string/operator"
-        android:id="@+id/fragment_pick_operator_header"/>
+        android:title="@string/operator" />
 
     <uikit.widget.DropdownButton
         android:id="@+id/fragment_pick_operator_currency_dropdown"
@@ -51,4 +51,12 @@
                 tools:text="Armenian Dram" />
         </uikit.widget.RowLayout>
     </uikit.widget.DropdownButton>
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/fragment_pick_operator_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1" />
 </uikit.widget.ColumnLayout>

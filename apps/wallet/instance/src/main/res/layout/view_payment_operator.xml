@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.item.BaseItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="horizontal"
+    app:isHeightHardcoded="false">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/view_payment_operator_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="16dp"
+        android:layout_marginEnd="16dp"
+        app:roundedCornerRadius="12dp" />
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="16dp"
+        android:layout_weight="1">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/view_payment_operator_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?textPrimaryColor"
+                tools:text="Mercuryo" />
+
+            <FrameLayout
+                android:id="@+id/view_payment_operator_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_chip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/best"
+                    android:textAppearance="@style/TextAppearance.Body4CAPS"
+                    android:textColor="?accentBlueColor" />
+            </FrameLayout>
+        </uikit.widget.RowLayout>
+
+        <TextView
+            android:id="@+id/view_payment_operator_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?textSecondaryColor"
+            tools:text="2,330.01 AMD for 1 TON" />
+    </uikit.widget.ColumnLayout>
+
+    <RadioButton
+        android:id="@+id/view_payment_operator_radiobutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="-16dp"
+        android:background="@null"
+        android:clickable="false"
+        android:padding="0dp" />
+
+</uikit.widget.item.BaseItemView>

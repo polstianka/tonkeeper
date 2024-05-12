@@ -1,11 +1,15 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_operator
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.trade.domain.GetAvailableCurrenciesCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetDefaultCurrencyCase
+import com.tonapps.tonkeeper.fragment.trade.domain.GetPaymentOperatorsCase
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
+import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.model.PaymentOperatorListItem
+import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.localization.getNameResIdForCurrency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class PickOperatorViewModel(
     getAvailableCurrenciesCase: GetAvailableCurrenciesCase,
-    getDefaultCurrencyCase: GetDefaultCurrencyCase
+    getDefaultCurrencyCase: GetDefaultCurrencyCase,
+    getPaymentOperatorsCase: GetPaymentOperatorsCase
 ) : ViewModel() {
 
     private val args = MutableSharedFlow<PickOperatorFragmentArgs>(replay = 1)
@@ -46,6 +51,29 @@ class PickOperatorViewModel(
         }
     }
     val currencyName = this.currencyCode.map { it.getNameResIdForCurrency() }
+    private val paymentOperatorsDomain = combine(
+        args,
+        currencyCode
+    ) { arg, currencyCode ->
+        getPaymentOperatorsCase.execute(
+            arg.country,
+            arg.paymentMethodId,
+            currencyCode
+        )
+    }
+    val paymentOperators = paymentOperatorsDomain.map { list ->
+        list.mapIndexed { index, paymentOperator ->
+            PaymentOperatorListItem(
+                id = paymentOperator.id,
+                iconUrl = paymentOperator.iconUrl,
+                title = paymentOperator.name,
+                rate = paymentOperator.rate,
+                isPicked = false,
+                isBest = index == 0,
+                position = ListCell.getPosition(list.size, index)
+            )
+        }
+    }
 
     val subtitleText = args.map { it.name }
 
@@ -73,5 +101,9 @@ class PickOperatorViewModel(
 
     fun onCurrencyPicked(result: PickCurrencyResult) {
         pickedCurrency.value = result.currencyCode
+    }
+
+    fun onPaymentOperatorClicked(it: PaymentOperatorListItem) {
+        Log.wtf("###", "paymentOperator clicked: $it")
     }
 }
