@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.view
 
 import android.content.Context
 import android.util.AttributeSet

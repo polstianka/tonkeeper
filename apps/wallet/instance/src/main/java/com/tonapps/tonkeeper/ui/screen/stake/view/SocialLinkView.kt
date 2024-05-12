@@ -1,17 +1,20 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.view
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.AttributeSet
+import android.view.Gravity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.textPrimaryColor
+import com.tonapps.wallet.localization.Localization
 import uikit.extensions.dp
 import uikit.extensions.setPaddingHorizontal
 import uikit.extensions.setPaddingVertical
-import com.tonapps.uikit.icon.R as IconR
 
 typealias TitleIconData = Pair<String, Int>
 
@@ -35,6 +38,7 @@ class SocialLinkView @JvmOverloads constructor(
         iconView = AppCompatImageView(context).apply {
             layoutParams = LayoutParams(16.dp, 16.dp).apply {
                 setMargins(0, 0, 8.dp, 0)
+                setGravity(Gravity.CENTER_VERTICAL)
             }
         }
         textView = AppCompatTextView(context).apply {
@@ -47,18 +51,30 @@ class SocialLinkView @JvmOverloads constructor(
     }
 
     fun setLink(link: String) {
-        val (title, iconRes) = getTitleAndIcon(link)
+        val uri = Uri.parse(link)
+        val (title, iconRes) = getTitleAndIcon(uri.host ?: link)
         textView.text = title
         iconView.setImageResource(iconRes)
+        setOnClickListener { openLink(uri) }
     }
 
-    private fun getTitleAndIcon(link: String): TitleIconData {
+    private fun openLink(link: Uri) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, link))
+    }
+
+    private fun getTitleAndIcon(host: String): TitleIconData {
         return when {
-            link.contains("t.me/") -> TitleIconData("Community", IconR.drawable.ic_telegram_16)
+            host.contains("t.me/") -> TitleIconData(
+                context.getString(Localization.community),
+                com.tonapps.uikit.icon.R.drawable.ic_telegram_16
+            )
 
-            link.contains("twitter.com/") -> TitleIconData("Twitter", IconR.drawable.ic_twitter_16)
+            host.contains("twitter.com/") -> TitleIconData(
+                context.getString(Localization.twitter),
+                com.tonapps.uikit.icon.R.drawable.ic_twitter_16
+            )
 
-            else -> TitleIconData(link, IconR.drawable.ic_globe_16)
+            else -> TitleIconData(host, com.tonapps.uikit.icon.R.drawable.ic_globe_16)
         }
     }
 }

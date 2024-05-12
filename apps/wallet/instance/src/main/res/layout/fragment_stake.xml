@@ -105,6 +105,12 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <uikit.widget.ActionCellView
+                android:id="@+id/selected_pool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:action="@drawable/ic_switch_16"
+                android:visibility="gone" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <Button

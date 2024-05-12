@@ -3,7 +3,10 @@ package com.tonapps.tonkeeper.ui.screen.stake
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import com.tonapps.tonkeeper.ui.screen.stake.model.DetailsArgs
+import com.tonapps.tonkeeper.ui.screen.stake.model.ExpandedPoolsArgs
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
@@ -27,39 +30,68 @@ class StakeOptionsScreen : BaseFragment(R.layout.fragment_stake_options), BaseFr
         otherLayout = view.findViewById(R.id.other_items)
 
         collectFlow(optionsViewModel.uiState) { state ->
+            liquidStakingLayout.removeAllViews()
+            otherLayout.removeAllViews()
             state.info.forEach { info ->
                 when (info) {
                     is StakeOptionsUiState.StakeInfo.Liquid -> {
-                        liquidStakingLayout.addView(ActionCellRadioView(requireContext()).apply {
-                            title = info.name
-                            subtitle = info.description
-                            titleBadgeText = if (info.isMaxApy) "max apy" else null
-                            position = info.position
-                            checked = info.selected
-                            setOnClickListener {
-                                val args = DetailsArgs(
-                                    name = info.name,
-                                    isApyMax = info.isMaxApy,
-                                    value = info.maxApyFormatted,
-                                    minDeposit = 0f,
-                                    currency = "TON",
-                                    links = info.links
-                                )
-                                navigation?.add(PoolDetailsScreen.newInstance(args))
-                            }
-                        })
+                        addToLiquidStaking(info)
                     }
 
                     is StakeOptionsUiState.StakeInfo.Other -> {
-                        otherLayout.addView(ActionCellView(requireContext()).apply {
-                            title = info.name
-                            subtitle = info.description
-                            titleBadgeText = if (info.isMaxApy) "max apy" else null
-                            position = info.position
-                        })
+                        addToOther(info)
                     }
                 }
             }
         }
     }
+
+    private fun addToOther(info: StakeOptionsUiState.StakeInfo.Other) {
+        otherLayout.addView(ActionCellView(requireContext()).apply {
+            title = info.name
+            subtitle = getDescription(info)
+            titleBadgeText = getString(Localization.max_apy).takeIf { info.isMaxApy }
+            position = info.position
+
+            setOnClickListener {
+                navigation?.add(
+                    StakePoolsFragment.newInstance(
+                        ExpandedPoolsArgs(
+                            type = info.type,
+                            maxApyAddress = info.maxApyAddress,
+                            name = info.name
+                        )
+                    )
+                )
+            }
+        })
+    }
+
+    private fun addToLiquidStaking(info: StakeOptionsUiState.StakeInfo.Liquid) {
+        liquidStakingLayout.addView(ActionCellRadioView(requireContext()).apply {
+            title = info.name
+            subtitle = getDescription(info)
+            titleBadgeText = getString(Localization.max_apy).takeIf { info.isMaxApy }
+            position = info.position
+            checked = info.selected
+            onCheckedChange = { optionsViewModel.select(info.address) }
+            setOnClickListener {
+                val args = DetailsArgs(
+                    address = info.address,
+                    name = info.name,
+                    isApyMax = info.isMaxApy,
+                    value = info.maxApyFormatted,
+                    minDeposit = info.minStake,
+                    links = info.links
+                )
+                navigation?.add(PoolDetailsScreen.newInstance(args))
+            }
+        })
+    }
+
+    private fun getDescription(info: StakeOptionsUiState.StakeInfo) =
+        info.description + "\n" + getString(
+            Localization.apy_percent_placeholder,
+            info.maxApyFormatted
+        )
 }

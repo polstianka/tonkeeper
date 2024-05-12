@@ -16,6 +16,9 @@ import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -43,11 +46,11 @@ class StakeViewModel(
     private val _uiState = MutableStateFlow(StakeUiState())
     val uiState: StateFlow<StakeUiState> = _uiState
 
-    fun init() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val currency = settingsRepository.currency
-            val rate = settingsRepository.currency.code
-            val wallet = walletManager.getWalletInfo() ?: return@launch
+    init {
+        val currency = settingsRepository.currency
+        val rate = settingsRepository.currency.code
+        repository.selectedPoolAddress.onEach { address ->
+            val wallet = walletManager.getWalletInfo() ?: error("No wallet info")
             val accountId = wallet.accountId
             val tokens = tokenRepository.get(currency, accountId, wallet.testnet)
             selectToken(tokens.first())
@@ -60,55 +63,19 @@ class StakeViewModel(
                     selectedTokenAddress = WalletCurrency.TON.code,
                 )
             }
-            val pools = repository.get()
-            val liquidStakingList = mutableListOf<StakeUiState.PoolInfo>()
-            val otherList = mutableListOf<StakeUiState.PoolInfo>()
-            val maxApy = pools.pools.maxByOrNull { it.apy } ?: return@launch
-            val maxApyByType = mutableMapOf<PoolImplementationType, BigDecimal>()
-            pools.pools.forEach {
-                val poolType = it.implementation
-                val currentMaxApy = maxApyByType[poolType] ?: BigDecimal.ZERO
-                if (it.apy > currentMaxApy) {
-                    maxApyByType[poolType] = it.apy
-                }
+            val pools = repository.get().pools
+            val maxApy = pools.maxByOrNull { it.apy } ?: error("No pools")
+            val pool = if (address.isEmpty()) maxApy else pools.first { it.address == address }
+            val isMaxApy = address.isEmpty() || pool.address == maxApy.address
 
-                when (it.implementation) {
-                    PoolImplementationType.liquidTF -> {
-                        liquidStakingList.add(
-                            StakeUiState.PoolInfo(
-                                pool = it,
-                                isMaxApy = maxApy.address == it.address,
-
-                                )
-                        )
-                    }
-
-                    PoolImplementationType.whales -> {
-                        otherList.add(
-                            StakeUiState.PoolInfo(
-                                pool = it,
-                                isMaxApy = maxApy.address == it.address
-                            )
-                        )
-                    }
-
-                    PoolImplementationType.tf -> {
-                        otherList.add(
-                            StakeUiState.PoolInfo(
-                                pool = it,
-                                isMaxApy = maxApy.address == it.address
-                            )
-                        )
-                    }
-                }
-            }
             _uiState.update {
-                it.copy(
-                    maxPool = StakeUiState.PoolInfo(maxApy, true)
-                )
+                it.copy(selectedPool = StakeUiState.PoolInfo(pool, isMaxApy))
             }
             setValue(0f)
-        }
+            if (address.isEmpty()) {
+                repository.select(maxApy.address)
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
     fun selectToken(tokenAddress: String) {
@@ -173,7 +140,7 @@ data class StakeUiState(
     ),
     val pools: List<PoolInfo> = emptyList(),
     val maxApyByType: Map<PoolImplementationType, BigDecimal> = emptyMap(),
-    val maxPool: PoolInfo? = null,
+    val selectedPool: PoolInfo? = null,
 
     val wallet: WalletLegacy? = null,
     val amount: Float = 0f,

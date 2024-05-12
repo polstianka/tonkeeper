@@ -143,6 +143,9 @@
 
     <string name="enter_amount">Введите сумму</string>
     <string name="choose_token">Выберите токен</string>
+    <string name="options">Опции</string>
+    <string name="liquid_staking">Liquid Staking</string>
+    <string name="links">Ссылки</string>
     <string name="slippage">Скольжение</string>
     <string name="slippage_description">Величина, на которую цена может измениться в неблагоприятную сторону до возврата сделки</string>
     <string name="recipient">Получатель</string>
@@ -281,4 +284,7 @@
     <string name="provider">Провайдер</string>
     <string name="insufficient_balance_buy">Недостаточный баланс. Купите %s</string>
     <string name="confirm_swap">Подтвердить обмен</string>
+    <string name="min_deposit">Минимальный депозит</string>
+    <string name="pool_details_disclaimer">Стейкинг основан на смарт-контрактах третьих лиц. Tonkeeper не несет ответственности за опыт работы со стейкингом.</string>
+    <string name="community">Сообщество</string>
 </resources>

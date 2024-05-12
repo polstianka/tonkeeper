@@ -33,7 +33,9 @@ import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.PoolDetailsViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakeOptionsViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakePoolsViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakeViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapSettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
@@ -116,4 +118,6 @@ val koinModel = module {
     viewModel { SwapSettingsViewModel(get()) }
     viewModel { StakeViewModel(get(), get(), get(), get(), get()) }
     viewModel { StakeOptionsViewModel(get()) }
+    viewModel { StakePoolsViewModel(get()) }
+    viewModel { PoolDetailsViewModel(get()) }
 }

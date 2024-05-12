@@ -1,48 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <uikit.widget.HeaderView
-        android:id="@+id/header"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:icon="@drawable/ic_chevron_left_16" />
+
+        <uikit.widget.ColumnLayout
+            android:id="@+id/top_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:background="@drawable/bg_wallet_bubble_no_ripple"
+            android:paddingVertical="8dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextAppearance.Body3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginVertical="12dp"
+            android:text="@string/pool_details_disclaimer"
+            android:textColor="?attr/textTertiaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/social_links_title"
+            style="@style/TextAppearance.H3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginVertical="14dp"
+            android:text="@string/links"
+            android:textColor="?attr/textPrimaryColor" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/social_links"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            app:flexWrap="wrap" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/choose_button"
+        style="@style/Widget.App.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:action="@drawable/ic_close_16"
-        android:icon="@drawable/ic_chevron_left_16" />
-
-    <uikit.widget.ColumnLayout
-        android:id="@+id/top_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_marginHorizontal="@dimen/offsetMedium"
-        android:background="@drawable/bg_wallet_bubble_no_ripple"
-        android:paddingVertical="8dp" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.Body3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/offsetMedium"
-        android:layout_marginVertical="12dp"
-        android:text="@string/pool_details_disclaimer"
-        android:textColor="?attr/textTertiaryColor" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.H3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/offsetMedium"
-        android:layout_marginVertical="14dp"
-        android:text="@string/links"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:text="@string/choose"
+        android:textAppearance="@style/TextAppearance.Label1"
         android:textColor="?attr/textPrimaryColor" />
-
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/social_links"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/offsetMedium"
-        app:flexWrap="wrap" />
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>

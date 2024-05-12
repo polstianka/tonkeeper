@@ -2,13 +2,14 @@ package com.tonapps.tonkeeper.ui.screen.stake
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.helper.NumberFormatter
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonPrimaryBackgroundColor
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
@@ -26,7 +27,7 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
     private val stakeViewModel: StakeViewModel by viewModel()
 
     private lateinit var headerView: HeaderView
-    private lateinit var verticalLayout: ViewGroup
+    private lateinit var selectedPool: ActionCellView
     private lateinit var valueCurrencyView: AppCompatTextView
     private lateinit var rateView: AppCompatTextView
     private lateinit var availableView: AppCompatTextView
@@ -38,7 +39,7 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
         headerView = view.findViewById(R.id.header)
         headerView.doOnActionClick = { finish() }
 
-        verticalLayout = view.findViewById(R.id.vertical_layout)
+        selectedPool = view.findViewById(R.id.selected_pool)
         valueCurrencyView = view.findViewById(R.id.value_currency)
 
         valueView = view.findViewById(R.id.value)
@@ -61,50 +62,47 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
         continueButton = view.findViewById(R.id.continue_action)
         continueButton.setOnClickListener { }
 
-        collectFlow(stakeViewModel.uiState) {
-            rateView.text = it.rate
+        collectFlow(stakeViewModel.uiState) { state ->
+            rateView.text = state.rate
             valueView.setMaxLength(stakeViewModel.decimals)
-            valueCurrencyView.text = it.selectedTokenCode
+            valueCurrencyView.text = state.selectedTokenCode
 
-            if (it.insufficientBalance) {
+            if (state.insufficientBalance) {
                 availableView.setText(Localization.insufficient_balance)
                 availableView.setTextColor(requireContext().constantRedColor)
-            } else if (it.remaining != "") {
-                availableView.text = getString(Localization.remaining_balance, it.remaining)
+            } else if (state.remaining != "") {
+                availableView.text = getString(Localization.remaining_balance, state.remaining)
                 availableView.setTextColor(requireContext().textSecondaryColor)
             } else {
-                availableView.text = getString(Localization.available_balance, it.available)
+                availableView.text = getString(Localization.available_balance, state.available)
                 availableView.setTextColor(requireContext().textSecondaryColor)
             }
 
-            continueButton.isEnabled = it.canContinue
+            continueButton.isEnabled = state.canContinue
 
-            if (it.maxActive) {
+            if (state.maxActive) {
                 maxButton.background.setTint(requireContext().buttonPrimaryBackgroundColor)
             } else {
                 maxButton.background.setTint(requireContext().buttonSecondaryBackgroundColor)
             }
 
-            maxButton.isActivated = it.maxActive
-
-            if (it.maxPool != null) {
-                verticalLayout.findViewWithTag<View>(it.maxPool.pool.name).apply {
-                    verticalLayout.removeView(this)
-                }
-                verticalLayout.addView(ActionCellView(requireContext()).apply {
-                    tag = it.maxPool.pool.name
-                    actionRes = com.tonapps.uikit.icon.R.drawable.ic_switch_16
-                    title = it.maxPool.pool.name
-                    titleBadgeText = "max apy"
+            maxButton.isActivated = state.maxActive
+            selectedPool.isVisible = state.selectedPool != null
+            if (state.selectedPool != null) {
+                with(selectedPool) {
+                    title = state.selectedPool.pool.name
+                    titleBadgeText = getString(Localization.max_apy).takeIf {
+                        state.selectedPool.isMaxApy
+                    }
                     actionTint = com.tonapps.uikit.color.R.attr.iconTertiaryColor
-                    subtitle = "APY ≈ ${it.maxPool.pool.apy.toPlainString()}%"
+                    subtitle = getString(
+                        Localization.apy_percent_placeholder,
+                        NumberFormatter.format(state.selectedPool.pool.apy)
+                    )
                     setOnClickListener { navigation?.add(StakeOptionsScreen()) }
-                })
+                }
             }
         }
-
-
-        stakeViewModel.init()
     }
 
     private fun forceSetAmount(amount: Float) {

@@ -172,6 +172,13 @@
     <string name="liquid_staking">Liquid Staking</string>
     <string name="pool_details_disclaimer">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
     <string name="links">Links</string>
+    <string name="apy" translatable="false">APY</string>
+    <string name="max_apy" translatable="false">MAX APY</string>
+    <string name="min_deposit">Minimal deposit</string>
+    <string name="apy_percent_placeholder" translatable="false">APY ≈ %1$s\%%</string>
+    <string name="apy_short_percent_placeholder" translatable="false">≈ %1$s\%%</string>
+    <string name="community">Community</string>
+    <string name="twitter" translatable="false">Twitter</string>
 
     <string name="slippage">Slippage</string>
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>

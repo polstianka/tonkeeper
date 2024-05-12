@@ -66,6 +66,8 @@ class ActionCellRadioView @JvmOverloads constructor(
             radioButton.isChecked = value
         }
 
+    var onCheckedChange: () -> Unit = {}
+
     init {
         setPadding(context.getDimensionPixelSize(R.dimen.offsetMedium))
         minimumHeight = 76.dp
@@ -89,6 +91,10 @@ class ActionCellRadioView @JvmOverloads constructor(
                 subtitleView.setSingleLine()
             }
         }
+        radioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                onCheckedChange()
+            }
+        }
     }
-
 }

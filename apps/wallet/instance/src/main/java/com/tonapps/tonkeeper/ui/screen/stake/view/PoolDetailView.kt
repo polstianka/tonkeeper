@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -17,7 +17,7 @@ import com.tonapps.uikit.color.textSecondaryColor
 import uikit.extensions.dp
 import uikit.extensions.setPaddingVertical
 
-class PoolTopDetail @JvmOverloads constructor(
+class PoolDetailView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,

@@ -5,6 +5,8 @@ import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.StakePoolsEntity
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 
 class StakeRepository(
@@ -15,6 +17,13 @@ class StakeRepository(
 
     private val localDataSource = StakeLocalDataSource(context)
     private val remoteDataSource = StakeRemoteDataSource(api)
+
+    private val _selectedPoolAddress = MutableStateFlow("")
+    val selectedPoolAddress: StateFlow<String> = _selectedPoolAddress
+
+    fun select(address: String) {
+        _selectedPoolAddress.value = address
+    }
 
     suspend fun get(): StakePoolsEntity {
         val wallet = walletManager.getWalletInfo() ?: return StakePoolsEntity.Empty
