@@ -71,7 +71,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         observeFlow(viewModel.subtitleText) { subtitle?.text = it }
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.currencyCode) { currencyTitle?.text = it }
-        observeFlow(viewModel.currencyName) { currencyDescription?.text = it }
+        observeFlow(viewModel.currencyName) { currencyDescription?.setText(it) }
     }
 
     private fun handleEvent(it: PickOperatorEvents) {

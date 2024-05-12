@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.fragment.trade.buy.vm
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
@@ -14,8 +15,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class BuyViewModel(
     getRateFlowCase: GetRateFlowCase,
@@ -35,18 +38,9 @@ class BuyViewModel(
     val events: Flow<BuyEvent>
         get() = _events
 
-    private var currencyValue = ""
-    private var paymentMethodId = ""
-    private var paymentMethodName = ""
-
 
     init {
         observeFlow(methodsDomain) { buyListHolder.submitItems(it) }
-        observeFlow(currency) { currencyValue = it.code }
-        observeFlow(buyListHolder.pickedItem) {
-            paymentMethodId = it.id
-            paymentMethodName = it.title
-        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,7 +56,7 @@ class BuyViewModel(
         CurrencyFormatter.format(currency.code, totalAmount)
     }
     val isButtonActive = combine(amount, buyListHolder.pickedItem) { currentAmount, _ ->
-        !currentAmount.isNaN() && currentAmount != 0f
+        !currentAmount.isNaN() && currentAmount != 0f && currentAmount.isFinite()
     }
 
     fun onAmountChanged(amount: String) {
@@ -81,14 +75,16 @@ class BuyViewModel(
         buyListHolder.onMethodClicked(it.id)
     }
 
-    fun onButtonClicked() {
+    fun onButtonClicked() = viewModelScope.launch {
+        val paymentMethod = buyListHolder.pickedItem.first()
+        val currency = currency.first()
         emit(
             _events,
             BuyEvent.NavigateToPickOperator(
-                paymentMethodId = paymentMethodId,
-                paymentMethodName = paymentMethodName,
+                paymentMethodId = paymentMethod.id,
+                paymentMethodName = paymentMethod.title,
                 country = country.value,
-                currencyCode = currencyValue,
+                currencyCode = currency.code,
                 amount = amount.value
             )
         )

@@ -1,32 +1,44 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_operator
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.fragment.trade.domain.GetAvailableCurrenciesCase
+import com.tonapps.tonkeeper.fragment.trade.domain.GetDefaultCurrencyCase
+import com.tonapps.wallet.localization.getNameResIdForCurrency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-class PickOperatorViewModel : ViewModel() {
+class PickOperatorViewModel(
+    getAvailableCurrenciesCase: GetAvailableCurrenciesCase,
+    getDefaultCurrencyCase: GetDefaultCurrencyCase
+) : ViewModel() {
 
-    private val paymentMethodId = MutableStateFlow("")
+    private val args = MutableSharedFlow<PickOperatorFragmentArgs>(replay = 1)
     private val _events = MutableSharedFlow<PickOperatorEvents>()
     val events: Flow<PickOperatorEvents>
         get() = _events
-    private val _subtitleText = MutableStateFlow("")
-    private val _currencyCode = MutableStateFlow("AMD")
-    val currencyCode: Flow<String>
-        get() = _currencyCode
-    private val _currencyName = MutableStateFlow("Armenian Dram")
-    val currencyName: Flow<String>
-        get() = _currencyName
 
-    val subtitleText: Flow<String>
-        get() = _subtitleText
+    private val availableCurrencies = args.map { getAvailableCurrenciesCase.execute(it.id) }
+    private val defaultCurrency = args.map { getDefaultCurrencyCase.execute(it.id) }
+    val currencyCode = combine(
+        args,
+        availableCurrencies,
+        defaultCurrency
+    ) { arg, available, default ->
+            val availableCurrency = available.firstOrNull { it.code == arg.selectedCurrencyCode }
+            availableCurrency?.code ?: default.code
+        }
+    val currencyName = this.currencyCode.map { it.getNameResIdForCurrency() }
+
+    val subtitleText = args.map { it.name }
 
     fun provideArguments(arguments: PickOperatorFragmentArgs) {
-        _subtitleText.value = arguments.name
-        paymentMethodId.value = arguments.id
-        arguments.selectedCurrencyCode?.let { _currencyCode.value = it }
+        emit(args, arguments)
     }
 
     fun onChevronClicked() {
@@ -37,13 +49,13 @@ class PickOperatorViewModel : ViewModel() {
         emit(_events, PickOperatorEvents.CloseFlow)
     }
 
-    fun onCurrencyDropdownClicked() {
-        emit(
-            _events,
-            PickOperatorEvents.PickCurrency(
-                paymentMethodId.value,
-                _currencyCode.value
-            )
+    fun onCurrencyDropdownClicked() = viewModelScope.launch {
+        val paymentMethodId = args.first().id
+        val currencyCode = this@PickOperatorViewModel.currencyCode.first()
+        val event = PickOperatorEvents.PickCurrency(
+            paymentMethodId,
+            currencyCode
         )
+        _events.emit(event)
     }
 }
