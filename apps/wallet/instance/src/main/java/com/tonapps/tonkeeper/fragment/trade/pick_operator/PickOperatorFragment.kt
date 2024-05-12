@@ -9,6 +9,7 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
+import uikit.widget.DropdownButton
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     BaseFragment.BottomSheet {
@@ -37,7 +38,13 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         get() = view?.findViewById(R.id.fragment_pick_operator_header_cross)
     private val subtitle: TextView?
         get() = view?.findViewById(R.id.fragment_pick_operator_header_subtitle)
+    private val currencyTitle: TextView?
+        get() = view?.findViewById(R.id.fragment_pick_operator_currency_title)
+    private val currencyDescription: TextView?
+        get() = view?.findViewById(R.id.fragment_pick_operator_currency_description)
     private val viewModel: PickOperatorViewModel by viewModel()
+    private val currencyDropdown: DropdownButton?
+        get() = view?.findViewById(R.id.fragment_pick_operator_currency_dropdown)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,18 +59,22 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         super.onViewCreated(view, savedInstanceState)
         chevron?.setThrottleClickListener { viewModel.onChevronClicked() }
         cross?.setThrottleClickListener { viewModel.onCrossClicked() }
+        currencyDropdown?.setThrottleClickListener { viewModel.onCurrencyDropdownClicked() }
         observeFlows()
     }
 
     private fun observeFlows() {
         observeFlow(viewModel.subtitleText) { subtitle?.text = it }
         observeFlow(viewModel.events) { handleEvent(it) }
+        observeFlow(viewModel.currencyCode) { currencyTitle?.text = it }
+        observeFlow(viewModel.currencyName) { currencyDescription?.text = it }
     }
 
     private fun handleEvent(it: PickOperatorEvents) {
         when (it) {
             PickOperatorEvents.CloseFlow -> Log.wtf("###", "close flow")
             PickOperatorEvents.NavigateBack -> finish()
+            is PickOperatorEvents.PickCurrency -> Log.wtf("###", "pickCurrency: $it")
         }
     }
 }

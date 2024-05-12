@@ -12,6 +12,12 @@ class PickOperatorViewModel : ViewModel() {
     val events: Flow<PickOperatorEvents>
         get() = _events
     private val _subtitleText = MutableStateFlow("")
+    private val _currencyCode = MutableStateFlow("AMD")
+    val currencyCode: Flow<String>
+        get() = _currencyCode
+    private val _currencyName = MutableStateFlow("Armenian Dram")
+    val currencyName: Flow<String>
+        get() = _currencyName
 
     val subtitleText: Flow<String>
         get() = _subtitleText
@@ -26,5 +32,9 @@ class PickOperatorViewModel : ViewModel() {
 
     fun onCrossClicked() {
         emit(_events, PickOperatorEvents.CloseFlow)
+    }
+
+    fun onCurrencyDropdownClicked() {
+        emit(_events, PickOperatorEvents.PickCurrency(_currencyCode.value))
     }
 }
