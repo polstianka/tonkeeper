@@ -4,7 +4,7 @@ import android.os.Bundle
 import uikit.base.BaseArgs
 
 class PickOperatorFragmentArgs(
-    val id: String,
+    val paymentMethodId: String,
     val name: String,
     val country: String,
     val selectedCurrencyCode: String,
@@ -21,7 +21,7 @@ class PickOperatorFragmentArgs(
 
     override fun toBundle(): Bundle {
         return Bundle().apply {
-            putString(KEY_ID, id)
+            putString(KEY_ID, paymentMethodId)
             putString(KEY_NAME, name)
             putString(KEY_COUNTRY, country)
             putString(KEY_SELECTED_CURRENCY_CODE, selectedCurrencyCode)
@@ -30,7 +30,7 @@ class PickOperatorFragmentArgs(
     }
 
     constructor(bundle: Bundle) : this(
-        id = bundle.getString(KEY_ID)!!,
+        paymentMethodId = bundle.getString(KEY_ID)!!,
         name = bundle.getString(KEY_NAME)!!,
         country = bundle.getString(KEY_COUNTRY)!!,
         selectedCurrencyCode = bundle.getString(KEY_SELECTED_CURRENCY_CODE)!!,

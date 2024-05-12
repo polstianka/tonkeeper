@@ -26,8 +26,12 @@ class PickOperatorViewModel(
         get() = _events
 
     private val pickedCurrency = MutableStateFlow<String?>(null)
-    private val availableCurrencies = args.map { getAvailableCurrenciesCase.execute(it.id) }
-    private val defaultCurrency = args.map { getDefaultCurrencyCase.execute(it.id) }
+    private val availableCurrencies = args.map {
+        getAvailableCurrenciesCase.execute(it.paymentMethodId)
+    }
+    private val defaultCurrency = args.map {
+        getDefaultCurrencyCase.execute(it.paymentMethodId)
+    }
     val currencyCode = combine(
         args,
         availableCurrencies,
@@ -58,7 +62,7 @@ class PickOperatorViewModel(
     }
 
     fun onCurrencyDropdownClicked() = viewModelScope.launch {
-        val paymentMethodId = args.first().id
+        val paymentMethodId = args.first().paymentMethodId
         val currencyCode = this@PickOperatorViewModel.currencyCode.first()
         val event = PickOperatorEvents.PickCurrency(
             paymentMethodId,

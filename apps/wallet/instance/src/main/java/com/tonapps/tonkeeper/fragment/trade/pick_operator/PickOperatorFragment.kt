@@ -27,7 +27,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             amount: Float
         ): PickOperatorFragment {
             val argument = PickOperatorFragmentArgs(
-                id = id,
+                paymentMethodId = id,
                 name = name,
                 country = country,
                 selectedCurrencyCode = selectedCurrencyCode,
