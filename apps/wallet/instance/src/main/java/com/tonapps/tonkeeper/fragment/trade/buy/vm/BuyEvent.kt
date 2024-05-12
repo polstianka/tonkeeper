@@ -4,6 +4,7 @@ sealed class BuyEvent {
     data class PickOperator(
         val methodId: String,
         val methodName: String,
-        val country: String
+        val country: String,
+        val selectedCurrencyCode: String?
     ) : BuyEvent()
 }

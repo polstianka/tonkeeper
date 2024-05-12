@@ -17,9 +17,16 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             id: String,
             name: String,
             country: String,
-            requestCode: Int
+            requestCode: Int,
+            selectedCurrencyCode: String?
         ): PickOperatorFragment {
-            val argument = PickOperatorFragmentArgs(id, name, country, requestCode)
+            val argument = PickOperatorFragmentArgs(
+                id = id,
+                name = name,
+                country = country,
+                selectedCurrencyCode = selectedCurrencyCode,
+                requestCode = requestCode,
+            )
             return PickOperatorFragment().apply { setArgs(argument) }
         }
     }
