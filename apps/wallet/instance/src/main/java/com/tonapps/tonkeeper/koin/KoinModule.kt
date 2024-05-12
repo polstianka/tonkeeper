@@ -92,5 +92,5 @@ val koinModel = module {
     viewModel { BuySellViewModel() }
     viewModel { BuyViewModel(get(), get(), get(), get()) }
     viewModel { PickOperatorViewModel() }
-    viewModel { PickCurrencyViewModel() }
+    viewModel { PickCurrencyViewModel(get()) }
 }

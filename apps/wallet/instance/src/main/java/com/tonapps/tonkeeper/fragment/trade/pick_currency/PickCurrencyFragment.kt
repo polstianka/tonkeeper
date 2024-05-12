@@ -16,7 +16,7 @@ class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
     companion object {
         fun newInstance(
             paymentMethodId: String,
-            pickedCurrencyCode: String?
+            pickedCurrencyCode: String
         ): PickCurrencyFragment {
             val args = PickCurrencyFragmentArgs(paymentMethodId, pickedCurrencyCode)
             return PickCurrencyFragment().apply { setArgs(args) }
@@ -28,7 +28,7 @@ class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
             viewModel.provideArgs(PickCurrencyFragmentArgs(requireArguments()))
         }
         lifecycleScope.launch {

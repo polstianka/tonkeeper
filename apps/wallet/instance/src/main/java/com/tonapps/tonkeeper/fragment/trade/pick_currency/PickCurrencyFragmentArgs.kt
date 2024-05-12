@@ -5,7 +5,7 @@ import uikit.base.BaseArgs
 
 class PickCurrencyFragmentArgs(
     val paymentMethodId: String,
-    val pickedCurrencyCode: String?
+    val pickedCurrencyCode: String
 ) : BaseArgs() {
 
     companion object {
@@ -22,6 +22,6 @@ class PickCurrencyFragmentArgs(
 
     constructor(bundle: Bundle) : this(
         bundle.getString(KEY_PAYMENT_METHOD_ID)!!,
-        bundle.getString(KEY_PICKED_CURRENCY_CODE)
+        bundle.getString(KEY_PICKED_CURRENCY_CODE)!!
     )
 }

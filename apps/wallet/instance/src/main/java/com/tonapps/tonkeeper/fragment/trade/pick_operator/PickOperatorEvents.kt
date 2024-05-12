@@ -5,6 +5,6 @@ sealed class PickOperatorEvents {
     object CloseFlow : PickOperatorEvents()
     data class PickCurrency(
         val paymentMethodId: String,
-        val pickedCurrencyCode: String?
+        val pickedCurrencyCode: String
     ) : PickOperatorEvents()
 }
