@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.trade.domain.GetAvailableCurrenciesCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetDefaultCurrencyCase
+import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.wallet.localization.getNameResIdForCurrency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -23,16 +25,22 @@ class PickOperatorViewModel(
     val events: Flow<PickOperatorEvents>
         get() = _events
 
+    private val pickedCurrency = MutableStateFlow<String?>(null)
     private val availableCurrencies = args.map { getAvailableCurrenciesCase.execute(it.id) }
     private val defaultCurrency = args.map { getDefaultCurrencyCase.execute(it.id) }
     val currencyCode = combine(
         args,
         availableCurrencies,
-        defaultCurrency
-    ) { arg, available, default ->
+        defaultCurrency,
+        pickedCurrency
+    ) { arg, available, default, picked ->
+        if (picked != null) {
+            picked
+        } else {
             val availableCurrency = available.firstOrNull { it.code == arg.selectedCurrencyCode }
             availableCurrency?.code ?: default.code
         }
+    }
     val currencyName = this.currencyCode.map { it.getNameResIdForCurrency() }
 
     val subtitleText = args.map { it.name }
@@ -57,5 +65,9 @@ class PickOperatorViewModel(
             currencyCode
         )
         _events.emit(event)
+    }
+
+    fun onCurrencyPicked(result: PickCurrencyResult) {
+        pickedCurrency.value = result.currencyCode
     }
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.base.BaseListFragment
+import uikit.navigation.Navigation.Companion.navigation
 
 class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
@@ -44,5 +45,14 @@ class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
     }
 
     private fun handleEvent(event: PickCurrencyEvent) {
+        when (event) {
+            is PickCurrencyEvent.ReturnWithResult -> {
+                navigation?.setFragmentResult(
+                    PickCurrencyResult.KEY_REQUEST,
+                    PickCurrencyResult(event.currencyCode).toBundle()
+                )
+                finish()
+            }
+        }
     }
 }

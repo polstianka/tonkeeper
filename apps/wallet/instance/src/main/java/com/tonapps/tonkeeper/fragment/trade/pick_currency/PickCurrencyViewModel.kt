@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.trade.pick_currency
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.trade.domain.GetAvailableCurrenciesCase
 import com.tonapps.tonkeeper.ui.screen.settings.currency.list.CurrencyItem
@@ -10,7 +11,9 @@ import com.tonapps.wallet.localization.getNameResIdForCurrency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class PickCurrencyViewModel(
     getAvailableCurrenciesCase: GetAvailableCurrenciesCase
@@ -34,12 +37,15 @@ class PickCurrencyViewModel(
             )
         }
     }
+    private val pickedItem = items.map { it.firstOrNull { it.selected } }
 
     fun provideArgs(pickCurrencyFragmentArgs: PickCurrencyFragmentArgs) {
         emit(arg, pickCurrencyFragmentArgs)
     }
 
-    fun onCurrencyClicked(code: String) {
-        Log.wtf("###", "onCurrencyClicked: $code")
+    fun onCurrencyClicked(code: String) = viewModelScope.launch {
+        val picked = pickedItem.first()
+        if (picked?.currency == code) return@launch
+        emit(_events, PickCurrencyEvent.ReturnWithResult(code))
     }
 }

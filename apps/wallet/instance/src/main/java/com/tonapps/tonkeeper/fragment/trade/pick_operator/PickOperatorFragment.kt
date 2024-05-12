@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
+import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,6 +58,10 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
                 PickOperatorFragmentArgs(requireArguments())
             )
         }
+        navigation?.setFragmentResultListener(
+            PickCurrencyResult.KEY_REQUEST,
+            ::onPickCurrencyResult
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,6 +85,11 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             PickOperatorEvents.NavigateBack -> finish()
             is PickOperatorEvents.PickCurrency -> it.handle()
         }
+    }
+
+    private fun onPickCurrencyResult(bundle: Bundle) {
+        val result = PickCurrencyResult(bundle)
+        viewModel.onCurrencyPicked(result)
     }
 
     private fun PickOperatorEvents.PickCurrency.handle() {
