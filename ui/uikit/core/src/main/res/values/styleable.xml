@@ -111,4 +111,8 @@
     <declare-styleable name="SimpleRecyclerView">
         <attr name="android:maxHeight" format="dimension|reference"/>
     </declare-styleable>
+    <declare-styleable name="DropdownButton">
+        <attr name="dropdownIcon" format="reference"/>
+        <attr name="dropdownIconTint" format="color"/>
+    </declare-styleable>
 </resources>

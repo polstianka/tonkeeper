@@ -28,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.tonapps.uikit.color.backgroundHighlightedColor
 import com.tonapps.uikit.color.stateList
 import com.tonapps.uikit.color.textTertiaryColor
+import uikit.R
 
 fun Context.inflate(
     @LayoutRes layoutId: Int,
@@ -114,3 +115,6 @@ fun Context.getCurrentFocus(): View? {
 fun Context.getCurrentFocusEditText(): EditText? {
     return getCurrentFocus() as? EditText
 }
+
+val Context.cornerMedium: Int
+    get() = resources.getDimensionPixelSize(R.dimen.cornerMedium)
