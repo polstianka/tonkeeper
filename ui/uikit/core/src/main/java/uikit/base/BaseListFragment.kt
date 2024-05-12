@@ -22,6 +22,9 @@ open class BaseListFragment: BaseFragment(R.layout.fragment_list) {
         if (this is SwipeBack) {
             headerView.setIcon(UIKitIcon.ic_chevron_left_16)
             headerView.doOnCloseClick = { finish() }
+        } else if (this is BottomSheet) {
+            headerView.setAction(UIKitIcon.ic_close_16)
+            headerView.doOnActionClick = { finish() }
         }
         listView = view.findViewById(R.id.list)
         listView.applyNavBottomPadding(requireContext().getDimensionPixelSize(R.dimen.cornerMedium))
