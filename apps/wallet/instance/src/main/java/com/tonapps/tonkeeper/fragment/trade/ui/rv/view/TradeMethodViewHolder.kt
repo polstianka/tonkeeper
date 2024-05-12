@@ -8,17 +8,21 @@ import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.list.BaseListHolder
 import uikit.extensions.setThrottleClickListener
+import uikit.widget.item.BaseItemView
 
 class TradeMethodViewHolder(
     parent: ViewGroup,
     val onItemClicked: (TradeMethodListItem) -> Unit
 ) : BaseListHolder<TradeMethodListItem>(parent, R.layout.view_trade_method) {
 
+    private val baseItemView: BaseItemView
+        get() = itemView as BaseItemView
     private val radioButton = findViewById<RadioButton>(R.id.view_trade_method_radio_button)
     private val titleTextView = findViewById<TextView>(R.id.view_trade_method_title_view)
     private val draweeView = findViewById<SimpleDraweeView>(R.id.view_trade_method_drawee_view)
 
     override fun onBind(item: TradeMethodListItem) {
+        baseItemView.position = item.position
         radioButton.isChecked = item.isChecked
         titleTextView.text = item.title
         draweeView.setImageURI(item.iconUrl)

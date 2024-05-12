@@ -18,6 +18,7 @@ open class BaseItemView @JvmOverloads constructor(
 
     var position: ListCell.Position = com.tonapps.uikit.list.ListCell.Position.SINGLE
         set(value) {
+            if (field == value) return
             field = value
             background = value.drawable(context)
         }

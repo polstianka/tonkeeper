@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<uikit.widget.item.BaseItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    app:isHeightHardcoded="false">
 
     <RadioButton
         android:id="@+id/view_trade_method_radio_button"
@@ -40,4 +42,4 @@
         tools:layout_height="48dp"
         tools:layout_width="48dp" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</uikit.widget.item.BaseItemView>
