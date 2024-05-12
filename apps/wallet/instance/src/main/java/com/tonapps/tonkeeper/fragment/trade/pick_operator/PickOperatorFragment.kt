@@ -13,6 +13,8 @@ import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation
 import uikit.widget.DropdownButton
+import uikit.widget.HeaderView
+import com.tonapps.uikit.icon.UIKitIcon
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     BaseFragment.BottomSheet {
@@ -35,12 +37,8 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         }
     }
 
-    private val chevron: View?
-        get() = view?.findViewById(R.id.fragment_pick_operator_header_chevron)
-    private val cross: View?
-        get() = view?.findViewById(R.id.fragment_pick_operator_header_cross)
-    private val subtitle: TextView?
-        get() = view?.findViewById(R.id.fragment_pick_operator_header_subtitle)
+    private val header: HeaderView?
+        get() = view?.findViewById(R.id.fragment_pick_operator_header)
     private val currencyTitle: TextView?
         get() = view?.findViewById(R.id.fragment_pick_operator_currency_title)
     private val currencyDescription: TextView?
@@ -66,14 +64,16 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chevron?.setThrottleClickListener { viewModel.onChevronClicked() }
-        cross?.setThrottleClickListener { viewModel.onCrossClicked() }
+        header?.setAction(UIKitIcon.ic_close_16)
+        header?.doOnActionClick = { viewModel.onCrossClicked() }
+        header?.setIcon(UIKitIcon.ic_chevron_left_16)
+        header?.doOnCloseClick = { viewModel.onChevronClicked() }
         currencyDropdown?.setThrottleClickListener { viewModel.onCurrencyDropdownClicked() }
         observeFlows()
     }
 
     private fun observeFlows() {
-        observeFlow(viewModel.subtitleText) { subtitle?.text = it }
+        observeFlow(viewModel.subtitleText) { header?.setSubtitle(it) }
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.currencyCode) { currencyTitle?.text = it }
         observeFlow(viewModel.currencyName) { currencyDescription?.setText(it) }

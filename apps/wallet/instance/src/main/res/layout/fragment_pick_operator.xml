@@ -6,67 +6,11 @@
     android:layout_height="match_parent"
     android:background="?backgroundPageColor">
 
-    <uikit.widget.RowLayout
-        android:id="@+id/fragment_pick_operator_header"
+    <uikit.widget.HeaderView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fragment_pick_operator_header_chevron"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_oval_button_secondary"
-            android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_chevron_left_16"
-            android:tint="?attr/buttonSecondaryForegroundColor" />
-
-        <uikit.widget.ColumnLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginVertical="8dp"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/fragment_pick_operator_header_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/operator"
-                android:textAppearance="@style/TextAppearance.H3"
-                android:textColor="?attr/textPrimaryColor" />
-
-            <TextView
-                android:id="@+id/fragment_pick_operator_header_subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?textSecondaryColor"
-                tools:text="Credit Card" />
-        </uikit.widget.ColumnLayout>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fragment_pick_operator_header_cross"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_oval_button_secondary"
-            android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_close_16"
-            android:tint="?attr/buttonSecondaryForegroundColor" />
-    </uikit.widget.RowLayout>
+        android:layout_height="wrap_content"
+        android:title="@string/operator"
+        android:id="@+id/fragment_pick_operator_header"/>
 
     <uikit.widget.DropdownButton
         android:id="@+id/fragment_pick_operator_currency_dropdown"
@@ -107,5 +51,4 @@
                 tools:text="Armenian Dram" />
         </uikit.widget.RowLayout>
     </uikit.widget.DropdownButton>
-
 </uikit.widget.ColumnLayout>
