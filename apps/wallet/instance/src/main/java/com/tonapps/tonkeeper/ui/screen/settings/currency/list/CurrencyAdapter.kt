@@ -5,11 +5,11 @@ import com.tonapps.uikit.list.BaseListAdapter
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.uikit.list.BaseListItem
 
-class Adapter(
+class CurrencyAdapter(
     private val onClick: (currency: String) -> Unit
 ): BaseListAdapter() {
 
     override fun createHolder(parent: ViewGroup, viewType: Int): BaseListHolder<out BaseListItem> {
-        return Holder(parent, onClick)
+        return CurrencyHolder(parent, onClick)
     }
 }

@@ -3,12 +3,11 @@ package com.tonapps.tonkeeper.ui.screen.settings.currency
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tonapps.tonkeeper.ui.screen.settings.currency.list.Item
+import com.tonapps.tonkeeper.ui.screen.settings.currency.list.CurrencyItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
@@ -20,7 +19,7 @@ class CurrencyViewModel(
     private val settings: SettingsRepository
 ): ViewModel() {
 
-    private val _uiItemsFlow = MutableStateFlow<List<Item>>(emptyList())
+    private val _uiItemsFlow = MutableStateFlow<List<CurrencyItem>>(emptyList())
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
 
     init {
@@ -33,11 +32,11 @@ class CurrencyViewModel(
         settings.currency = WalletCurrency(currency)
     }
 
-    private fun buildUiItems(selectedCurrency: WalletCurrency): List<Item> {
+    private fun buildUiItems(selectedCurrency: WalletCurrency): List<CurrencyItem> {
         val currencies = WalletCurrency.ALL
-        val items = mutableListOf<Item>()
+        val items = mutableListOf<CurrencyItem>()
         for ((index, currency) in currencies.withIndex()) {
-            val item = Item(
+            val item = CurrencyItem(
                 currency = currency,
                 nameResId = getNameResIdForCurrency(currency),
                 selected = currency == selectedCurrency.code,

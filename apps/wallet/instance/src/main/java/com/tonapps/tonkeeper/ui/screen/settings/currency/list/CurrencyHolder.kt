@@ -6,10 +6,10 @@ import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.uikit.list.BaseListHolder
 import uikit.widget.item.ItemIconView
 
-class Holder(
+class CurrencyHolder(
     parent: ViewGroup,
     private val onClick: (currency: String) -> Unit
-): BaseListHolder<Item>(ItemIconView(parent.context)) {
+): BaseListHolder<CurrencyItem>(ItemIconView(parent.context)) {
 
     private val itemIconView = itemView as ItemIconView
 
@@ -20,7 +20,7 @@ class Holder(
         )
     }
 
-    override fun onBind(item: Item) {
+    override fun onBind(item: CurrencyItem) {
         itemIconView.setOnClickListener { onClick(item.currency) }
         itemIconView.position = item.position
         itemIconView.text = item.currency
