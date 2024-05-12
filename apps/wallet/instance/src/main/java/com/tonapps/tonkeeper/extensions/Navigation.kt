@@ -6,9 +6,10 @@ import androidx.annotation.StringRes
 import com.tonapps.tonkeeper.fragment.camera.CameraFragment
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.tonkeeper.fragment.send.SendScreen
+import com.tonapps.tonkeeper.fragment.trade.pick_operator.PickOperatorFragment
+import com.tonapps.tonkeeper.fragment.trade.root.presentation.BuySellFragment
 import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.wallet.localization.Localization
-import io.tonapi.models.JettonBalance
 import uikit.extensions.findFragment
 import uikit.navigation.Navigation
 
@@ -52,4 +53,29 @@ fun Navigation.sendCoin(
     } else {
         add(SendScreen.newInstance(address, text, amount, jettonAddress))
     }
+}
+
+fun Navigation.toBuySell() {
+    add(BuySellFragment.newInstance())
+}
+
+fun Navigation.pickOperator(
+    id: String,
+    name: String,
+    country: String,
+    requestCode: Int,
+    selectedCurrencyCode: String?
+) {
+    val fragment = PickOperatorFragment.newInstance(
+        id = id,
+        name = name,
+        country = country,
+        requestCode = requestCode,
+        selectedCurrencyCode = selectedCurrencyCode
+    )
+    add(fragment)
+}
+
+fun Navigation.closeTrade() {
+    TODO()
 }

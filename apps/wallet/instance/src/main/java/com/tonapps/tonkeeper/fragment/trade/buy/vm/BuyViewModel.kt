@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -73,7 +72,8 @@ class BuyViewModel(
         val event = BuyEvent.PickOperator(
             methodId = it.id,
             methodName = it.title,
-            country = country.value
+            country = country.value,
+            selectedCurrencyCode = null // todo
         )
         viewModelScope.launch { _events.emit(event) }
     }

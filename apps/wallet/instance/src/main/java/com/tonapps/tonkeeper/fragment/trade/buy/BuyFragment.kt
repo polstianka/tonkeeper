@@ -1,9 +1,8 @@
 package com.tonapps.tonkeeper.fragment.trade.buy
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
@@ -18,6 +17,10 @@ import uikit.base.BaseFragment
 import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
 import uikit.widget.SimpleRecyclerView
+import com.tonapps.tonkeeper.extensions.pickOperator
+import uikit.extensions.cornerMedium
+import uikit.navigation.Navigation
+import kotlin.random.Random
 
 class BuyFragment : BaseFragment(R.layout.fragment_buy) {
     companion object {
@@ -34,6 +37,9 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         get() = view?.findViewById(R.id.fragment_buy_rv)
     private val button: Button?
         get() = view?.findViewById(R.id.next)
+    private val navigation
+        get() = context?.let { Navigation.from(it) }
+    private val requestCode = Random.nextInt()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,13 +52,23 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         observeFlow(viewModel.isButtonActive) { button?.isEnabled = it }
         observeFlow(viewModel.events) { handleEvent(it) }
         // clip children ripple effect
-        recyclerView?.round(resources.getDimensionPixelSize(uikit.R.dimen.cornerMedium))
+        recyclerView?.round(requireContext().cornerMedium)
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
     }
 
     private fun handleEvent(event: BuyEvent) {
         when (event) {
-            is BuyEvent.PickOperator -> Log.wtf("###", "pickOperator: $event")
+            is BuyEvent.PickOperator -> event.handle()
         }
+    }
+
+    private fun BuyEvent.PickOperator.handle() {
+        navigation?.pickOperator(
+            id = methodId,
+            name = methodName,
+            country = country,
+            requestCode = requestCode,
+            selectedCurrencyCode = selectedCurrencyCode
+        )
     }
 }

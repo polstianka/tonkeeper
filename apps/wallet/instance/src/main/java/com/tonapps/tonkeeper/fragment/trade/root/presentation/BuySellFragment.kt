@@ -2,9 +2,7 @@ package com.tonapps.tonkeeper.fragment.trade.root.presentation
 
 import android.os.Bundle
 import android.util.Log
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -12,10 +10,8 @@ import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
-import uikit.drawable.HeaderDrawable
 import uikit.widget.TabLayoutEx
 import com.tonapps.wallet.localization.R as LocalizationR
 
@@ -33,12 +29,9 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         get() = view?.findViewById(R.id.tab_layout)
     private val viewPager: ViewPager2?
         get() = view?.findViewById(R.id.trade_view_pager)
-    private val header: View?
-        get() = view?.findViewById(R.id.fragment_trade_header)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        header?.background = HeaderDrawable(view.context)
         closeButton?.setOnClickListener { finish() }
         prepareTabs()
     }

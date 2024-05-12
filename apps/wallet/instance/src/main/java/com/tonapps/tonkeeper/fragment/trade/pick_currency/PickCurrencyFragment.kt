@@ -3,14 +3,15 @@ package com.tonapps.tonkeeper.fragment.trade.pick_currency
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.tonapps.tonkeeperx.R
+import com.tonapps.tonkeeper.ui.screen.settings.currency.list.CurrencyAdapter
+import core.extensions.observeFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
-import uikit.extensions.setThrottleClickListener
+import uikit.base.BaseListFragment
 
-class PickCurrencyFragment : BaseFragment(R.layout.fragment_pick_currency), BaseFragment.BottomSheet {
+class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     companion object {
         fun newInstance(
@@ -23,8 +24,7 @@ class PickCurrencyFragment : BaseFragment(R.layout.fragment_pick_currency), Base
     }
 
     private val viewModel: PickCurrencyViewModel by viewModel()
-    private val cross: View?
-        get() = view?.findViewById(R.id.fragment_pick_currency_header_cross)
+    private val adapter = CurrencyAdapter { viewModel.onCurrencyClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +38,11 @@ class PickCurrencyFragment : BaseFragment(R.layout.fragment_pick_currency), Base
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cross?.setThrottleClickListener { viewModel.onCrossClicked() }
+        setTitle(getString(com.tonapps.wallet.localization.R.string.currency))
+        setAdapter(adapter)
+        observeFlow(viewModel.items) { adapter.submitList(it) }
     }
 
     private fun handleEvent(event: PickCurrencyEvent) {
-        when (event) {
-            PickCurrencyEvent.NavigateBack -> finish()
-        }
     }
 }
