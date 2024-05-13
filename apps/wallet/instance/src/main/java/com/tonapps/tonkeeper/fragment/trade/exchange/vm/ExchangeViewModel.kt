@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
+import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragmentArgs
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.ExchangeMethodListItem
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +31,7 @@ class ExchangeViewModel(
     companion object {
         private const val TOKEN_TON = "TON"
     }
+    private val args = MutableSharedFlow<ExchangeFragmentArgs>(replay = 1)
     private val country = MutableStateFlow(settingsRepository.country)
     private val currency = settingsRepository.currencyFlow
     private val methodsDomain = country.map { getExchangeMethodsCase.execute(it) }
@@ -88,5 +90,9 @@ class ExchangeViewModel(
                 amount = amount.value
             )
         )
+    }
+
+    fun provideArgs(exchangeFragmentArgs: ExchangeFragmentArgs) = viewModelScope.launch {
+        args.emit(exchangeFragmentArgs)
     }
 }

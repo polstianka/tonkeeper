@@ -24,7 +24,9 @@ import uikit.widget.SimpleRecyclerView
 
 class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
     companion object {
-        fun newInstance() = ExchangeFragment()
+        fun newInstance(direction: ExchangeDirection) = ExchangeFragment().apply {
+            setArgs(ExchangeFragmentArgs(direction))
+        }
     }
 
     private val viewModel: ExchangeViewModel by viewModel()
@@ -42,6 +44,13 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
         get() = context?.let { Navigation.from(it) }
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_exchange_footer)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.provideArgs(ExchangeFragmentArgs(requireArguments()))
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
