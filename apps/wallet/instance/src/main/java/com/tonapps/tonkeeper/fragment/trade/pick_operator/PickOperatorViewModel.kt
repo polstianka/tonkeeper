@@ -1,9 +1,9 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_operator
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.trade.domain.GetAvailableCurrenciesCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetDefaultCurrencyCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetPaymentOperatorsCase
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -61,17 +62,24 @@ class PickOperatorViewModel(
             currencyCode
         )
     }
-    val paymentOperators = paymentOperatorsDomain.map { list ->
-        list.mapIndexed { index, paymentOperator ->
-            PaymentOperatorListItem(
-                id = paymentOperator.id,
-                iconUrl = paymentOperator.iconUrl,
-                title = paymentOperator.name,
-                rate = paymentOperator.rate,
-                isPicked = false,
-                isBest = index == 0,
-                position = ListCell.getPosition(list.size, index)
-            )
+    private val _paymentOperators = MutableStateFlow(emptyList<PaymentOperatorListItem>())
+    val paymentOperators: Flow<List<PaymentOperatorListItem>>
+        get() = _paymentOperators.filter { it.isNotEmpty() }
+    private val pickedPaymentOperator = paymentOperators.map { it.firstOrNull { it.isPicked } }
+
+    init {
+        observeFlow(paymentOperatorsDomain) { domainItems ->
+            _paymentOperators.value = domainItems.mapIndexed { index, paymentOperator ->
+                PaymentOperatorListItem(
+                    id = paymentOperator.id,
+                    iconUrl = paymentOperator.iconUrl,
+                    title = paymentOperator.name,
+                    rate = paymentOperator.rate,
+                    isPicked = index == 0,
+                    isBest = index == 0,
+                    position = ListCell.getPosition(domainItems.size, index)
+                )
+            }
         }
     }
 
@@ -103,7 +111,18 @@ class PickOperatorViewModel(
         pickedCurrency.value = result.currencyCode
     }
 
-    fun onPaymentOperatorClicked(it: PaymentOperatorListItem) {
-        Log.wtf("###", "paymentOperator clicked: $it")
+    fun onPaymentOperatorClicked(it: PaymentOperatorListItem) = viewModelScope.launch {
+        val pickedItem = pickedPaymentOperator.first()
+        if (pickedItem?.id == it.id) return@launch
+        val state = _paymentOperators.value.toMutableList()
+        val iterator = state.listIterator()
+        while (iterator.hasNext()) {
+            val current = iterator.next()
+            val updated = current.copy(
+                isPicked = it.id == current.id
+            )
+            iterator.set(updated)
+        }
+        _paymentOperators.value = state
     }
 }
