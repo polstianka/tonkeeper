@@ -6,6 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeperx.R
@@ -16,7 +17,7 @@ import uikit.widget.TabLayoutEx
 import com.tonapps.wallet.localization.R as LocalizationR
 
 class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.BottomSheet,
-    TabLayout.OnTabSelectedListener {
+    TabLayout.OnTabSelectedListener, ExchangeFeatureFlowMarker {
 
     companion object {
         fun newInstance() = BuySellFragment()

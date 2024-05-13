@@ -125,4 +125,12 @@ class PickOperatorViewModel(
         }
         _paymentOperators.value = state
     }
+
+    fun onButtonClicked() = viewModelScope.launch {
+        val pickedItem = pickedPaymentOperator.first() ?: return@launch
+        val domainItems = paymentOperatorsDomain.first()
+        val domainItem = domainItems.firstOrNull { it.id == pickedItem.id } ?: return@launch
+        val event = PickOperatorEvents.NavigateToWebView(domainItem.url, domainItem.successUrlPattern)
+        emit(_events, event)
+    }
 }

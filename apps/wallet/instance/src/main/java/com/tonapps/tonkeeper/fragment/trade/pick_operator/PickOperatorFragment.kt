@@ -3,8 +3,12 @@ package com.tonapps.tonkeeper.fragment.trade.pick_operator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
+import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
@@ -17,9 +21,11 @@ import uikit.navigation.Navigation
 import uikit.widget.DropdownButton
 import uikit.widget.HeaderView
 import com.tonapps.uikit.icon.UIKitIcon
+import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.dp
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
-    BaseFragment.BottomSheet {
+    BaseFragment.BottomSheet, ExchangeFeatureFlowMarker {
     companion object {
         fun newInstance(
             id: String,
@@ -52,6 +58,10 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
         get() = context?.let { Navigation.from(it) }
     private val recyclerView: RecyclerView?
         get() = view?.findViewById(R.id.fragment_pick_operator_recycler_view)
+    private val button: Button?
+        get() = view?.findViewById(R.id.fragment_pick_operator_button)
+    private val buttonContainer: View?
+        get() = view?.findViewById(R.id.fragment_pick_operator_button_container)
     private val adapter = PaymentOperatorAdapter { viewModel.onPaymentOperatorClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,11 +79,13 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        buttonContainer?.applyNavBottomPadding(32f.dp)
         header?.setAction(UIKitIcon.ic_close_16)
         header?.doOnActionClick = { viewModel.onCrossClicked() }
         header?.setIcon(UIKitIcon.ic_chevron_left_16)
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
         currencyDropdown?.setThrottleClickListener { viewModel.onCurrencyDropdownClicked() }
+        button?.setOnClickListener { viewModel.onButtonClicked() }
         recyclerView?.adapter = adapter
         observeFlows()
     }
@@ -90,10 +102,28 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
 
     private fun handleEvent(it: PickOperatorEvents) {
         when (it) {
-            PickOperatorEvents.CloseFlow -> Log.wtf("###", "close flow")
+            PickOperatorEvents.CloseFlow -> dismissFlow()
             PickOperatorEvents.NavigateBack -> finish()
             is PickOperatorEvents.PickCurrency -> it.handle()
+            is PickOperatorEvents.NavigateToWebView -> it.handle()
         }
+    }
+
+    private fun dismissFlow() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val toRemove = fragmentManager.fragments.filter {
+            ExchangeFeatureFlowMarker::class.isInstance(it) && it != this
+        }
+        fragmentManager.commit {
+            toRemove.forEach { remove(it) }
+        }
+        finish()
+    }
+
+    private fun PickOperatorEvents.NavigateToWebView.handle() {
+        dismissFlow()
+        val fragment = FiatWebFragment.newInstance(url, successUrlPattern)
+        navigation?.add(fragment)
     }
 
     private fun onPickCurrencyResult(bundle: Bundle) {
