@@ -4,7 +4,7 @@ import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
 
-data class TradeMethodListItem(
+data class ExchangeMethodListItem(
     val id: String,
     val isChecked: Boolean,
     val title: String,

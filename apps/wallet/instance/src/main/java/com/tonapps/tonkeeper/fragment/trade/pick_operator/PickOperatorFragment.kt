@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_operator
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -13,16 +12,16 @@ import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
-import uikit.extensions.setThrottleClickListener
-import uikit.navigation.Navigation
-import uikit.widget.DropdownButton
-import uikit.widget.HeaderView
-import com.tonapps.uikit.icon.UIKitIcon
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
+import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
+import uikit.widget.DropdownButton
+import uikit.widget.HeaderView
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     BaseFragment.BottomSheet, ExchangeFeatureFlowMarker {
@@ -54,8 +53,6 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     private val viewModel: PickOperatorViewModel by viewModel()
     private val currencyDropdown: DropdownButton?
         get() = view?.findViewById(R.id.fragment_pick_operator_currency_dropdown)
-    private val navigation
-        get() = context?.let { Navigation.from(it) }
     private val recyclerView: RecyclerView?
         get() = view?.findViewById(R.id.fragment_pick_operator_recycler_view)
     private val button: Button?

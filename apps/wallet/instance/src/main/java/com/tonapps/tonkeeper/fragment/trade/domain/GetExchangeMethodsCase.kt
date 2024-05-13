@@ -1,23 +1,23 @@
 package com.tonapps.tonkeeper.fragment.trade.domain
 
-import com.tonapps.tonkeeper.fragment.trade.domain.model.BuyMethod
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeMethod
 
-class GetBuyMethodsCase {
+class GetExchangeMethodsCase {
 
     // todo: fix when api is ready
-    suspend fun execute(countryCode: String): List<BuyMethod> {
+    suspend fun execute(countryCode: String): List<ExchangeMethod> {
         return listOf(
-            BuyMethod(
+            ExchangeMethod(
                 id = "1",
                 name = "Credit Card",
                 iconUrl = ""
             ),
-            BuyMethod(
+            ExchangeMethod(
                 id = "2",
                 name = "Cryptocurrency",
                 iconUrl = ""
             ),
-            BuyMethod(
+            ExchangeMethod(
                 id = "3",
                 name = "Google Pay",
                 iconUrl = ""

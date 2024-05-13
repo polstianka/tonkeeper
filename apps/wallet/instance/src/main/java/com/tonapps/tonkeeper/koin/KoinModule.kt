@@ -12,7 +12,7 @@ import com.tonapps.tonkeeper.fragment.send.amount.AmountScreenFeature
 import com.tonapps.tonkeeper.fragment.send.confirm.ConfirmScreenFeature
 import com.tonapps.tonkeeper.fragment.send.recipient.RecipientScreenFeature
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthViewModel
-import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyViewModel
+import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyViewModel
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.PickOperatorViewModel
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
@@ -90,7 +90,7 @@ val koinModel = module {
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
     viewModel { BuySellViewModel() }
-    viewModel { BuyViewModel(get(), get(), get(), get()) }
+    viewModel { ExchangeViewModel(get(), get(), get(), get()) }
     viewModel { PickOperatorViewModel(get(), get(), get()) }
     viewModel { PickCurrencyViewModel(get()) }
 }

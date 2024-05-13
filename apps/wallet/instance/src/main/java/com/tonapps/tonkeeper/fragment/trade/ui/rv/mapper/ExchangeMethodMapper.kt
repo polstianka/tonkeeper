@@ -1,18 +1,18 @@
 package com.tonapps.tonkeeper.fragment.trade.ui.rv.mapper
 
-import com.tonapps.tonkeeper.fragment.trade.domain.model.BuyMethod
-import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeMethod
+import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.ExchangeMethodListItem
 import com.tonapps.uikit.list.ListCell
 
-class BuyMethodMapper {
+class ExchangeMethodMapper {
 
     fun map(
-        model: BuyMethod,
+        model: ExchangeMethod,
         index: Int,
         listSize: Int
-    ): TradeMethodListItem {
+    ): ExchangeMethodListItem {
         return with(model) {
-            TradeMethodListItem(
+            ExchangeMethodListItem(
                 id,
                 false,
                 name,

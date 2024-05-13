@@ -61,9 +61,10 @@
         android:layout_weight="1" />
 
     <FrameLayout
+        android:id="@+id/fragment_pick_operator_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_pick_operator_button_container">
+        android:layout_marginHorizontal="16dp">
 
         <Button
             android:id="@+id/fragment_pick_operator_button"

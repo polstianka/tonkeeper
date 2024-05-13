@@ -1,13 +1,13 @@
-package com.tonapps.tonkeeper.fragment.trade.buy.vm
+package com.tonapps.tonkeeper.fragment.trade.exchange.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
-import com.tonapps.tonkeeper.fragment.trade.domain.GetBuyMethodsCase
+import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
-import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.TradeMethodListItem
+import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.ExchangeMethodListItem
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -20,11 +20,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class BuyViewModel(
+class ExchangeViewModel(
     getRateFlowCase: GetRateFlowCase,
     settingsRepository: SettingsRepository,
-    getBuyMethodsCase: GetBuyMethodsCase,
-    private val buyListHolder: BuyListHolder
+    getExchangeMethodsCase: GetExchangeMethodsCase,
+    private val exchangeItems: ExchangeItems
 ) : ViewModel() {
 
     companion object {
@@ -32,15 +32,15 @@ class BuyViewModel(
     }
     private val country = MutableStateFlow(settingsRepository.country)
     private val currency = settingsRepository.currencyFlow
-    private val methodsDomain = country.map { getBuyMethodsCase.execute(it) }
-    val methods = buyListHolder.items
-    private val _events = MutableSharedFlow<BuyEvent>()
-    val events: Flow<BuyEvent>
+    private val methodsDomain = country.map { getExchangeMethodsCase.execute(it) }
+    val methods = exchangeItems.items
+    private val _events = MutableSharedFlow<ExchangeEvent>()
+    val events: Flow<ExchangeEvent>
         get() = _events
 
 
     init {
-        observeFlow(methodsDomain) { buyListHolder.submitItems(it) }
+        observeFlow(methodsDomain) { exchangeItems.submitItems(it) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,7 +55,7 @@ class BuyViewModel(
         val totalAmount = amount * rate
         CurrencyFormatter.format(currency.code, totalAmount)
     }
-    val isButtonActive = combine(amount, buyListHolder.pickedItem) { currentAmount, _ ->
+    val isButtonActive = combine(amount, exchangeItems.pickedItem) { currentAmount, _ ->
         !currentAmount.isNaN() && currentAmount != 0f && currentAmount.isFinite()
     }
 
@@ -71,16 +71,16 @@ class BuyViewModel(
         return toFloatOrNull() ?: 0f
     }
 
-    fun onTradeMethodClicked(it: TradeMethodListItem) {
-        buyListHolder.onMethodClicked(it.id)
+    fun onTradeMethodClicked(it: ExchangeMethodListItem) {
+        exchangeItems.onMethodClicked(it.id)
     }
 
     fun onButtonClicked() = viewModelScope.launch {
-        val paymentMethod = buyListHolder.pickedItem.first()
+        val paymentMethod = exchangeItems.pickedItem.first()
         val currency = currency.first()
         emit(
             _events,
-            BuyEvent.NavigateToPickOperator(
+            ExchangeEvent.NavigateToPickOperator(
                 paymentMethodId = paymentMethod.id,
                 paymentMethodName = paymentMethod.title,
                 country = country.value,

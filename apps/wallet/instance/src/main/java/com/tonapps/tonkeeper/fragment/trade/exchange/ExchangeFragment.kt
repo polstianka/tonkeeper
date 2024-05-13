@@ -1,15 +1,14 @@
-package com.tonapps.tonkeeper.fragment.trade.buy
+package com.tonapps.tonkeeper.fragment.trade.exchange
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
 import com.tonapps.tonkeeper.extensions.pickOperator
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
-import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyEvent
-import com.tonapps.tonkeeper.fragment.trade.buy.vm.BuyViewModel
+import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeEvent
+import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
@@ -23,25 +22,26 @@ import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation
 import uikit.widget.SimpleRecyclerView
 
-class BuyFragment : BaseFragment(R.layout.fragment_buy) {
+class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
     companion object {
-        fun newInstance() = BuyFragment()
+        fun newInstance() = ExchangeFragment()
     }
 
-    private val viewModel: BuyViewModel by viewModel()
+    private val viewModel: ExchangeViewModel by viewModel()
     private val input: AmountInput?
-        get() = view?.findViewById(R.id.value)
+        get() = view?.findViewById(R.id.fragment_exchange_input)
     private val rateTextView: AppCompatTextView?
-        get() = view?.findViewById(R.id.rate)
+        get() = view?.findViewById(R.id.fragment_exchange_rate)
     private val adapter = TradeAdapter { viewModel.onTradeMethodClicked(it) }
     private val recyclerView: SimpleRecyclerView?
-        get() = view?.findViewById(R.id.fragment_buy_rv)
+        get() = view?.findViewById(R.id.fragment_exchange_rv)
     private val button: Button?
-        get() = view?.findViewById(R.id.next)
+        get() = view?.findViewById(R.id.fragment_exchange_button)
+    // todo min amount
     private val navigation
         get() = context?.let { Navigation.from(it) }
     private val footer: View?
-        get() = view?.findViewById(R.id.footer)
+        get() = view?.findViewById(R.id.fragment_exchange_footer)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,13 +59,13 @@ class BuyFragment : BaseFragment(R.layout.fragment_buy) {
         footer?.applyNavBottomPadding(16f.dp.toInt())
     }
 
-    private fun handleEvent(event: BuyEvent) {
+    private fun handleEvent(event: ExchangeEvent) {
         when (event) {
-            is BuyEvent.NavigateToPickOperator -> event.handle()
+            is ExchangeEvent.NavigateToPickOperator -> event.handle()
         }
     }
 
-    private fun BuyEvent.NavigateToPickOperator.handle() {
+    private fun ExchangeEvent.NavigateToPickOperator.handle() {
         navigation?.pickOperator(
             id = paymentMethodId,
             name = paymentMethodName,
