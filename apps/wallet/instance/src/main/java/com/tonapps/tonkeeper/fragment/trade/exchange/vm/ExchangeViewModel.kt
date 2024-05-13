@@ -34,7 +34,9 @@ class ExchangeViewModel(
     private val args = MutableSharedFlow<ExchangeFragmentArgs>(replay = 1)
     private val country = MutableStateFlow(settingsRepository.country)
     private val currency = settingsRepository.currencyFlow
-    private val methodsDomain = country.map { getExchangeMethodsCase.execute(it) }
+    private val methodsDomain = combine(country, args) { country, argument ->
+        getExchangeMethodsCase.execute(country, argument.direction)
+    }
     val methods = exchangeItems.items
     private val _events = MutableSharedFlow<ExchangeEvent>()
     val events: Flow<ExchangeEvent>

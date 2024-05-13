@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.trade.exchange
 import android.os.Bundle
 import com.tonapps.extensions.getEnum
 import com.tonapps.extensions.putEnum
+import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import uikit.base.BaseArgs
 
 data class ExchangeFragmentArgs(val direction: ExchangeDirection) : BaseArgs() {

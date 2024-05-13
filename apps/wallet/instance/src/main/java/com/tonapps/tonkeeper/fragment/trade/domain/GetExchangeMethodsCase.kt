@@ -5,7 +5,10 @@ import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeMethod
 class GetExchangeMethodsCase {
 
     // todo: fix when api is ready
-    suspend fun execute(countryCode: String): List<ExchangeMethod> {
+    suspend fun execute(
+        countryCode: String,
+        exchangeDirection: ExchangeDirection
+    ): List<ExchangeMethod> {
         return listOf(
             ExchangeMethod(
                 id = "1",

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
 import com.tonapps.tonkeeper.extensions.pickOperator
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeEvent
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
