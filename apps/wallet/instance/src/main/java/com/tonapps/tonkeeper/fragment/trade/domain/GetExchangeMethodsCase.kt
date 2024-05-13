@@ -9,22 +9,40 @@ class GetExchangeMethodsCase {
         countryCode: String,
         exchangeDirection: ExchangeDirection
     ): List<ExchangeMethod> {
-        return listOf(
-            ExchangeMethod(
-                id = "1",
-                name = "Credit Card",
-                iconUrl = ""
-            ),
-            ExchangeMethod(
-                id = "2",
-                name = "Cryptocurrency",
-                iconUrl = ""
-            ),
-            ExchangeMethod(
-                id = "3",
-                name = "Google Pay",
-                iconUrl = ""
-            )
-        )
+        return when (exchangeDirection) {
+            ExchangeDirection.BUY -> {
+                listOf(
+                    ExchangeMethod(
+                        id = "1",
+                        name = "Credit Card",
+                        iconUrl = ""
+                    ),
+                    ExchangeMethod(
+                        id = "2",
+                        name = "Cryptocurrency",
+                        iconUrl = ""
+                    ),
+                    ExchangeMethod(
+                        id = "3",
+                        name = "Google Pay",
+                        iconUrl = ""
+                    )
+                )
+            }
+            ExchangeDirection.SELL -> {
+                listOf(
+                    ExchangeMethod(
+                        id = "1",
+                        name = "Credit Card",
+                        iconUrl = ""
+                    ),
+                    ExchangeMethod(
+                        id = "2",
+                        name = "Cryptocurrency",
+                        iconUrl = ""
+                    ),
+                )
+            }
+        }
     }
 }

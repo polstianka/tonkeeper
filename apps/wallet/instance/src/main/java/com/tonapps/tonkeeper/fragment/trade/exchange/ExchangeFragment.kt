@@ -5,11 +5,11 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
-import com.tonapps.tonkeeper.extensions.pickOperator
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeEvent
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
+import com.tonapps.tonkeeper.fragment.trade.pick_operator.PickOperatorFragment
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.TradeAdapter
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
@@ -20,7 +20,7 @@ import uikit.extensions.cornerMedium
 import uikit.extensions.dp
 import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
-import uikit.navigation.Navigation
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.SimpleRecyclerView
 
 class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
@@ -41,8 +41,6 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
     private val button: Button?
         get() = view?.findViewById(R.id.fragment_exchange_button)
     // todo min amount
-    private val navigation
-        get() = context?.let { Navigation.from(it) }
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_exchange_footer)
 
@@ -76,12 +74,15 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
     }
 
     private fun ExchangeEvent.NavigateToPickOperator.handle() {
-        navigation?.pickOperator(
+
+        val fragment = PickOperatorFragment.newInstance(
             id = paymentMethodId,
             name = paymentMethodName,
             country = country,
             selectedCurrencyCode = currencyCode,
-            amount = amount
+            amount = amount,
+            direction = direction
         )
+        navigation?.add(fragment)
     }
 }

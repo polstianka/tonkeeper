@@ -8,6 +8,7 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
 import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
+import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
@@ -27,6 +28,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     BaseFragment.BottomSheet, ExchangeFeatureFlowMarker {
     companion object {
         fun newInstance(
+            direction: ExchangeDirection,
             id: String,
             name: String,
             country: String,
@@ -34,6 +36,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             amount: Float
         ): PickOperatorFragment {
             val argument = PickOperatorFragmentArgs(
+                exchangeDirection = direction,
                 paymentMethodId = id,
                 name = name,
                 country = country,

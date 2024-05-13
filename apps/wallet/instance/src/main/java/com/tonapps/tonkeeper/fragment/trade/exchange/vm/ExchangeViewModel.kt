@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
+import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragmentArgs
@@ -82,6 +83,7 @@ class ExchangeViewModel(
     fun onButtonClicked() = viewModelScope.launch {
         val paymentMethod = exchangeItems.pickedItem.first()
         val currency = currency.first()
+        val direction = args.first().direction
         emit(
             _events,
             ExchangeEvent.NavigateToPickOperator(
@@ -89,7 +91,8 @@ class ExchangeViewModel(
                 paymentMethodName = paymentMethod.title,
                 country = country.value,
                 currencyCode = currency.code,
-                amount = amount.value
+                amount = amount.value,
+                direction = direction
             )
         )
     }

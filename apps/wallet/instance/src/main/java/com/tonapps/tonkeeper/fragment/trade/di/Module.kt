@@ -13,7 +13,7 @@ val ratesDomainModule = module {
     single { GetRateFlowCase(get()) }
     single { ExchangeMethodMapper() }
     single { GetExchangeMethodsCase() }
-    single { ExchangeItems(get()) }
+    factory { ExchangeItems(get()) }
     single { GetAvailableCurrenciesCase() }
     single { GetDefaultCurrencyCase() }
     single { GetPaymentOperatorsCase() }

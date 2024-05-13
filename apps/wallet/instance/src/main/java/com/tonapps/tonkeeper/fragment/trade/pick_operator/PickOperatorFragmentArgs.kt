@@ -1,9 +1,13 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_operator
 
 import android.os.Bundle
+import com.tonapps.extensions.getEnum
+import com.tonapps.extensions.putEnum
+import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import uikit.base.BaseArgs
 
 class PickOperatorFragmentArgs(
+    val exchangeDirection: ExchangeDirection,
     val paymentMethodId: String,
     val name: String,
     val country: String,
@@ -17,6 +21,7 @@ class PickOperatorFragmentArgs(
         private const val KEY_COUNTRY = "KEY_COUNTRY"
         private const val KEY_SELECTED_CURRENCY_CODE = "KEY_SELECTED_CURRENCY_CODE"
         private const val KEY_AMOUNT = "KEY_AMOUNT "
+        private const val KEY_EXCHANGE_DIRECTION = "KEY_EXCHANGE_DIRECTION "
     }
 
     override fun toBundle(): Bundle {
@@ -26,10 +31,12 @@ class PickOperatorFragmentArgs(
             putString(KEY_COUNTRY, country)
             putString(KEY_SELECTED_CURRENCY_CODE, selectedCurrencyCode)
             putFloat(KEY_AMOUNT, amount)
+            putEnum(KEY_EXCHANGE_DIRECTION, exchangeDirection)
         }
     }
 
     constructor(bundle: Bundle) : this(
+        exchangeDirection = bundle.getEnum(KEY_EXCHANGE_DIRECTION, ExchangeDirection.BUY),
         paymentMethodId = bundle.getString(KEY_ID)!!,
         name = bundle.getString(KEY_NAME)!!,
         country = bundle.getString(KEY_COUNTRY)!!,

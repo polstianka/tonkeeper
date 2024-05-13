@@ -66,14 +66,6 @@ fun Navigation.pickOperator(
     selectedCurrencyCode: String,
     amount: Float
 ) {
-    val fragment = PickOperatorFragment.newInstance(
-        id = id,
-        name = name,
-        country = country,
-        selectedCurrencyCode = selectedCurrencyCode,
-        amount = amount
-    )
-    add(fragment)
 }
 
 fun Navigation.closeTrade() {
