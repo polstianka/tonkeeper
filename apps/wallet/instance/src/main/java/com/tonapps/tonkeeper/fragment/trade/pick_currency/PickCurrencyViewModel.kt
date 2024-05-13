@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.trade.pick_currency
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
@@ -22,7 +21,10 @@ class PickCurrencyViewModel(
     private val _events = MutableSharedFlow<PickCurrencyEvent>()
     private val arg = MutableSharedFlow<PickCurrencyFragmentArgs>(replay = 1)
     private val availableCurrencies = arg.map {
-        getAvailableCurrenciesCase.execute(it.paymentMethodId)
+        getAvailableCurrenciesCase.execute(
+            paymentMethodId = it.paymentMethodId,
+            direction = it.direction
+        )
     }
 
     val events: Flow<PickCurrencyEvent>

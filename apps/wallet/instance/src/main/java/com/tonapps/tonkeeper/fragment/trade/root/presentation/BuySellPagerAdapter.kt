@@ -2,7 +2,7 @@ package com.tonapps.tonkeeper.fragment.trade.root.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragment
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 

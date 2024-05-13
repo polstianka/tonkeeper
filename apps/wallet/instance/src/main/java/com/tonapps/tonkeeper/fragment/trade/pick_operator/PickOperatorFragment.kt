@@ -8,7 +8,7 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
 import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
-import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
@@ -132,6 +132,12 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     }
 
     private fun PickOperatorEvents.PickCurrency.handle() {
-        navigation?.add(PickCurrencyFragment.newInstance(paymentMethodId, pickedCurrencyCode))
+        navigation?.add(
+            PickCurrencyFragment.newInstance(
+                paymentMethodId = paymentMethodId,
+                pickedCurrencyCode = pickedCurrencyCode,
+                direction = direction
+            )
+        )
     }
 }

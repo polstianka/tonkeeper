@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.ui.screen.settings.currency.list.CurrencyAdapter
 import core.extensions.observeFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -19,9 +20,14 @@ class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet,
     companion object {
         fun newInstance(
             paymentMethodId: String,
-            pickedCurrencyCode: String
+            pickedCurrencyCode: String,
+            direction: ExchangeDirection
         ): PickCurrencyFragment {
-            val args = PickCurrencyFragmentArgs(paymentMethodId, pickedCurrencyCode)
+            val args = PickCurrencyFragmentArgs(
+                paymentMethodId = paymentMethodId,
+                pickedCurrencyCode = pickedCurrencyCode,
+                direction = direction
+            )
             return PickCurrencyFragment().apply { setArgs(args) }
         }
     }

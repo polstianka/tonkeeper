@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.fragment.trade.domain
 
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeMethod
 
 class GetExchangeMethodsCase {

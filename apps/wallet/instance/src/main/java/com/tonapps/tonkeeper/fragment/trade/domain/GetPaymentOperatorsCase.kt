@@ -1,19 +1,24 @@
 package com.tonapps.tonkeeper.fragment.trade.domain
 
 import com.tonapps.tonkeeper.App
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.domain.model.PaymentOperator
 
 class GetPaymentOperatorsCase {
     suspend fun execute(
         country: String,
         paymentMethodId: String,
-        currencyCode: String
+        currencyCode: String,
+        direction: ExchangeDirection
     ): List<PaymentOperator> {
         return App.fiat.getMethods(country)
             .map {
                 PaymentOperator(
                     id = it.id,
-                    name = it.title,
+                    name = when (direction) {
+                        ExchangeDirection.BUY -> it.title
+                        ExchangeDirection.SELL -> it.title + "hehe"
+                    },
                     description = it.description,
                     iconUrl = it.iconUrl,
                     url = it.actionButton.url,

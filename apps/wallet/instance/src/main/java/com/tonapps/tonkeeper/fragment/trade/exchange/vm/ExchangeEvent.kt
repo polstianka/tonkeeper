@@ -1,6 +1,6 @@
 package com.tonapps.tonkeeper.fragment.trade.exchange.vm
 
-import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 
 sealed class ExchangeEvent {
     data class NavigateToPickOperator(

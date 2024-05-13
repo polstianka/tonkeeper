@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
-import com.tonapps.tonkeeper.fragment.trade.domain.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragmentArgs
