@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="6dp"
+                android:backgroundTint="?accentBlueColor"
                 android:background="@drawable/bg_chip">
 
                 <TextView
