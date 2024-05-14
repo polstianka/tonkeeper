@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
@@ -33,6 +34,16 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         get() = view?.findViewById(R.id.fragment_stake_max)
     private val availableLabel: TextView?
         get() = view?.findViewById(R.id.fragment_stake_available)
+    private val optionIconView: SimpleDraweeView?
+        get() = view?.findViewById(R.id.fragment_stake_option_icon)
+    private val optionTitle: TextView?
+        get() = view?.findViewById(R.id.fragment_stake_option_title)
+    private val optionSubtitle: TextView?
+        get() = view?.findViewById(R.id.fragment_stake_option_subtitle)
+    private val optionChip: View?
+        get() = view?.findViewById(R.id.fragment_stake_option_chip)
+    private val optionDropdown: View?
+        get() = view?.findViewById(R.id.fragment_stake_dropdown)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,6 +54,8 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         input?.doOnAmountChange { viewModel.onAmountChanged(it) }
 
         maxButton?.setThrottleClickListener { viewModel.onMaxClicked() }
+
+        optionDropdown?.setThrottleClickListener { viewModel.onDropdownClicked() }
 
         observeFlow(viewModel.events, ::handleEvent)
         observeFlow(viewModel.fiatAmount) { fiatTextView?.text = it }

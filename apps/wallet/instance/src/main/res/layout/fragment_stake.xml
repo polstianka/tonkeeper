@@ -68,7 +68,8 @@
     <uikit.widget.RowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp">
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fragment_stake_max"
@@ -94,6 +95,76 @@
             android:textColor="?textSecondaryColor"
             tools:text="Available: 100,000.01 TON" />
     </uikit.widget.RowLayout>
+
+    <uikit.widget.DropdownButton
+        android:id="@+id/fragment_stake_dropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        app:dropdownIcon="@drawable/ic_switch_16"
+        app:dropdownIconTint="?iconTertiaryColor">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+
+                android:id="@+id/fragment_stake_option_icon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="16dp"
+                android:layout_marginEnd="16dp"
+                app:roundedCornerRadius="12dp"
+                tools:background="#f00" />
+
+            <uikit.widget.ColumnLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1">
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/fragment_stake_option_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="Tonstakers" />
+
+                    <uikit.widget.ChipView
+                        android:id="@+id/fragment_stake_option_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:visibility="gone"
+                        app:color="?accentGreenColor"
+                        app:text="@string/max_apy" />
+                </uikit.widget.RowLayout>
+
+                <TextView
+                    android:id="@+id/fragment_stake_option_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?textSecondaryColor"
+                    tools:text="APY ~5.01% | 50.01 TON" />
+
+            </uikit.widget.ColumnLayout>
+        </uikit.widget.RowLayout>
+
+    </uikit.widget.DropdownButton>
 
 
 </uikit.widget.ColumnLayout>

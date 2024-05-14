@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -89,5 +90,9 @@ class StakeViewModel(
     fun onMaxClicked() = viewModelScope.launch {
         val balance = balance.first().balance.value
         _events.emit(StakeEvent.SetInputValue(balance))
+    }
+
+    fun onDropdownClicked() {
+        Log.wtf("###", "onDropdownClicked")
     }
 }

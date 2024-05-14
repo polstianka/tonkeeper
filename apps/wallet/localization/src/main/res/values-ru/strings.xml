@@ -268,4 +268,5 @@
     <string name="best">Лучший</string>
 
     <string name="stake_fragment_available_mask">Доступно: %1s</string>
+    <string name="max_apy">Max APY</string>
 </resources>
