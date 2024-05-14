@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
@@ -89,7 +90,7 @@ class StakeViewModel(
             service.apy.toFloat(),
             2
         ) // todo properly work with bigdecimals
-        val minStaking = BigDecimal(service.minStake).movePointLeft(9)
+        val minStaking = BigDecimal(service.minStake).movePointLeft(8)
         val minStakingString = CurrencyFormatter.format(TOKEN_TON, minStaking)
         TextWrapper.StringResource(R.string.apy_mask, maxApy, minStakingString)
     }
@@ -133,14 +134,5 @@ class StakeViewModel(
     }
 }
 
-private fun StakingServiceType.getIconUrl() = "res:/${getIconDrawableRes()}"
-
-private fun StakingServiceType.getIconDrawableRes(): Int {
-    return when (this) {
-        StakingServiceType.TF -> com.tonapps.tonkeeperx.R.drawable.ic_staking_tf
-        StakingServiceType.WHALES -> com.tonapps.tonkeeperx.R.drawable.ic_staking_whales
-        StakingServiceType.LIQUID_TF -> com.tonapps.tonkeeperx.R.drawable.ic_staking_tonstakers
-    }
-}
 
 private fun List<StakingService>.maxApy() = first().pools.first()

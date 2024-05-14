@@ -4,11 +4,18 @@
     android:layout_height="match_parent">
 
     <uikit.widget.HeaderView
+        android:id="@+id/fragment_pick_staking_option_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_pick_staking_option_header"
-        android:title="@string/options"
+        android:action="@drawable/ic_close_16"
         android:icon="@drawable/ic_chevron_left_16"
-        android:action="@drawable/ic_close_16"/>
+        android:title="@string/options" />
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/fragment_pick_staking_option_rv"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </uikit.widget.ColumnLayout>

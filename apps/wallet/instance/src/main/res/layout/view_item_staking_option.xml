@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.item.BaseItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:isHeightHardcoded="false"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+
+        android:id="@+id/view_item_staking_option_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="16dp"
+        app:roundedCornerRadius="12dp"
+        tools:background="#f00" />
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/view_item_staking_option_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?textPrimaryColor"
+                tools:text="Tonstakers" />
+
+            <uikit.widget.ChipView
+                android:id="@+id/view_item_staking_option_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:visibility="gone"
+                app:color="?accentGreenColor"
+                app:text="@string/max_apy"
+                tools:visibility="visible" />
+        </uikit.widget.RowLayout>
+
+        <TextView
+            android:id="@+id/view_item_staking_option_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?textSecondaryColor"
+            tools:text="APY ~5.01% | 50.01 TON" />
+
+    </uikit.widget.ColumnLayout>
+
+    <RadioButton
+        android:id="@+id/view_item_staking_option_radiobutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@null"
+        android:clickable="false" />
+</uikit.widget.item.BaseItemView>
