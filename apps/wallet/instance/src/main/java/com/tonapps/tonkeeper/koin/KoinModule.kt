@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.fragment.send.amount.AmountScreenFeature
 import com.tonapps.tonkeeper.fragment.send.confirm.ConfirmScreenFeature
 import com.tonapps.tonkeeper.fragment.send.recipient.RecipientScreenFeature
+import com.tonapps.tonkeeper.fragment.stake.StakeViewModel
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthViewModel
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyViewModel
@@ -93,4 +94,5 @@ val koinModel = module {
     viewModel { ExchangeViewModel(get(), get(), get(), get()) }
     viewModel { PickOperatorViewModel(get(), get(), get()) }
     viewModel { PickCurrencyViewModel(get()) }
+    viewModel { StakeViewModel() }
 }
