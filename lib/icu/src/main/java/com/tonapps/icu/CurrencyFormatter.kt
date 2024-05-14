@@ -76,7 +76,7 @@ object CurrencyFormatter {
     val monetarySymbolFirstPosition = format.toPattern().startsWith(CURRENCY_SIGN)
     val monetaryDecimalSeparator = format.decimalFormatSymbols.monetaryDecimalSeparator.toString()
 
-    private fun formatFloat(
+    fun formatFloat(
         value: Float,
         decimals: Int,
     ): String {
