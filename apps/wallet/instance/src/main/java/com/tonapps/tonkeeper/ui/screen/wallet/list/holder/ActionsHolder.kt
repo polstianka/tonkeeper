@@ -6,6 +6,7 @@ import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.extensions.toBuySell
+import com.tonapps.tonkeeper.fragment.stake.StakeFragment
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
@@ -30,6 +31,7 @@ class ActionsHolder(parent: ViewGroup) :
         sendView.setOnClickListener { navigation?.sendCoin() }
         scanView.setOnClickListener { navigation?.openCamera() }
         buyOrSellView.setThrottleClickListener { navigation?.toBuySell() }
+        stakeView.setThrottleClickListener { navigation?.add(StakeFragment.newInstance()) }
         findViewById<View>(R.id.scan).setOnClickListener { navigation?.openCamera() }
     }
 
@@ -53,6 +55,7 @@ class ActionsHolder(parent: ViewGroup) :
         buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap
         buyOrSellView.isEnabled =
             item.walletType != WalletType.Testnet && item.walletType != WalletType.Watch
+        stakeView.isEnabled = item.walletType == WalletType.Default
     }
 
 }
