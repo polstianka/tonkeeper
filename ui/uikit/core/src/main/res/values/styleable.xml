@@ -118,4 +118,8 @@
     <declare-styleable name="BaseItemView">
         <attr name="isHeightHardcoded" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="ChipView">
+        <attr name="color" format="color"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
 </resources>
