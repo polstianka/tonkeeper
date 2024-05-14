@@ -67,7 +67,8 @@ class StakingServiceMapper {
             name = name,
             nominatorsStake = nominatorsStake,
             totalAmount = totalAmount,
-            validatorStake = validatorStake
+            validatorStake = validatorStake,
+            isMaxApy = false
         )
     }
 

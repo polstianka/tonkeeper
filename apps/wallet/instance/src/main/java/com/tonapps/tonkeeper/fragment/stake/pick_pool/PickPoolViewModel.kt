@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolListItem
+import com.tonapps.tonkeeper.fragment.stake.presentation.apyText
+import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.Flow
@@ -22,10 +24,11 @@ class PickPoolViewModel : ViewModel() {
             PickPoolListItem(
                 iconUrl = item.serviceType.getIconUrl(),
                 title = item.name,
-                subtitle = "todo",
+                subtitle = item.apyText(),
                 isChecked = args.pickedPool.address == item.address,
                 accountNumber = item.address,
-                position = ListCell.getPosition(args.pools.size, index)
+                position = ListCell.getPosition(args.pools.size, index),
+                isMaxApy = item.isMaxApy
             )
         }
     }

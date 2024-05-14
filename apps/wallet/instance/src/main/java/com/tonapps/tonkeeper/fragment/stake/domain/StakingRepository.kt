@@ -30,6 +30,21 @@ class StakingRepository(
             .filter { it.value.isNotEmpty() }
             .map { mapper.map(it, result.implementations) }
             .sortedByDescending { it.maxAPY }
+            .mapIndexed { index1, item1 ->
+                if (index1 == 0) {
+                    item1.copy(
+                        pools = item1.pools.mapIndexed { index, item ->
+                            if (index == 0) {
+                                item.copy(isMaxApy = true)
+                            } else {
+                                item
+                            }
+                        }
+                    )
+                } else {
+                    item1
+                }
+            }
             .toList()
     }
 }

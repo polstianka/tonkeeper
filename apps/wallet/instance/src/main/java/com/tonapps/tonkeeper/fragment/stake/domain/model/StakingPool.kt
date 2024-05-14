@@ -19,5 +19,6 @@ data class StakingPool(
     val name: String,
     val nominatorsStake: Long,
     val totalAmount: Long,
-    val validatorStake: Long
+    val validatorStake: Long,
+    val isMaxApy: Boolean
 ) : Parcelable

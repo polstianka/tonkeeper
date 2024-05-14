@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.stake.root
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -10,7 +9,7 @@ import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
-import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
+import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
@@ -85,15 +84,7 @@ class StakeViewModel(
     }
     val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
     val optionTitle = pickedPool.map { it.name }
-    val optionSubtitle = pickedPool.map { service ->
-        val maxApy = CurrencyFormatter.formatFloat(
-            service.apy.toFloat(),
-            2
-        ) // todo properly work with bigdecimals
-        val minStaking = BigDecimal(service.minStake).movePointLeft(8)
-        val minStakingString = CurrencyFormatter.format(TOKEN_TON, minStaking)
-        TextWrapper.StringResource(R.string.apy_mask, maxApy, minStakingString)
-    }
+    val optionSubtitle = pickedPool.map { it.description() }
     val isMaxApy = combine(stakingServices, pickedPool) { list, item ->
         list.maxApy() === item
     }
