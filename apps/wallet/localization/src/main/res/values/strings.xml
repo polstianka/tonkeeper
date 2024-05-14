@@ -270,4 +270,6 @@
     <string name="browser_search_placeholder">Enter an address or search the web</string>
     <string name="operator">Operator</string>
     <string name="best">Best</string>
+
+    <string name="stake_fragment_available_mask">Available: %1s</string>
 </resources>

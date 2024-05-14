@@ -266,4 +266,6 @@
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
     <string name="operator">Оператор</string>
     <string name="best">Лучший</string>
+
+    <string name="stake_fragment_available_mask">Доступно: %1s</string>
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -62,5 +64,36 @@
             android:textColor="?attr/textSecondaryColor" />
 
     </uikit.widget.ColumnLayout>
+
+    <uikit.widget.RowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_stake_max"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_secondary_24"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="20dp"
+            android:text="@string/max"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/buttonSecondaryForegroundColor"
+            app:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/fragment_stake_available"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?textSecondaryColor"
+            tools:text="Available: 100,000.01 TON" />
+    </uikit.widget.RowLayout>
+
 
 </uikit.widget.ColumnLayout>
