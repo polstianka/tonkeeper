@@ -126,8 +126,10 @@ class StakeViewModel(
         _events.emit(StakeEvent.SetInputValue(balance))
     }
 
-    fun onDropdownClicked() {
-        Log.wtf("###", "onDropdownClicked")
+    fun onDropdownClicked() = viewModelScope.launch {
+        val items = stakingServices.value
+        val pickedValue = pickedPool.first()
+        emit(_events, StakeEvent.PickStakingOption(items, pickedValue))
     }
 }
 

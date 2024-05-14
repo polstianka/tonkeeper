@@ -10,12 +10,14 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionFragment
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.resolveColor
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 
 class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSheet {
@@ -75,10 +77,16 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
             StakeEvent.NavigateBack -> finish()
             StakeEvent.ShowInfo -> Log.wtf("###", "showInfo")
             is StakeEvent.SetInputValue -> event.handle()
+            is StakeEvent.PickStakingOption -> event.handle()
         }
     }
 
     private fun StakeEvent.SetInputValue.handle() {
         input?.setText(CurrencyFormatter.formatFloat(value, 2))
+    }
+
+    private fun StakeEvent.PickStakingOption.handle() {
+        val fragment = PickStakingOptionFragment.newInstance(items, picked)
+        navigation?.add(fragment)
     }
 }
