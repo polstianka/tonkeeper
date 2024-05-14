@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.doOnTextChanged
+import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeEvent
@@ -53,9 +53,7 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        input?.doOnTextChanged { text, _, _, _ ->
-            viewModel.onAmountChanged(text.toString())
-        }
+        input?.doOnAmountChange { viewModel.onAmountChanged(it) }
         recyclerView?.adapter = adapter
         observeFlow(viewModel.totalFiat) { rateTextView?.text = it }
         observeFlow(viewModel.methods) { adapter.submitList(it) }

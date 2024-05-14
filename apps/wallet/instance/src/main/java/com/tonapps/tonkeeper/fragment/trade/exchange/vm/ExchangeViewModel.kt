@@ -63,16 +63,11 @@ class ExchangeViewModel(
         !currentAmount.isNaN() && currentAmount != 0f && currentAmount.isFinite()
     }
 
-    fun onAmountChanged(amount: String) {
+    fun onAmountChanged(newAmount: Float) {
         val oldAmount = this.amount.value
-        val newAmount = amount.getValue()
         if (oldAmount == newAmount) return
 
         this.amount.value = newAmount
-    }
-
-    private fun String.getValue(): Float {
-        return toFloatOrNull() ?: 0f
     }
 
     fun onTradeMethodClicked(it: ExchangeMethodListItem) {
