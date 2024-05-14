@@ -19,8 +19,8 @@ import java.io.IOException
 import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.GetStorageProviders200Response
+import io.tonapi.models.StatusDefaultResponse
 
 import com.squareup.moshi.Json
 

@@ -15,6 +15,7 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.AccountAddress
 import io.tonapi.models.JettonMetadata
 import io.tonapi.models.JettonVerificationType
 
@@ -29,6 +30,7 @@ import com.squareup.moshi.JsonClass
  * @param metadata 
  * @param verification 
  * @param holdersCount 
+ * @param admin 
  */
 
 
@@ -47,7 +49,10 @@ data class JettonInfo (
     val verification: JettonVerificationType,
 
     @Json(name = "holders_count")
-    val holdersCount: kotlin.Int
+    val holdersCount: kotlin.Int,
+
+    @Json(name = "admin")
+    val admin: AccountAddress? = null
 
 )
 

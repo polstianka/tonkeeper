@@ -33,7 +33,7 @@ data class TraceID (
     val id: kotlin.String,
 
     @Json(name = "utime")
-    val utime: kotlin.Int
+    val utime: kotlin.Long
 
 )
 

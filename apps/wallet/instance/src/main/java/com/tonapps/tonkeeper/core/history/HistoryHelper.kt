@@ -529,7 +529,7 @@ class HistoryHelper(
                 isOut = false,
                 failed = action.status == Action.Status.failed,
             )
-        } else if (action.type == Action.Type.unknown) {
+        } else if (action.type == Action.Type.Unknown) {
             return createUnknown(index, txId, action, date, timestamp, simplePreview)
         } else if (action.withdrawStake != null) {
             val withdrawStake = action.withdrawStake!!

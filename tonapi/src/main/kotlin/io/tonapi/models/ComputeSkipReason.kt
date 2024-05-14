@@ -22,20 +22,20 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * Values: noState,badState,noGas
+ * Values: no_state,bad_state,no_gas
  */
 
 @JsonClass(generateAdapter = false)
 enum class ComputeSkipReason(val value: kotlin.String) {
 
     @Json(name = "cskip_no_state")
-    noState("cskip_no_state"),
+    no_state("cskip_no_state"),
 
     @Json(name = "cskip_bad_state")
-    badState("cskip_bad_state"),
+    bad_state("cskip_bad_state"),
 
     @Json(name = "cskip_no_gas")
-    noGas("cskip_no_gas");
+    no_gas("cskip_no_gas");
 
     /**
      * Override [toString()] to avoid using the enum variable name as the value, and instead use

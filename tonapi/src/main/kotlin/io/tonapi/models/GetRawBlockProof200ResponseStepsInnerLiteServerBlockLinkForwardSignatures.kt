@@ -32,7 +32,7 @@ import com.squareup.moshi.JsonClass
 data class GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForwardSignatures (
 
     @Json(name = "validator_set_hash")
-    val validatorSetHash: kotlin.Int,
+    val validatorSetHash: kotlin.Long,
 
     @Json(name = "catchain_seqno")
     val catchainSeqno: kotlin.Int,

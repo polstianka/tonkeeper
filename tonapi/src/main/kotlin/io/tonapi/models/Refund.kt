@@ -40,13 +40,13 @@ data class Refund (
     /**
      * 
      *
-     * Values: dNSPeriodTon,dNSPeriodTg,getGems
+     * Values: DNSPeriodTon,DNSPeriodTg,GetGems
      */
     @JsonClass(generateAdapter = false)
     enum class Type(val value: kotlin.String) {
-        @Json(name = "DNS.ton") dNSPeriodTon("DNS.ton"),
-        @Json(name = "DNS.tg") dNSPeriodTg("DNS.tg"),
-        @Json(name = "GetGems") getGems("GetGems");
+        @Json(name = "DNS.ton") DNSPeriodTon("DNS.ton"),
+        @Json(name = "DNS.tg") DNSPeriodTg("DNS.tg"),
+        @Json(name = "GetGems") GetGems("GetGems");
     }
 }
 

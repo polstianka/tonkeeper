@@ -3,6 +3,7 @@ package com.tonapps.wallet.api.entity
 import android.os.Parcelable
 import com.tonapps.blockchain.ton.contract.WalletVersion
 import io.tonapi.models.Account
+import io.tonapi.models.AccountStatus
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -26,7 +27,7 @@ data class AccountDetailsEntity(
     constructor(query: String, account: Account, testnet: Boolean) : this(
         query = query,
         preview = AccountEntity(account, testnet),
-        active = account.status == "active",
+        active = account.status == AccountStatus.active,
         walletVersion = resolveVersion(account.interfaces),
         balance = account.balance
     )

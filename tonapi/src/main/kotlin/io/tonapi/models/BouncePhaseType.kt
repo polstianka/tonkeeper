@@ -22,20 +22,20 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * Values: trPhaseBounceNegfunds,trPhaseBounceNofunds,trPhaseBounceOk
+ * Values: TrPhaseBounceNegfunds,TrPhaseBounceNofunds,TrPhaseBounceOk
  */
 
 @JsonClass(generateAdapter = false)
 enum class BouncePhaseType(val value: kotlin.String) {
 
     @Json(name = "TrPhaseBounceNegfunds")
-    trPhaseBounceNegfunds("TrPhaseBounceNegfunds"),
+    TrPhaseBounceNegfunds("TrPhaseBounceNegfunds"),
 
     @Json(name = "TrPhaseBounceNofunds")
-    trPhaseBounceNofunds("TrPhaseBounceNofunds"),
+    TrPhaseBounceNofunds("TrPhaseBounceNofunds"),
 
     @Json(name = "TrPhaseBounceOk")
-    trPhaseBounceOk("TrPhaseBounceOk");
+    TrPhaseBounceOk("TrPhaseBounceOk");
 
     /**
      * Override [toString()] to avoid using the enum variable name as the value, and instead use

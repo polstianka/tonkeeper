@@ -30,9 +30,9 @@ import io.tonapi.models.FoundAccounts
 import io.tonapi.models.GetAccountDiff200Response
 import io.tonapi.models.GetAccountPublicKey200Response
 import io.tonapi.models.GetAccountsRequest
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.JettonsBalances
 import io.tonapi.models.NftItems
+import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.Subscriptions
 import io.tonapi.models.TraceIDs
 
@@ -746,7 +746,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getAccountJettonsBalances(accountId: kotlin.String, currencies: kotlin.String? = null) : JettonsBalances {
+    fun getAccountJettonsBalances(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>? = null) : JettonsBalances {
         val localVarResponse = getAccountJettonsBalancesWithHttpInfo(accountId = accountId, currencies = currencies)
 
         return when (localVarResponse.responseType) {
@@ -775,7 +775,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getAccountJettonsBalancesWithHttpInfo(accountId: kotlin.String, currencies: kotlin.String?) : ApiResponse<JettonsBalances?> {
+    fun getAccountJettonsBalancesWithHttpInfo(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?) : ApiResponse<JettonsBalances?> {
         val localVariableConfig = getAccountJettonsBalancesRequestConfig(accountId = accountId, currencies = currencies)
 
         return request<Unit, JettonsBalances>(
@@ -790,12 +790,12 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
      * @return RequestConfig
      */
-    fun getAccountJettonsBalancesRequestConfig(accountId: kotlin.String, currencies: kotlin.String?) : RequestConfig<Unit> {
+    fun getAccountJettonsBalancesRequestConfig(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
                 if (currencies != null) {
-                    put("currencies", listOf(currencies.toString()))
+                    put("currencies", toMultiValue(currencies.toList(), "csv"))
                 }
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

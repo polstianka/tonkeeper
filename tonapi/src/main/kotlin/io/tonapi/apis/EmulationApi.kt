@@ -24,8 +24,8 @@ import io.tonapi.models.DecodeMessageRequest
 import io.tonapi.models.DecodedMessage
 import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.Event
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.MessageConsequences
+import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.Trace
 
 import com.squareup.moshi.Json
@@ -130,6 +130,7 @@ class EmulationApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClie
      * @param accountId account ID
      * @param decodeMessageRequest bag-of-cells serialized to base64
      * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
      * @return AccountEvent
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -139,8 +140,8 @@ class EmulationApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClie
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun emulateMessageToAccountEvent(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String? = "en") : AccountEvent {
-        val localVarResponse = emulateMessageToAccountEventWithHttpInfo(accountId = accountId, decodeMessageRequest = decodeMessageRequest, acceptLanguage = acceptLanguage)
+    fun emulateMessageToAccountEvent(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String? = "en", ignoreSignatureCheck: kotlin.Boolean? = null) : AccountEvent {
+        val localVarResponse = emulateMessageToAccountEventWithHttpInfo(accountId = accountId, decodeMessageRequest = decodeMessageRequest, acceptLanguage = acceptLanguage, ignoreSignatureCheck = ignoreSignatureCheck)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as AccountEvent
@@ -163,14 +164,15 @@ class EmulationApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClie
      * @param accountId account ID
      * @param decodeMessageRequest bag-of-cells serialized to base64
      * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
      * @return ApiResponse<AccountEvent?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun emulateMessageToAccountEventWithHttpInfo(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String?) : ApiResponse<AccountEvent?> {
-        val localVariableConfig = emulateMessageToAccountEventRequestConfig(accountId = accountId, decodeMessageRequest = decodeMessageRequest, acceptLanguage = acceptLanguage)
+    fun emulateMessageToAccountEventWithHttpInfo(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String?, ignoreSignatureCheck: kotlin.Boolean?) : ApiResponse<AccountEvent?> {
+        val localVariableConfig = emulateMessageToAccountEventRequestConfig(accountId = accountId, decodeMessageRequest = decodeMessageRequest, acceptLanguage = acceptLanguage, ignoreSignatureCheck = ignoreSignatureCheck)
 
         return request<DecodeMessageRequest, AccountEvent>(
             localVariableConfig
@@ -183,11 +185,17 @@ class EmulationApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClie
      * @param accountId account ID
      * @param decodeMessageRequest bag-of-cells serialized to base64
      * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
      * @return RequestConfig
      */
-    fun emulateMessageToAccountEventRequestConfig(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String?) : RequestConfig<DecodeMessageRequest> {
+    fun emulateMessageToAccountEventRequestConfig(accountId: kotlin.String, decodeMessageRequest: DecodeMessageRequest, acceptLanguage: kotlin.String?, ignoreSignatureCheck: kotlin.Boolean?) : RequestConfig<DecodeMessageRequest> {
         val localVariableBody = decodeMessageRequest
-        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (ignoreSignatureCheck != null) {
+                    put("ignore_signature_check", listOf(ignoreSignatureCheck.toString()))
+                }
+            }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         acceptLanguage?.apply { localVariableHeaders["Accept-Language"] = this.toString() }
         localVariableHeaders["Content-Type"] = "application/json"
@@ -412,6 +420,7 @@ class EmulationApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClie
     @Throws(IllegalStateException::class, IOException::class)
     fun emulateMessageToWalletWithHttpInfo(emulateMessageToWalletRequest: EmulateMessageToWalletRequest, acceptLanguage: kotlin.String?) : ApiResponse<MessageConsequences?> {
         val localVariableConfig = emulateMessageToWalletRequestConfig(emulateMessageToWalletRequest = emulateMessageToWalletRequest, acceptLanguage = acceptLanguage)
+
         return request<EmulateMessageToWalletRequest, MessageConsequences>(
             localVariableConfig
         )

@@ -20,9 +20,9 @@ import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
 import io.tonapi.models.Accounts
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.GetWalletBackup200Response
 import io.tonapi.models.Seqno
+import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.TonConnectProof200Response
 import io.tonapi.models.TonConnectProofRequest
 

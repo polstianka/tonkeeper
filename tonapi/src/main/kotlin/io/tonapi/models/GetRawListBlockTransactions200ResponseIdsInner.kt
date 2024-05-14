@@ -38,7 +38,7 @@ data class GetRawListBlockTransactions200ResponseIdsInner (
     val account: kotlin.String? = null,
 
     @Json(name = "lt")
-    val lt: kotlin.Int? = null,
+    val lt: kotlin.Long? = null,
 
     @Json(name = "hash")
     val hash: kotlin.String? = null

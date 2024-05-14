@@ -32,7 +32,7 @@ import com.squareup.moshi.JsonClass
 data class DecodedMessageExtInMsgDecodedWalletHighloadV2 (
 
     @Json(name = "subwallet_id")
-    val subwalletId: kotlin.Int,
+    val subwalletId: kotlin.Long,
 
     @Json(name = "bounded_query_id")
     val boundedQueryId: kotlin.String,

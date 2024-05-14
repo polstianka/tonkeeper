@@ -15,7 +15,9 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.AccountStatus
 import io.tonapi.models.AccountStorageInfo
+import io.tonapi.models.BlockchainRawAccountLibrariesInner
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -31,6 +33,9 @@ import com.squareup.moshi.JsonClass
  * @param extraBalance 
  * @param code 
  * @param `data` 
+ * @param lastTransactionHash 
+ * @param frozenHash 
+ * @param libraries 
  */
 
 
@@ -46,7 +51,7 @@ data class BlockchainRawAccount (
     val lastTransactionLt: kotlin.Long,
 
     @Json(name = "status")
-    val status: kotlin.String,
+    val status: AccountStatus,
 
     @Json(name = "storage")
     val storage: AccountStorageInfo,
@@ -58,7 +63,16 @@ data class BlockchainRawAccount (
     val code: kotlin.String? = null,
 
     @Json(name = "data")
-    val `data`: kotlin.String? = null
+    val `data`: kotlin.String? = null,
+
+    @Json(name = "last_transaction_hash")
+    val lastTransactionHash: kotlin.String? = null,
+
+    @Json(name = "frozen_hash")
+    val frozenHash: kotlin.String? = null,
+
+    @Json(name = "libraries")
+    val libraries: kotlin.collections.List<BlockchainRawAccountLibrariesInner>? = null
 
 )
 

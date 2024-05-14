@@ -118,7 +118,7 @@ class API(
     ): List<BalanceEntity> {
         val jettonsBalances = accounts(testnet).getAccountJettonsBalances(
             accountId = accountId,
-            currencies = currency
+            currencies = listOf(currency)
         ).balances
         return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
     }
@@ -149,7 +149,10 @@ class API(
     }
 
     fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates> {
-        return rates().getRates(tokens.joinToString(","), currency).rates
+        return rates().getRates(
+            tokens,
+            listOf(currency)
+        ).rates
     }
 
     fun getNft(address: String, testnet: Boolean): NftItem? {

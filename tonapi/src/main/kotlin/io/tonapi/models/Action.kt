@@ -22,6 +22,8 @@ import io.tonapi.models.DepositStakeAction
 import io.tonapi.models.DomainRenewAction
 import io.tonapi.models.ElectionsDepositStakeAction
 import io.tonapi.models.ElectionsRecoverStakeAction
+import io.tonapi.models.InscriptionMintAction
+import io.tonapi.models.InscriptionTransferAction
 import io.tonapi.models.JettonBurnAction
 import io.tonapi.models.JettonMintAction
 import io.tonapi.models.JettonSwapAction
@@ -44,6 +46,7 @@ import com.squareup.moshi.JsonClass
  * @param type 
  * @param status 
  * @param simplePreview 
+ * @param baseTransactions 
  * @param tonTransfer 
  * @param contractDeploy 
  * @param jettonTransfer 
@@ -62,6 +65,8 @@ import com.squareup.moshi.JsonClass
  * @param jettonSwap 
  * @param smartContractExec 
  * @param domainRenew 
+ * @param inscriptionTransfer 
+ * @param inscriptionMint 
  */
 
 
@@ -75,6 +80,9 @@ data class Action (
 
     @Json(name = "simple_preview")
     val simplePreview: ActionSimplePreview,
+
+    @Json(name = "base_transactions")
+    val baseTransactions: kotlin.collections.List<kotlin.String>,
 
     @Json(name = "TonTransfer")
     val tonTransfer: TonTransferAction? = null,
@@ -128,36 +136,44 @@ data class Action (
     val smartContractExec: SmartContractAction? = null,
 
     @Json(name = "DomainRenew")
-    val domainRenew: DomainRenewAction? = null
+    val domainRenew: DomainRenewAction? = null,
+
+    @Json(name = "InscriptionTransfer")
+    val inscriptionTransfer: InscriptionTransferAction? = null,
+
+    @Json(name = "InscriptionMint")
+    val inscriptionMint: InscriptionMintAction? = null
 
 ) {
 
     /**
      * 
      *
-     * Values: tonTransfer,jettonTransfer,jettonBurn,jettonMint,nftItemTransfer,contractDeploy,subscribe,unSubscribe,auctionBid,nftPurchase,depositStake,withdrawStake,withdrawStakeRequest,jettonSwap,smartContractExec,electionsRecoverStake,electionsDepositStake,domainRenew,unknown
+     * Values: TonTransfer,JettonTransfer,JettonBurn,JettonMint,NftItemTransfer,ContractDeploy,Subscribe,UnSubscribe,AuctionBid,NftPurchase,DepositStake,WithdrawStake,WithdrawStakeRequest,JettonSwap,SmartContractExec,ElectionsRecoverStake,ElectionsDepositStake,DomainRenew,InscriptionTransfer,InscriptionMint,Unknown
      */
     @JsonClass(generateAdapter = false)
     enum class Type(val value: kotlin.String) {
-        @Json(name = "TonTransfer") tonTransfer("TonTransfer"),
-        @Json(name = "JettonTransfer") jettonTransfer("JettonTransfer"),
-        @Json(name = "JettonBurn") jettonBurn("JettonBurn"),
-        @Json(name = "JettonMint") jettonMint("JettonMint"),
-        @Json(name = "NftItemTransfer") nftItemTransfer("NftItemTransfer"),
-        @Json(name = "ContractDeploy") contractDeploy("ContractDeploy"),
-        @Json(name = "Subscribe") subscribe("Subscribe"),
-        @Json(name = "UnSubscribe") unSubscribe("UnSubscribe"),
-        @Json(name = "AuctionBid") auctionBid("AuctionBid"),
-        @Json(name = "NftPurchase") nftPurchase("NftPurchase"),
-        @Json(name = "DepositStake") depositStake("DepositStake"),
-        @Json(name = "WithdrawStake") withdrawStake("WithdrawStake"),
-        @Json(name = "WithdrawStakeRequest") withdrawStakeRequest("WithdrawStakeRequest"),
-        @Json(name = "JettonSwap") jettonSwap("JettonSwap"),
-        @Json(name = "SmartContractExec") smartContractExec("SmartContractExec"),
-        @Json(name = "ElectionsRecoverStake") electionsRecoverStake("ElectionsRecoverStake"),
-        @Json(name = "ElectionsDepositStake") electionsDepositStake("ElectionsDepositStake"),
-        @Json(name = "DomainRenew") domainRenew("DomainRenew"),
-        @Json(name = "Unknown") unknown("Unknown");
+        @Json(name = "TonTransfer") TonTransfer("TonTransfer"),
+        @Json(name = "JettonTransfer") JettonTransfer("JettonTransfer"),
+        @Json(name = "JettonBurn") JettonBurn("JettonBurn"),
+        @Json(name = "JettonMint") JettonMint("JettonMint"),
+        @Json(name = "NftItemTransfer") NftItemTransfer("NftItemTransfer"),
+        @Json(name = "ContractDeploy") ContractDeploy("ContractDeploy"),
+        @Json(name = "Subscribe") Subscribe("Subscribe"),
+        @Json(name = "UnSubscribe") UnSubscribe("UnSubscribe"),
+        @Json(name = "AuctionBid") AuctionBid("AuctionBid"),
+        @Json(name = "NftPurchase") NftPurchase("NftPurchase"),
+        @Json(name = "DepositStake") DepositStake("DepositStake"),
+        @Json(name = "WithdrawStake") WithdrawStake("WithdrawStake"),
+        @Json(name = "WithdrawStakeRequest") WithdrawStakeRequest("WithdrawStakeRequest"),
+        @Json(name = "JettonSwap") JettonSwap("JettonSwap"),
+        @Json(name = "SmartContractExec") SmartContractExec("SmartContractExec"),
+        @Json(name = "ElectionsRecoverStake") ElectionsRecoverStake("ElectionsRecoverStake"),
+        @Json(name = "ElectionsDepositStake") ElectionsDepositStake("ElectionsDepositStake"),
+        @Json(name = "DomainRenew") DomainRenew("DomainRenew"),
+        @Json(name = "InscriptionTransfer") InscriptionTransfer("InscriptionTransfer"),
+        @Json(name = "InscriptionMint") InscriptionMint("InscriptionMint"),
+        @Json(name = "Unknown") Unknown("Unknown");
     }
     /**
      * 

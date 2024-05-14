@@ -23,7 +23,7 @@ import io.tonapi.models.Auctions
 import io.tonapi.models.DnsRecord
 import io.tonapi.models.DomainBids
 import io.tonapi.models.DomainInfo
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
+import io.tonapi.models.StatusDefaultResponse
 
 import com.squareup.moshi.Json
 

@@ -30,6 +30,7 @@ import com.squareup.moshi.JsonClass
  * @param gasUsed 
  * @param vmSteps 
  * @param exitCode 
+ * @param exitCodeDescription 
  */
 
 
@@ -54,7 +55,10 @@ data class ComputePhase (
     val vmSteps: kotlin.Int? = null,
 
     @Json(name = "exit_code")
-    val exitCode: kotlin.Int? = null
+    val exitCode: kotlin.Int? = null,
+
+    @Json(name = "exit_code_description")
+    val exitCodeDescription: kotlin.String? = null
 
 )
 

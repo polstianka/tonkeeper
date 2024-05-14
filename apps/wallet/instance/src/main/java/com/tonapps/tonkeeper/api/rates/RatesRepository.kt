@@ -59,26 +59,13 @@ class RatesRepository(
         val chunks = tokens.chunked(100)
         for (chunk in chunks) {
             val response = fromCloud(
-                tokens = chunk.joinToString(","),
-                currency = currency.joinToString(","),
+                tokens = chunk,
+                currency = currency,
                 testnet = testnet
             )?.rates ?: continue
             rates.putAll(response)
         }
         return GetRates200Response(rates)
-    }
-
-    private suspend fun fromCloud(
-        tokens: String,
-        currency: String,
-        testnet: Boolean,
-    ): GetRates200Response? = withContext(Dispatchers.IO) {
-       withRetry {
-           api.get(testnet).getRates(
-               tokens = tokens,
-               currencies = currency
-           )
-       }
     }
 
     override fun onParse(

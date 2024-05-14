@@ -19,9 +19,10 @@ import java.io.IOException
 import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.GetChartRates200Response
+import io.tonapi.models.GetMarketsRates200Response
 import io.tonapi.models.GetRates200Response
+import io.tonapi.models.StatusDefaultResponse
 
 import com.squareup.moshi.Json
 
@@ -54,6 +55,7 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      * @param currency  (optional)
      * @param startDate  (optional)
      * @param endDate  (optional)
+     * @param pointsCount  (optional, default to 200)
      * @return GetChartRates200Response
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -63,8 +65,8 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getChartRates(token: kotlin.String, currency: kotlin.String? = null, startDate: kotlin.Long? = null, endDate: kotlin.Long? = null) : GetChartRates200Response {
-        val localVarResponse = getChartRatesWithHttpInfo(token = token, currency = currency, startDate = startDate, endDate = endDate)
+    fun getChartRates(token: kotlin.String, currency: kotlin.String? = null, startDate: kotlin.Long? = null, endDate: kotlin.Long? = null, pointsCount: kotlin.Int? = 200) : GetChartRates200Response {
+        val localVarResponse = getChartRatesWithHttpInfo(token = token, currency = currency, startDate = startDate, endDate = endDate, pointsCount = pointsCount)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as GetChartRates200Response
@@ -88,14 +90,15 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      * @param currency  (optional)
      * @param startDate  (optional)
      * @param endDate  (optional)
+     * @param pointsCount  (optional, default to 200)
      * @return ApiResponse<GetChartRates200Response?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getChartRatesWithHttpInfo(token: kotlin.String, currency: kotlin.String?, startDate: kotlin.Long?, endDate: kotlin.Long?) : ApiResponse<GetChartRates200Response?> {
-        val localVariableConfig = getChartRatesRequestConfig(token = token, currency = currency, startDate = startDate, endDate = endDate)
+    fun getChartRatesWithHttpInfo(token: kotlin.String, currency: kotlin.String?, startDate: kotlin.Long?, endDate: kotlin.Long?, pointsCount: kotlin.Int?) : ApiResponse<GetChartRates200Response?> {
+        val localVariableConfig = getChartRatesRequestConfig(token = token, currency = currency, startDate = startDate, endDate = endDate, pointsCount = pointsCount)
 
         return request<Unit, GetChartRates200Response>(
             localVariableConfig
@@ -109,9 +112,10 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      * @param currency  (optional)
      * @param startDate  (optional)
      * @param endDate  (optional)
+     * @param pointsCount  (optional, default to 200)
      * @return RequestConfig
      */
-    fun getChartRatesRequestConfig(token: kotlin.String, currency: kotlin.String?, startDate: kotlin.Long?, endDate: kotlin.Long?) : RequestConfig<Unit> {
+    fun getChartRatesRequestConfig(token: kotlin.String, currency: kotlin.String?, startDate: kotlin.Long?, endDate: kotlin.Long?, pointsCount: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -125,6 +129,9 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
                 if (endDate != null) {
                     put("end_date", listOf(endDate.toString()))
                 }
+                if (pointsCount != null) {
+                    put("points_count", listOf(pointsCount.toString()))
+                }
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"
@@ -132,6 +139,74 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/v2/rates/chart",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * 
+     * Get the TON price from markets
+     * @return GetMarketsRates200Response
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getMarketsRates() : GetMarketsRates200Response {
+        val localVarResponse = getMarketsRatesWithHttpInfo()
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as GetMarketsRates200Response
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * 
+     * Get the TON price from markets
+     * @return ApiResponse<GetMarketsRates200Response?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getMarketsRatesWithHttpInfo() : ApiResponse<GetMarketsRates200Response?> {
+        val localVariableConfig = getMarketsRatesRequestConfig()
+
+        return request<Unit, GetMarketsRates200Response>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getMarketsRates
+     *
+     * @return RequestConfig
+     */
+    fun getMarketsRatesRequestConfig() : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/v2/rates/markets",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -153,7 +228,7 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getRates(tokens: kotlin.String, currencies: kotlin.String) : GetRates200Response {
+    fun getRates(tokens: kotlin.collections.List<kotlin.String>, currencies: kotlin.collections.List<kotlin.String>) : GetRates200Response {
         val localVarResponse = getRatesWithHttpInfo(tokens = tokens, currencies = currencies)
 
         return when (localVarResponse.responseType) {
@@ -182,7 +257,7 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getRatesWithHttpInfo(tokens: kotlin.String, currencies: kotlin.String) : ApiResponse<GetRates200Response?> {
+    fun getRatesWithHttpInfo(tokens: kotlin.collections.List<kotlin.String>, currencies: kotlin.collections.List<kotlin.String>) : ApiResponse<GetRates200Response?> {
         val localVariableConfig = getRatesRequestConfig(tokens = tokens, currencies = currencies)
 
         return request<Unit, GetRates200Response>(
@@ -197,12 +272,12 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
      * @param currencies accept ton and all possible fiat currencies, separated by commas
      * @return RequestConfig
      */
-    fun getRatesRequestConfig(tokens: kotlin.String, currencies: kotlin.String) : RequestConfig<Unit> {
+    fun getRatesRequestConfig(tokens: kotlin.collections.List<kotlin.String>, currencies: kotlin.collections.List<kotlin.String>) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
-                put("tokens", listOf(tokens.toString()))
-                put("currencies", listOf(currencies.toString()))
+                put("tokens", toMultiValue(tokens.toList(), "csv"))
+                put("currencies", toMultiValue(currencies.toList(), "csv"))
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"

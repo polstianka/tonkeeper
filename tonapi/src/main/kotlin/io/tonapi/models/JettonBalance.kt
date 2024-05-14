@@ -16,6 +16,7 @@
 package io.tonapi.models
 
 import io.tonapi.models.AccountAddress
+import io.tonapi.models.JettonBalanceLock
 import io.tonapi.models.JettonPreview
 import io.tonapi.models.TokenRates
 
@@ -29,6 +30,7 @@ import com.squareup.moshi.JsonClass
  * @param walletAddress 
  * @param jetton 
  * @param price 
+ * @param lock 
  */
 
 
@@ -44,7 +46,10 @@ data class JettonBalance (
     val jetton: JettonPreview,
 
     @Json(name = "price")
-    val price: TokenRates? = null
+    val price: TokenRates? = null,
+
+    @Json(name = "lock")
+    val lock: JettonBalanceLock? = null
 
 )
 
