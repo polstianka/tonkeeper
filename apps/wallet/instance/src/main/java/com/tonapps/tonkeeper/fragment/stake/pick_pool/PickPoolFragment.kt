@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionAdapter
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolAdapter
 import com.tonapps.uikit.icon.UIKitIcon
@@ -16,12 +17,11 @@ class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     companion object {
         fun newInstance(
-            title: String,
-            pools: List<StakingPool>,
+            service: StakingService,
             picked: StakingPool
         ) = PickPoolFragment().apply {
             setArgs(
-                PickPoolFragmentArgs(title, pools, picked)
+                PickPoolFragmentArgs(service, picked)
             )
         }
     }

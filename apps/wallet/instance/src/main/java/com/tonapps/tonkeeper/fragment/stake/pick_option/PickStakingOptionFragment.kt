@@ -61,7 +61,7 @@ class PickStakingOptionFragment : BaseListFragment(), BaseFragment.BottomSheet {
     }
 
     private fun PickStakingOptionEvent.ShowPoolPicker.handle() {
-        val fragment = PickPoolFragment.newInstance(title, pools, pickedPool)
+        val fragment = PickPoolFragment.newInstance(service, pickedPool)
         navigation?.add(fragment)
     }
 }

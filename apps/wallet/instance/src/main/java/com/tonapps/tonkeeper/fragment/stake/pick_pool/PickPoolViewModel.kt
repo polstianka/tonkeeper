@@ -18,16 +18,16 @@ class PickPoolViewModel : ViewModel() {
     private val _events = MutableSharedFlow<PickPoolEvents>()
     val events: Flow<PickPoolEvents>
         get() = _events
-    val title = args.map { it.title }
+    val title = args.map { it.service.name }
     val items = args.map { args ->
-        args.pools.mapIndexed { index, item ->
+        args.service.pools.mapIndexed { index, item ->
             PickPoolListItem(
                 iconUrl = item.serviceType.getIconUrl(),
                 title = item.name,
                 subtitle = item.apyText(),
                 isChecked = args.pickedPool.address == item.address,
                 accountNumber = item.address,
-                position = ListCell.getPosition(args.pools.size, index),
+                position = ListCell.getPosition(args.service.pools.size, index),
                 isMaxApy = item.isMaxApy
             )
         }

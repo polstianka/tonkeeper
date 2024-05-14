@@ -51,8 +51,7 @@ class PickStakingOptionViewModel : ViewModel() {
         val domainItem = args.options.first { it.type == item.stakingServiceType }
         val pickedItem = args.picked
         val event = PickStakingOptionEvent.ShowPoolPicker(
-            domainItem.name,
-            domainItem.pools,
+            domainItem,
             pickedItem
         )
         _events.emit(event)
