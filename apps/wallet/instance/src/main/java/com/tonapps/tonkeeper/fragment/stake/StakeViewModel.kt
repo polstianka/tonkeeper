@@ -7,6 +7,8 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.extensions.formattedRate
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
@@ -29,7 +31,8 @@ class StakeViewModel(
     settingsRepository: SettingsRepository,
     getRateFlowCase: GetRateFlowCase,
     walletRepository: WalletRepository,
-    tokenRepository: TokenRepository
+    tokenRepository: TokenRepository,
+    private val stakingRepository: StakingRepository
 ) : ViewModel() {
 
     companion object {
@@ -57,6 +60,7 @@ class StakeViewModel(
     private val isValid = combine(balance, amount) { balance, amount ->
         balance.balance.value >= amount
     }
+    private val stakingServices = MutableStateFlow(listOf<StakingService>())
     val labelTextColorAttribute = isValid.map { isValid ->
         if (isValid) {
             com.tonapps.uikit.color.R.attr.textSecondaryColor
@@ -72,6 +76,16 @@ class StakeViewModel(
                 TextWrapper.StringResource(LocalizationR.string.insufficient_balance)
             )
         }
+    }
+
+    init {
+        loadStakingServices()
+    }
+
+    private fun loadStakingServices() = viewModelScope.launch {
+        val accountId = activeWallet.first().accountId
+        val stakingServices = stakingRepository.getStakingPools(accountId)
+        this@StakeViewModel.stakingServices.value = stakingServices
     }
 
     fun onCloseClicked() {

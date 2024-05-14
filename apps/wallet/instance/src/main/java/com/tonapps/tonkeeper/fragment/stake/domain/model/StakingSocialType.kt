@@ -4,5 +4,6 @@ enum class StakingSocialType {
     LINK,
     TWITTER,
     TELEGRAM,
+    TONVIEWER,
     SEARCH;
 }
