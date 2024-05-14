@@ -2,9 +2,9 @@ package com.tonapps.tonkeeper.fragment.trade.exchange.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
+import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragmentArgs
@@ -15,10 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ExchangeViewModel(
@@ -49,16 +47,14 @@ class ExchangeViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val rate = currency.flatMapLatest { getRateFlowCase.execute(it) }
-        .map { it.rate(TOKEN_TON) }
-        .filterNotNull()
-        .map { it.value }
 
     private val amount = MutableStateFlow(0f)
 
-    val totalFiat = combine(amount, rate, currency) { amount, rate, currency ->
-        val totalAmount = amount * rate
-        CurrencyFormatter.format(currency.code, totalAmount)
-    }
+    val totalFiat = formattedRate(
+        rateFlow = rate,
+        amountFlow = amount,
+        token = TOKEN_TON
+    )
     val isButtonActive = combine(amount, exchangeItems.pickedItem) { currentAmount, _ ->
         !currentAmount.isNaN() && currentAmount != 0f && currentAmount.isFinite()
     }
