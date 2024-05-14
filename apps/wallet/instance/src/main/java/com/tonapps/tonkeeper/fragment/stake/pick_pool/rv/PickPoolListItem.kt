@@ -9,7 +9,7 @@ data class PickPoolListItem(
     val title: String,
     val subtitle: TextWrapper,
     val isChecked: Boolean,
-    val accountNumber: String,
+    val address: String,
     val position: ListCell.Position,
     val isMaxApy: Boolean
 ) : BaseListItem(1)

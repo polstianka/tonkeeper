@@ -1,16 +1,17 @@
 package com.tonapps.tonkeeper.fragment.stake.pick_pool
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolListItem
 import com.tonapps.tonkeeper.fragment.stake.presentation.apyText
-import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class PickPoolViewModel : ViewModel() {
 
@@ -26,7 +27,7 @@ class PickPoolViewModel : ViewModel() {
                 title = item.name,
                 subtitle = item.apyText(),
                 isChecked = args.pickedPool.address == item.address,
-                accountNumber = item.address,
+                address = item.address,
                 position = ListCell.getPosition(args.service.pools.size, index),
                 isMaxApy = item.isMaxApy
             )
@@ -44,7 +45,11 @@ class PickPoolViewModel : ViewModel() {
         emit(_events, PickPoolEvents.CloseFlow)
     }
 
-    fun onItemClicked(item: PickPoolListItem) {
-        Log.wtf("###", "onItemClicked: $item")
+    fun onItemClicked(item: PickPoolListItem) = viewModelScope.launch {
+        val args = args.first()
+        val service = args.service
+        val pool = service.pools.first { it.address == item.address }
+        val event = PickPoolEvents.NavigateToPoolDetails(service, pool)
+        _events.emit(event)
     }
 }

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:action="@drawable/ic_close_16"
+        android:icon="@drawable/ic_info_16"
         android:title="@string/stake" />
 
     <uikit.widget.ColumnLayout

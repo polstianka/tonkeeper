@@ -7,11 +7,13 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionAdapter
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolAdapter
+import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment
 import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import uikit.base.BaseListFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.navigation.Navigation.Companion.navigation
 
 class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
@@ -52,6 +54,12 @@ class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
         when (event) {
             PickPoolEvents.CloseFlow -> Log.wtf("###", "closeFlow")
             PickPoolEvents.NavigateBack -> finish()
+            is PickPoolEvents.NavigateToPoolDetails -> event.handle()
         }
+    }
+
+    private fun PickPoolEvents.NavigateToPoolDetails.handle() {
+        val fragment = PoolDetailsFragment.newInstance(service, pool)
+        navigation?.add(fragment)
     }
 }

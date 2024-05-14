@@ -50,7 +50,6 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        header?.setIcon(R.drawable.ic_info_16)
         header?.doOnActionClick = { viewModel.onCloseClicked() }
         header?.doOnCloseClick = { viewModel.onInfoClicked() }
 

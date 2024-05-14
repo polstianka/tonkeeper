@@ -10,4 +10,8 @@ sealed class PickStakingOptionEvent {
         val service: StakingService,
         val pickedPool: StakingPool
     ) : PickStakingOptionEvent()
+    data class ShowPoolDetails(
+        val service: StakingService,
+        val pool: StakingPool
+    ) : PickStakingOptionEvent()
 }

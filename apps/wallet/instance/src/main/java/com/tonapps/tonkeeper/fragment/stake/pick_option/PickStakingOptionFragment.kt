@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionAdapter
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.PickPoolFragment
+import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment
 import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,11 +58,17 @@ class PickStakingOptionFragment : BaseListFragment(), BaseFragment.BottomSheet {
             PickStakingOptionEvent.CloseFlow -> Log.wtf("###", "closeFlow")
             PickStakingOptionEvent.NavigateBack -> finish()
             is PickStakingOptionEvent.ShowPoolPicker -> event.handle()
+            is PickStakingOptionEvent.ShowPoolDetails -> event.handle()
         }
     }
 
     private fun PickStakingOptionEvent.ShowPoolPicker.handle() {
         val fragment = PickPoolFragment.newInstance(service, pickedPool)
+        navigation?.add(fragment)
+    }
+
+    private fun PickStakingOptionEvent.ShowPoolDetails.handle() {
+        val fragment = PoolDetailsFragment.newInstance(service, pool)
         navigation?.add(fragment)
     }
 }
