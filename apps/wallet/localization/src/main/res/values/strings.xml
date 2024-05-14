@@ -273,4 +273,5 @@
 
     <string name="stake_fragment_available_mask">Available: %1s</string>
     <string name="max_apy">Max APY</string>
+    <string name="apy_mask" translatable="false">APY ~%1s%% · %2s</string>
 </resources>

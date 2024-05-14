@@ -99,15 +99,16 @@
 
     <uikit.widget.DropdownButton
         android:id="@+id/fragment_stake_dropdown"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_width="match_parent"
         android:layout_marginTop="16dp"
         app:dropdownIcon="@drawable/ic_switch_16"
         app:dropdownIconTint="?iconTertiaryColor">
 
         <uikit.widget.RowLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp">
 

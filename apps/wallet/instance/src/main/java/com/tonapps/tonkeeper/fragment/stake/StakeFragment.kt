@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
@@ -63,6 +64,10 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         observeFlow(viewModel.labelTextColorAttribute) { attr ->
             availableLabel?.setTextColor(requireContext().resolveColor(attr))
         }
+        observeFlow(viewModel.iconUrl) { optionIconView?.setImageURI(it) }
+        observeFlow(viewModel.optionTitle) { optionTitle?.text = it }
+        observeFlow(viewModel.optionSubtitle) { optionSubtitle?.text = toString(it) }
+        observeFlow(viewModel.isMaxApy) { optionChip?.isVisible = it }
     }
 
     private fun handleEvent(event: StakeEvent) {

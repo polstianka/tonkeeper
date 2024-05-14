@@ -8,8 +8,13 @@ import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
+import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
+import com.tonapps.tonkeeper.fragment.stake.domain.model.minStake
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
+import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
@@ -24,6 +29,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import com.tonapps.wallet.localization.R as LocalizationR
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,8 +47,6 @@ class StakeViewModel(
     }
 
     private val _events = MutableSharedFlow<StakeEvent>()
-    val events: Flow<StakeEvent>
-        get() = _events
     private val currency = settingsRepository.currencyFlow
     private val exchangeRate = currency.flatMapLatest { getRateFlowCase.execute(it) }
     private val amount = MutableStateFlow(0f)
@@ -52,7 +56,6 @@ class StakeViewModel(
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
-    val fiatAmount = formattedRate(exchangeRate, amount, TOKEN_TON)
     private val availableText = balance.map {
         val amount = CurrencyFormatter.format(it.balance.token.name, it.balance.value)
         TextWrapper.StringResource(LocalizationR.string.stake_fragment_available_mask, amount)
@@ -61,6 +64,11 @@ class StakeViewModel(
         balance.balance.value >= amount
     }
     private val stakingServices = MutableStateFlow(listOf<StakingService>())
+    private val pickedPool = MutableSharedFlow<StakingPool>(replay = 1)
+
+    val events: Flow<StakeEvent>
+        get() = _events
+    val fiatAmount = formattedRate(exchangeRate, amount, TOKEN_TON)
     val labelTextColorAttribute = isValid.map { isValid ->
         if (isValid) {
             com.tonapps.uikit.color.R.attr.textSecondaryColor
@@ -77,6 +85,17 @@ class StakeViewModel(
             )
         }
     }
+    val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
+    val optionTitle = pickedPool.map { it.name }
+    val optionSubtitle = pickedPool.map { service ->
+        val maxApy = CurrencyFormatter.formatFloat(service.apy.toFloat(), 2) // todo properly work with bigdecimals
+        val minStaking = BigDecimal(service.minStake).movePointLeft(9)
+        val minStakingString = CurrencyFormatter.format(TOKEN_TON, minStaking)
+        TextWrapper.StringResource(LocalizationR.string.apy_mask, maxApy, minStakingString)
+    }
+    val isMaxApy = combine(stakingServices, pickedPool) { list, item ->
+        list.maxApy() === item
+    }
 
     init {
         loadStakingServices()
@@ -86,6 +105,7 @@ class StakeViewModel(
         val accountId = activeWallet.first().accountId
         val stakingServices = stakingRepository.getStakingPools(accountId)
         this@StakeViewModel.stakingServices.value = stakingServices
+        pickedPool.emit(stakingServices.maxApy())
     }
 
     fun onCloseClicked() {
@@ -110,3 +130,15 @@ class StakeViewModel(
         Log.wtf("###", "onDropdownClicked")
     }
 }
+
+private fun StakingServiceType.getIconUrl() = "res:/${getIconDrawableRes()}"
+
+private fun StakingServiceType.getIconDrawableRes(): Int {
+    return when (this) {
+        StakingServiceType.TF -> R.drawable.ic_staking_tf
+        StakingServiceType.WHALES -> R.drawable.ic_staking_whales
+        StakingServiceType.LIQUID_TF -> R.drawable.ic_staking_tonstakers
+    }
+}
+
+private fun List<StakingService>.maxApy() = first().pools.first()
