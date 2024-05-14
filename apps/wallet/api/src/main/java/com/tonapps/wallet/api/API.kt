@@ -26,6 +26,7 @@ import io.tonapi.models.Account
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.AccountEvents
 import io.tonapi.models.EmulateMessageToWalletRequest
+import io.tonapi.models.GetStakingPools200Response
 import io.tonapi.models.MessageConsequences
 import io.tonapi.models.NftItem
 import io.tonapi.models.SendBlockchainMessageRequest
@@ -78,6 +79,15 @@ class API(
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
     fun rates() = provider.rates.get(false)
+
+    fun staking(testnet: Boolean) = provider.staking.get(testnet)
+
+    fun getStakingPools(accountId: String, testnet: Boolean): GetStakingPools200Response {
+        return staking(testnet).getStakingPools(
+            availableFor = accountId,
+            includeUnverified = false
+        )
+    }
 
     fun getEvents(
         accountId: String,

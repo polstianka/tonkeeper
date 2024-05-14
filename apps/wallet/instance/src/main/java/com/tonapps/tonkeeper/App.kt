@@ -10,6 +10,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.core.ImageTranscoderType
 import com.facebook.imagepipeline.core.MemoryChunkType
 import com.tonapps.tonkeeper.core.fiat.Fiat
+import com.tonapps.tonkeeper.fragment.stake.di.stakingModule
 import com.tonapps.tonkeeper.fragment.trade.di.ratesDomainModule
 import com.tonapps.tonkeeper.koin.koinModel
 import com.tonapps.wallet.api.apiModule
@@ -64,7 +65,8 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
                 tokenModule,
                 eventsModule,
                 collectiblesModule,
-                ratesDomainModule
+                ratesDomainModule,
+                stakingModule
             )
         }
 
