@@ -13,7 +13,7 @@ import uikit.widget.HeaderView
 
 open class BaseListFragment: BaseFragment(R.layout.fragment_list) {
 
-    private lateinit var headerView: HeaderView
+    protected lateinit var headerView: HeaderView
     private lateinit var listView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

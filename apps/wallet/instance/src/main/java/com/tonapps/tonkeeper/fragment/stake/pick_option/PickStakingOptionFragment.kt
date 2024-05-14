@@ -3,19 +3,19 @@ package com.tonapps.tonkeeper.fragment.stake.pick_option
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionAdapter
-import com.tonapps.tonkeeperx.R
+import com.tonapps.tonkeeper.fragment.stake.pick_pool.PickPoolFragment
+import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
-import uikit.widget.HeaderView
+import uikit.base.BaseListFragment
+import uikit.navigation.Navigation.Companion.navigation
+import com.tonapps.wallet.localization.R as LocalizationR
 
-class PickStakingOptionFragment : BaseFragment(
-    R.layout.fragment_pick_staking_option
-), BaseFragment.BottomSheet {
+class PickStakingOptionFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     companion object {
         fun newInstance(
@@ -28,12 +28,7 @@ class PickStakingOptionFragment : BaseFragment(
         }
     }
 
-
     private val viewModel: PickStakingOptionViewModel by viewModel()
-    private val header: HeaderView?
-        get() = view?.findViewById(R.id.fragment_pick_staking_option_header)
-    private val recyclerView: RecyclerView?
-        get() = view?.findViewById(R.id.fragment_pick_staking_option_rv)
     private val adapter = StakingOptionAdapter { viewModel.onItemClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +39,12 @@ class PickStakingOptionFragment : BaseFragment(
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        header?.doOnCloseClick = { viewModel.onChevronClicked() }
-        header?.doOnActionClick = { viewModel.onCrossClicked() }
+        headerView.doOnCloseClick = { viewModel.onChevronClicked() }
+        headerView.doOnActionClick = { viewModel.onCrossClicked() }
+        headerView.setIcon(UIKitIcon.ic_chevron_left_16)
+        setTitle(getString(LocalizationR.string.options))
 
-        recyclerView?.adapter = adapter
+        setAdapter(adapter)
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.items) { list ->
@@ -59,7 +56,12 @@ class PickStakingOptionFragment : BaseFragment(
         when (event) {
             PickStakingOptionEvent.CloseFlow -> Log.wtf("###", "closeFlow")
             PickStakingOptionEvent.NavigateBack -> finish()
+            is PickStakingOptionEvent.ShowPoolPicker -> event.handle()
         }
+    }
 
+    private fun PickStakingOptionEvent.ShowPoolPicker.handle() {
+        val fragment = PickPoolFragment.newInstance(title, pools, pickedPool)
+        navigation?.add(fragment)
     }
 }

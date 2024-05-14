@@ -1,14 +1,16 @@
 package com.tonapps.tonkeeper.fragment.stake.pick_option
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionListItem
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class PickStakingOptionViewModel : ViewModel() {
 
@@ -43,7 +45,15 @@ class PickStakingOptionViewModel : ViewModel() {
         emit(_events, PickStakingOptionEvent.CloseFlow)
     }
 
-    fun onItemClicked(item: StakingOptionListItem) {
-        Log.wtf("###", "onItemClicked: $item")
+    fun onItemClicked(item: StakingOptionListItem) = viewModelScope.launch {
+        val args = args.first()
+        val domainItem = args.options.first { it.type == item.stakingServiceType }
+        val pickedItem = args.picked
+        val event = PickStakingOptionEvent.ShowPoolPicker(
+            domainItem.name,
+            domainItem.pools,
+            pickedItem
+        )
+        _events.emit(event)
     }
 }
