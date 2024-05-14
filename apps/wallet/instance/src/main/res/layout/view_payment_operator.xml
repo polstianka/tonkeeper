@@ -39,22 +39,14 @@
                 android:textColor="?textPrimaryColor"
                 tools:text="Mercuryo" />
 
-            <FrameLayout
+            <uikit.widget.ChipView
                 android:id="@+id/view_payment_operator_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="6dp"
-                android:backgroundTint="?accentBlueColor"
-                android:background="@drawable/bg_chip">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/best"
-                    android:textAppearance="@style/TextAppearance.Body4CAPS"
-                    android:textColor="?accentBlueColor" />
-            </FrameLayout>
+                app:color="@color/accentBlueBlue"
+                app:text="@string/best"/>
         </uikit.widget.RowLayout>
 
         <TextView
