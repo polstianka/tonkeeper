@@ -1,11 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <uikit.widget.HeaderView
+        android:id="@+id/fragment_pool_details_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_chevron_left_16"
         android:action="@drawable/ic_close_16"
-        android:id="@+id/fragment_pool_details_header"/>
+        android:icon="@drawable/ic_chevron_left_16" />
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_content">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/apy"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <uikit.widget.ChipView
+                android:id="@+id/fragment_pool_details_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                app:color="?accentGreenColor"
+                app:text="@string/max" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/fragment_pool_details_apy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="~5.01%" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minimal_deposit"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/fragment_pool_details_minimal_deposit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="1 TON" />
+        </uikit.widget.RowLayout>
+    </uikit.widget.ColumnLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/staking_note"
+        android:textAppearance="@style/TextAppearance.Body3"
+        android:textColor="?textTertiaryColor" />
 </uikit.widget.ColumnLayout>

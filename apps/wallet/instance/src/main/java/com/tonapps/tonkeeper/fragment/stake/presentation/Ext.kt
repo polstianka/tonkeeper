@@ -18,20 +18,27 @@ private fun StakingServiceType.getIconDrawableRes(): Int {
     }
 }
 
-fun StakingPool.description(): TextWrapper {
-    val apy = CurrencyFormatter.formatFloat(
-        apy.toFloat(),
-        2
-    ) // todo properly work with bigdecimals
+
+
+fun StakingPool.minStakingText(): String {
     val minStaking = BigDecimal(minStake).movePointLeft(8)
-    val minStakingString = CurrencyFormatter.format(StakeViewModel.TOKEN_TON, minStaking)
+    return CurrencyFormatter.format(StakeViewModel.TOKEN_TON, minStaking).toString()
+}
+
+fun StakingPool.description(): TextWrapper {
+    val apy = formatApy()
+    val minStakingString = minStakingText()
     return TextWrapper.StringResource(R.string.staking_pool_description_mask, apy, minStakingString)
 }
 
 fun StakingPool.apyText(): TextWrapper {
-    val apy = CurrencyFormatter.formatFloat(
+    val apy = formatApy()
+    return TextWrapper.StringResource(R.string.apy_mask, apy)
+}
+
+fun StakingPool.formatApy(): String {
+    return CurrencyFormatter.formatFloat(
         apy.toFloat(),
         2
-    )
-    return TextWrapper.StringResource(R.string.apy_mask, apy)
+    ) // todo properly work with bigdecimals
 }

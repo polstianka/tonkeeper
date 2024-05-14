@@ -276,4 +276,7 @@
     <string name="staking_pool_description_mask" translatable="false">APY ~%1s%% · %2s</string>
     <string name="apy_mask" translatable="false">APY ~%1s%%</string>
     <string name="options">Options</string>
+    <string name="apy" translatable="false">APY</string>
+    <string name="minimal_deposit">Minimal deposit</string>
+    <string name="staking_note">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
 </resources>

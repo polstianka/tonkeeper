@@ -270,4 +270,6 @@
     <string name="stake_fragment_available_mask">Доступно: %1s</string>
     <string name="max_apy">Max APY</string>
     <string name="options">Options</string>
+    <string name="minimal_deposit">Minimal deposit</string>
+    <string name="staking_note">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
 </resources>
