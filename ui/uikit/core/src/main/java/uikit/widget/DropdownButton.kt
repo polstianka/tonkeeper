@@ -15,6 +15,7 @@ import uikit.R
 import uikit.extensions.cornerMedium
 import uikit.extensions.dp
 import uikit.extensions.round
+import uikit.extensions.selectableItemBackground
 import uikit.extensions.useAttributes
 
 class DropdownButton @JvmOverloads constructor(
@@ -70,19 +71,15 @@ class DropdownButton @JvmOverloads constructor(
     }
 
     private fun prepareBackground(context: Context) {
-        val typedValue = TypedValue()
-        val isResolved = context.theme.resolveAttribute(
-            android.R.attr.selectableItemBackground,
-            typedValue,
-            true
-        )
-        if (isResolved) {
-            val colorDrawable = ColorDrawable(context.backgroundContentColor)
-            val selectableItemDrawable = ContextCompat.getDrawable(context, typedValue.resourceId)
-            val layeredDrawable = LayerDrawable(arrayOf(colorDrawable, selectableItemDrawable))
-            background = layeredDrawable
+        val selectableItemBackgroundDrawable = context.selectableItemBackground
+        val backgroundContentColor = context.backgroundContentColor
+        if (selectableItemBackgroundDrawable == null) {
+            setBackgroundColor(backgroundContentColor)
         } else {
-            setBackgroundColor(context.backgroundContentColor)
+            val colorDrawable = ColorDrawable(backgroundContentColor)
+            val array = arrayOf(colorDrawable, selectableItemBackgroundDrawable)
+            val layeredDrawable = LayerDrawable(array)
+            background = layeredDrawable
         }
         round(context.cornerMedium)
     }
