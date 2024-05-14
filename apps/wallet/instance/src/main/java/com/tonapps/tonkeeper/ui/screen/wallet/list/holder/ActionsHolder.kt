@@ -6,7 +6,7 @@ import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.extensions.toBuySell
-import com.tonapps.tonkeeper.fragment.stake.StakeFragment
+import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item

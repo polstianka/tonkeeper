@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.fragment.stake
+package com.tonapps.tonkeeper.fragment.stake.root
 
 sealed class StakeEvent {
     object NavigateBack : StakeEvent()

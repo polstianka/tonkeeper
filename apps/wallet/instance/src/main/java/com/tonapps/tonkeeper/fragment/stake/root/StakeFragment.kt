@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.fragment.stake
+package com.tonapps.tonkeeper.fragment.stake.root
 
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +13,10 @@ import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.resolveColor
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
-import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
+import uikit.widget.HeaderView
 
 class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSheet {
 

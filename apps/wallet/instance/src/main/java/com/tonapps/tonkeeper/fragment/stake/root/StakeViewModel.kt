@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.fragment.stake
+package com.tonapps.tonkeeper.fragment.stake.root
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,13 +11,11 @@ import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
-import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
-import com.tonapps.tonkeeper.fragment.stake.domain.model.minStake
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
-import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.localization.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,7 +28,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import com.tonapps.wallet.localization.R as LocalizationR
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StakeViewModel(
@@ -58,7 +55,7 @@ class StakeViewModel(
         .filterNotNull()
     private val availableText = balance.map {
         val amount = CurrencyFormatter.format(it.balance.token.name, it.balance.value)
-        TextWrapper.StringResource(LocalizationR.string.stake_fragment_available_mask, amount)
+        TextWrapper.StringResource(R.string.stake_fragment_available_mask, amount)
     }
     private val isValid = combine(balance, amount) { balance, amount ->
         balance.balance.value >= amount
@@ -81,17 +78,20 @@ class StakeViewModel(
             availableText
         } else {
             flowOf(
-                TextWrapper.StringResource(LocalizationR.string.insufficient_balance)
+                TextWrapper.StringResource(R.string.insufficient_balance)
             )
         }
     }
     val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
     val optionTitle = pickedPool.map { it.name }
     val optionSubtitle = pickedPool.map { service ->
-        val maxApy = CurrencyFormatter.formatFloat(service.apy.toFloat(), 2) // todo properly work with bigdecimals
+        val maxApy = CurrencyFormatter.formatFloat(
+            service.apy.toFloat(),
+            2
+        ) // todo properly work with bigdecimals
         val minStaking = BigDecimal(service.minStake).movePointLeft(9)
         val minStakingString = CurrencyFormatter.format(TOKEN_TON, minStaking)
-        TextWrapper.StringResource(LocalizationR.string.apy_mask, maxApy, minStakingString)
+        TextWrapper.StringResource(R.string.apy_mask, maxApy, minStakingString)
     }
     val isMaxApy = combine(stakingServices, pickedPool) { list, item ->
         list.maxApy() === item
@@ -135,9 +135,9 @@ private fun StakingServiceType.getIconUrl() = "res:/${getIconDrawableRes()}"
 
 private fun StakingServiceType.getIconDrawableRes(): Int {
     return when (this) {
-        StakingServiceType.TF -> R.drawable.ic_staking_tf
-        StakingServiceType.WHALES -> R.drawable.ic_staking_whales
-        StakingServiceType.LIQUID_TF -> R.drawable.ic_staking_tonstakers
+        StakingServiceType.TF -> com.tonapps.tonkeeperx.R.drawable.ic_staking_tf
+        StakingServiceType.WHALES -> com.tonapps.tonkeeperx.R.drawable.ic_staking_whales
+        StakingServiceType.LIQUID_TF -> com.tonapps.tonkeeperx.R.drawable.ic_staking_tonstakers
     }
 }
 
