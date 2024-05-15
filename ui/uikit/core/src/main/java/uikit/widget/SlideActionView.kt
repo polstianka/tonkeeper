@@ -17,8 +17,8 @@ import androidx.core.math.MathUtils
 import androidx.customview.widget.ViewDragHelper
 import com.tonapps.uikit.color.textTertiaryColor
 import com.tonapps.uikit.icon.UIKitIcon
-import uikit.R
 import uikit.HapticHelper
+import uikit.R
 import uikit.extensions.dp
 import uikit.extensions.getDimension
 import uikit.extensions.getDimensionPixelSize
@@ -36,6 +36,12 @@ class SlideActionView @JvmOverloads constructor(
     }
 
     var doOnDone: (() -> Unit)? = null
+
+    var text: CharSequence?
+        get() = textView.text
+        set(value) {
+            textView.text = value
+        }
 
     private var icon: Int = arrowIcon
         set(value) {
@@ -75,7 +81,13 @@ class SlideActionView @JvmOverloads constructor(
             invalidate()
         }
 
-        override fun onViewPositionChanged(changedView: View, left: Int, top: Int, dx: Int, dy: Int) {
+        override fun onViewPositionChanged(
+            changedView: View,
+            left: Int,
+            top: Int,
+            dx: Int,
+            dy: Int
+        ) {
             super.onViewPositionChanged(changedView, left, top, dx, dy)
             textView.alpha = 1f - left / horizontalDragRange.toFloat()
             icon = if (left >= horizontalDragRange) {
@@ -87,10 +99,11 @@ class SlideActionView @JvmOverloads constructor(
 
         override fun onViewDragStateChanged(state: Int) {
             super.onViewDragStateChanged(state)
-            when(state) {
+            when (state) {
                 ViewDragHelper.STATE_IDLE -> {
                     parent.requestDisallowInterceptTouchEvent(false)
                 }
+
                 ViewDragHelper.STATE_DRAGGING -> {
                     parent.requestDisallowInterceptTouchEvent(true)
                 }
@@ -184,7 +197,15 @@ class SlideActionView @JvmOverloads constructor(
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
             super.onSizeChanged(w, h, oldw, oldh)
-            paint.shader = LinearGradient(0f, 0f, w + gradientWidth, context.getDimension(R.dimen.itemHeight), gradientColors, null, Shader.TileMode.MIRROR)
+            paint.shader = LinearGradient(
+                0f,
+                0f,
+                w + gradientWidth,
+                context.getDimension(R.dimen.itemHeight),
+                gradientColors,
+                null,
+                Shader.TileMode.MIRROR
+            )
         }
 
         override fun onAnimationUpdate(animation: ValueAnimator) {

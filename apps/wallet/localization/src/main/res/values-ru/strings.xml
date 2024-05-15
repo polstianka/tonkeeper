@@ -287,4 +287,5 @@
     <string name="min_deposit">Минимальный депозит</string>
     <string name="pool_details_disclaimer">Стейкинг основан на смарт-контрактах третьих лиц. Tonkeeper не несет ответственности за опыт работы со стейкингом.</string>
     <string name="community">Сообщество</string>
+    <string name="deposit">Депозит</string>
 </resources>

@@ -2,9 +2,17 @@ package com.tonapps.tonkeeper.ui.screen.stake
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.blockchain.Coin
+import com.tonapps.extensions.toByteArray
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.security.Security
+import com.tonapps.security.hex
+import com.tonapps.tonkeeper.api.totalFees
+import com.tonapps.tonkeeper.extensions.emulate
+import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.StakePoolsEntity
 import com.tonapps.wallet.api.entity.StakePoolsEntity.PoolImplementationType
+import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.core.WalletCurrency
@@ -21,15 +29,28 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.ton.block.Coins
+import org.ton.block.MsgAddressInt
+import org.ton.block.StateInit
+import org.ton.cell.Cell
+import org.ton.contract.wallet.WalletTransfer
+import org.ton.contract.wallet.WalletTransferBuilder
+import ton.SendMode
+import ton.transfer.Transfer
 import java.math.BigDecimal
+import java.math.BigInteger
 
 class StakeViewModel(
     private val repository: StakeRepository,
     private val settingsRepository: SettingsRepository,
     private val walletManager: WalletManager,
+    private val walletRepository: WalletRepository,
     private val ratesRepository: RatesRepository,
     private val tokenRepository: TokenRepository,
+    private val api: API
 ) : ViewModel() {
+
+    private var lastSeqno = -1
 
     private val currentToken: AccountTokenEntity?
         get() = uiState.value.selectedToken
@@ -105,6 +126,92 @@ class StakeViewModel(
         }
     }
 
+    fun onContinue() {
+        viewModelScope.launch {
+            val queryId = getWalletQueryId()
+            val stakeDepositBody = Transfer.stakeDeposit(queryId)
+            val amount = uiState.value.amount
+            val fee = getWithdrawalFee(PoolImplementationType.liquidTF)
+            val total = amount + fee
+            val poolAddress = repository.selectedPoolAddress.value
+            val wallet = walletManager.getWalletInfo() ?: error("No wallet info")
+            val stateInit = getStateInitIfNeed(wallet)
+            lastSeqno = getSeqno(wallet)
+            val gift = buildWalletTransfer(
+                destination = MsgAddressInt.parse(poolAddress),
+                stateInit = getStateInitIfNeed(wallet),
+                body = stakeDepositBody,
+                coins = Coins.of(total.toDouble())
+            )
+            println("@@@ total $total")
+            val emulated = wallet.emulate(api, gift)
+            val feeInTon = emulated.totalFees
+            val amountFee = Coin.toCoins(feeInTon)
+            println("@@@ $amountFee")
+        }
+    }
+
+    private suspend fun getStateInitIfNeed(wallet: WalletLegacy): StateInit? {
+        if (lastSeqno == -1) {
+            lastSeqno = getSeqno(wallet)
+        }
+        if (lastSeqno == 0) {
+            return wallet.contract.stateInit
+        }
+        return null
+    }
+
+    private suspend fun getSeqno(wallet: WalletLegacy): Int {
+        if (lastSeqno == 0) {
+            lastSeqno = wallet.getSeqno(api)
+        }
+        return lastSeqno
+    }
+
+    private suspend fun WalletLegacy.getSeqno(api: API): Int {
+        return try {
+            api.getAccountSeqno(accountId, testnet)
+        } catch (e: Throwable) {
+            0
+        }
+    }
+
+    private fun getWithdrawalFee(implementationType: PoolImplementationType): Float {
+        return if (implementationType == PoolImplementationType.whales) {
+            0.2f
+        } else {
+            1f
+        }
+    };
+
+    private fun buildWalletTransfer(
+        destination: MsgAddressInt,
+        stateInit: StateInit?,
+        body: Cell,
+        coins: Coins
+    ): WalletTransfer {
+        val builder = WalletTransferBuilder()
+        builder.bounceable = true
+        builder.destination = destination
+        builder.body = body
+        builder.sendMode = SendMode.PAY_GAS_SEPARATELY.value + SendMode.IGNORE_ERRORS.value
+        builder.coins = coins
+        builder.stateInit = stateInit
+        return builder.build()
+    }
+
+    private fun getWalletQueryId(): BigInteger {
+        try {
+            val tonkeeperSignature = 0x546de4ef.toByteArray()
+            val randomBytes = Security.randomBytes(4)
+            val value = tonkeeperSignature + randomBytes
+            val hexString = hex(value)
+            return BigInteger(hexString, 16)
+        } catch (e: Throwable) {
+            return BigInteger.ZERO
+        }
+    }
+
     private fun updateValue(newValue: Float) {
         val currentTokenAddress = _uiState.value.selectedTokenAddress
         val currency = _uiState.value.currency
@@ -126,7 +233,8 @@ class StakeViewModel(
                 remaining = remaining,
                 canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
                 maxActive = currentBalance == newValue,
-                available = CurrencyFormatter.format(currentTokenCode, currentBalance)
+                available = CurrencyFormatter.format(currentTokenCode, currentBalance),
+                amount = newValue
             )
         }
     }

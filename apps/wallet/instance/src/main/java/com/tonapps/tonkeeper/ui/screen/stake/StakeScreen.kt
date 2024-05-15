@@ -10,12 +10,14 @@ import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.helper.NumberFormatter
+import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonPrimaryBackgroundColor
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
 import com.tonapps.uikit.color.constantRedColor
 import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.localization.Localization
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
@@ -25,6 +27,7 @@ import uikit.widget.HeaderView
 
 class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSheet {
     private val stakeViewModel: StakeViewModel by viewModel()
+    private val rootViewModel: RootViewModel by activityViewModel()
 
     private lateinit var headerView: HeaderView
     private lateinit var selectedPool: ActionCellView
@@ -60,7 +63,19 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
         }
 
         continueButton = view.findViewById(R.id.continue_action)
-        continueButton.setOnClickListener { }
+        continueButton.setOnClickListener {
+            stakeViewModel.onContinue()
+            /* navigation?.add(StakeConfirmationScreen.newInstance(
+                 ConfirmationArgs(
+                     listOf(
+                         KeyValueModel.Simple("Wallet", "Main", null, ListCell.Position.FIRST),
+                         KeyValueModel.Simple("Recipient", "Tokstakers", null, ListCell.Position.MIDDLE),
+                         KeyValueModel.Simple("APY", "≈ 5.01%", null, ListCell.Position.MIDDLE),
+                         KeyValueModel.Simple("Fee", "≈ 0.01 TON", null, ListCell.Position.LAST, "\$ 0.01"),
+                     )
+                 )
+             ))*/
+        }
 
         collectFlow(stakeViewModel.uiState) { state ->
             rateView.text = state.rate
@@ -78,7 +93,7 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
                 availableView.setTextColor(requireContext().textSecondaryColor)
             }
 
-            continueButton.isEnabled = state.canContinue
+            continueButton.isEnabled = true//state.canContinue
 
             if (state.maxActive) {
                 maxButton.background.setTint(requireContext().buttonPrimaryBackgroundColor)

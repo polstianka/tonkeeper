@@ -175,6 +175,7 @@
     <string name="apy" translatable="false">APY</string>
     <string name="max_apy" translatable="false">MAX APY</string>
     <string name="min_deposit">Minimal deposit</string>
+    <string name="deposit">Deposit</string>
     <string name="apy_percent_placeholder" translatable="false">APY ≈ %1$s\%%</string>
     <string name="apy_short_percent_placeholder" translatable="false">≈ %1$s\%%</string>
     <string name="community">Community</string>

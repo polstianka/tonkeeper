@@ -73,6 +73,13 @@ object Transfer {
         }
     }
 
+    fun stakeDeposit(queryId: BigInteger = BigInteger.ZERO): Cell {
+        return buildCell {
+            storeUInt(0x47d54391, 32)
+            storeUInt(queryId, 64)
+        }
+    }
+
     fun nft(
         newOwnerAddress: MsgAddressInt,
         excessesAddress: MsgAddressInt,
