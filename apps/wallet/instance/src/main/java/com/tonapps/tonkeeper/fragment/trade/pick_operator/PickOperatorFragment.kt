@@ -6,12 +6,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
-import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyFragment
 import com.tonapps.tonkeeper.fragment.trade.pick_currency.PickCurrencyResult
 import com.tonapps.tonkeeper.fragment.trade.pick_operator.rv.PaymentOperatorAdapter
+import com.tonapps.tonkeeper.fragment.trade.root.presentation.BuySellFragment
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
@@ -25,7 +26,7 @@ import uikit.widget.DropdownButton
 import uikit.widget.HeaderView
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
-    BaseFragment.BottomSheet, ExchangeFeatureFlowMarker {
+    BaseFragment.BottomSheet {
     companion object {
         fun newInstance(
             direction: ExchangeDirection,
@@ -110,13 +111,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     }
 
     private fun dismissFlow() {
-        val fragmentManager = requireActivity().supportFragmentManager
-        val toRemove = fragmentManager.fragments.filter {
-            ExchangeFeatureFlowMarker::class.isInstance(it) && it != this
-        }
-        fragmentManager.commit {
-            toRemove.forEach { remove(it) }
-        }
+        popBackToRootFragment(includingRoot = true, BuySellFragment::class)
         finish()
     }
 

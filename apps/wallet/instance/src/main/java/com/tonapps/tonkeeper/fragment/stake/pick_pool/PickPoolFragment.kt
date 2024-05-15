@@ -3,11 +3,13 @@ package com.tonapps.tonkeeper.fragment.stake.pick_pool
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionAdapter
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolAdapter
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment
+import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.uikit.icon.UIKitIcon
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -52,10 +54,15 @@ class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     private fun handleEvent(event: PickPoolEvents) {
         when (event) {
-            PickPoolEvents.CloseFlow -> Log.wtf("###", "closeFlow")
+            is PickPoolEvents.CloseFlow -> event.handle()
             PickPoolEvents.NavigateBack -> finish()
             is PickPoolEvents.NavigateToPoolDetails -> event.handle()
         }
+    }
+
+    private fun PickPoolEvents.CloseFlow.handle() {
+        popBackToRootFragment(includingRoot = true, StakeFragment::class)
+        finish()
     }
 
     private fun PickPoolEvents.NavigateToPoolDetails.handle() {

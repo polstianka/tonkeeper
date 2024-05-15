@@ -3,7 +3,6 @@ package com.tonapps.tonkeeper.fragment.trade.pick_currency
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.tonapps.tonkeeper.fragment.trade.ExchangeFeatureFlowMarker
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.ui.screen.settings.currency.list.CurrencyAdapter
 import core.extensions.observeFlow
@@ -14,8 +13,7 @@ import uikit.base.BaseFragment
 import uikit.base.BaseListFragment
 import uikit.navigation.Navigation.Companion.navigation
 
-class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet,
-    ExchangeFeatureFlowMarker {
+class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
 
     companion object {
         fun newInstance(
