@@ -2,9 +2,13 @@ package com.tonapps.tonkeeper.fragment.signer
 
 import com.tonapps.tonkeeper.extensions.getSeqno
 import com.tonapps.tonkeeper.fragment.send.TransactionData
+import com.tonapps.tonkeeper.fragment.send.buildWalletTransferBody
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.ton.bitstring.BitString
+import org.ton.block.MsgAddressInt
 import org.ton.block.StateInit
 import org.ton.cell.Cell
 
@@ -24,26 +28,33 @@ class TransactionDataHelper(
         return null
     }
 
-    private suspend fun getSeqno(walletLegacy: WalletLegacy): Int {
-        if (lastSeqno == 0) {
+    private suspend fun getSeqno(walletLegacy: WalletLegacy): Int = withContext(Dispatchers.IO) {
+        if (lastSeqno == -1) {
             lastSeqno = walletLegacy.getSeqno(api)
         }
-        return lastSeqno
+        return@withContext lastSeqno
     }
 
     private suspend fun buildUnsignedBody(
         wallet: WalletLegacy,
         seqno: Int,
-        tx: TransactionData
+        tx: TransactionData,
+        bodyBuilder: TransactionData.() -> Cell?
     ): Cell {
         val stateInit = getStateInitIfNeed(wallet)
-        val transfer = tx.buildWalletTransfer(wallet.contract.address, stateInit)
+        val transfer = tx.buildWalletTransfer(wallet.contract.address, stateInit, bodyBuilder)
         return wallet.contract.createTransferUnsignedBody(seqno = seqno, gifts = arrayOf(transfer))
     }
 
-    suspend fun buildSignRequest(walletLegacy: WalletLegacy, tx: TransactionData): SignRequest {
+    suspend fun buildSignRequest(
+        walletLegacy: WalletLegacy,
+        tx: TransactionData,
+        bodyBuilder: TransactionData.() -> Cell? = {
+            buildWalletTransferBody(walletLegacy.contract.address)
+        }
+    ): SignRequest {
         lastSeqno = getSeqno(walletLegacy)
-        val cell = buildUnsignedBody(walletLegacy, lastSeqno, tx)
+        val cell = buildUnsignedBody(walletLegacy, lastSeqno, tx, bodyBuilder)
         lastUnsignedBody = cell
         return SignRequest(cell, walletLegacy.publicKey)
     }
