@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake.pool_details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -114,7 +113,7 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
 
     private fun handleEvent(event: PoolDetailsEvent) {
         when (event) {
-            PoolDetailsEvent.FinishFlow -> Log.wtf("###", "finishFlow")
+            PoolDetailsEvent.FinishFlow -> popBackToRoot(includingRoot = true)
             PoolDetailsEvent.NavigateBack -> finish()
             is PoolDetailsEvent.NavigateToLink -> navigation?.openURL(event.url, external = true)
             is PoolDetailsEvent.PickPool -> event.handle()
@@ -124,14 +123,15 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
     private fun PoolDetailsEvent.PickPool.handle() {
         val result = PoolDetailsFragmentResult(pool)
         navigation?.setFragmentResult(REQUEST_KEY_PICK_POOL, result.toBundle())
-        popBackToStakingFragment()
+        popBackToRoot()
     }
 
-    private fun popBackToStakingFragment() {
+    private fun popBackToRoot(
+        includingRoot: Boolean = false
+    ) {
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.commit {
-            val fragments = fragmentManager.fragments
-            val iterator = fragments.iterator()
+            val iterator = fragmentManager.fragments.iterator()
             var visitedRoot = false
             val toRemove = mutableListOf<Fragment>()
             while (iterator.hasNext()) {
@@ -143,6 +143,9 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
                 } else {
                     if (current is StakeFragment) {
                         visitedRoot = true
+                        if (includingRoot) {
+                            toRemove.add(current)
+                        }
                     }
                 }
             }
