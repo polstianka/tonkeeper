@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.fragment.app.viewModels
 import com.tonapps.wallet.localization.Localization
 import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.api.shortAddress
-import com.tonapps.tonkeeper.core.signer.SingerResultContract
+import com.tonapps.tonkeeper.core.signer.SignerResultContract
 import com.tonapps.tonkeeper.fragment.send.SendScreenEffect
 import com.tonapps.tonkeeper.fragment.send.pager.PagerScreen
 import com.tonapps.tonkeeper.view.TransactionDetailView
@@ -41,7 +40,7 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
     private lateinit var sendButton: Button
     private lateinit var processView: ProcessTaskView
 
-    private val signerLauncher = registerForActivityResult(SingerResultContract()) {
+    private val signerLauncher = registerForActivityResult(SignerResultContract()) {
         if (it == null) {
             feature.setFailedResult()
         } else {
@@ -174,7 +173,7 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
 
             sendFeature.sendEffect(SendScreenEffect.Finish)
         } else if (effect is ConfirmScreenEffect.OpenSignerApp) {
-            signerLauncher.launch(SingerResultContract.Input(effect.body, effect.publicKey))
+            signerLauncher.launch(SignerResultContract.Input(effect.body, effect.publicKey))
         }
     }
 

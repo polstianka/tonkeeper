@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
 
-class SingerResultContract : ActivityResultContract<SingerResultContract.Input, String?>() {
+class SignerResultContract : ActivityResultContract<SignerResultContract.Input, String?>() {
 
     data class Input(val body: Cell, val publicKey: PublicKeyEd25519)
 

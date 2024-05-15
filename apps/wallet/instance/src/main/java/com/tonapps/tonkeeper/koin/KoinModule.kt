@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.fragment.send.amount.AmountScreenFeature
 import com.tonapps.tonkeeper.fragment.send.confirm.ConfirmScreenFeature
 import com.tonapps.tonkeeper.fragment.send.recipient.RecipientScreenFeature
+import com.tonapps.tonkeeper.fragment.signer.TransactionDataHelper
 import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionViewModel
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.PickPoolViewModel
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsViewModel
@@ -65,6 +66,7 @@ val koinModel = module {
 
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
+    factory { TransactionDataHelper(get()) }
 
     viewModel { parameters -> NameViewModel(mode = parameters.get(), get(), get()) }
     viewModel { parameters -> InitViewModel(parameters.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
@@ -73,6 +75,7 @@ val koinModel = module {
     viewModel { RecipientScreenFeature(get()) }
     viewModel { PickerViewModel(get()) }
     viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ConfirmScreenFeature(get(), get(), get(), get(), get()) }
     viewModel { CurrencyViewModel(get()) }
     viewModel { SettingsViewModel(get(), get(), get()) }
     viewModel { EditNameViewModel(get()) }
@@ -89,7 +92,6 @@ val koinModel = module {
     viewModel { BrowserSearchViewModel(get(), get(), get(), get()) }
     viewModel { DAppViewModel(get(), get()) }
 
-    viewModel { ConfirmScreenFeature(get(), get(), get(), get()) }
     viewModel { ChartScreenFeature(get(), get(), get()) }
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }

@@ -2,29 +2,26 @@ package com.tonapps.tonkeeper.fragment.send.confirm
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.api.totalFees
-import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.event.WalletStateUpdateEvent
 import com.tonapps.tonkeeper.extensions.emulate
-import com.tonapps.tonkeeper.extensions.getSeqno
 import com.tonapps.tonkeeper.extensions.label
 import com.tonapps.tonkeeper.extensions.sendToBlockchain
 import com.tonapps.tonkeeper.fragment.send.TransactionData
+import com.tonapps.tonkeeper.fragment.signer.TransactionDataHelper
 import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.RatesRepository
 import core.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.ton.cell.Cell
-import com.tonapps.wallet.data.account.legacy.WalletLegacy
-import com.tonapps.wallet.data.rates.RatesRepository
 import org.ton.bitstring.BitString
-import org.ton.block.StateInit
 import uikit.mvi.UiFeature
 import uikit.widget.ProcessTaskView
 
@@ -34,13 +31,11 @@ class ConfirmScreenFeature(
     private val ratesRepository: RatesRepository,
     private val api: API,
     private val historyHelper: HistoryHelper,
+    private val transactionDataHelper: TransactionDataHelper
 ): UiFeature<ConfirmScreenState, ConfirmScreenEffect>(ConfirmScreenState()) {
 
     private val currency: WalletCurrency
         get() = App.settings.currency
-
-    private var lastSeqno = -1
-    private var lastUnsignedBody: Cell? = null
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,16 +47,6 @@ class ConfirmScreenFeature(
                 )
             }
         }
-    }
-
-    private suspend fun buildUnsignedBody(
-        wallet: WalletLegacy,
-        seqno: Int,
-        tx: TransactionData
-    ): Cell {
-        val stateInit = getStateInitIfNeed(wallet)
-        val transfer = tx.buildWalletTransfer(wallet.contract.address, stateInit)
-        return wallet.contract.createTransferUnsignedBody(seqno = seqno, gifts = arrayOf(transfer))
     }
 
     fun sendSignature(data: ByteArray) {
@@ -77,10 +62,16 @@ class ConfirmScreenFeature(
                 val wallet = App.walletManager.getWalletInfo() ?: throw Exception("failed to get wallet")
                 val contract = wallet.contract
 
-                val unsignedBody = lastUnsignedBody ?: throw Exception("unsigned body is null")
+                // todo
+                val unsignedBody = transactionDataHelper.lastUnsignedBody
+                    ?: throw Exception("unsigned body is null")
                 val signature = BitString(data)
                 val signerBody = contract.signedBody(signature, unsignedBody)
-                val b = contract.createTransferMessageCell(wallet.contract.address, lastSeqno, signerBody)
+                val b = contract.createTransferMessageCell(
+                    wallet.contract.address,
+                    transactionDataHelper.lastSeqno,
+                    signerBody
+                )
                 if (!wallet.sendToBlockchain(api, b)) {
                     failedResult()
                     return@launch
@@ -102,21 +93,15 @@ class ConfirmScreenFeature(
 
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = App.walletManager.getWalletInfo() ?: throw Exception("failed to get wallet")
-            lastSeqno = getSeqno(wallet)
-            lastUnsignedBody = buildUnsignedBody(wallet, lastSeqno, tx)
+            val request = transactionDataHelper.buildSignRequest(wallet, tx)
 
-            sendEffect(ConfirmScreenEffect.OpenSignerApp(lastUnsignedBody!!, wallet.publicKey))
+            sendEffect(
+                ConfirmScreenEffect.OpenSignerApp(
+                    request.cell,
+                    request.publicKey
+                )
+            )
         }
-    }
-
-    private suspend fun getStateInitIfNeed(wallet: WalletLegacy): StateInit? {
-        if (lastSeqno == -1) {
-            lastSeqno = getSeqno(wallet)
-        }
-        if (lastSeqno == 0) {
-            return wallet.contract.stateInit
-        }
-        return null
     }
 
     fun send(context: Context, tx: TransactionData) {
@@ -134,7 +119,10 @@ class ConfirmScreenFeature(
                     throw Exception("failed to request passcode")
                 }
                 val privateKey = App.walletManager.getPrivateKey(wallet.id)
-                val gift = tx.buildWalletTransfer(wallet.contract.address, getStateInitIfNeed(wallet))
+                val gift = tx.buildWalletTransfer(
+                    wallet.contract.address,
+                    transactionDataHelper.getStateInitIfNeed(wallet)
+                )
                 wallet.sendToBlockchain(api, privateKey, gift) ?: throw Exception("failed to send to blockchain")
 
                 successResult()
@@ -204,8 +192,11 @@ class ConfirmScreenFeature(
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = App.walletManager.getWalletInfo() ?: return@launch
             try {
-                lastSeqno = getSeqno(wallet)
-                val gift = tx.buildWalletTransfer(wallet.contract.address, getStateInitIfNeed(wallet))
+                val seqno = transactionDataHelper.getSeqno(wallet)
+                val gift = tx.buildWalletTransfer(
+                    wallet.contract.address,
+                    transactionDataHelper.getStateInitIfNeed(wallet)
+                )
                 val emulate = wallet.emulate(api, gift)
                 val feeInTon = emulate.totalFees
                 val actions = historyHelper.mapping(wallet, emulate.event, false)
@@ -236,12 +227,4 @@ class ConfirmScreenFeature(
             }
         }
     }
-
-    private suspend fun getSeqno(wallet: WalletLegacy): Int {
-        if (lastSeqno == 0) {
-            lastSeqno = wallet.getSeqno(api)
-        }
-        return lastSeqno
-    }
-
 }
