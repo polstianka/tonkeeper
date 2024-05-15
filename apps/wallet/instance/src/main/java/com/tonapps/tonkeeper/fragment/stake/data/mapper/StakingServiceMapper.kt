@@ -41,14 +41,14 @@ class StakingServiceMapper {
 
     private fun String.socialType(): StakingSocialType {
         val uri = URI.create(this)
-        val path = uri.path
+        val host = uri.host
         return when {
-            path.startsWith("twitter.com") ||
-                    path.startsWith("x.com") -> StakingSocialType.TWITTER
+            host.startsWith("twitter.com") ||
+                    host.startsWith("x.com") -> StakingSocialType.TWITTER
 
-            path.startsWith("t.me") -> StakingSocialType.TELEGRAM
+            host.startsWith("t.me") -> StakingSocialType.TELEGRAM
 
-            else -> StakingSocialType.SEARCH
+            else -> StakingSocialType.LINK
         }
     }
 

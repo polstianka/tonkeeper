@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 
 sealed class TextWrapper {
     class StringResource(@StringRes val id: Int, vararg val args: Any) : TextWrapper()
+    class PlainString(val string: String): TextWrapper()
 }
 
 fun Fragment.toString(wrapper: TextWrapper): String {
@@ -15,5 +16,6 @@ fun Fragment.toString(wrapper: TextWrapper): String {
 fun Context.toString(wrapper: TextWrapper): String {
     return when (wrapper) {
         is TextWrapper.StringResource -> getString(wrapper.id, *wrapper.args)
+        is TextWrapper.PlainString -> wrapper.string
     }
 }
