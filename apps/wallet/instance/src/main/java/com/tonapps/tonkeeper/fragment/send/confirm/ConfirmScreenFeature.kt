@@ -21,7 +21,6 @@ import core.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.ton.bitstring.BitString
 import uikit.mvi.UiFeature
 import uikit.widget.ProcessTaskView
 
@@ -60,19 +59,11 @@ class ConfirmScreenFeature(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val wallet = App.walletManager.getWalletInfo() ?: throw Exception("failed to get wallet")
-                val contract = wallet.contract
-
-                // todo
-                val unsignedBody = transactionDataHelper.lastUnsignedBody
-                    ?: throw Exception("unsigned body is null")
-                val signature = BitString(data)
-                val signerBody = contract.signedBody(signature, unsignedBody)
-                val b = contract.createTransferMessageCell(
-                    wallet.contract.address,
-                    transactionDataHelper.lastSeqno,
-                    signerBody
+                val cell = transactionDataHelper.createTransferMessageCell(
+                    wallet,
+                    data
                 )
-                if (!wallet.sendToBlockchain(api, b)) {
+                if (!wallet.sendToBlockchain(api, cell)) {
                     failedResult()
                     return@launch
                 }
@@ -192,7 +183,6 @@ class ConfirmScreenFeature(
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = App.walletManager.getWalletInfo() ?: return@launch
             try {
-                val seqno = transactionDataHelper.getSeqno(wallet)
                 val gift = tx.buildWalletTransfer(
                     wallet.contract.address,
                     transactionDataHelper.getStateInitIfNeed(wallet)
