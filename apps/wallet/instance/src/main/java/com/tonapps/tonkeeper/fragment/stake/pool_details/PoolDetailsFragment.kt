@@ -11,6 +11,7 @@ import androidx.fragment.app.commit
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.tonapps.tonkeeper.core.toString
+import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
@@ -126,31 +127,8 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         popBackToRoot()
     }
 
-    private fun popBackToRoot(
-        includingRoot: Boolean = false
-    ) {
-        val fragmentManager = requireActivity().supportFragmentManager
-        fragmentManager.commit {
-            val iterator = fragmentManager.fragments.iterator()
-            var visitedRoot = false
-            val toRemove = mutableListOf<Fragment>()
-            while (iterator.hasNext()) {
-                val current = iterator.next()
-                if (visitedRoot) {
-                    if (iterator.hasNext()) {
-                        toRemove.add(current)
-                    }
-                } else {
-                    if (current is StakeFragment) {
-                        visitedRoot = true
-                        if (includingRoot) {
-                            toRemove.add(current)
-                        }
-                    }
-                }
-            }
-            toRemove.forEach { remove(it) }
-        }
+    private fun popBackToRoot(includingRoot: Boolean = false) {
+        popBackToRootFragment(includingRoot = includingRoot, StakeFragment::class)
         finish()
     }
 }
