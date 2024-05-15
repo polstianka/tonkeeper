@@ -18,6 +18,7 @@ import com.tonapps.wallet.data.account.accountModule
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.browser.browserModule
 import com.tonapps.wallet.data.collectibles.collectiblesModule
+import com.tonapps.wallet.data.core.dataModule
 import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
 import com.tonapps.wallet.data.rates.ratesDataModule
@@ -66,7 +67,8 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
                 eventsModule,
                 collectiblesModule,
                 ratesDomainModule,
-                stakingModule
+                stakingModule,
+                dataModule
             )
         }
 

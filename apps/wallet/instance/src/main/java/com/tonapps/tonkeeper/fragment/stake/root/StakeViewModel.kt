@@ -41,7 +41,6 @@ class StakeViewModel(
 
     companion object {
         const val TOKEN_TON = "TON"
-        const val isTestnet = false // todo
     }
 
     private val _events = MutableSharedFlow<StakeEvent>()
@@ -50,7 +49,7 @@ class StakeViewModel(
     private val amount = MutableStateFlow(0f)
     private val activeWallet = walletRepository.activeWalletFlow
     private val balance = combine(activeWallet, currency) { wallet, currency ->
-        tokenRepository.get(currency, wallet.accountId, isTestnet)
+        tokenRepository.get(currency, wallet.accountId, wallet.testnet)
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
