@@ -3,15 +3,19 @@ package com.tonapps.tonkeeper.fragment.stake.pool_details
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
+import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
 import com.tonapps.uikit.color.iconPrimaryColor
@@ -20,16 +24,15 @@ import com.tonapps.uikit.color.textPrimaryColor
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
-import uikit.extensions.setPaddingHorizontal
-import uikit.extensions.setPaddingVertical
 import uikit.extensions.setThrottleClickListener
-import uikit.extensions.sp
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 
 class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFragment.BottomSheet {
     companion object {
+        const val REQUEST_KEY_PICK_POOL = "REQUEST_KEY_PICK_POOL "
         fun newInstance(
             service: StakingService,
             pool: StakingPool
@@ -51,6 +54,10 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         get() = view?.findViewById(R.id.fragment_pool_details_minimal_deposit)
     private val chipGroup: ChipGroup?
         get() = view?.findViewById(R.id.fragment_pool_details_chip_group)
+    private val button: Button?
+        get() = view?.findViewById(R.id.fragment_pool_details_button)
+    private val footer: View?
+        get() = view?.findViewById(R.id.fragment_pool_details_footer)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +71,9 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         header?.doOnActionClick = { viewModel.onCloseClicked() }
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
 
+        button?.setThrottleClickListener { viewModel.onButtonClicked() }
+
+        footer?.applyNavBottomPadding(32f.dp)
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.title) { header?.title = it }
@@ -107,6 +117,37 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
             PoolDetailsEvent.FinishFlow -> Log.wtf("###", "finishFlow")
             PoolDetailsEvent.NavigateBack -> finish()
             is PoolDetailsEvent.NavigateToLink -> navigation?.openURL(event.url, external = true)
+            is PoolDetailsEvent.PickPool -> event.handle()
         }
+    }
+
+    private fun PoolDetailsEvent.PickPool.handle() {
+        val result = PoolDetailsFragmentResult(pool)
+        navigation?.setFragmentResult(REQUEST_KEY_PICK_POOL, result.toBundle())
+        popBackToStakingFragment()
+    }
+
+    private fun popBackToStakingFragment() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.commit {
+            val fragments = fragmentManager.fragments
+            val iterator = fragments.iterator()
+            var visitedRoot = false
+            val toRemove = mutableListOf<Fragment>()
+            while (iterator.hasNext()) {
+                val current = iterator.next()
+                if (visitedRoot) {
+                    if (iterator.hasNext()) {
+                        toRemove.add(current)
+                    }
+                } else {
+                    if (current is StakeFragment) {
+                        visitedRoot = true
+                    }
+                }
+            }
+            toRemove.forEach { remove(it) }
+        }
+        finish()
     }
 }

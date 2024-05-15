@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
+import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
 import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
@@ -122,6 +123,10 @@ class StakeViewModel(
         val items = stakingServices.value
         val pickedValue = pickedPool.first()
         emit(_events, StakeEvent.PickStakingOption(items, pickedValue))
+    }
+
+    fun onPoolPicked(result: PoolDetailsFragmentResult) {
+        emit(pickedPool, result.pickedPool)
     }
 }
 

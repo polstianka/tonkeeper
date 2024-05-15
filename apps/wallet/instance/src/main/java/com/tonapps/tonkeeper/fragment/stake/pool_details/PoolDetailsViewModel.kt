@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.stake.pool_details
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.net.URI
 import com.tonapps.wallet.localization.R as LocalizationR
 
@@ -65,6 +67,12 @@ class PoolDetailsViewModel : ViewModel() {
     fun onChipClicked(model: LinksChipModel) {
         val event = PoolDetailsEvent.NavigateToLink(model.url)
         emit(_events, event)
+    }
+
+    fun onButtonClicked() = viewModelScope.launch {
+        val pool = args.first().pool
+        val event = PoolDetailsEvent.PickPool(pool)
+        _events.emit(event)
     }
 }
 

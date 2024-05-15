@@ -11,6 +11,8 @@ import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionFragment
+import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment.Companion.REQUEST_KEY_PICK_POOL
+import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.resolveColor
 import core.extensions.observeFlow
@@ -47,6 +49,14 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         get() = view?.findViewById(R.id.fragment_stake_option_chip)
     private val optionDropdown: View?
         get() = view?.findViewById(R.id.fragment_stake_dropdown)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        navigation?.setFragmentResultListener(REQUEST_KEY_PICK_POOL) { bundle ->
+            val result = PoolDetailsFragmentResult(bundle)
+            viewModel.onPoolPicked(result)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
