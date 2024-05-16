@@ -275,4 +275,5 @@
     <string name="links">Links</string>
     <string name="community">Community</string>
     <string name="deposit">Deposit</string>
+    <string name="slide_to_confirm">Slide to confirm</string>
 </resources>

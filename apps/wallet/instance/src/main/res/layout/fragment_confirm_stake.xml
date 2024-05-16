@@ -11,48 +11,74 @@
         android:action="@drawable/ic_close_16"
         android:icon="@drawable/ic_chevron_left_16" />
 
-    <ImageView
-        android:id="@+id/fragment_confirm_stake_icon"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@null" />
 
-    <TextView
-        android:id="@+id/fragment_confirm_stake_operation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:textAppearance="@style/TextAppearance.Body1"
-        android:textColor="?textSecondaryColor"
-        tools:text="Deposit" />
-
-    <TextView
-        android:id="@+id/fragment_confirm_stake_amount_crypto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
-        android:textAppearance="@style/TextAppearance.H2"
-        android:textColor="?textPrimaryColor"
-        tools:text="1,000.01 TON" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_confirm_stake_amount_fiat"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="@style/TextAppearance.Body1"
-        android:textColor="?textSecondaryColor"
-        android:layout_marginTop="4dp"
-        tools:text="$6,010.01"/>
-
-    <uikit.widget.SimpleRecyclerView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="32dp"
-        android:layout_marginHorizontal="16dp"
-        android:id="@+id/fragment_confirm_stake_rv"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/fragment_confirm_stake_icon"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/fragment_confirm_stake_operation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?textSecondaryColor"
+                tools:text="Deposit" />
+
+            <TextView
+                android:id="@+id/fragment_confirm_stake_amount_crypto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.H2"
+                android:textColor="?textPrimaryColor"
+                tools:text="1,000.01 TON" />
+
+            <TextView
+                android:id="@+id/fragment_confirm_stake_amount_fiat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?textSecondaryColor"
+                tools:text="$6,010.01" />
+
+            <uikit.widget.SimpleRecyclerView
+                android:id="@+id/fragment_confirm_stake_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp" />
+        </uikit.widget.ColumnLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/fragment_confirm_stake_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <uikit.widget.SlideActionView
+            android:id="@+id/fragment_confirm_stake_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/slide_to_confirm" />
+    </FrameLayout>
 
 </uikit.widget.ColumnLayout>

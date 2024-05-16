@@ -20,9 +20,13 @@ fun StakingServiceType.getIconDrawableRes(): Int {
 
 
 
-fun StakingPool.minStakingText(): String {
-    val minStaking = BigDecimal(minStake).movePointLeft(8)
+fun Long.formatTon(): String {
+    val minStaking = BigDecimal(this).movePointLeft(8)
     return CurrencyFormatter.format(StakeViewModel.TOKEN_TON, minStaking).toString()
+}
+
+fun StakingPool.minStakingText(): String {
+    return minStake.formatTon()
 }
 
 fun StakingPool.description(): TextWrapper {

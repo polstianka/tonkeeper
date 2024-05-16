@@ -15,6 +15,9 @@ import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.dp
+import uikit.widget.SlideActionView
 
 class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), BaseFragment.BottomSheet {
 
@@ -45,6 +48,10 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
     private val recyclerView: RecyclerView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_rv)
     private val adapter = ConfirmStakeAdapter()
+    private val slider: SlideActionView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_slider)
+    private val footer: View?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_footer)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +72,10 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
 
         recyclerView?.adapter = adapter
+
+        slider?.doOnDone = { viewModel.onSliderDone() }
+
+        footer?.applyNavBottomPadding(16f.dp)
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.icon) { icon?.setImageResource(it) }

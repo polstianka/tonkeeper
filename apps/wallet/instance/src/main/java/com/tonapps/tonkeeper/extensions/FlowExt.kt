@@ -12,7 +12,16 @@ fun formattedRate(
     token: String,
     formatter: (currencyCode: String, amount: Float) -> CharSequence = CurrencyFormatter::format
 ): Flow<CharSequence> = combine(rateFlow, amountFlow) { rates, amount ->
-    val rate = rates.rate(token) ?: return@combine null
-    val totalAmount = rate.value * amount
-    return@combine formatter(rates.currency.code, totalAmount)
+    formatRate(rates, amount, token, formatter)
 }.filterNotNull()
+
+fun formatRate(
+    rates: RatesEntity,
+    amount: Float,
+    token: String,
+    formatter: (currencyCode: String, amount: Float) -> CharSequence = CurrencyFormatter::format
+): CharSequence? {
+    val rate = rates.rate(token) ?: return null
+    val totalAmount = rate.value * amount
+    return formatter(rates.currency.code, totalAmount)
+}

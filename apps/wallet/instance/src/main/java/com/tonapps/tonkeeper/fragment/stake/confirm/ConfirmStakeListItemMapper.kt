@@ -67,13 +67,12 @@ class ConfirmStakeListItemMapper {
         )
     }
 
-    // todo
     private fun buildFeeItem(): ConfirmStakeListItem {
         val type = ConfirmStakeItemType.FEE
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.fee),
-            textPrimary = TextWrapper.PlainString("todo",),
-            textSecondary = "todo",
+            textPrimary = TextWrapper.PlainString("",),
+            textSecondary = "",
             position = ListCell.getPosition(
                 listSize,
                 type.ordinal
