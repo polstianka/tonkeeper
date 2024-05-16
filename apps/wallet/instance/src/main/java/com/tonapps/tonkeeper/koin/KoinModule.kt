@@ -106,5 +106,5 @@ val koinModel = module {
     viewModel { PickStakingOptionViewModel() }
     viewModel { PickPoolViewModel() }
     viewModel { PoolDetailsViewModel() }
-    viewModel { ConfirmStakeViewModel() }
+    viewModel { ConfirmStakeViewModel(get(), get()) }
 }

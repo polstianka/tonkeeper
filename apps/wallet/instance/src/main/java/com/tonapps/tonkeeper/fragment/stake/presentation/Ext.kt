@@ -10,7 +10,7 @@ import java.math.BigDecimal
 
 fun StakingServiceType.getIconUrl() = "res:/${getIconDrawableRes()}"
 
-private fun StakingServiceType.getIconDrawableRes(): Int {
+fun StakingServiceType.getIconDrawableRes(): Int {
     return when (this) {
         StakingServiceType.TF -> com.tonapps.tonkeeperx.R.drawable.ic_staking_tf
         StakingServiceType.WHALES -> com.tonapps.tonkeeperx.R.drawable.ic_staking_whales

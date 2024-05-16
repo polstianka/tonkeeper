@@ -2,6 +2,8 @@ package com.tonapps.tonkeeper.fragment.stake.confirm
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
@@ -26,9 +28,19 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         }
     }
 
+    // todo add circle cropping for icons
     private val viewModel: ConfirmStakeViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_header)
+    private val icon: ImageView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_icon)
+    private val operationTextView: TextView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_operation)
+    private val amountCryptoTextView: TextView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_amount_crypto)
+    private val amountFiatTextView: TextView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_amount_fiat)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +60,10 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
 
         observeFlow(viewModel.events) { handleEvent(it) }
+        observeFlow(viewModel.icon) { icon?.setImageResource(it) }
+        observeFlow(viewModel.operationText) { operationTextView?.setText(it) }
+        observeFlow(viewModel.amountCryptoText) { amountCryptoTextView?.text = it }
+        observeFlow(viewModel.amountFiatText) { amountFiatTextView?.text = it }
     }
 
     private fun handleEvent(event: ConfirmStakeEvent) {
