@@ -75,8 +75,6 @@ data class TransactionData(
 
     val amount: Coins
         get() {
-            /*val value = Coin.bigDecimal(amountRaw, decimals)
-            return Coins.ofNano(value.toLong())*/
             val value = Coin.prepareValue(amountRaw).toFloatOrNull() ?: 0f
             val nano = Coin.toNano(value, decimals)
             return Coins.ofNano(nano)

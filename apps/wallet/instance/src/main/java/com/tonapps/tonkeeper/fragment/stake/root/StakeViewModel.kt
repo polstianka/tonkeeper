@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
@@ -28,7 +29,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StakeViewModel(
@@ -126,6 +126,18 @@ class StakeViewModel(
 
     fun onPoolPicked(result: PoolDetailsFragmentResult) {
         emit(pickedPool, result.pickedPool)
+    }
+
+    // todo add minstake validation
+    fun onButtonClicked() = viewModelScope.launch {
+        val pool = pickedPool.first()
+        val amount = amount.value
+        val event = StakeEvent.NavigateToConfirmFragment(
+            pool = pool,
+            amount = amount,
+            type = StakingTransactionType.DEPOSIT // todo
+        )
+        _events.emit(event)
     }
 }
 
