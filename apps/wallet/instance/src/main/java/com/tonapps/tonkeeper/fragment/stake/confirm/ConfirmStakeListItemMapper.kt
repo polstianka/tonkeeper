@@ -4,7 +4,9 @@ import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeItemType
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeListItem
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
+import com.tonapps.tonkeeper.fragment.stake.domain.model.withdrawalFee
 import com.tonapps.tonkeeper.fragment.stake.presentation.formatApy
+import com.tonapps.tonkeeper.fragment.stake.presentation.formatTon
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.localization.R as LocalizationR
@@ -20,7 +22,7 @@ class ConfirmStakeListItemMapper {
             ConfirmStakeItemType.WALLET -> buildWalletItem(wallet)
             ConfirmStakeItemType.RECIPIENT -> buildRecipientItem(pool)
             ConfirmStakeItemType.APY -> buildAPYItem(pool)
-            ConfirmStakeItemType.FEE -> buildFeeItem()
+            ConfirmStakeItemType.FEE -> buildFeeItem(pool)
         }
     }
 
@@ -67,11 +69,12 @@ class ConfirmStakeListItemMapper {
         )
     }
 
-    private fun buildFeeItem(): ConfirmStakeListItem {
+    private fun buildFeeItem(pool: StakingPool): ConfirmStakeListItem {
         val type = ConfirmStakeItemType.FEE
+        val initialFee = pool.serviceType.withdrawalFee
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.fee),
-            textPrimary = TextWrapper.PlainString("",),
+            textPrimary = TextWrapper.PlainString(initialFee.formatTon()),
             textSecondary = "",
             position = ListCell.getPosition(
                 listSize,

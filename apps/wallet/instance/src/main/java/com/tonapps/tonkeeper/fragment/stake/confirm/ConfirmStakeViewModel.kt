@@ -71,7 +71,10 @@ class ConfirmStakeViewModel(
             val result = emulateCase.execute(wallet, args.pool, args.amount)
             fee.emit(result.totalFees)
         }
-        observeFlow(feeUpdate) { confirmStakeListHelper.setFee(it.first, it.second) }
+        observeFlow(feeUpdate) {
+            val pool = args.first().pool
+            confirmStakeListHelper.setFee(it.first, it.second, pool)
+        }
     }
 
     fun provideArgs(args: ConfirmStakeArgs) {

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 inline fun <T> ViewModel.observeFlow(
     flow: Flow<T>,
-    crossinline action: (T) -> Unit
+    crossinline action: suspend (T) -> Unit
 ) {
     viewModelScope.launch {
         flow.collectLatest { action(it) }
