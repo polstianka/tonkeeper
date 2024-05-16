@@ -87,14 +87,4 @@ data class WalletEntity(
             unsignedBody = body,
         )
     }
-
-
-    /*
-    val cell = contract.createTransferMessageCell(
-            address = contract.address,
-            privateKey = EmptyPrivateKeyEd25519,
-            seqno = seqno,
-            unsignedBody = unsignedBody,
-        )
-     */
 }
