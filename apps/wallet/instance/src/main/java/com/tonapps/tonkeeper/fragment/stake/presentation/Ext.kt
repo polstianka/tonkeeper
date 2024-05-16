@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake.presentation
 
+import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
@@ -21,7 +22,7 @@ fun StakingServiceType.getIconDrawableRes(): Int {
 
 
 fun Long.formatTon(): String {
-    val minStaking = BigDecimal(this).movePointLeft(8)
+    val minStaking = BigDecimal(this).movePointLeft(Coin.TON_DECIMALS)
     return CurrencyFormatter.format(StakeViewModel.TOKEN_TON, minStaking).toString()
 }
 
