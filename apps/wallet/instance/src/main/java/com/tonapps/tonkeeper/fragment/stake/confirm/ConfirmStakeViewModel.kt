@@ -1,10 +1,12 @@
 package com.tonapps.tonkeeper.fragment.stake.confirm
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.extensions.formattedRate
-import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeItemType
+import com.tonapps.tonkeeper.fragment.stake.domain.StakeCase
 import com.tonapps.tonkeeper.fragment.stake.domain.getOperationStringResId
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconDrawableRes
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
@@ -15,15 +17,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ConfirmStakeViewModel(
     settingsRepository: SettingsRepository,
     getRateFlowCase: GetRateFlowCase,
     walletRepository: WalletRepository,
-    mapper: ConfirmStakeListItemMapper
+    private val confirmStakeListHelper: ConfirmStakeListHelper,
+    private val walletManager: WalletManager,
+    private val stakeCase: StakeCase
 ) : ViewModel() {
     companion object {
         private const val TOKEN_TON = "TON"
@@ -40,8 +46,11 @@ class ConfirmStakeViewModel(
     val operationText = args.map { it.type.getOperationStringResId() }
     val amountCryptoText = args.map { CurrencyFormatter.format(TOKEN_TON, it.amount) }
     val amountFiatText = formattedRate(exchangeRate, args.map { it.amount }, TOKEN_TON)
-    val items = combine(args, walletRepository.activeWalletFlow) { args, wallet ->
-        ConfirmStakeItemType.entries.map { mapper.map(it, wallet, args.pool) }
+    val items = confirmStakeListHelper.items
+
+    init {
+        val flow = combine(args, walletRepository.activeWalletFlow) { a, b -> a.pool to b }
+        observeFlow(flow) { confirmStakeListHelper.init(it.second, it.first) }
     }
 
     fun provideArgs(args: ConfirmStakeArgs) {

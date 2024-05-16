@@ -8,5 +8,6 @@ data class ConfirmStakeListItem(
     val name: TextWrapper,
     val textPrimary: TextWrapper,
     val textSecondary: String? = null,
-    val position: ListCell.Position
+    val position: ListCell.Position,
+    val itemType: ConfirmStakeItemType
 ) : BaseListItem(1)

@@ -25,6 +25,7 @@ class ConfirmStakeListItemMapper {
     }
 
     private fun buildWalletItem(wallet: WalletEntity): ConfirmStakeListItem {
+        val type = ConfirmStakeItemType.WALLET
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.wallet),
             textPrimary = TextWrapper.PlainString(
@@ -32,12 +33,14 @@ class ConfirmStakeListItemMapper {
             ),
             position = ListCell.getPosition(
                 listSize,
-                ConfirmStakeItemType.WALLET.ordinal
-            )
+                type.ordinal
+            ),
+            itemType = type
         )
     }
 
     private fun buildRecipientItem(pool: StakingPool): ConfirmStakeListItem {
+        val type = ConfirmStakeItemType.RECIPIENT
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.recipient),
             textPrimary = TextWrapper.PlainString(
@@ -45,35 +48,37 @@ class ConfirmStakeListItemMapper {
             ),
             position = ListCell.getPosition(
                 listSize,
-                ConfirmStakeItemType.RECIPIENT.ordinal
-            )
+                type.ordinal
+            ),
+            itemType = type
         )
     }
 
     private fun buildAPYItem(pool: StakingPool): ConfirmStakeListItem {
+        val type = ConfirmStakeItemType.APY
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.apy),
-            textPrimary = TextWrapper.StringResource(
-                LocalizationR.string.apy_mask,
-                pool.formatApy(),
-            ),
+            textPrimary = TextWrapper.PlainString("~ ${pool.formatApy()}%"),
             position = ListCell.getPosition(
                 listSize,
-                ConfirmStakeItemType.APY.ordinal
-            )
+                type.ordinal
+            ),
+            itemType = type
         )
     }
 
     // todo
     private fun buildFeeItem(): ConfirmStakeListItem {
+        val type = ConfirmStakeItemType.FEE
         return ConfirmStakeListItem(
             name = TextWrapper.StringResource(LocalizationR.string.fee),
             textPrimary = TextWrapper.PlainString("todo",),
             textSecondary = "todo",
             position = ListCell.getPosition(
                 listSize,
-                ConfirmStakeItemType.FEE.ordinal
-            )
+                type.ordinal
+            ),
+            itemType = type
         )
     }
 }
