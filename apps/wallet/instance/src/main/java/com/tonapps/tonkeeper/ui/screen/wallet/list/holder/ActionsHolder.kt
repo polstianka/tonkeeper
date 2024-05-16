@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.extensions.toBuySell
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
+import com.tonapps.tonkeeper.fragment.swap.root.SwapFragment
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
@@ -39,15 +40,7 @@ class ActionsHolder(parent: ViewGroup) :
         receiveView.setOnClickListener {
             navigation?.add(QRScreen.newInstance(item.address, item.token, item.walletType))
         }
-        swapView.setOnClickListener {
-            navigation?.add(
-                SwapScreen.newInstance(
-                    item.swapUri,
-                    item.address,
-                    TokenEntity.TON.address
-                )
-            )
-        }
+        swapView.setThrottleClickListener { navigation?.add(SwapFragment.newInstance()) }
 
         swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
         sendView.isEnabled = item.walletType != WalletType.Watch
@@ -55,7 +48,8 @@ class ActionsHolder(parent: ViewGroup) :
         buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap
         buyOrSellView.isEnabled =
             item.walletType != WalletType.Testnet && item.walletType != WalletType.Watch
-        stakeView.isEnabled = item.walletType == WalletType.Default
+        stakeView.isEnabled = item.walletType == WalletType.Default ||
+                item.walletType == WalletType.Testnet
     }
 
 }
