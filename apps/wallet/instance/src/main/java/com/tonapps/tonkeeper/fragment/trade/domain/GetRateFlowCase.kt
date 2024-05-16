@@ -5,7 +5,9 @@ import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 
 class GetRateFlowCase(
     private val repository: RatesRepository
@@ -27,5 +29,8 @@ class GetRateFlowCase(
             emit(rates)
             delay(DELAY_MILLIS)
         }
+    }.retry {
+        delay(DELAY_MILLIS)
+        true
     }
 }

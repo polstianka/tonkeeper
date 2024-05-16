@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeAdapter
@@ -17,6 +18,7 @@ import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
+import uikit.widget.ProcessTaskView
 import uikit.widget.SlideActionView
 
 class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), BaseFragment.BottomSheet {
@@ -52,6 +54,8 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         get() = view?.findViewById(R.id.fragment_confirm_stake_slider)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_confirm_stake_footer)
+    private val processView: ProcessTaskView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_process_view)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,13 +87,22 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         observeFlow(viewModel.amountCryptoText) { amountCryptoTextView?.text = it }
         observeFlow(viewModel.amountFiatText) { amountFiatTextView?.text = it }
         observeFlow(viewModel.items) { adapter.submitList(it) }
+        observeFlow(viewModel.isSliderVisible) { slider?.isVisible = it }
+        observeFlow(viewModel.isProcessViewVisible) { processView?.isVisible = it }
+        observeFlow(viewModel.processViewState) { processView?.state = it }
     }
 
     private fun handleEvent(event: ConfirmStakeEvent) {
         when (event) {
             is ConfirmStakeEvent.CloseFlow -> event.handle()
             ConfirmStakeEvent.NavigateBack -> finish()
+            is ConfirmStakeEvent.RestartSlider -> event.handle()
         }
+    }
+
+    private fun ConfirmStakeEvent.RestartSlider.handle() {
+        slider?.reset()
+        processView
     }
 
     private fun ConfirmStakeEvent.CloseFlow.handle() {
