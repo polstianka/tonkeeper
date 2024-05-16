@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
+import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeAdapter
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
@@ -40,6 +42,9 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         get() = view?.findViewById(R.id.fragment_confirm_stake_amount_crypto)
     private val amountFiatTextView: TextView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_amount_fiat)
+    private val recyclerView: RecyclerView?
+        get() = view?.findViewById(R.id.fragment_confirm_stake_rv)
+    private val adapter = ConfirmStakeAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,11 +64,14 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         header?.doOnActionClick = { viewModel.onCrossClicked() }
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
 
+        recyclerView?.adapter = adapter
+
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.icon) { icon?.setImageResource(it) }
         observeFlow(viewModel.operationText) { operationTextView?.setText(it) }
         observeFlow(viewModel.amountCryptoText) { amountCryptoTextView?.text = it }
         observeFlow(viewModel.amountFiatText) { amountFiatTextView?.text = it }
+        observeFlow(viewModel.items) { adapter.submitList(it) }
     }
 
     private fun handleEvent(event: ConfirmStakeEvent) {
