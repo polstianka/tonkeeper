@@ -9,7 +9,7 @@ enum class StakingTransactionType {
 
 fun StakingTransactionType.getOperationStringResId(): Int {
     return when (this) {
-        StakingTransactionType.DEPOSIT -> LocalizationR.string.stake
+        StakingTransactionType.DEPOSIT -> LocalizationR.string.deposit
         StakingTransactionType.UNSTAKE -> LocalizationR.string.unstake
     }
 }
