@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
+import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
 import com.tonapps.wallet.data.account.WalletRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -93,5 +94,9 @@ class SwapViewModel(
                 _pickedReceiveAsset.value = result.asset
             }
         }
+    }
+
+    fun onSettingsUpdated(result: SwapSettingsResult) {
+        swapSettings.value = result.settings
     }
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class SwapSettingsViewModel : ViewModel() {
 
-    private val _events = MutableSharedFlow<SwapSettingsEvent>()
+    private val _events = MutableSharedFlow<SwapSettingsEvent>(replay = 1)
     private val _screenState = MutableStateFlow<SwapSettings?>(null)
 
     val events: Flow<SwapSettingsEvent>
@@ -22,6 +22,9 @@ class SwapSettingsViewModel : ViewModel() {
 
     fun provideArgs(args: SwapSettingsArgs) {
         _screenState.value = args.settings
+        if (args.settings is SwapSettings.ExpertMode) {
+            emit(_events, SwapSettingsEvent.FillInput(args.settings.slippagePercent.toString()))
+        }
     }
 
     fun onCloseClick() {
@@ -35,6 +38,7 @@ class SwapSettingsViewModel : ViewModel() {
             lastPercentage = 100
             emit(_events, SwapSettingsEvent.FillInput("100"))
         }
+        updateState(SwapSettings.ExpertMode(lastPercentage))
     }
 
     fun onSlippageOptionOneChecked() {
@@ -71,5 +75,11 @@ class SwapSettingsViewModel : ViewModel() {
             else -> _events.emit(SwapSettingsEvent.FillInput(""))
         }
         _screenState.value = newState
+    }
+
+    fun onButtonClicked() = viewModelScope.launch {
+        val state = screenState.first()
+        val event = SwapSettingsEvent.ReturnResult(state)
+        _events.emit(event)
     }
 }

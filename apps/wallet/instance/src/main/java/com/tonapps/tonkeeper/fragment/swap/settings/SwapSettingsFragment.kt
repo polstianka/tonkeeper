@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeperx.R
@@ -19,6 +20,7 @@ import uikit.extensions.cornerMedium
 import uikit.extensions.round
 import uikit.extensions.selectableItemBackground
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.InputView
 import uikit.widget.ModalHeader
 import uikit.widget.SwitchView
@@ -52,6 +54,8 @@ class SwapSettingsFragment : BaseFragment(R.layout.fragment_swap_settings), Base
         get() = view?.findViewById(R.id.fragment_swap_settings_expert_mode_group)
     private val editText: EditText?
         get() = view?.findViewById(uikit.R.id.input_field)
+    private val button: Button?
+        get() = view?.findViewById(R.id.fragment_swap_settings_button)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +90,8 @@ class SwapSettingsFragment : BaseFragment(R.layout.fragment_swap_settings), Base
 
         expertModeGroup?.setThrottleClickListener { viewModel.onExpertModeChecked() }
         prepareExpertModeGroupBackground()
+
+        button?.setOnClickListener { viewModel.onButtonClicked() }
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.screenState) { handleState(it) }
@@ -145,7 +151,14 @@ class SwapSettingsFragment : BaseFragment(R.layout.fragment_swap_settings), Base
         when (event) {
             SwapSettingsEvent.NavigateBack -> finish()
             is SwapSettingsEvent.FillInput -> event.handle()
+            is SwapSettingsEvent.ReturnResult -> event.handle()
         }
+    }
+
+    private fun SwapSettingsEvent.ReturnResult.handle() {
+        val result = SwapSettingsResult(settings)
+        navigation?.setFragmentResult(SwapSettingsResult.REQUEST_KEY, result.toBundle())
+        finish()
     }
 
     private fun SwapSettingsEvent.FillInput.handle() {

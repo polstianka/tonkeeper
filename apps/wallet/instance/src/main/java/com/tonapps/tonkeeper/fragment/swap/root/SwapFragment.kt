@@ -16,6 +16,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsFragment
+import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -65,6 +66,10 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         navigation?.setFragmentResultListener(PickAssetResult.REQUEST_KEY) { bundle ->
             val result = PickAssetResult(bundle)
             viewModel.onAssetPicked(result)
+        }
+        navigation?.setFragmentResultListener(SwapSettingsResult.REQUEST_KEY) { bundle ->
+            val result = SwapSettingsResult(bundle)
+            viewModel.onSettingsUpdated(result)
         }
     }
 
