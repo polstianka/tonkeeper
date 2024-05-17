@@ -27,7 +27,7 @@ import uikit.widget.webview.bridge.message.FunctionInvokeBridgeMessage
 import uikit.widget.webview.bridge.message.FunctionResponseBridgeMessage
 import java.util.LinkedList
 
-class BridgeWebView @JvmOverloads constructor(
+open class BridgeWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = android.R.attr.webViewStyle,
@@ -129,8 +129,10 @@ class BridgeWebView @JvmOverloads constructor(
 
     private suspend fun invokeFunction(message: FunctionInvokeBridgeMessage) {
         val bridge = jsBridge ?: return
+
         try {
             val data = bridge.invokeFunction(message.name, message.args) ?: return
+            //val data = bridge.invokeFunction(message.name, JSONArray("[{\"source\":\"UQD2NmD_lH5f5u1Kj3KfGyTvhZSX0Eg6qp2a5IQUKXxOGzCi\",\"valid_until\":1716924003449,\"messages\":[{\"address\":\"EQARULUYsmJq1RiZ-YiH-IJLcAZUVkVff-KBPwEmmaQGH6aC\",\"amount\":\"1215000000\",\"payload\":\"te6ccsEBAgEAhQAAOgFtD4p+pQAAAAAAADA5Q7msoAgA7zuZAqJxsqAciTilI8/iTnGEeq62piAAHtRKd6wOcJwQM0KPAwEAkSWThWGAEPckSDVNSvvmJOKMGCE4qb+zE0NdQGXsIPpYy63RDznCAwA9jZg/5R+X+btSo9ynxsk74WUl9BIOqqdmuSEFCl8ThtBeoaGW\"}]}]")) ?: return
             postMessage(FunctionResponseBridgeMessage(
                 invocationId = message.invocationId,
                 status = "fulfilled",

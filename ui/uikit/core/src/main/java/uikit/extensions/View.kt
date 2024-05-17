@@ -270,6 +270,18 @@ fun View.applyBottomInsets() {
     }
 }
 
+fun ViewGroup.setBottomInset() {
+    ViewCompat.setOnApplyWindowInsetsListener(
+        this
+    ) { v: View, windowInsets: WindowInsetsCompat ->
+        val insetTypes =
+            WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.systemBars()
+        val insets = windowInsets.getInsets(insetTypes)
+        v.setPadding(0, 0, 0, insets.bottom)
+        WindowInsetsCompat.CONSUMED
+    }
+}
+
 fun View.getViews(): List<View> {
     val result = mutableListOf<View>()
     if (this is ViewGroup) {

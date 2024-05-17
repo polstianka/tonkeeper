@@ -67,3 +67,18 @@ fun toggleVisibilityAnimation(
     }
     animationSet.start()
 }
+
+fun makeVisibleAnimation(
+    views: List<View>,
+    duration: Long = 180L,
+) {
+
+    val animationSet = AnimatorSet()
+    animationSet.duration = duration
+
+    animationSet.playTogether(views.filter { it.visibility != View.VISIBLE || it.alpha != 1.0f }.map {
+        it.visibility = View.VISIBLE
+        ObjectAnimator.ofFloat(it, View.ALPHA, it.alpha, 1f)
+    })
+    animationSet.start()
+}

@@ -1,8 +1,11 @@
 package uikit.extensions
 
+import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
+import androidx.annotation.DimenRes
 import androidx.core.util.TypedValueCompat
+import uikit.R
 import kotlin.math.roundToInt
 
 val Int.dp: Int
@@ -25,3 +28,11 @@ val Float.sp: Float
         val density = Resources.getSystem().displayMetrics.scaledDensity
         return (this * density)
     }
+
+fun Context.dimen(@DimenRes id: Int): Int {
+    return getDimensionPixelSize(id)
+}
+
+fun Context.dimenF(@DimenRes id: Int): Float {
+    return getDimension(id)
+}

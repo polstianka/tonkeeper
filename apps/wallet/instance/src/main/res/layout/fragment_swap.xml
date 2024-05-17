@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <uikit.widget.webview.bridge.BridgeWebView
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:title="@string/swap"
+        android:icon="@drawable/ic_sliders_16"
+        android:action="@drawable/ic_close_16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <com.tonapps.tonkeeper.ui.component.swap.SwapView
+        android:id="@+id/swap"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:alpha="0.4"
+        />
+
+    <uikit.widget.webview.bridge.StonfiWebView
         android:id="@+id/web"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-</FrameLayout>
+    <Button
+        style="@style/Widget.App.Button.Secondary"
+        android:id="@+id/confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:filterTouchesWhenObscured="true"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:enabled="false"
+        android:text=""
+        android:layout_marginTop="@dimen/offsetLarge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swap"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:alpha=".4"
+        android:textAppearance="@style/TextAppearance.Label1"/>
+
+    <uikit.widget.LoaderView
+        android:id="@+id/confirm_loading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/confirm"
+        app:layout_constraintStart_toStartOf="@id/confirm"
+        app:layout_constraintEnd_toEndOf="@id/confirm"
+        app:layout_constraintBottom_toBottomOf="@id/confirm"
+        />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm test"
+        android:id="@+id/test_confirm"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        />
+
+
+
+    <uikit.widget.SkeletonLayout
+        android:id="@+id/shimmer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:alpha="0.4"
+        >
+        <include layout="@layout/shimmer_swap" />
+    </uikit.widget.SkeletonLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

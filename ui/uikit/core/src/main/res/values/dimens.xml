@@ -2,10 +2,12 @@
 <resources>
     <dimen name="actionSize">32dp</dimen>
     <dimen name="itemHeight">56dp</dimen>
+
     <dimen name="barHeight">64dp</dimen>
     <dimen name="shadowSize">3dp</dimen>
     <dimen name="tertiaryHeight">36dp</dimen>
     <dimen name="iconSize">28dp</dimen>
+    <dimen name="buttonHeight">56dp</dimen>
 
     <dimen name="gap">12dp</dimen>
 
@@ -19,4 +21,11 @@
     <dimen name="offsetExtraSmall">4dp</dimen>
     <dimen name="offsetMedium">16dp</dimen>
     <dimen name="offsetLarge">32dp</dimen>
+
+    <dimen name="labelHeight">48dp</dimen>
+
+    <dimen name="inputPercentHeight">56dp</dimen>
+
+    <dimen name="detailViewLoadingHeight">48dp</dimen>
+    <dimen name="detailViewDescriptionHeight">36dp</dimen>
 </resources>

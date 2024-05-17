@@ -5,6 +5,7 @@
         <attr name="android:title" format="string|reference"/>
         <attr name="android:action" format="reference"/>
         <attr name="ignoreSystemOffset" format="boolean"/>
+        <attr name="makeTitleFromStart" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="IntroBlockView">
@@ -16,6 +17,26 @@
     <declare-styleable name="TextHeaderView">
         <attr name="android:title" format="string|reference"/>
         <attr name="android:description" format="string|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="DescriptionView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:description" format="string|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="PreferenceView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:description" format="string|reference"/>
+        <attr name="android:checked" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="DetailLoadingView">
+        <attr name="android:title" format="string|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="DetailDescriptionView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:value" format="string|reference"/>
     </declare-styleable>
 
     <declare-styleable name="BackHeaderView">
@@ -48,6 +69,11 @@
         <attr name="disableClearButton" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="InputRoundedView">
+        <attr name="inputSuffixText" format="string|reference"/>
+        <attr name="inputSuffixSpacing" format="dimension|reference"/>
+    </declare-styleable>
+
     <attr name="position">
         <enum name="first" value="0"/>
         <enum name="middle" value="1"/>
@@ -67,6 +93,8 @@
         <attr name="android:tint" format="color|reference"/>
         <attr name="position"/>
     </declare-styleable>
+
+
 
     <declare-styleable name="ItemTextView">
         <attr name="android:text" format="string|reference"/>

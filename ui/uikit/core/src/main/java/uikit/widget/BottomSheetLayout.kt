@@ -97,6 +97,7 @@ class BottomSheetLayout @JvmOverloads constructor(
         behavior = BottomSheetBehavior.from(contentView)
         behavior.addBottomSheetCallback(bottomSheetCallback)
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
+        behavior.isDraggable = false
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {

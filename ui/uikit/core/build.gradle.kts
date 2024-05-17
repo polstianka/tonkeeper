@@ -27,6 +27,7 @@ dependencies {
     implementation(Dependence.AndroidX.fragment)
     implementation(Dependence.AndroidX.appCompat)
     implementation(Dependence.AndroidX.splashscreen)
+    implementation(Dependence.AndroidX.constraintlayout)
     implementation(Dependence.UI.material)
     implementation(Dependence.fresco) {
         exclude(group = "com.facebook.soloader", module = "soloader")
@@ -36,4 +37,5 @@ dependencies {
         exclude(group = "com.facebook.fresco", module = "memory-type-native")
         exclude(group = "com.facebook.fresco", module = "imagepipeline-native")
     }
+    implementation(project(Dependence.Lib.icu))
 }

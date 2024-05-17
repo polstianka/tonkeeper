@@ -61,6 +61,7 @@ dependencies {
 
     implementation(project(Dependence.Wallet.Data.core))
     implementation(project(Dependence.Wallet.Data.tokens))
+    implementation(project(Dependence.Wallet.Data.stonfi))
     implementation(project(Dependence.Wallet.Data.account))
     implementation(project(Dependence.Wallet.Data.settings))
     implementation(project(Dependence.Wallet.Data.rates))
@@ -81,6 +82,7 @@ dependencies {
     implementation(Dependence.AndroidX.workManager)
     implementation(Dependence.AndroidX.biometric)
     implementation(Dependence.AndroidX.swiperefreshlayout)
+    implementation(Dependence.AndroidX.constraintlayout)
 
     implementation(Dependence.guava)
 

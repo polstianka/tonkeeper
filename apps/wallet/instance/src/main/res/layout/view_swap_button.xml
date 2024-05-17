@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:layout_width="40dp"
+    tools:layout_height="40dp"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_swap_vertical_down_16"
+        android:tint="?attr/buttonSecondaryForegroundColor"
+        android:scaleType="centerInside" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow_up"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_swap_vertical_up_16"
+        android:tint="?attr/buttonSecondaryForegroundColor"
+        android:scaleType="centerInside" />
+
+</merge>

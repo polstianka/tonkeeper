@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/bg_content"
+    tools:layout_margin="@dimen/offsetMedium"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:lineHeight="20dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:text="@string/receive"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textSecondaryColor"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry,UnusedAttribute"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:lineHeight="20dp"
+        android:maxLines="1"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textSecondaryColor"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnusedAttribute"
+        tools:text="0.0"
+        tools:visibility="visible" />
+
+    <com.tonapps.tonkeeper.ui.component.swap.TokenButtonView
+        android:id="@+id/token"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/choose"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/value"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:singleLine="true"
+        android:textColor="?attr/textTertiaryColor"
+        android:textAppearance="@style/TextAppearance.NUM2"
+        android:textAlignment="textEnd"
+        android:paddingEnd="16dp"
+        android:lineHeight="36dp"
+        android:text="0"
+        app:autoSizeMaxTextSize="28sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintTop_toBottomOf="@id/label"
+        app:layout_constraintStart_toEndOf="@id/token"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        />
+
+    <uikit.widget.DividerView
+        android:id="@+id/divider_end_receive"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/token"
+        tools:visibility="visible"
+        />
+
+    <uikit.widget.DetailLoadingView
+        android:id="@+id/detail_swap_rate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_end_receive"
+        tools:visibility="visible" />
+
+    <uikit.widget.DividerView
+        android:id="@+id/divider_start_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_swap_rate"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_price_impact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_detail_price_impact"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_start_info"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_minimum_received"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_detail_minimum_received"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_price_impact"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_liquidity_provider_fee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_detail_liquidity_provider_fee"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_minimum_received"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_blockchain_fee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_detail_blockchain_fee"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_liquidity_provider_fee"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_route"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_detail_route"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_blockchain_fee"
+        tools:visibility="visible" />
+
+    <uikit.widget.DetailDescriptionView
+        android:id="@+id/detail_provider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:title="@string/swap_detail_provider"
+        android:value="@string/swap_detail_provider_value"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_route"
+        tools:visibility="visible" />
+
+
+</merge>

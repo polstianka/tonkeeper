@@ -3,10 +3,9 @@ package com.tonapps.tonkeeper.ui.screen.swap
 import android.util.Log
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import org.json.JSONArray
-import org.json.JSONObject
 import uikit.widget.webview.bridge.JsBridge
 
-class StonfiBridge2(
+class StonfiBridge(
     val address: String,
     val close: () -> Unit,
     val sendTransaction: suspend (request: SignRequestEntity) -> String?

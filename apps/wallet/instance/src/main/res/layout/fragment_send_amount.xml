@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-                <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                <uikit.widget.AmountInput
                     android:id="@+id/value"
                     android:layout_width="wrap_content"
                     android:layout_height="48.76dp"
@@ -48,6 +48,7 @@
                     android:textColor="?attr/textPrimaryColor"
                     android:textCursorDrawable="@drawable/cursor"
                     android:gravity="center_vertical"
+                    android:textSize="40sp"
                     android:text="0"
                     android:hint="0"
                     app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Webpack App</title>
+    <script defer="defer" src="file:///android_asset/main.js"></script>
+    <script>
+        function swapTonToJetton(address, askJettonAddress, offerAmount, minAskAmount) {
+      new Promise((resolve) => {
+        window.buildSwapTonToJettonTxParams(address, askJettonAddress, offerAmount, minAskAmount)
+      });
+    };
+
+        function swapJettonToJetton(address, offerJettonAddress, askJettonAddress, offerAmount, minAskAmount) {
+      new Promise((resolve) => {
+        window.buildSwapJettonToJettonTxParams(address, offerJettonAddress, askJettonAddress, offerAmount, minAskAmount)
+      });
+    };
+
+          function swapJettonToTon(address, offerJettonAddress, offerAmount, minAskAmount) {
+      new Promise((resolve) => {
+        window.buildSwapJettonToTonTxParams(address, offerJettonAddress, offerAmount, minAskAmount)
+      });
+    };
+    </script>
+</head>
+<body><h1>TonWeb</h1>
+<h2>Tip: Check your console</h2></body>
+</html>

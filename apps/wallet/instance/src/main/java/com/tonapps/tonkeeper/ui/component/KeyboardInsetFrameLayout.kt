@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.fragment.send.view
+package com.tonapps.tonkeeper.ui.component
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import androidx.core.view.WindowInsetsCompat
 import uikit.extensions.setPaddingBottom
 
-class SendFrameLayout @JvmOverloads constructor(
+class KeyboardInsetFrameLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,

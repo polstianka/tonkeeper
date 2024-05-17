@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -14,7 +13,7 @@ import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.getDimensionPixelSize
 import uikit.widget.webview.bridge.BridgeWebView
 
-class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet {
+class SwapScreen: BaseFragment(R.layout.fragment_swap_web), BaseFragment.BottomSheet {
 
     private val args: SwapArgs by lazy { SwapArgs(requireArguments()) }
 
@@ -28,7 +27,7 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         webView.clipToPadding = false
         webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
         webView.loadUrl(getUri().toString())
-        webView.jsBridge = StonfiBridge2(
+        webView.jsBridge = StonfiBridge(
             address = args.address,
             close = ::finish,
             sendTransaction = ::sing

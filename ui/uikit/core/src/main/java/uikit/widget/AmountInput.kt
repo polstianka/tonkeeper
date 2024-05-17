@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.fragment.send.view
+package uikit.widget
 
 import android.content.Context
 import android.text.Editable
@@ -16,23 +16,10 @@ class AmountInput @JvmOverloads constructor(
     defStyle: Int = R.attr.editTextStyle,
 ) : AppCompatEditText(context, attrs, defStyle), TextWatcher {
 
-    private companion object {
-        private const val maxTextSize = 40f
-    }
-
     private val separator = CurrencyFormatter.monetaryDecimalSeparator
 
     init {
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, maxTextSize)
         addTextChangedListener(this)
-    }
-
-    private fun checkTextSize(s: CharSequence) {
-        val maxWidth = measuredWidth
-        val textWidth = paint.measureText(s, 0, s.length)
-        if (textWidth >= maxWidth) {
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize - 2)
-        }
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -46,6 +33,16 @@ class AmountInput @JvmOverloads constructor(
         lengthAfter: Int
     ) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
+    }
+
+    fun setAmount(amount: Float) {
+        val amountString = if (0f >= amount) {
+            ""
+        } else {
+            amount.toString()
+        }
+        val editable = this.text ?: return
+        editable.replace(0, editable.length, amountString)
     }
 
     override fun afterTextChanged(editable: Editable) {

@@ -267,4 +267,34 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+
+    <string name="balance">Balance: %1$s</string>
+    <string name="choose">Choose</string>
+    <string name="choose_token">Choose token</string>
+    <string name="swap_assets_suggested" translatable="false">Suggested</string>
+    <string name="swap_assets_other" translatable="false">Other</string>
+
+    <string name="swap_settings_slippage_title" translatable="false">Slippage</string>
+    <string name="swap_settings_slippage_description" translatable="false">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="swap_settings_expert_mode_title" translatable="false">Expert Mode</string>
+    <string name="swap_settings_expert_mode_description" translatable="false">Allows high price impact trades. Use at your own risk.</string>
+    <string name="swap_settings_slippage_custom_hint" translatable="false">Custom</string>
+    <string name="swap_settings_slippage_custom_suffix" translatable="false">%</string>
+    <string name="swap_settings_slippage_1percent" translatable="false">1%</string>
+    <string name="swap_settings_slippage_3percent" translatable="false">3%</string>
+    <string name="swap_settings_slippage_5percent" translatable="false">5%</string>
+
+    <string name="swap_detail_price_impact" translatable="false">Price impact</string>
+    <string name="swap_detail_minimum_received" translatable="false">Minimum received</string>
+    <string name="swap_detail_liquidity_provider_fee" translatable="false">Liquidity provider fee</string>
+    <string name="swap_detail_blockchain_fee" translatable="false">Blockchain fee</string>
+    <string name="swap_detail_route" translatable="false">Route</string>
+    <string name="swap_detail_provider" translatable="false">Provider</string>
+    <string name="swap_detail_provider_value" translatable="false">STON.fi</string>
+
+    <string name="swap_head_confirm">Confirm Swap</string>
+    <string name="swap_btn_enter_amount">Enter Amount</string>
+    <string name="swap_btn_choose_token">Choose Token</string>
+
+    <string name="swap_max">Max</string>
 </resources>

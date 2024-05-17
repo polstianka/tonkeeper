@@ -10,6 +10,7 @@
         android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
         android:background="@drawable/bg_oval_button_secondary"
         android:scaleType="centerInside"
+        android:layout_marginStart="16dp"
         android:alpha="0"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -69,6 +70,7 @@
         android:tint="?attr/buttonSecondaryForegroundColor"
         android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
         android:background="@drawable/bg_oval_button_secondary"
+        android:layout_marginEnd="16dp"
         android:alpha="0"/>
 
 </merge>

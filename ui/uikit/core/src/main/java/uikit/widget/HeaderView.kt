@@ -3,19 +3,25 @@ package uikit.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isGone
 import uikit.R
 import uikit.drawable.BarDrawable
 import uikit.drawable.HeaderDrawable
+import uikit.extensions.dp
 import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.setPaddingHorizontal
+import uikit.extensions.setPaddingStart
 import uikit.extensions.setPaddingTop
 import uikit.extensions.useAttributes
 import uikit.extensions.withAnimation
@@ -36,6 +42,8 @@ open class HeaderView @JvmOverloads constructor(
 
     private val barHeight = context.getDimensionPixelSize(R.dimen.barHeight)
     private var ignoreSystemOffset = false
+    private var makeTitleFromStart = false
+
     private var topOffset: Int = 0
         set(value) {
             if (field != value) {
@@ -80,7 +88,6 @@ open class HeaderView @JvmOverloads constructor(
 
     init {
         super.setBackground(drawable)
-        setPaddingHorizontal(context.getDimensionPixelSize(R.dimen.offsetMedium))
 
         inflate(context, R.layout.view_header, this)
 
@@ -93,7 +100,8 @@ open class HeaderView @JvmOverloads constructor(
         textView = findViewById(R.id.header_text)
 
         context.useAttributes(attrs, R.styleable.HeaderView) {
-            ignoreSystemOffset = it.getBoolean(R.styleable.HeaderView_ignoreSystemOffset, false)
+            ignoreSystemOffset = it.getBoolean(R.styleable.HeaderView_ignoreSystemOffset, ignoreSystemOffset)
+            makeTitleFromStart = it.getBoolean(R.styleable.HeaderView_makeTitleFromStart, makeTitleFromStart)
             val iconResId = it.getResourceId(R.styleable.HeaderView_android_icon, 0)
             setIcon(iconResId)
 
@@ -101,8 +109,18 @@ open class HeaderView @JvmOverloads constructor(
 
             val actionResId = it.getResourceId(R.styleable.HeaderView_android_action, 0)
             setAction(actionResId)
+
+            if (makeTitleFromStart) {
+                closeView.isGone = true
+                titleView.layoutParams.let {params ->
+                    if (params is LinearLayout.LayoutParams) {
+                        params.gravity = Gravity.START
+                    }
+                }
+            }
         }
     }
+
 
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
         if (ignoreSystemOffset) {

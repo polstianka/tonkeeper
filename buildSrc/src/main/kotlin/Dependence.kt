@@ -42,6 +42,7 @@ object Dependence {
         const val biometric = "androidx.biometric:biometric:1.1.0"
         const val annotation = "androidx.annotation:annotation:1.7.1"
         const val splashscreen = "androidx.core:core-splashscreen:1.0.1"
+        const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 
         const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
         const val profileinstaller = "androidx.profileinstaller:profileinstaller:1.3.1"
@@ -74,11 +75,17 @@ object Dependence {
     }
 
     object Squareup {
-        const val okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
-        const val sse = "com.squareup.okhttp3:okhttp-sse:4.12.0"
+        const val versionOkHttp = "4.12.0"
+        const val okhttp = "com.squareup.okhttp3:okhttp:$versionOkHttp"
+        const val sse = "com.squareup.okhttp3:okhttp-sse:$versionOkHttp"
+        const val logger = "com.squareup.okhttp3:logging-interceptor:$versionOkHttp"
         const val moshi = "com.squareup.moshi:moshi-kotlin:1.15.0"
         const val moshiAdapters = "com.squareup.moshi:moshi-adapters:1.15.0"
         const val okio = "com.squareup.okio:okio:3.9.0"
+
+        const val retrofitVersion = "2.11.0"
+        const val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+        const val retrofitMoshiAdapter = "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     }
 
     object Firebase {
@@ -125,6 +132,7 @@ object Dependence {
             const val settings = ":apps:wallet:data:settings"
             const val rates = ":apps:wallet:data:rates"
             const val tokens = ":apps:wallet:data:tokens"
+            const val stonfi = ":apps:wallet:data:stonfi"
             const val collectibles = ":apps:wallet:data:collectibles"
             const val events = ":apps:wallet:data:events"
             const val tonconnect = ":apps:wallet:data:tonconnect"

@@ -8,28 +8,15 @@ import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
-import com.tonapps.uikit.color.UIKitColor
-import com.tonapps.uikit.color.backgroundContentTintColor
 import uikit.R
 import uikit.base.BaseActivity
 import uikit.base.BaseFragment
-import uikit.extensions.doOnEnd
-import uikit.extensions.hapticConfirm
 import uikit.extensions.primaryFragment
-import uikit.extensions.runAnimation
 import uikit.widget.ToastView
 
 abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.OnPreDrawListener {
@@ -166,6 +153,11 @@ abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.
                 remove(fragment)
             }
         }
+    }
+
+    override fun previous(): Fragment {
+        val fragments = supportFragmentManager.fragments
+        return fragments[fragments.size - 2]
     }
 
     private fun clearBackStack() {
