@@ -2,6 +2,7 @@ package uikit.widget
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
@@ -15,6 +16,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.tonapps.uikit.color.accentBlueColor
 import com.tonapps.uikit.color.accentRedColor
 import uikit.R
@@ -99,6 +101,7 @@ class InputView @JvmOverloads constructor(
     private val iconView: AppCompatImageView
     private val clearView: AppCompatImageView
     private val loaderView: LoaderView
+    private val iconStart: AppCompatImageView
 
     var error: Boolean
         get() = inputDrawable.error
@@ -190,6 +193,12 @@ class InputView @JvmOverloads constructor(
         set(value) {
             editText.inputType = value
         }
+    var iconStartDrawable: Drawable?
+        get() = iconStart.drawable
+        set(value) {
+            iconStart.isVisible = value != null
+            value?.let { iconStart.setImageDrawable(it) }
+        }
 
     init {
         background = inputDrawable
@@ -208,6 +217,7 @@ class InputView @JvmOverloads constructor(
         iconView = findViewById(R.id.input_icon)
         clearView = findViewById(R.id.input_clear)
         loaderView = findViewById(R.id.input_loader)
+        iconStart = findViewById(R.id.input_icon_start)
 
         clearView.setOnClickListener {
             if (isEnabled) {
@@ -223,6 +233,9 @@ class InputView @JvmOverloads constructor(
             singleLine = it.getBoolean(R.styleable.InputView_android_singleLine, false)
             maxLength = it.getInt(R.styleable.InputView_android_maxLength, 0)
             disableClearButton = it.getBoolean(R.styleable.InputView_disableClearButton, false)
+            if (it.hasValue(R.styleable.InputView_iconStart)) {
+                iconStartDrawable = it.getDrawable(R.styleable.InputView_iconStart)!!
+            }
         }
 
         setOnClickListener {

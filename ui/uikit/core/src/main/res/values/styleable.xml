@@ -46,6 +46,7 @@
         <attr name="android:singleLine" format="boolean"/>
         <attr name="android:maxLength" format="integer"/>
         <attr name="disableClearButton" format="boolean"/>
+        <attr name="iconStart" format="reference"/>
     </declare-styleable>
 
     <attr name="position">
