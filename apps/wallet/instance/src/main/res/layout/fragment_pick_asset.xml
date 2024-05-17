@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.ModalHeader
+        android:id="@+id/fragment_pick_asset_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_token" />
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/fragment_pick_asset_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp" />
+
+</uikit.widget.ColumnLayout>

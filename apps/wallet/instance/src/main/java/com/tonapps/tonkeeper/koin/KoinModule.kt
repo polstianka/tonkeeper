@@ -17,6 +17,7 @@ import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionViewMod
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.PickPoolViewModel
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsViewModel
 import com.tonapps.tonkeeper.fragment.stake.root.StakeViewModel
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetViewModel
 import com.tonapps.tonkeeper.fragment.swap.root.SwapViewModel
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthViewModel
 import com.tonapps.tonkeeper.fragment.trade.exchange.vm.ExchangeViewModel
@@ -110,4 +111,5 @@ val koinModel = module {
     viewModel { ConfirmStakeViewModel(get(), get(), get(), get(), get(), get(), get()) }
 
     viewModel { SwapViewModel(get()) }
+    viewModel { PickAssetViewModel() }
 }

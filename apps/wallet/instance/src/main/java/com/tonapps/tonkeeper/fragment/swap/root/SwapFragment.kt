@@ -9,12 +9,14 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ProcessTaskView
 import com.tonapps.wallet.localization.R as LocalizationR
 
@@ -92,6 +94,12 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     private fun handleEvent(event: SwapEvent) {
         when (event) {
             SwapEvent.NavigateBack -> finish()
+            is SwapEvent.NavigateToPickAsset -> event.handle()
         }
+    }
+
+    private fun SwapEvent.NavigateToPickAsset.handle() {
+        val fragment = PickAssetFragment.newInstance(type)
+        navigation?.add(fragment)
     }
 }

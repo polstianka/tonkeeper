@@ -6,6 +6,7 @@ import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,11 +43,13 @@ class SwapViewModel(
     }
 
     fun onSendTokenClicked() {
-        Log.wtf("###", "send token clicked")
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.SEND)
+        emit(_events, event)
     }
 
     fun onReceiveTokenClicked() {
-        Log.wtf("###", "receive token clicked")
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.RECEIVE)
+        emit(_events, event)
     }
 
     fun onSwapTokensClicked() {
