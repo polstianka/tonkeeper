@@ -8,7 +8,7 @@ import io.stonfiapi.apis.StatsApi
 import io.stonfiapi.apis.WalletsApi
 import okhttp3.OkHttpClient
 
-class BaseStonfiApi(
+class StonfiProvider(
     basePath: String,
     okHttpClient: OkHttpClient
 ) {

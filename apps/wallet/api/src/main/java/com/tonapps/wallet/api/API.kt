@@ -398,7 +398,7 @@ class API(
 
         val JSON = Json { prettyPrint = true }
 
-        private fun baseOkHttpClientBuilder(): OkHttpClient.Builder {
+        fun baseOkHttpClientBuilder(): OkHttpClient.Builder {
             return OkHttpClient().newBuilder()
                 .retryOnConnectionFailure(false)
                 .connectTimeout(10, TimeUnit.SECONDS)

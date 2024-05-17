@@ -92,6 +92,7 @@ object Dependence {
         const val core = ":core"
         const val ton = ":ton"
         const val tonApi = ":tonapi"
+        const val stonfiApi = ":stonfiapi"
 
         const val shimmer = ":ui:shimmer"
         const val blur = ":ui:blur"
