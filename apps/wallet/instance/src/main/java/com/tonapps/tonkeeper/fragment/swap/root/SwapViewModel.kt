@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
+import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
@@ -20,9 +21,11 @@ import kotlinx.coroutines.flow.flowOf
 @OptIn(ExperimentalCoroutinesApi::class)
 class SwapViewModel(
     private val repository: DexAssetsRepository,
-    private val walletManager: WalletRepository
+    walletManager: WalletRepository,
+    getDefaultSwapSettingsCase: GetDefaultSwapSettingsCase
 ) : ViewModel() {
 
+    private val swapSettings = MutableStateFlow(getDefaultSwapSettingsCase.execute())
     private val _pickedSendAsset = MutableStateFlow<DexAsset?>(null)
     private val _pickedReceiveAsset = MutableStateFlow<DexAsset?>(null)
     private val _events = MutableSharedFlow<SwapEvent>()
@@ -34,7 +37,6 @@ class SwapViewModel(
         get() = _events
     val pickedSendAsset: Flow<DexAsset?>
         get() = _pickedSendAsset
-    val currentWallet = walletManager.activeWalletFlow
     val pickedReceiveAsset: Flow<DexAsset?>
         get() = _pickedReceiveAsset
     val pickedTokenBalance = pairFlow.flatMapLatest { pair ->
