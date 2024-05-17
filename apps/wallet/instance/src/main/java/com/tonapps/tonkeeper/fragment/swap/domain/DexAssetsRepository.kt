@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.fragment.swap.domain
 
+import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.wallet.api.StonfiAPI
@@ -8,6 +9,7 @@ import io.stonfiapi.models.AssetKindSchema
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class DexAssetsRepository(
@@ -46,6 +48,26 @@ class DexAssetsRepository(
 
     fun getDefaultAsset(): DexAsset {
         return nonCommunityItems.value.first { it.type == DexAssetType.TON }
+    }
+
+
+    private val assetBalances = mutableListOf<AssetBalance.Entity>()
+    fun getAssetBalance(
+        walletAddress: String,
+        contractAddress: String
+    ) = flow {
+        if (assetBalances.isEmpty()) {
+            emit(AssetBalance.Loading)
+            val assets = withContext(Dispatchers.IO) {
+                api.wallets.getWalletAssets(walletAddress)
+                    .assetList
+                    .map { AssetBalance.Entity(it.toDomain(), it.balance?.toLongOrNull() ?: 0L) }
+            }
+            assetBalances.clear()
+            assetBalances.addAll(assets)
+        }
+        val balance = assetBalances.firstOrNull { it.asset.contractAddress == contractAddress }
+        emit(balance)
     }
 
     private fun AssetInfoSchema.toDomain(): DexAsset {

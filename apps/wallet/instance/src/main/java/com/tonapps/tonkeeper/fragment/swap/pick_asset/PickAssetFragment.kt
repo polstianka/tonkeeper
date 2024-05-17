@@ -9,6 +9,7 @@ import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.applyNavBottomPadding
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
 
 class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragment.BottomSheet {
@@ -54,6 +55,13 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
     private fun handleEvent(event: PickAssetEvent) {
         when (event) {
             PickAssetEvent.NavigateBack -> finish()
+            is PickAssetEvent.ReturnResult -> event.handle()
         }
+    }
+
+    private fun PickAssetEvent.ReturnResult.handle() {
+        val result = PickAssetResult(asset, type)
+        navigation?.setFragmentResult(PickAssetResult.REQUEST_KEY, result.toBundle())
+        finish()
     }
 }

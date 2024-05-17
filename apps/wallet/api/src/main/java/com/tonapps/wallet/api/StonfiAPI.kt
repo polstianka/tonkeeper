@@ -9,6 +9,7 @@ import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.stonfiapi.apis.DexApi
 import io.stonfiapi.apis.StatsApi
+import io.stonfiapi.apis.WalletsApi
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -43,4 +44,6 @@ class StonfiAPI(
         get() = provider.stats
     val dex: DexApi
         get() = provider.dex
+    val wallets: WalletsApi
+        get() = provider.wallets
 }

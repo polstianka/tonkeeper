@@ -6,10 +6,15 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.fragment.stake.presentation.formatTon
+import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -51,6 +56,16 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_send_input)
     private val receiveInput: AmountInput?
         get() = view?.findViewById(R.id.fragment_swap_new_receive_input)
+    private val balanceTextView: TextView?
+        get() = view?.findViewById(R.id.fragment_swap_new_balance_label)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        navigation?.setFragmentResultListener(PickAssetResult.REQUEST_KEY) { bundle ->
+            val result = PickAssetResult(bundle)
+            viewModel.onAssetPicked(result)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,19 +84,31 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         observeFlow(viewModel.isLoading) { updateLoading(it) }
         observeFlow(viewModel.pickedSendAsset) { updateSendAsset(it) }
         observeFlow(viewModel.pickedReceiveAsset) { updateReceiveAsset(it) }
+        observeFlow(viewModel.pickedTokenBalance) { updateBalance(it) }
+    }
+
+    private fun updateBalance(balance: AssetBalance?) {
+        when (balance) {
+            is AssetBalance.Entity ->
+                balanceTextView?.text = balance.balance
+                    .formatCurrency(balance.asset)
+
+            AssetBalance.Loading,
+            null -> balanceTextView?.text = ""
+        }
     }
 
     private fun updateReceiveAsset(asset: DexAsset?) {
         receiveAssetIcon?.isVisible = asset != null
         asset?.imageUrl?.let { receiveAssetIcon?.setImageURI(it) }
-        val text = asset?.displayName ?: getString(LocalizationR.string.choose)
+        val text = asset?.symbol ?: getString(LocalizationR.string.choose)
         receiveAssetText?.text = text
     }
 
     private fun updateSendAsset(asset: DexAsset?) {
         sendAssetIcon?.isVisible = asset != null
         asset?.imageUrl?.let { sendAssetIcon?.setImageURI(it) }
-        val text = asset?.displayName ?: getString(LocalizationR.string.choose)
+        val text = asset?.symbol ?: getString(LocalizationR.string.choose)
         sendAssetText?.text = text
     }
 

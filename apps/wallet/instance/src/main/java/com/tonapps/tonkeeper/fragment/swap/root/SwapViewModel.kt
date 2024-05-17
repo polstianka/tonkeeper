@@ -6,26 +6,45 @@ import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
+import com.tonapps.wallet.data.account.WalletRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SwapViewModel(
-    private val repository: DexAssetsRepository
+    private val repository: DexAssetsRepository,
+    private val walletManager: WalletRepository
 ) : ViewModel() {
 
     private val _pickedSendAsset = MutableStateFlow<DexAsset?>(null)
     private val _pickedReceiveAsset = MutableStateFlow<DexAsset?>(null)
     private val _events = MutableSharedFlow<SwapEvent>()
+    private val activeWallet = walletManager.activeWalletFlow
+    private val pairFlow = combine(activeWallet, _pickedSendAsset) { a, b -> a to b }
 
     val isLoading = repository.isLoading
     val events: Flow<SwapEvent>
         get() = _events
     val pickedSendAsset: Flow<DexAsset?>
         get() = _pickedSendAsset
+    val currentWallet = walletManager.activeWalletFlow
     val pickedReceiveAsset: Flow<DexAsset?>
         get() = _pickedReceiveAsset
+    val pickedTokenBalance = pairFlow.flatMapLatest { pair ->
+        val asset = pair.second
+        if (asset == null) {
+            flowOf(null)
+        } else {
+            repository.getAssetBalance(pair.first.address, asset.contractAddress)
+        }
+    }
 
     init {
         observeFlow(isLoading) { isLoading ->
@@ -59,5 +78,16 @@ class SwapViewModel(
     }
 
     fun onSendAmountChanged(amount: Float) {
+    }
+
+    fun onAssetPicked(result: PickAssetResult) {
+        when (result.type) {
+            PickAssetType.SEND -> {
+                _pickedSendAsset.value = result.asset
+            }
+            PickAssetType.RECEIVE -> {
+                _pickedReceiveAsset.value = result.asset
+            }
+        }
     }
 }
