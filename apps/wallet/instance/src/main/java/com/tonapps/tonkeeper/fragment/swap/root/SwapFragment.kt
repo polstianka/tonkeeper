@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
+import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsFragment
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -122,7 +123,13 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         when (event) {
             SwapEvent.NavigateBack -> finish()
             is SwapEvent.NavigateToPickAsset -> event.handle()
+            is SwapEvent.NavigateToSwapSettings -> event.handle()
         }
+    }
+
+    private fun SwapEvent.NavigateToSwapSettings.handle() {
+        val fragment = SwapSettingsFragment.newInstance(settings)
+        navigation?.add(fragment)
     }
 
     private fun SwapEvent.NavigateToPickAsset.handle() {

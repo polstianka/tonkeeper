@@ -278,4 +278,8 @@
     <string name="slide_to_confirm">Slide to confirm</string>
     <string name="choose">Choose</string>
     <string name="choose_token">Choose Token</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="expert_mode">Expert mode</string>
+    <string name="expert_mode_description">Allows high price impact trades. Use at your own risk.</string>
 </resources>

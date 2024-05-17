@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.ModalHeader
+        android:id="@+id/fragment_swap_settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/slippage"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?textPrimaryColor" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/slippage_description"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?textSecondaryColor" />
+
+    <uikit.widget.InputView
+        android:id="@+id/fragment_swap_settings_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="12dp" />
+
+    <uikit.widget.RowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <FrameLayout
+            android:id="@+id/fragment_swap_settings_slippage_1"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_field">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/percent_one"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?textPrimaryColor" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_swap_settings_slippage_2"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_field">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/percent_three"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?textPrimaryColor" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_swap_settings_slippage_3"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_field">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/percent_five"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?textPrimaryColor" />
+        </FrameLayout>
+    </uikit.widget.RowLayout>
+
+    <uikit.widget.RowLayout
+        android:id="@+id/fragment_swap_settings_expert_mode_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_content"
+        android:padding="16dp">
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expert_mode"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?textPrimaryColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expert_mode_description"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+        </uikit.widget.ColumnLayout>
+
+        <uikit.widget.SwitchView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:clickable="false"/>
+
+    </uikit.widget.RowLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/fragment_swap_settings_footer">
+        <Button
+            style="@style/Widget.App.Button"
+            android:id="@+id/fragment_swap_settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:text="@string/save"/>
+    </FrameLayout>
+</uikit.widget.ColumnLayout>

@@ -56,7 +56,9 @@ class SwapViewModel(
     }
 
     fun onSettingsClicked() {
-        Log.wtf("###", "settings clicked")
+        val settings = swapSettings.value
+        val event = SwapEvent.NavigateToSwapSettings(settings)
+        emit(_events, event)
     }
 
     fun onCrossClicked() {
