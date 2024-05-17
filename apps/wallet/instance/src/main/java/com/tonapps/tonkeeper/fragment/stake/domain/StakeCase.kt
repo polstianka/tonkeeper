@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.stake.domain
 
 import com.tonapps.tonkeeper.extensions.sendToBlockchain
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.addStakeCellProducer
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
@@ -19,7 +20,7 @@ class StakeCase(
         pool: StakingPool,
         amount: Float
     ): Boolean = withContext(Dispatchers.IO) {
-        val cell = pool.serviceType.addStakeCellProducer.produce()
+        val cell = StakingServiceType.WHALES.addStakeCellProducer.produce()//pool.serviceType.addStakeCellProducer.produce()
         val walletTransfer = getStakeWalletTransferCase.getWalletTransfer(
             wallet,
             pool,
