@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <uikit.widget.ModalHeader
         android:id="@+id/fragment_swap_settings_header"
@@ -26,8 +27,12 @@
         android:textColor="?textSecondaryColor" />
 
     <uikit.widget.InputView
+        app:disableClearButton="true"
         android:id="@+id/fragment_swap_settings_input"
+        android:digits="0123456789."
         android:layout_width="match_parent"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="12dp" />
@@ -118,6 +123,7 @@
         </uikit.widget.ColumnLayout>
 
         <uikit.widget.SwitchView
+            android:id="@+id/fragment_swap_settings_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
