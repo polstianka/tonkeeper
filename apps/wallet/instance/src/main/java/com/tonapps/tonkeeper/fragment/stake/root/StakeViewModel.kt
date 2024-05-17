@@ -95,7 +95,7 @@ class StakeViewModel(
 
     private fun loadStakingServices() = viewModelScope.launch {
         val activeWallet = activeWallet.first()
-        val stakingServices = stakingRepository.getStakingPools(activeWallet)
+        val stakingServices = stakingRepository.getStakingPools(activeWallet.accountId)
         this@StakeViewModel.stakingServices.value = stakingServices
         pickedPool.emit(stakingServices.maxApy())
     }

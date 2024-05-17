@@ -285,4 +285,5 @@
     <string name="tonviewer" translatable="false">tonviewer.com</string>
     <string name="deposit">Deposit</string>
     <string name="slide_to_confirm">Slide to confirm</string>
+    <string name="choose">Choose</string>
 </resources>

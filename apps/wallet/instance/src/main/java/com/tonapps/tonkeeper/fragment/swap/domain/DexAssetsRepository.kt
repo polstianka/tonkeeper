@@ -44,6 +44,10 @@ class DexAssetsRepository(
         _isLoading.value = false
     }
 
+    fun getDefaultAsset(): DexAsset {
+        return nonCommunityItems.value.first { it.type == DexAssetType.TON }
+    }
+
     private fun AssetInfoSchema.toDomain(): DexAsset {
         return DexAsset(
             isCommunity = community,
