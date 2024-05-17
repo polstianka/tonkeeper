@@ -76,7 +76,7 @@ val koinModel = module {
     viewModel { RootViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RecipientScreenFeature(get()) }
     viewModel { PickerViewModel(get()) }
-    viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ConfirmScreenFeature(get(), get(), get(), get(), get()) }
     viewModel { CurrencyViewModel(get()) }
     viewModel { SettingsViewModel(get(), get(), get()) }

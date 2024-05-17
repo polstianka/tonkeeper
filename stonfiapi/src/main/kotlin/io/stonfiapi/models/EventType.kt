@@ -60,7 +60,7 @@ interface EventType {
     @Json(name = "txnIndex")
     val txnIndex: kotlin.Long
     @Json(name = "eventType")
-    val eventType: EventType.EventType
+    val eventType: EventType
     @Json(name = "priceNative")
     val priceNative: kotlin.String
     @Json(name = "reserves")

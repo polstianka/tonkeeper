@@ -7,9 +7,11 @@ import com.tonapps.wallet.api.core.StonfiProvider
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
+import io.stonfiapi.apis.DexApi
 import io.stonfiapi.apis.StatsApi
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 class StonfiAPI(
     private val context: Context,
@@ -22,6 +24,8 @@ class StonfiAPI(
         ): OkHttpClient {
             return API.baseOkHttpClientBuilder()
                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
+                .callTimeout(15L, TimeUnit.SECONDS)
+                .readTimeout(15L, TimeUnit.SECONDS)
                 .build()
         }
     }
@@ -32,9 +36,11 @@ class StonfiAPI(
         get() = configRepository.configEntity
 
     private val provider: StonfiProvider by lazy {
-        StonfiProvider(config.stonfiUrl, createStonfiAPIHttpClient(context))
+        StonfiProvider("https://api.ston.fi/", createStonfiAPIHttpClient(context))
     }
 
     val stats: StatsApi
         get() = provider.stats
+    val dex: DexApi
+        get() = provider.dex
 }

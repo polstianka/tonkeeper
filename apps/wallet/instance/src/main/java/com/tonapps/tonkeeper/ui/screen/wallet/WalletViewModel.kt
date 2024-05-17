@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
+import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
@@ -48,7 +49,8 @@ class WalletViewModel(
     private val networkMonitor: NetworkMonitor,
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
-    private val screenCacheSource: ScreenCacheSource
+    private val screenCacheSource: ScreenCacheSource,
+    private val dexAssetsRepository: DexAssetsRepository
 ): ViewModel() {
 
     private data class Tokens(
@@ -59,6 +61,12 @@ class WalletViewModel(
         val push: List<AppPushEntity>,
         val apps: List<DAppEntity>,
     )
+
+    init {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            dexAssetsRepository.loadAssets()
+        }
+    }
 
     private val _tokensFlow = MutableStateFlow<Tokens?>(null)
     private val tokensFlow = _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }

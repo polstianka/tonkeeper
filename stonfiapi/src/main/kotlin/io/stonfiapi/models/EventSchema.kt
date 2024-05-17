@@ -67,7 +67,7 @@ data class EventSchema (
     override val txnIndex: kotlin.Long,
 
     @Json(name = "eventType")
-    override val eventType: EventSchema.EventType,
+    override val eventType: EventType.EventType,
 
     @Json(name = "priceNative")
     override val priceNative: kotlin.String,

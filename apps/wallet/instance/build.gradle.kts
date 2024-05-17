@@ -96,6 +96,7 @@ dependencies {
 
     implementation(project(Dependence.Module.core))
     implementation(project(Dependence.Module.tonApi))
+    implementation(project(Dependence.Module.stonfiApi))
     implementation(project(Dependence.Module.blur))
 
     implementation(project(Dependence.Lib.network))
