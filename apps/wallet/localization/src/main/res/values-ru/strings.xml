@@ -290,4 +290,8 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+
+    <string name="balance_value">Баланс: %1$s</string>
+    <string name="enter_amount">Введите Количество</string>
+    <string name="choose_token">Выбери Токен</string>
 </resources>

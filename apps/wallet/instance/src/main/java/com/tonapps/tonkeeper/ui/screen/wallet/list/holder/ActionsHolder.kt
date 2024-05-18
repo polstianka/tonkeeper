@@ -10,11 +10,9 @@ import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
-import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
 
-class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
-
+class ActionsHolder(parent: ViewGroup) : Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
     private val sendView = findViewById<View>(R.id.send)
     private val receiveView = findViewById<View>(R.id.receive)
     private val buyOrSellView = findViewById<View>(R.id.buy_or_sell)
@@ -36,10 +34,9 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
             navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, TokenEntity.TON.address))
         }
 
-        swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
-        sendView.isEnabled = item.walletType != WalletType.Watch
-        scanView.isEnabled = item.walletType != WalletType.Watch
-        buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap
+        swapView.isEnabled = true // TODO v item.walletType == WalletType.Default && !item.disableSwap
+        sendView.isEnabled = true // TODO v item.walletType != WalletType.Watch
+        scanView.isEnabled = true // TODO V item.walletType != WalletType.Watch
+        buyOrSellView.isEnabled = true // TODO V item.walletType != WalletType.Testnet && !item.disableSwap
     }
-
 }

@@ -292,4 +292,8 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+
+    <string name="balance_value">Balance: %1$s</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="choose_token">Choose Token</string>
 </resources>
