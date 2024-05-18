@@ -294,4 +294,5 @@
     <string name="balance_value">Баланс: %1$s</string>
     <string name="enter_amount">Введите Количество</string>
     <string name="choose_token">Выбери Токен</string>
+    <string name="suggested">Рекомендации</string>
 </resources>

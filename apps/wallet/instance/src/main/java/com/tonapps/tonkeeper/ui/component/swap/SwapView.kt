@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tonapps.tonkeeperx.R
 
-class SwapField
+class SwapView
     @JvmOverloads
     constructor(
         context: Context,

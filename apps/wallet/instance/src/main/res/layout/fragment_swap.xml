@@ -12,6 +12,7 @@
         android:action="@drawable/ic_close_16"
         android:icon="@drawable/ic_sliders_16"
         app:ignoreSystemOffset="true"
+        android:title="@string/swap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

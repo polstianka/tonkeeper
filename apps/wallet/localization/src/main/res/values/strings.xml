@@ -296,4 +296,5 @@
     <string name="balance_value">Balance: %1$s</string>
     <string name="enter_amount">Enter Amount</string>
     <string name="choose_token">Choose Token</string>
+    <string name="suggested">Suggested</string>
 </resources>
