@@ -1,31 +1,39 @@
 package com.tonapps.tonkeeper.ui.component.swap
 
 import android.content.Context
-import android.graphics.Color
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.core.content.ContextCompat
+import com.tonapps.tonkeeperx.R
+import uikit.drawable.InputDrawable
 
 class PercentageEditText
     @JvmOverloads
     constructor(
         context: Context,
         attrs: AttributeSet? = null,
-    ) : EditText(context, attrs) {
+    ) : EditText(context, attrs),
+        View.OnFocusChangeListener {
         private var isProgrammaticallyChangingText = false
-        private val percentageColor = Color.parseColor("#8D8D93")
+        private val percentageColor =
+            ContextCompat.getColor(context, com.tonapps.uikit.color.R.color.textSecondaryDark)
+        private val inputDrawable = InputDrawable(context)
 
         init {
             setup()
         }
 
         private fun setup() {
+            background = inputDrawable
             inputType = EditorInfo.TYPE_CLASS_NUMBER
+            onFocusChangeListener = this
             addPercentageSymbol()
 
             addTextChangedListener(
@@ -72,6 +80,13 @@ class PercentageEditText
             if (currentText.contains(" %")) {
                 setText(currentText.replace(" %", ""))
             }
+        }
+
+        override fun onFocusChange(
+            v: View?,
+            hasFocus: Boolean,
+        ) {
+            inputDrawable.active = hasFocus
         }
 
         private fun validateInput() {
