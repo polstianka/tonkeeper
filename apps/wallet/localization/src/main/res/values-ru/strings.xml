@@ -295,4 +295,6 @@
     <string name="enter_amount">Введите Количество</string>
     <string name="choose_token">Выбери Токен</string>
     <string name="suggested">Рекомендации</string>
+    <string name="choose">Выбрать</string>
+    <string name="slippage">Slippage</string>
 </resources>

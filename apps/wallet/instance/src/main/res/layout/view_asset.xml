@@ -15,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true"
         android:layout_width="28dp"
+        android:visibility="gone"
         android:layout_height="28dp"
         android:background="@drawable/bg_oval"
         android:backgroundTint="?attr/backgroundContentTintColor"
@@ -22,11 +23,12 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/asset_name_text"
-        tools:text="TON"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="10dp"
+        android:textAllCaps="true"
+        android:text="@string/choose"
         android:textAppearance="@style/TextAppearance.Body1"
         android:textColor="?attr/textPrimaryColor" />
 </LinearLayout>

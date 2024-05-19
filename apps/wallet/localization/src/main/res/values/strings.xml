@@ -297,4 +297,7 @@
     <string name="enter_amount">Enter Amount</string>
     <string name="choose_token">Choose Token</string>
     <string name="suggested">Suggested</string>
+    <string name="choose">Choose</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_warning">The amount the price can change\nunfavorably before the trade reverts</string>
 </resources>
