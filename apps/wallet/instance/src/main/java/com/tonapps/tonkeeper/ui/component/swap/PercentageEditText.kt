@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import com.tonapps.tonkeeperx.R
 import uikit.drawable.InputDrawable
@@ -19,7 +18,7 @@ class PercentageEditText
     constructor(
         context: Context,
         attrs: AttributeSet? = null,
-    ) : EditText(context, attrs),
+    ) : androidx.appcompat.widget.AppCompatEditText(context, attrs),
         View.OnFocusChangeListener {
         private var isProgrammaticallyChangingText = false
         private val percentageColor =
