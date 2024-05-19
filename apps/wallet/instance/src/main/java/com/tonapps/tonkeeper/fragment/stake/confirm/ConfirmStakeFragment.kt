@@ -20,13 +20,14 @@ import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
 import uikit.widget.ProcessTaskView
 import uikit.widget.SlideActionView
+import java.math.BigDecimal
 
 class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), BaseFragment.BottomSheet {
 
     companion object {
         fun newInstance(
             pool: StakingPool,
-            amount: Float,
+            amount: BigDecimal,
             type: StakingTransactionType
         ) = ConfirmStakeFragment().apply {
             setArgs(

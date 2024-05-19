@@ -8,6 +8,7 @@ import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import io.tonapi.models.MessageConsequences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 
 class EmulateStakingCase(
     private val getStakeWalletTransferCase: GetStakeWalletTransferCase,
@@ -17,7 +18,7 @@ class EmulateStakingCase(
     suspend fun execute(
         walletLegacy: WalletLegacy,
         pool: StakingPool,
-        amount: Float
+        amount: BigDecimal
     ): MessageConsequences = withContext(Dispatchers.IO) {
         val cell = pool.serviceType.addStakeCellProducer.produce()
         val walletTransfer = getStakeWalletTransferCase.getWalletTransfer(

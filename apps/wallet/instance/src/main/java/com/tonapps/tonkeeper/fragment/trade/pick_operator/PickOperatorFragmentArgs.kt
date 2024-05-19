@@ -5,6 +5,7 @@ import com.tonapps.extensions.getEnum
 import com.tonapps.extensions.putEnum
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import uikit.base.BaseArgs
+import java.math.BigDecimal
 
 class PickOperatorFragmentArgs(
     val exchangeDirection: ExchangeDirection,
@@ -12,7 +13,7 @@ class PickOperatorFragmentArgs(
     val name: String,
     val country: String,
     val selectedCurrencyCode: String,
-    val amount: Float
+    val amount: BigDecimal
 ) : BaseArgs() {
 
     companion object {
@@ -30,7 +31,7 @@ class PickOperatorFragmentArgs(
             putString(KEY_NAME, name)
             putString(KEY_COUNTRY, country)
             putString(KEY_SELECTED_CURRENCY_CODE, selectedCurrencyCode)
-            putFloat(KEY_AMOUNT, amount)
+            putSerializable(KEY_AMOUNT, amount)
             putEnum(KEY_EXCHANGE_DIRECTION, exchangeDirection)
         }
     }
@@ -41,6 +42,6 @@ class PickOperatorFragmentArgs(
         name = bundle.getString(KEY_NAME)!!,
         country = bundle.getString(KEY_COUNTRY)!!,
         selectedCurrencyCode = bundle.getString(KEY_SELECTED_CURRENCY_CODE)!!,
-        amount = bundle.getFloat(KEY_AMOUNT)
+        amount = bundle.getSerializable(KEY_AMOUNT) as BigDecimal
     )
 }

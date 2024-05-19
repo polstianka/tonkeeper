@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 class ExchangeViewModel(
     getRateFlowCase: GetRateFlowCase,
@@ -48,7 +49,7 @@ class ExchangeViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val rate = currency.flatMapLatest { getRateFlowCase.execute(it) }
 
-    private val amount = MutableStateFlow(0f)
+    private val amount = MutableStateFlow(BigDecimal.ZERO)
 
     val totalFiat = formattedRate(
         rateFlow = rate,
@@ -56,10 +57,10 @@ class ExchangeViewModel(
         token = TOKEN_TON
     )
     val isButtonActive = combine(amount, exchangeItems.pickedItem) { currentAmount, _ ->
-        !currentAmount.isNaN() && currentAmount != 0f && currentAmount.isFinite()
+        currentAmount != BigDecimal.ZERO
     }
 
-    fun onAmountChanged(newAmount: Float) {
+    fun onAmountChanged(newAmount: BigDecimal) {
         val oldAmount = this.amount.value
         if (oldAmount == newAmount) return
 

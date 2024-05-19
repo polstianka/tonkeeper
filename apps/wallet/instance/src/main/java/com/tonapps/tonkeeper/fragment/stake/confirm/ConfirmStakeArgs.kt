@@ -6,10 +6,11 @@ import com.tonapps.extensions.putEnum
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import uikit.base.BaseArgs
+import java.math.BigDecimal
 
 data class ConfirmStakeArgs(
     val pool: StakingPool,
-    val amount: Float,
+    val amount: BigDecimal,
     val type: StakingTransactionType
 ) : BaseArgs() {
     companion object {
@@ -20,14 +21,14 @@ data class ConfirmStakeArgs(
     override fun toBundle(): Bundle {
         return Bundle().apply {
             putParcelable(KEY_POOL, pool)
-            putFloat(KEY_AMOUNT, amount)
+            putSerializable(KEY_AMOUNT, amount)
             putEnum(KEY_TYPE, type)
         }
     }
 
     constructor(bundle: Bundle) : this(
         pool = bundle.getParcelable(KEY_POOL)!!,
-        amount = bundle.getFloat(KEY_AMOUNT),
+        amount = bundle.getSerializable(KEY_AMOUNT) as BigDecimal,
         type = bundle.getEnum(KEY_TYPE, StakingTransactionType.DEPOSIT)
     )
 }

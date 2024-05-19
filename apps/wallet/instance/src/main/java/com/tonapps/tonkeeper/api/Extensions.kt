@@ -23,6 +23,7 @@ import io.tonapi.models.NftItem
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.TokenRates
 import kotlinx.coroutines.delay
+import java.math.BigDecimal
 import kotlin.math.abs
 
 private val nftItemPreviewSizes = arrayOf(
@@ -170,13 +171,13 @@ fun JettonBalance.getAddress(testnet: Boolean): String {
 val JettonBalance.symbol: String
     get() = jetton.symbol
 
-val JettonBalance.parsedBalance: Float
+val JettonBalance.parsedBalance: BigDecimal
     get() = Coin.parseJettonBalance(balance, jetton.decimals)
 
-val JettonMintAction.parsedAmount: Float
+val JettonMintAction.parsedAmount: BigDecimal
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
-val JettonBurnAction.parsedAmount: Float
+val JettonBurnAction.parsedAmount: BigDecimal
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
 fun NftItem.imageBySize(size: String): ImagePreview? {

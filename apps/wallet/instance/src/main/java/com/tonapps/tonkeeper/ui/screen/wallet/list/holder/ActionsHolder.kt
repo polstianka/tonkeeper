@@ -42,7 +42,7 @@ class ActionsHolder(parent: ViewGroup) :
         }
         swapView.setThrottleClickListener { navigation?.add(SwapFragment.newInstance()) }
 
-        swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
+        swapView.isEnabled = true//item.walletType == WalletType.Default && !item.disableSwap
         sendView.isEnabled = item.walletType != WalletType.Watch
         scanView.isEnabled = item.walletType != WalletType.Watch
         buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap

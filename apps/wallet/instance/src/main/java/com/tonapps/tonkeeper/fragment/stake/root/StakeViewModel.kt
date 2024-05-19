@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StakeViewModel(
@@ -46,7 +47,7 @@ class StakeViewModel(
     private val _events = MutableSharedFlow<StakeEvent>()
     private val currency = settingsRepository.currencyFlow
     private val exchangeRate = currency.flatMapLatest { getRateFlowCase.execute(it) }
-    private val amount = MutableStateFlow(0f)
+    private val amount = MutableStateFlow(BigDecimal.ZERO)
     private val activeWallet = walletRepository.activeWalletFlow
     private val balance = combine(activeWallet, currency) { wallet, currency ->
         tokenRepository.get(currency, wallet.accountId, wallet.testnet)
@@ -108,7 +109,7 @@ class StakeViewModel(
         emit(_events, StakeEvent.ShowInfo)
     }
 
-    fun onAmountChanged(amount: Float) {
+    fun onAmountChanged(amount: BigDecimal) {
         if (amount == this.amount.value) return
         this.amount.value = amount
     }

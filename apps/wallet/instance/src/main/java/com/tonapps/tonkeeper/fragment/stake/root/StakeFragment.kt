@@ -109,7 +109,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     }
 
     private fun StakeEvent.SetInputValue.handle() {
-        input?.setText(CurrencyFormatter.formatFloat(value, 2))
+        input?.setText(CurrencyFormatter.format(value, value.scale()))
     }
 
     private fun StakeEvent.PickStakingOption.handle() {

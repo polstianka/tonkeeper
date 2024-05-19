@@ -11,6 +11,7 @@ import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
 import org.ton.contract.wallet.WalletTransferBuilder
 import ton.SendMode
+import java.math.BigDecimal
 
 class GetStakeWalletTransferCase(
     private val api: API,
@@ -20,7 +21,7 @@ class GetStakeWalletTransferCase(
     suspend fun getWalletTransfer(
         wallet: WalletLegacy,
         pool: StakingPool,
-        amount: Float,
+        amount: BigDecimal,
         bodyCell: Cell
     ): WalletTransfer {
         val seqno = wallet.getSeqno(api)

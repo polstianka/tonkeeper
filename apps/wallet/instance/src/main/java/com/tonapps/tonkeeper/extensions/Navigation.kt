@@ -12,6 +12,7 @@ import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.wallet.localization.Localization
 import uikit.extensions.findFragment
 import uikit.navigation.Navigation
+import java.math.BigDecimal
 
 fun Navigation.toast(@StringRes resId: Int) {
     val context = this as? Context ?: return
@@ -39,7 +40,7 @@ fun Navigation.openCamera() {
 fun Navigation.sendCoin(
     address: String? = null,
     text: String? = null,
-    amount: Float = 0f,
+    amount: BigDecimal = BigDecimal.ZERO,
     jettonAddress: String? = null
 ) {
     if (this !is RootActivity) return
@@ -57,17 +58,4 @@ fun Navigation.sendCoin(
 
 fun Navigation.toBuySell() {
     add(BuySellFragment.newInstance())
-}
-
-fun Navigation.pickOperator(
-    id: String,
-    name: String,
-    country: String,
-    selectedCurrencyCode: String,
-    amount: Float
-) {
-}
-
-fun Navigation.closeTrade() {
-    TODO()
 }

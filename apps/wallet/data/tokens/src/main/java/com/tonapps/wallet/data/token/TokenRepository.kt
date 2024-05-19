@@ -15,6 +15,7 @@ import io.tonapi.models.TokenRates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
 
 class TokenRepository(
@@ -23,7 +24,7 @@ class TokenRepository(
     private val api: API
 ) {
 
-    private val totalBalanceCache = ConcurrentHashMap<String, Float>(3, 1.0f, 2)
+    private val totalBalanceCache = ConcurrentHashMap<String, BigDecimal>(3, 1.0f, 2)
 
     private val localDataSource = LocalDataSource(context)
     private val remoteDataSource = RemoteDataSource(api)
@@ -32,7 +33,7 @@ class TokenRepository(
         currency: WalletCurrency,
         accountId: String,
         testnet: Boolean
-    ): Float {
+    ): BigDecimal {
         return totalBalanceCache[cacheKey(accountId, testnet)] ?: loadTotalBalances(currency, accountId, testnet)
     }
 
@@ -40,9 +41,9 @@ class TokenRepository(
         currency: WalletCurrency,
         accountId: String,
         testnet: Boolean
-    ): Float {
+    ): BigDecimal {
         val tokens = get(currency, accountId, testnet)
-        var fiatBalance = 0f
+        var fiatBalance = BigDecimal.ZERO
         if (testnet) {
             fiatBalance = tokens.first().balance.value
         } else {

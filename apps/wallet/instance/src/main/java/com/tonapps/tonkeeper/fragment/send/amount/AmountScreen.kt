@@ -23,6 +23,7 @@ import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.focusWithKeyboard
 import uikit.extensions.hideKeyboard
+import java.math.BigDecimal
 
 class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScreenFeature>(R.layout.fragment_send_amount) {
 
@@ -36,7 +37,7 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
         val popup = SelectTokenPopup(requireContext())
         popup.doOnSelectJetton = { token ->
             feature.selectToken(token)
-            forceSetAmount(0f)
+            forceSetAmount(BigDecimal.ZERO)
         }
         popup
     }
@@ -74,15 +75,15 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
         continueButton = view.findViewById(R.id.continue_action)
         continueButton.setOnClickListener { next() }
 
-        feature.setValue(0f)
+        feature.setValue(BigDecimal.ZERO)
     }
 
     fun forceSetJetton(address: String?) {
         address?.let { feature.selectToken(it) }
     }
 
-    fun forceSetAmount(amount: Float) {
-        val text = if (0f >= amount) {
+    fun forceSetAmount(amount: BigDecimal) {
+        val text = if (BigDecimal.ZERO >= amount) {
             ""
         } else {
             amount.toString()
@@ -104,7 +105,7 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
     }
 
     private fun clearValue() {
-        forceSetAmount(0f)
+        forceSetAmount(BigDecimal.ZERO)
     }
 
     override fun newUiState(state: AmountScreenState) {

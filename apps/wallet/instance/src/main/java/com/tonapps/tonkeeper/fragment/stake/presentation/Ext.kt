@@ -42,8 +42,8 @@ fun StakingPool.apyText(): TextWrapper {
 }
 
 fun StakingPool.formatApy(): String {
-    return CurrencyFormatter.formatFloat(
-        apy.toFloat(),
+    return CurrencyFormatter.format(
+        apy,
         2
-    ) // todo properly work with bigdecimals
+    )
 }

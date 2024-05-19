@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.wallet
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -12,6 +13,7 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.entities.WalletEvent
+import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
@@ -40,6 +42,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class WalletViewModel(
     private val walletRepository: WalletRepository,
@@ -219,8 +223,8 @@ class WalletViewModel(
         currency: WalletCurrency,
         testnet: Boolean,
         tokens: List<AccountTokenEntity>,
-    ): Pair<Float, List<Item.Token>> {
-        var fiatBalance = 0f
+    ): Pair<BigDecimal, List<Item.Token>> {
+        var fiatBalance = BigDecimal.ZERO
         if (testnet) {
             fiatBalance = tokens.first().balance.value
         }

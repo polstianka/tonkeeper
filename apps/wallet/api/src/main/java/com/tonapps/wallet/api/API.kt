@@ -44,6 +44,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
+import java.math.BigDecimal
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -130,7 +131,7 @@ class API(
             accountId = accountId,
             currencies = listOf(currency)
         ).balances
-        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
+        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > BigDecimal.ZERO }
     }
 
     fun resolveAddressOrName(

@@ -13,6 +13,7 @@ import io.tonapi.models.JettonTransferAction
 import io.tonapi.models.NftItemTransferAction
 import io.tonapi.models.TonTransferAction
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
 
 @Parcelize
 data class ActionEntity(
@@ -21,7 +22,7 @@ data class ActionEntity(
     val recipient: AccountEntity? = null,
     val comment: String? = null,
     val token: TokenEntity? = null,
-    val amount: Float? = null,
+    val amount: BigDecimal? = null,
     val nftAddress: String? = null,
     var nftEntity: NftEntity? = null
 ): Parcelable {

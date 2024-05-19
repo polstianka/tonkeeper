@@ -9,6 +9,7 @@ import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 
 class StakeCase(
     private val api: API,
@@ -18,7 +19,7 @@ class StakeCase(
     suspend fun execute(
         wallet: WalletLegacy,
         pool: StakingPool,
-        amount: Float
+        amount: BigDecimal
     ): Boolean = withContext(Dispatchers.IO) {
         val cell = StakingServiceType.WHALES.addStakeCellProducer.produce()//pool.serviceType.addStakeCellProducer.produce()
         val walletTransfer = getStakeWalletTransferCase.getWalletTransfer(

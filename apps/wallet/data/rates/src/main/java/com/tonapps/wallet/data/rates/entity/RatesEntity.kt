@@ -3,6 +3,7 @@ package com.tonapps.wallet.data.rates.entity
 import android.os.Parcelable
 import com.tonapps.wallet.data.core.WalletCurrency
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
 
 @Parcelize
 data class RatesEntity(
@@ -45,19 +46,19 @@ data class RatesEntity(
         return map[token]
     }
 
-    fun rateValue(token: String): Float {
-        return rate(token)?.value ?: 0f
+    fun rateValue(token: String): BigDecimal {
+        return rate(token)?.value ?: BigDecimal.ZERO
     }
 
     fun rateDiff(token: String): RateDiffEntity? {
         return rate(token)?.diff
     }
 
-    fun convert(token: String, value: Float): Float {
+    fun convert(token: String, value: BigDecimal): BigDecimal {
         return value * rateValue(token)
     }
 
-    fun getRate(token: String): Float {
+    fun getRate(token: String): BigDecimal {
         return rateValue(token)
     }
 

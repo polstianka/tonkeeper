@@ -18,6 +18,7 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import com.tonapps.wallet.data.push.entities.AppPushEntity
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
+import java.math.BigDecimal
 
 sealed class Item(type: Int): BaseListItem(type), Parcelable {
 
@@ -134,9 +135,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val address: String,
         val symbol: String,
         val name: String,
-        val balance: Float,
+        val balance: BigDecimal,
         val balanceFormat: CharSequence,
-        val fiat: Float,
+        val fiat: BigDecimal,
         val fiatFormat: CharSequence,
         val rate: CharSequence,
         val rateDiff24h: String,
@@ -151,9 +152,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
-            parcel.readFloat(),
+            parcel.readSerializable()!! as BigDecimal,
             parcel.readCharSequenceCompat()!!,
-            parcel.readFloat(),
+            parcel.readSerializable()!! as BigDecimal,
             parcel.readCharSequenceCompat()!!,
             parcel.readCharSequenceCompat()!!,
             parcel.readString()!!,
@@ -168,9 +169,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeString(address)
             dest.writeString(symbol)
             dest.writeString(name)
-            dest.writeFloat(balance)
+            dest.writeSerializable(balance)
             dest.writeCharSequenceCompat(balanceFormat)
-            dest.writeFloat(fiat)
+            dest.writeSerializable(fiat)
             dest.writeCharSequenceCompat(fiatFormat)
             dest.writeCharSequenceCompat(rate)
             dest.writeString(rateDiff24h)

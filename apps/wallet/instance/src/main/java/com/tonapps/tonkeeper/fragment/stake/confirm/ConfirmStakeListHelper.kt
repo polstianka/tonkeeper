@@ -13,6 +13,7 @@ import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.math.BigDecimal
 
 class ConfirmStakeListHelper(
     private val mapper: ConfirmStakeListItemMapper
@@ -39,7 +40,7 @@ class ConfirmStakeListHelper(
             if (current.itemType == ConfirmStakeItemType.FEE) {
                 val textCrypto = "~ ${totalFee.formatTon()}"
                 val wrapperCrypto = TextWrapper.PlainString(textCrypto)
-                val textFiat = "~ ${formatRate(rate, Coin.toCoins(totalFee), "TON")}"
+                val textFiat = "~ ${formatRate(rate, BigDecimal(totalFee).movePointLeft(Coin.TON_DECIMALS), "TON")}"
                 val updatedItem = current.copy(
                     textPrimary = wrapperCrypto,
                     textSecondary = textFiat

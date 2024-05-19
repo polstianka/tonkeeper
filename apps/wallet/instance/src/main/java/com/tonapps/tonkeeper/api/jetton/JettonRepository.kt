@@ -13,6 +13,7 @@ import com.tonapps.tonkeeper.api.parsedBalance
 import com.tonapps.tonkeeper.api.symbol
 import io.tonapi.apis.AccountsApi
 import io.tonapi.models.JettonBalance
+import java.math.BigDecimal
 
 // TODO need to be refactoring
 class JettonRepository(
@@ -23,7 +24,7 @@ class JettonRepository(
     private companion object {
         private fun List<JettonBalance>.prepare(): List<JettonBalance> {
             return this.filter {
-                it.parsedBalance > 0f
+                it.parsedBalance > BigDecimal.ZERO
             }.sortedBy {
                 it.symbol
             }

@@ -24,6 +24,7 @@ import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.DropdownButton
 import uikit.widget.HeaderView
+import java.math.BigDecimal
 
 class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
     BaseFragment.BottomSheet {
@@ -34,7 +35,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
             name: String,
             country: String,
             selectedCurrencyCode: String,
-            amount: Float
+            amount: BigDecimal
         ): PickOperatorFragment {
             val argument = PickOperatorFragmentArgs(
                 exchangeDirection = direction,

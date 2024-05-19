@@ -158,7 +158,7 @@ class ConfirmScreenFeature(
 
     fun setAmount(amountRaw: String, decimals: Int, tokenAddress: String, symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val value = Coin.prepareValue(amountRaw).toFloatOrNull() ?: 0f
+            val value = Coin.parseJettonBalance(amountRaw, decimals)
             val rates = ratesRepository.getRates(currency, tokenAddress)
             val fiat = rates.convert(tokenAddress, value)
 

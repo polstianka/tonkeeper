@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import java.math.BigDecimal
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SwapViewModel(
@@ -82,7 +83,7 @@ class SwapViewModel(
         _pickedReceiveAsset.value = toSend
     }
 
-    fun onSendAmountChanged(amount: Float) {
+    fun onSendAmountChanged(amount: BigDecimal) {
     }
 
     fun onAssetPicked(result: PickAssetResult) {

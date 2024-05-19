@@ -14,8 +14,11 @@ import uikit.extensions.hideKeyboard
 import uikit.mvi.UiScreen
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
+import java.math.BigDecimal
 
-class SendScreen: UiScreen<SendScreenState, SendScreenEffect, SendScreenFeature>(R.layout.fragment_send), BaseFragment.BottomSheet {
+class SendScreen :
+    UiScreen<SendScreenState, SendScreenEffect, SendScreenFeature>(R.layout.fragment_send),
+    BaseFragment.BottomSheet {
 
     companion object {
 
@@ -27,14 +30,14 @@ class SendScreen: UiScreen<SendScreenState, SendScreenEffect, SendScreenFeature>
         fun newInstance(
             address: String? = null,
             comment: String? = null,
-            amount: Float = 0f,
+            amount: BigDecimal = BigDecimal.ZERO,
             jettonAddress: String? = null
         ): SendScreen {
             val fragment = SendScreen()
             fragment.arguments = Bundle().apply {
                 putString(ADDRESS_KEY, address)
                 putString(COMMENT_KEY, comment)
-                putFloat(AMOUNT_KEY, amount)
+                putSerializable(AMOUNT_KEY, amount)
                 putString(JETTON_ADDRESS_KEY, jettonAddress)
             }
             return fragment
@@ -43,11 +46,13 @@ class SendScreen: UiScreen<SendScreenState, SendScreenEffect, SendScreenFeature>
 
     private val startAddress: String by lazy { arguments?.getString(ADDRESS_KEY) ?: "" }
     private val startComment: String by lazy { arguments?.getString(COMMENT_KEY) ?: "" }
-    private val startAmount: Float by lazy { arguments?.getFloat(AMOUNT_KEY) ?: 0f }
+    private val startAmount: BigDecimal by lazy {
+        arguments?.getSerializable(AMOUNT_KEY) as? BigDecimal ?: BigDecimal.ZERO
+    }
     private val startJettonAddress: String? by lazy { arguments?.getString(JETTON_ADDRESS_KEY) }
 
     private val hasStartValues: Boolean
-        get() = startAddress.isNotEmpty() || startComment.isNotEmpty() || startAmount > 0f || startJettonAddress != null
+        get() = startAddress.isNotEmpty() || startComment.isNotEmpty() || startAmount > BigDecimal.ZERO || startJettonAddress != null
 
     override val feature: SendScreenFeature by viewModels()
 
@@ -149,7 +154,7 @@ class SendScreen: UiScreen<SendScreenState, SendScreenEffect, SendScreenFeature>
         pageAdapter.recipientScreen?.setComment(text)
     }
 
-    fun forceSetAmount(amount: Float) {
+    fun forceSetAmount(amount: BigDecimal) {
         pageAdapter.amountScreen?.forceSetAmount(amount)
     }
 
