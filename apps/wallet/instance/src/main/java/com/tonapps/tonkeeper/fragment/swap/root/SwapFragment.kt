@@ -56,7 +56,7 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_receive_token_text)
     private val sendInput: AmountInput?
         get() = view?.findViewById(R.id.fragment_swap_new_send_input)
-    private val receiveInput: AmountInput?
+    private val receiveInput: TextView?
         get() = view?.findViewById(R.id.fragment_swap_new_receive_input)
     private val balanceTextView: TextView?
         get() = view?.findViewById(R.id.fragment_swap_new_balance_label)
@@ -91,6 +91,9 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         observeFlow(viewModel.pickedSendAsset) { updateSendAsset(it) }
         observeFlow(viewModel.pickedReceiveAsset) { updateReceiveAsset(it) }
         observeFlow(viewModel.pickedTokenBalance) { updateBalance(it) }
+        observeFlow(viewModel.receiveAmount) { (amount, token) ->
+            receiveInput?.text = CurrencyFormatter.format(token, amount)
+        }
     }
 
     private fun updateBalance(balance: AssetBalance?) {
@@ -119,7 +122,6 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     }
 
     private fun updateLoading(isLoading: Boolean) {
-        Log.wtf("###", "isLoading: $isLoading")
         loaderView?.isVisible = isLoading
         sendGroup?.isVisible = !isLoading
     }
