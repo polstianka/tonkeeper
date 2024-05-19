@@ -300,4 +300,6 @@
     <string name="choose">Choose</string>
     <string name="slippage">Slippage</string>
     <string name="slippage_warning">The amount the price can change\nunfavorably before the trade reverts</string>
+    <string name="expert_mode">Expert mode</string>
+    <string name="expert_mode_warning">Allows high price impact trades.\nUse at your own risk.</string>
 </resources>
