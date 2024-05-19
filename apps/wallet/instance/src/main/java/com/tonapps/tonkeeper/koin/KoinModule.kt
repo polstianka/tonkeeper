@@ -34,15 +34,19 @@ import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.PoolDetailsViewModel
-import com.tonapps.tonkeeper.ui.screen.stake.StakeOptionsViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakePoolsViewModel
-import com.tonapps.tonkeeper.ui.screen.stake.StakeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.amount.StakeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.confirm.StakeConfirmationViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsMainViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapSettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.WalletAssetsPickerViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.list.WalletAdapter
 import com.tonapps.wallet.data.push.PushManager
+import core.ResourceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -61,6 +65,7 @@ val koinModel = module {
     single { PushManager(get(), get(), get(), get(), get(), get(), get()) }
     single { SignManager(get(), get(), get(), get(), get()) }
     single { HistoryHelper(get(), get()) }
+    single { ResourceManager(get()) }
 
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
@@ -120,4 +125,7 @@ val koinModel = module {
     viewModel { StakeOptionsViewModel(get()) }
     viewModel { StakePoolsViewModel(get()) }
     viewModel { PoolDetailsViewModel(get()) }
+    viewModel { StakeConfirmationViewModel(get()) }
+    viewModel { StakeMainViewModel(get()) }
+    viewModel { StakeOptionsMainViewModel(get()) }
 }

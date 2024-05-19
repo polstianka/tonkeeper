@@ -2,34 +2,20 @@ package uikit.navigation
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
-import com.tonapps.uikit.color.UIKitColor
-import com.tonapps.uikit.color.backgroundContentTintColor
 import uikit.R
 import uikit.base.BaseActivity
 import uikit.base.BaseFragment
-import uikit.extensions.doOnEnd
-import uikit.extensions.hapticConfirm
 import uikit.extensions.primaryFragment
-import uikit.extensions.runAnimation
 import uikit.widget.ToastView
 
 abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.OnPreDrawListener {
@@ -147,7 +133,7 @@ abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.
     override fun add(fragment: BaseFragment) {
         val removeModals = fragment !is BaseFragment.Modal
         val transaction = supportFragmentManager.beginTransaction()
-        if (fragment is BaseFragment.BottomSheet || fragment is BaseFragment.Modal) {
+        if (fragment is BaseFragment.BottomSheet || fragment is BaseFragment.Modal || fragment is BaseFragment.SwipeBack) {
             transaction.add(hostSheetId, fragment)
         } else {
             transaction.add(hostFragmentId, fragment)

@@ -7,50 +7,51 @@ import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.helper.NumberFormatter
 import com.tonapps.tonkeeper.ui.screen.stake.model.DetailsArgs
+import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsMainViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.view.PoolDetailView
 import com.tonapps.tonkeeper.ui.screen.stake.view.SocialLinkView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.localization.Localization
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uikit.base.BaseFragment
-import uikit.widget.HeaderView
+import uikit.extensions.collectFlow
 
-class PoolDetailsScreen : BaseFragment(R.layout.fragment_pool_details), BaseFragment.BottomSheet {
+class PoolDetailsScreen : Fragment(R.layout.fragment_pool_details) {
 
     private val detailsViewModel: PoolDetailsViewModel by viewModel()
+    private val optionsMainViewModel: StakeOptionsMainViewModel by activityViewModel()
 
-    private lateinit var headerView: HeaderView
     private lateinit var topDetails: ViewGroup
     private lateinit var socialLinks: ViewGroup
     private lateinit var socialLinksTitle: AppCompatTextView
     private lateinit var chooseButton: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val args = arguments?.getParcelable<DetailsArgs>(ARGS_KEY) ?: error("Provide args")
-
-        headerView = view.findViewById(R.id.header)
-        headerView.doOnActionClick = { finish() }
 
         topDetails = view.findViewById(R.id.top_details)
         socialLinks = view.findViewById(R.id.social_links)
         socialLinksTitle = view.findViewById(R.id.social_links_title)
         chooseButton = view.findViewById(R.id.choose_button)
-        chooseButton.setOnClickListener {
-            detailsViewModel.choose(args.address)
-            finish()
+
+        collectFlow(optionsMainViewModel.detailsArgs) { args ->
+            if (args != null) {
+                chooseButton.setOnClickListener {
+                    detailsViewModel.choose(args.address)
+                    optionsMainViewModel.finish()
+                }
+                addTopDetails(args)
+                addLinks(args)
+            }
         }
-
-        headerView.title = args.name
-
-        addTopDetails(args)
-        addLinks(args)
     }
 
     private fun addLinks(args: DetailsArgs) {
         socialLinksTitle.isVisible = args.links.isNotEmpty()
+        socialLinks.removeAllViews()
         args.links.forEach {
             socialLinks.addView(SocialLinkView(requireContext()).apply {
                 setLink(it)
@@ -59,6 +60,7 @@ class PoolDetailsScreen : BaseFragment(R.layout.fragment_pool_details), BaseFrag
     }
 
     private fun addTopDetails(args: DetailsArgs) {
+        topDetails.removeAllViews()
         topDetails.addView(PoolDetailView(requireContext()).apply {
             titleTextView.text = context.getString(Localization.apy)
             maxView.isVisible = args.isApyMax
@@ -79,5 +81,7 @@ class PoolDetailsScreen : BaseFragment(R.layout.fragment_pool_details), BaseFrag
                 arguments = bundleOf(ARGS_KEY to args)
             }
         }
+
+        fun newInstance() = PoolDetailsScreen()
     }
 }

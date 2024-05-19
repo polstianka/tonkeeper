@@ -178,6 +178,7 @@
     <string name="deposit">Deposit</string>
     <string name="apy_percent_placeholder" translatable="false">APY ≈ %1$s\%%</string>
     <string name="apy_short_percent_placeholder" translatable="false">≈ %1$s\%%</string>
+    <string name="fee_placeholder" translatable="false">≈ %1$s</string>
     <string name="community">Community</string>
     <string name="twitter" translatable="false">Twitter</string>
 

@@ -6,22 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <uikit.widget.HeaderView
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:action="@drawable/ic_close_16"
-        android:icon="@drawable/ic_chevron_left_16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pool_image"
         android:layout_width="96dp"
         android:layout_height="96dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/deposit_title"

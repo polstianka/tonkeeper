@@ -1,9 +1,10 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.options
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.helper.NumberFormatter
-import com.tonapps.tonkeeper.ui.screen.stake.StakeOptionsUiState.StakeInfo
+import com.tonapps.tonkeeper.ui.screen.stake.model.icon
+import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsUiState.StakeInfo
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.StakePoolsEntity
 import com.tonapps.wallet.api.entity.StakePoolsEntity.PoolImplementationType
@@ -89,7 +90,8 @@ class StakeOptionsViewModel(
                             selected = if (selectedAddress.isEmpty()) isMaxApy else info.address == selectedAddress,
                             minStake = minStake,
                             links = links,
-                            position = ListCell.getPosition(value.size, index)
+                            position = ListCell.getPosition(value.size, index),
+                            iconRes = info.implementation.icon
                         )
                     )
                 }
@@ -104,6 +106,7 @@ class StakeOptionsViewModel(
                         minStake = minStake,
                         links = links,
                         maxApyAddress = maxApy.address,
+                        iconRes = key.icon
                     )
                 )
             }
@@ -130,6 +133,7 @@ data class StakeOptionsUiState(
         open val position: ListCell.Position,
         open val minStake: Long,
         open val links: List<String>,
+        open val iconRes: Int,
     ) {
         data class Liquid(
             override val name: String,
@@ -140,6 +144,7 @@ data class StakeOptionsUiState(
             override val position: ListCell.Position = ListCell.Position.SINGLE,
             override val minStake: Long,
             override val links: List<String>,
+            override val iconRes: Int,
             val address: String,
             val selected: Boolean
         ) : StakeInfo(
@@ -150,7 +155,8 @@ data class StakeOptionsUiState(
             type = type,
             position = position,
             minStake = minStake,
-            links = links
+            links = links,
+            iconRes = iconRes
         )
 
         data class Other(
@@ -162,6 +168,7 @@ data class StakeOptionsUiState(
             override val position: ListCell.Position = ListCell.Position.SINGLE,
             override val minStake: Long,
             override val links: List<String>,
+            override val iconRes: Int,
             val maxApyAddress: String,
         ) : StakeInfo(
             name = name,
@@ -171,7 +178,8 @@ data class StakeOptionsUiState(
             type = type,
             position = position,
             minStake = minStake,
-            links = links
+            links = links,
+            iconRes = iconRes
         )
     }
 

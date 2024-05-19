@@ -9,13 +9,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <uikit.widget.HeaderView
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:action="@drawable/ic_close_16"
-            android:icon="@drawable/ic_chevron_left_16" />
-
         <uikit.widget.ColumnLayout
             android:id="@+id/top_details"
             android:layout_width="match_parent"

@@ -1,18 +1,11 @@
 package uikit.extensions
 
 import android.animation.ValueAnimator
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.HapticFeedbackConstants
-import android.view.PixelCopy
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
@@ -22,26 +15,17 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateMargins
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.NestedScrollView.OnScrollChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -139,6 +123,16 @@ fun View.round(radius: Int) {
         }
         clipToOutline = true
     }
+}
+
+fun View.circle() {
+    outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val rect = Rect(0, 0, view.width, view.height)
+            outline.setRoundRect(rect, rect.width() / 2f)
+        }
+    }
+    clipToOutline = true
 }
 
 fun View.getDrawable(@DrawableRes resId: Int): Drawable {

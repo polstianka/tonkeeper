@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uikit.widget.FrescoView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/action_cell_icon"
         android:layout_width="@dimen/iconSize"
         android:layout_height="@dimen/iconSize"

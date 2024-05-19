@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.ui.screen.stake
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.ui.screen.stake.model.PoolModel
+import com.tonapps.tonkeeper.ui.screen.stake.model.icon
 import com.tonapps.uikit.list.BaseListAdapter
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.uikit.list.BaseListItem
@@ -47,5 +48,8 @@ class PoolHolder(
         view.position = item.position
         view.setOnClickListener { onClick(item) }
         view.onCheckedChange = { onCheckedChanged(item.address) }
+        view.iconTint = 0
+        view.iconRes = item.implType.icon
+        view.isRoundedIcon = true
     }
 }

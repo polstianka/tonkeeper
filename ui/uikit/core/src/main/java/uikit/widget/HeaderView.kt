@@ -2,7 +2,6 @@ package uikit.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
@@ -187,6 +186,12 @@ open class HeaderView @JvmOverloads constructor(
     fun showText() {
         withAnimation(duration = ANIMATION_DURATION) {
             textView.alpha = 1f
+        }
+    }
+
+    fun updateTitle(title: CharSequence?) {
+        withAnimation(ANIMATION_DURATION) {
+            titleView.text = title
         }
     }
 

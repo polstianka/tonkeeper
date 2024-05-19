@@ -11,9 +11,11 @@ import androidx.core.view.setPadding
 import com.tonapps.uikit.color.resolveColor
 import com.tonapps.uikit.list.ListCell
 import uikit.R
+import uikit.extensions.circle
 import uikit.extensions.dp
 import uikit.extensions.drawable
 import uikit.extensions.getDimensionPixelSize
+import uikit.extensions.round
 import uikit.extensions.useAttributes
 
 class ActionCellView @JvmOverloads constructor(
@@ -22,7 +24,7 @@ class ActionCellView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : RowLayout(context, attrs, defStyle) {
 
-    private val iconView: FrescoView
+    private val iconView: AppCompatImageView
     private val titleView: AppCompatTextView
     private val subtitleView: AppCompatTextView
     private val chevronView: View
@@ -57,6 +59,22 @@ class ActionCellView @JvmOverloads constructor(
                 iconView.visibility = VISIBLE
                 iconView.setImageResource(value)
             }
+        }
+
+    var iconTint: Int = 0
+        set(value) {
+            field = value
+            if (value == 0) {
+                iconView.imageTintList = null
+            } else {
+                iconView.imageTintList = ColorStateList.valueOf(context.resolveColor(value))
+            }
+        }
+
+    var isRoundedIcon: Boolean = false
+        set(value) {
+            field = value
+            if (value) iconView.circle() else iconView.round(0)
         }
 
     var actionRes: Int = 0
@@ -115,9 +133,5 @@ class ActionCellView @JvmOverloads constructor(
                 subtitleView.setSingleLine()
             }
         }
-    }
-
-    fun loadImage(url: String) {
-        iconView.setImageURI(url)
     }
 }

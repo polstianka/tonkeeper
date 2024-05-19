@@ -1,16 +1,21 @@
 package uikit.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import com.tonapps.uikit.color.resolveColor
 import com.tonapps.uikit.list.ListCell
 import uikit.R
+import uikit.extensions.circle
 import uikit.extensions.dp
 import uikit.extensions.drawable
 import uikit.extensions.getDimensionPixelSize
+import uikit.extensions.round
 import uikit.extensions.useAttributes
 
 class ActionCellRadioView @JvmOverloads constructor(
@@ -19,7 +24,7 @@ class ActionCellRadioView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : RowLayout(context, attrs, defStyle) {
 
-    private val iconView: FrescoView
+    private val iconView: AppCompatImageView
     private val titleView: AppCompatTextView
     private val subtitleView: AppCompatTextView
     private val titleBadge: AppCompatTextView
@@ -54,6 +59,23 @@ class ActionCellRadioView @JvmOverloads constructor(
                 iconView.setImageResource(value)
             }
         }
+
+    var iconTint: Int = 0
+        set(value) {
+            field = value
+            if (value == 0) {
+                iconView.imageTintList = null
+            } else {
+                iconView.imageTintList = ColorStateList.valueOf(context.resolveColor(value))
+            }
+        }
+
+    var isRoundedIcon: Boolean = false
+        set(value) {
+            field = value
+            if (value) iconView.circle() else iconView.round(0)
+        }
+
     var position: ListCell.Position = ListCell.Position.SINGLE
         set(value) {
             field = value

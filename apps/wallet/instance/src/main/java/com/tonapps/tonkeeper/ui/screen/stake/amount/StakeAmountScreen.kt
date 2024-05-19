@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.amount
 
 import android.os.Bundle
 import android.view.View
@@ -6,11 +6,14 @@ import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.helper.NumberFormatter
-import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.StakeScreensAdapter
+import com.tonapps.tonkeeper.ui.screen.stake.model.icon
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonPrimaryBackgroundColor
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
@@ -19,17 +22,13 @@ import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
-import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ActionCellView
-import uikit.widget.HeaderView
 
-class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSheet {
+class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
     private val stakeViewModel: StakeViewModel by viewModel()
-    private val rootViewModel: RootViewModel by activityViewModel()
+    private val stakeMainViewModel: StakeMainViewModel by activityViewModel()
 
-    private lateinit var headerView: HeaderView
     private lateinit var selectedPool: ActionCellView
     private lateinit var valueCurrencyView: AppCompatTextView
     private lateinit var rateView: AppCompatTextView
@@ -37,11 +36,14 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
     private lateinit var maxButton: Button
     private lateinit var continueButton: Button
     private lateinit var valueView: AmountInput
+    private lateinit var pagerAdapter: StakeScreensAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        pagerAdapter = StakeScreensAdapter(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        headerView = view.findViewById(R.id.header)
-        headerView.doOnActionClick = { finish() }
-
         selectedPool = view.findViewById(R.id.selected_pool)
         valueCurrencyView = view.findViewById(R.id.value_currency)
 
@@ -63,19 +65,7 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
         }
 
         continueButton = view.findViewById(R.id.continue_action)
-        continueButton.setOnClickListener {
-            stakeViewModel.onContinue()
-            /* navigation?.add(StakeConfirmationScreen.newInstance(
-                 ConfirmationArgs(
-                     listOf(
-                         KeyValueModel.Simple("Wallet", "Main", null, ListCell.Position.FIRST),
-                         KeyValueModel.Simple("Recipient", "Tokstakers", null, ListCell.Position.MIDDLE),
-                         KeyValueModel.Simple("APY", "≈ 5.01%", null, ListCell.Position.MIDDLE),
-                         KeyValueModel.Simple("Fee", "≈ 0.01 TON", null, ListCell.Position.LAST, "\$ 0.01"),
-                     )
-                 )
-             ))*/
-        }
+        continueButton.setOnClickListener { stakeViewModel.onContinue() }
 
         collectFlow(stakeViewModel.uiState) { state ->
             rateView.text = state.rate
@@ -93,7 +83,7 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
                 availableView.setTextColor(requireContext().textSecondaryColor)
             }
 
-            continueButton.isEnabled = true//state.canContinue
+            continueButton.isEnabled = state.canContinue
 
             if (state.maxActive) {
                 maxButton.background.setTint(requireContext().buttonPrimaryBackgroundColor)
@@ -109,13 +99,20 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
                     titleBadgeText = getString(Localization.max_apy).takeIf {
                         state.selectedPool.isMaxApy
                     }
+                    iconRes = state.selectedPool.pool.implementation.icon
+                    iconTint = 0
+                    isRoundedIcon = true
                     actionTint = com.tonapps.uikit.color.R.attr.iconTertiaryColor
                     subtitle = getString(
                         Localization.apy_percent_placeholder,
                         NumberFormatter.format(state.selectedPool.pool.apy)
                     )
-                    setOnClickListener { navigation?.add(StakeOptionsScreen()) }
+                    setOnClickListener { stakeMainViewModel.openOptions() }
                 }
+            }
+
+            if (state.confirmScreenArgs != null) {
+                stakeMainViewModel.onConfirmationArgsReceived(state.confirmScreenArgs)
             }
         }
     }
@@ -144,5 +141,9 @@ class StakeScreen : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSh
     private fun getValue(): Float {
         val text = Coin.prepareValue(valueView.text.toString())
         return text.toFloatOrNull() ?: 0f
+    }
+
+    companion object {
+        fun newInstance() = StakeAmountScreen()
     }
 }

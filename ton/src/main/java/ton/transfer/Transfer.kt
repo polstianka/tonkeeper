@@ -73,10 +73,25 @@ object Transfer {
         }
     }
 
-    fun stakeDeposit(queryId: BigInteger = BigInteger.ZERO): Cell {
+    fun stakeDepositLiquidTf(queryId: BigInteger = BigInteger.ZERO): Cell {
         return buildCell {
             storeUInt(0x47d54391, 32)
             storeUInt(queryId, 64)
+        }
+    }
+
+    fun stakeDepositWhales(queryId: BigInteger = BigInteger.ZERO): Cell {
+        return buildCell {
+            storeUInt(2077040623, 32)
+            storeUInt(queryId, 64)
+            storeTlb(Coins, Coins.ofNano(100000))
+        }
+    }
+
+    fun stakeDepositTf(queryId: BigInteger = BigInteger.ZERO): Cell {
+        return buildCell {
+            storeUInt(0, 32)
+            storeBytes("d".toByteArray())
         }
     }
 
