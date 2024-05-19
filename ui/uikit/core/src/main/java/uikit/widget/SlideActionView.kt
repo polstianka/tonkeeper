@@ -125,7 +125,7 @@ class SlideActionView @JvmOverloads constructor(
     }
 
     private fun done() {
-        HapticHelper.impactLight(context)
+        HapticHelper.success(context)
         icon = checkIcon
         doOnDone?.invoke()
         isDone = true

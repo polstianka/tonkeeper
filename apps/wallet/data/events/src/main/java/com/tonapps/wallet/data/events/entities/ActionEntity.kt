@@ -21,7 +21,7 @@ data class ActionEntity(
     val recipient: AccountEntity? = null,
     val comment: String? = null,
     val token: TokenEntity? = null,
-    val amount: Float? = null,
+    val amount: Double? = null,
     val nftAddress: String? = null,
     var nftEntity: NftEntity? = null
 ): Parcelable {
@@ -62,7 +62,7 @@ data class ActionEntity(
                 recipient = AccountEntity(tonTransfer.recipient, testnet),
                 comment = tonTransfer.comment,
                 token = TokenEntity.TON,
-                amount = Coin.toCoins(tonTransfer.amount)
+                amount = Coin.toCoinsDouble(tonTransfer.amount)
             )
         }
 

@@ -14,13 +14,13 @@ open class HistoryAdapter(
 ): BaseListAdapter() {
 
     init {
-        // super.setHasStableIds(true)
+        super.setHasStableIds(true)
     }
 
-    /*override fun getItemId(position: Int): Long {
+    override fun getItemId(position: Int): Long {
         val item = super.getItem(position) as? HistoryItem ?: return RecyclerView.NO_ID
-        return item.id
-    }*/
+        return item.timestampForSort
+    }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): com.tonapps.uikit.list.BaseListHolder<out com.tonapps.uikit.list.BaseListItem> {
         return when (viewType) {
@@ -30,25 +30,6 @@ open class HistoryAdapter(
             HistoryItem.TYPE_APP -> HistoryAppHolder(parent)
             else -> throw IllegalArgumentException("Unknown viewType: $viewType")
         }
-    }
-
-    fun getLastLt(): Long? {
-        val item = getLastEvent() ?: return null
-        return if (item.lt > 0) {
-            item.lt
-        } else {
-            null
-        }
-    }
-
-    fun getLastEvent(): HistoryItem.Event? {
-        for (i in currentList.size - 1 downTo 0) {
-            val item = currentList[i]
-            if (item is HistoryItem.Event) {
-                return item
-            }
-        }
-        return null
     }
 
 }

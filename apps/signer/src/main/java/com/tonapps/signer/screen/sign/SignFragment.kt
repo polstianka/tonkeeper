@@ -169,7 +169,7 @@ class SignFragment: BaseFragment(R.layout.fragment_sign), BaseFragment.Modal {
     }
 
     private fun finishDelay() {
-        postDelayed(ModalView.animationDuration) {
+        postDelayed(300) {
             finish()
         }
     }

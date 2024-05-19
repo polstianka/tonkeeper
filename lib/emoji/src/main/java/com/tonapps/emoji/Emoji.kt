@@ -30,6 +30,10 @@ object Emoji {
         return all.toTypedArray()
     }
 
+    suspend fun getBitmap(context: Context, emoji: CharSequence): Bitmap {
+        return getDrawable(context, emoji).bitmap
+    }
+
     internal suspend fun getDrawable(context: Context, emoji: CharSequence): PictogramDrawable {
         return createDrawable(context, emoji)
     }

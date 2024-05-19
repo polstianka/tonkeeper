@@ -27,7 +27,7 @@ internal class ConfigRepository(
             configEntity = it
         }
         scope.launch(Dispatchers.Main) {
-            remote()?.let {
+            remote(false)?.let {
                 configEntity = it
             }
         }
@@ -37,8 +37,8 @@ internal class ConfigRepository(
         return configFile.readBytes().toParcel()
     }
 
-    private suspend fun remote(): ConfigEntity? = withContext(Dispatchers.IO) {
-        val config = internalApi.downloadConfig() ?: return@withContext null
+    private suspend fun remote(testnet: Boolean): ConfigEntity? = withContext(Dispatchers.IO) {
+        val config = internalApi.downloadConfig(testnet) ?: return@withContext null
         configFile.writeBytes(config.toByteArray())
         config
     }

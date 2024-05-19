@@ -11,6 +11,7 @@
         android:layout_height="44dp"
         android:layout_marginTop="@dimen/offsetMedium"
         android:layout_marginStart="@dimen/offsetMedium"
+        android:tint="?attr/iconSecondaryColor"
         android:background="@drawable/bg_oval"
         android:backgroundTint="?attr/backgroundContentTintColor"
         android:scaleType="centerInside"

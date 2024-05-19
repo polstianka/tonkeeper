@@ -9,45 +9,38 @@
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_chevron_left_16"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="@dimen/offsetMedium"
-        android:fillViewport="true">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/offsetLarge"
-            android:orientation="vertical">
-
-            <uikit.widget.TextHeaderView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:title="@string/phrase_title"
-                android:description="@string/phrase_description"/>
-
-            <uikit.widget.PhraseWords
-                android:id="@+id/words"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/offsetMedium"/>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <Button
-        android:id="@+id/next"
-        style="@style/Widget.App.Button"
+    <uikit.widget.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_margin="@dimen/offsetLarge"
-        android:textAppearance="@style/TextAppearance.Label1"
-        android:text="@string/continue_action"/>
+        android:layout_gravity="center">
+
+        <uikit.widget.TextHeaderView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:layout_marginHorizontal="@dimen/offsetLarge"
+            android:title="@string/phrase_title"
+            android:description="@string/phrase_description"/>
+
+        <uikit.widget.PhraseWords
+            android:id="@+id/words"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/offsetMedium"/>
+
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/copy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetLarge"
+            android:layout_marginTop="@dimen/offsetLarge"
+            android:layout_marginBottom="@dimen/offsetMedium"
+            android:text="@string/copy"
+            android:textAppearance="@style/TextAppearance.Label1"/>
+
+    </uikit.widget.ColumnLayout>
 
 </uikit.widget.ColumnLayout>

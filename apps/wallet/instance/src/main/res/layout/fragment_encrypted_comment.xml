@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        android:action="@drawable/ic_close_16"/>
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:tint="?attr/accentGreenColor"
+            android:src="@drawable/ic_lock_128"/>
+
+        <uikit.widget.TextHeaderView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/offsetMedium"
+            android:title="@string/encrypted_comment"
+            android:description="@string/encrypted_comment_description"/>
+
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/decrypted_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/offsetMedium"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:text="@string/decrypted_comment_action"/>
+
+        <uikit.widget.RowLayout
+            android:id="@+id/checkbox_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="@dimen/offsetMedium">
+
+            <uikit.widget.CheckBoxView
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/do_not_show_again"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?attr/textSecondaryColor"
+                android:singleLine="true"/>
+        </uikit.widget.RowLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/offsetMedium"/>
+    </uikit.widget.ColumnLayout>
+
+</uikit.widget.ColumnLayout>

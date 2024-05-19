@@ -3,6 +3,31 @@
     <string name="ton" translatable="false">TON</string>
     <string name="toncoin" translatable="false">Toncoin</string>
 
+    <string name="encrypted_comment">Зашифрованный комментарий</string>
+    <string name="encrypted_comment_description">Комментарий зашифрован отправителем и может быть расшифрован только вами. Пожалуйста, будьте осторожны с контентом и остерегайтесь мошенничества.</string>
+    <string name="decrypted_comment_action">Расшифровать комментарий</string>
+    <string name="comment_decrypted_hint">Будет виден всем.</string>
+    <string name="encrypt_comment">Зашифровать комментарий</string>
+    <string name="comment_encrypted_hint">Будет виден только получателю и вам.</string>
+    <string name="decrypt_comment">Расшифровать</string>
+    <string name="unnamed_collection">Безымянная коллекция</string>
+    <string name="view_details">Подробнее</string>
+
+    <string name="connected_placeholder_title">Подключенные приложения будут отображаться здесь</string>
+    <string name="connected_placeholder_subtitle">Исследуйте приложения и сервисы в браузере Tonkeeper.</string>
+
+    <string name="push_notifications">Уведомления</string>
+    <string name="push_notifications_description">Получайте уведомления о получении TON, токенов и NFT. Уведомления от подключенных приложений.</string>
+
+    <string name="apps">Приложения</string>
+    <string name="apps_notifications_description">Уведомления от подключенных приложений в вашей активности</string>
+
+
+    <string name="refresh">Обновить</string>
+    <string name="mute">Загоушить</string>
+    <string name="disconnect">Отключится</string>
+    <string name="notifications">Оповещения</string>
+    <string name="rate_tonkeeper">Оценить Tonkeeper</string>
     <string name="delete_watch_account_alert">Удалить аккаунт для просмотра?</string>
     <string name="delete">Удалить</string>
     <string name="failed">Ошибка</string>
@@ -105,6 +130,8 @@
     <string name="passcode_enter">Введите пин-код</string>
     <string name="passcode_create">Создать пин-код</string>
     <string name="passcode_re_enter">Введите пин-код ещё раз</string>
+    <string name="passcode_current">Текущий пин-код</string>
+    <string name="passcode_new">Установите новый пин-код</string>
     <string name="cancel">Отмена</string>
     <string name="fee">Комиссия</string>
     <string name="period_24h">24ч</string>

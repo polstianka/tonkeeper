@@ -27,10 +27,10 @@ class BrowserExploreViewModel(
     val uiItemsFlow = _uiItemsFlow.asStateFlow()
 
     init {
-        combine(settings.countryFlow, walletRepository.activeWalletFlow) { code, _ ->
+        combine(settings.countryFlow, walletRepository.activeWalletFlow) { code, wallet ->
             _uiItemsFlow.value = emptyList()
-            browserRepository.load(code)?.let { setData(it) }
-            browserRepository.loadRemote(code)?.let { setData(it) }
+            browserRepository.load(code, wallet.testnet)?.let { setData(it) }
+            browserRepository.loadRemote(code, wallet.testnet)?.let { setData(it) }
         }.launchIn(viewModelScope)
     }
 

@@ -51,6 +51,7 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
         iconView.setImageURI(args.token.imageUri)
 
         addressView = view.findViewById(R.id.address)
+        addressView.setOnClickListener { copy() }
         addressView.text = args.address
 
         walletTypeView = view.findViewById(R.id.wallet_type)
@@ -68,15 +69,7 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
         }
 
         copyView = view.findViewById(R.id.copy)
-        copyView.setOnClickListener {
-            val color = if (args.walletType == WalletType.Default) {
-                requireContext().backgroundContentTintColor
-            } else {
-                requireContext().accentOrangeColor
-            }
-            navigation?.toast(getString(Localization.copied), color)
-            context?.copyToClipboard(args.address)
-        }
+        copyView.setOnClickListener { copy() }
 
         shareView = view.findViewById(R.id.share)
         shareView.setOnClickListener {
@@ -85,6 +78,16 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
             intent.putExtra(Intent.EXTRA_TEXT, args.address)
             startActivity(Intent.createChooser(intent, getString(Localization.share)))
         }
+    }
+
+    private fun copy() {
+        val color = if (args.walletType == WalletType.Default) {
+            requireContext().backgroundContentTintColor
+        } else {
+            requireContext().accentOrangeColor
+        }
+        navigation?.toast(getString(Localization.copied), color)
+        context?.copyToClipboard(args.address)
     }
 
     companion object {

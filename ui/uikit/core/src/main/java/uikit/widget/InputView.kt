@@ -100,6 +100,12 @@ class InputView @JvmOverloads constructor(
     private val clearView: AppCompatImageView
     private val loaderView: LoaderView
 
+    var activeBorderColor: Int
+        get() = inputDrawable.activeBorderColor
+        set(value) {
+            inputDrawable.activeBorderColor = value
+        }
+
     var error: Boolean
         get() = inputDrawable.error
         set(value) {
@@ -191,6 +197,24 @@ class InputView @JvmOverloads constructor(
             editText.inputType = value
         }
 
+    var hint: String?
+        get() = hintView.text.toString()
+        set(value) {
+            hintView.text = value
+        }
+
+    var hintColor: Int
+        get() = hintView.currentTextColor
+        set(value) {
+            hintView.setTextColor(value)
+        }
+
+    var color: Int
+        get() = editText.currentTextColor
+        set(value) {
+            editText.setTextColor(value)
+        }
+
     init {
         background = inputDrawable
         minimumHeight = context.getDimensionPixelSize(R.dimen.barHeight)
@@ -216,7 +240,7 @@ class InputView @JvmOverloads constructor(
         }
 
         context.useAttributes(attrs, R.styleable.InputView) {
-            hintView.text = it.getString(R.styleable.InputView_android_hint)
+            hint = it.getString(R.styleable.InputView_android_hint)
             iconValue = it.getResourceId(R.styleable.InputView_android_icon, 0)
             actionValue = it.getString(R.styleable.InputView_android_button)
             isEnabled = it.getBoolean(R.styleable.InputView_android_enabled, true)
@@ -264,6 +288,10 @@ class InputView @JvmOverloads constructor(
 
     fun hideKeyboard() {
         editText.hideKeyboard()
+    }
+
+    fun clear() {
+        editText.text?.clear()
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {

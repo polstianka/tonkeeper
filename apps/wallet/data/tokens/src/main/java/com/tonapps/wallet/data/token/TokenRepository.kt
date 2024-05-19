@@ -23,7 +23,7 @@ class TokenRepository(
     private val api: API
 ) {
 
-    private val totalBalanceCache = ConcurrentHashMap<String, Float>(3, 1.0f, 2)
+    private val totalBalanceCache = ConcurrentHashMap<String, Double>(3, 1.0f, 2)
 
     private val localDataSource = LocalDataSource(context)
     private val remoteDataSource = RemoteDataSource(api)
@@ -32,7 +32,7 @@ class TokenRepository(
         currency: WalletCurrency,
         accountId: String,
         testnet: Boolean
-    ): Float {
+    ): Double {
         return totalBalanceCache[cacheKey(accountId, testnet)] ?: loadTotalBalances(currency, accountId, testnet)
     }
 
@@ -40,9 +40,9 @@ class TokenRepository(
         currency: WalletCurrency,
         accountId: String,
         testnet: Boolean
-    ): Float {
+    ): Double {
         val tokens = get(currency, accountId, testnet)
-        var fiatBalance = 0f
+        var fiatBalance = 0.0
         if (testnet) {
             fiatBalance = tokens.first().balance.value
         } else {

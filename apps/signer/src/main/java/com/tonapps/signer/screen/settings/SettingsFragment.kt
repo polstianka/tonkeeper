@@ -10,6 +10,7 @@ import com.tonapps.signer.BuildConfig
 import com.tonapps.signer.R
 import com.tonapps.signer.screen.change.ChangeFragment
 import com.tonapps.signer.screen.debug.DebugFragment
+import com.tonapps.signer.screen.legal.LegalFragment
 import uikit.base.BaseFragment
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -24,6 +25,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings), BaseFragment.S
     private lateinit var scrollView: NestedScrollView
     private lateinit var changeView: View
     private lateinit var supportView: View
+    private lateinit var legalView: View
     private lateinit var versionView: AppCompatTextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +41,11 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings), BaseFragment.S
         supportView = view.findViewById(R.id.support)
         supportView.setOnClickListener { openSupport() }
 
+        legalView = view.findViewById(R.id.legal)
+        legalView.setOnClickListener {
+            navigation?.add(LegalFragment.newInstance())
+        }
+
         versionView = view.findViewById(R.id.version)
         versionView.text = getString(R.string.version, BuildConfig.VERSION_NAME)
         versionView.setOnClickListener {
@@ -47,8 +54,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings), BaseFragment.S
     }
 
     private fun openSupport() {
-        val uri = Uri.parse("mailto:support@tonkeeper.com")
-        val intent = Intent(Intent.ACTION_SENDTO, uri)
+        val uri = Uri.parse("https://t.me/tonkeeper_supportbot")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
     }
 }

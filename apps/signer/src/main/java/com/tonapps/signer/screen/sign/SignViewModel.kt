@@ -48,9 +48,7 @@ class SignViewModel(
     private val vault: SignerVault,
 ): ViewModel() {
 
-    val keyEntity = repository.getKey(id)
-        .filterNotNull()
-        .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+    val keyEntity = repository.getKey(id).filterNotNull()
 
     private val _actionsFlow = MutableStateFlow<List<SignItem>?>(null)
     val actionsFlow = _actionsFlow.asStateFlow().filterNotNull()

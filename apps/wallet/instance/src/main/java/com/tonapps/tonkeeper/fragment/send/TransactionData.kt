@@ -29,6 +29,7 @@ data class TransactionData(
     val max: Boolean = false,
     val token: AccountTokenEntity? = null,
     val bounce: Boolean = false,
+    val encryptComment: Boolean = false
 ) {
 
     private val t: TokenEntity

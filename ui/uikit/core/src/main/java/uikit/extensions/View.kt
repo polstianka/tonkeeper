@@ -279,3 +279,15 @@ fun View.getViews(): List<View> {
     }
     return result
 }
+
+fun TextView.setLeftDrawable(drawable: Drawable?) {
+    setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+}
+
+fun TextView.setRightDrawable(drawable: Drawable?) {
+    setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+}
+
+fun TextView.clearDrawables() {
+    setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+}

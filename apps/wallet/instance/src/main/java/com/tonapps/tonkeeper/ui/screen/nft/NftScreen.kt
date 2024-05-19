@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.nft
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
@@ -9,9 +10,13 @@ import com.tonapps.extensions.getParcelableCompat
 import com.tonapps.extensions.short4
 import com.tonapps.tonkeeper.extensions.copyWithToast
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.textSecondaryColor
+import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.collectibles.entities.NftEntity
+import com.tonapps.wallet.localization.Localization
 import org.koin.android.ext.android.inject
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
@@ -28,6 +33,10 @@ class NftScreen: BaseFragment(R.layout.fragment_nft), BaseFragment.BottomSheet {
 
     private val nftEntity: NftEntity by lazy {
         requireArguments().getParcelableCompat(ARG_ENTITY)!!
+    }
+
+    private val verificationIcon: Drawable by lazy {
+        getDrawable(UIKitIcon.ic_verification_16, requireContext().accentBlueColor)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +56,14 @@ class NftScreen: BaseFragment(R.layout.fragment_nft), BaseFragment.BottomSheet {
         nameView.text = nftEntity.name
 
         val collectionNameView = view.findViewById<AppCompatTextView>(R.id.collection_name)
-        collectionNameView.text = nftEntity.collectionName
+        collectionNameView.text = nftEntity.collectionName.ifEmpty {
+            getString(Localization.unnamed_collection)
+        }
+        if (nftEntity.verified) {
+            collectionNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIcon, null)
+        } else {
+            collectionNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
 
         val descriptionView = view.findViewById<AppCompatTextView>(R.id.nft_description)
         if (nftEntity.description.isBlank()) {
@@ -57,11 +73,12 @@ class NftScreen: BaseFragment(R.layout.fragment_nft), BaseFragment.BottomSheet {
             descriptionView.text = nftEntity.description
         }
 
+        val aboutView = view.findViewById<View>(R.id.about)
         val collectionDescription = view.findViewById<AppCompatTextView>(R.id.collection_description)
         if (nftEntity.collectionDescription.isBlank()) {
-            collectionDescription.visibility = View.GONE
+            aboutView.visibility = View.GONE
         } else {
-            collectionDescription.visibility = View.VISIBLE
+            aboutView.visibility = View.VISIBLE
             collectionDescription.text = nftEntity.collectionDescription
         }
 

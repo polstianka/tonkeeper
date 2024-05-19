@@ -4,8 +4,25 @@
     <string name="toncoin" translatable="false">Toncoin</string>
     <string name="bitcoin" translatable="false">Bitcoin</string>
 
+    <string name="refresh">Refresh</string>
+    <string name="mute">Mute</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="apps">Apps</string>
+    <string name="apps_notifications_description">Notifications from connected apps in your activity</string>
+    <string name="push_notifications">Push notifications</string>
+    <string name="push_notifications_description">Get notifications when you receive TON, tokens, and NFTs. Notifications from connected apps.</string>
+
     <string name="failed">Failed</string>
     <string name="remove_dapp_confirm">Remove %1$s?</string>
+    <string name="rate_tonkeeper">Rate Tonkeeper</string>
+    <string name="encrypted_comment">Encrypted comment</string>
+    <string name="encrypted_comment_description">The comment is encrypted by sender and can only be decrypted by you. Please be careful with the content and beware of scams.</string>
+    <string name="decrypted_comment_action">Decrypt the comment</string>
+    <string name="comment_decrypted_hint">Will be visible to everyone.</string>
+    <string name="encrypt_comment">Encrypt comment</string>
+
+    <string name="comment_encrypted_hint">Will be visible only to recipient and you.</string>
+    <string name="decrypt_comment">Decrypt</string>
 
     <string name="sign_out">Sign out</string>
     <string name="delete_watch_account_alert">Delete watch account?</string>
@@ -107,6 +124,8 @@
     <string name="passcode_enter">Enter passcode</string>
     <string name="passcode_create">Create passcode</string>
     <string name="passcode_re_enter">Re-enter passcode</string>
+    <string name="passcode_current">Enter current passcode</string>
+    <string name="passcode_new">Create new passcode</string>
     <string name="import_wallet">Import wallet</string>
     <string name="import_wallet_subtitle">Choose from the options below.</string>
     <string name="import_wallet_words">Import wallet with a 24 secret recovery words</string>
@@ -120,6 +139,7 @@
     <string name="cancel">Cancel</string>
     <string name="fee">Fee</string>
     <string name="period_24h">24h</string>
+    <string name="notifications">Notifications</string>
     <string name="enable_notification">Enable notification</string>
     <string name="allow_notification">Allow Notifications</string>
     <string name="enable_notification_title">Get instant notifications</string>
@@ -147,6 +167,9 @@
     <string name="security">Security</string>
     <string name="sending_transaction">Sending transaction</string>
     <string name="transaction_confirmed">Transaction confirmed</string>
+
+    <string name="connected_placeholder_title">Connected apps will be shown here</string>
+    <string name="connected_placeholder_subtitle">Explore apps and services in Tonkeeper browser.</string>
 
     <string name="send">Send</string>
     <string name="swap">Swap</string>
@@ -206,6 +229,8 @@
 
     <string name="done">Done</string>
     <string name="error">Error</string>
+    <string name="unnamed_collection">Unnamed collection</string>
+    <string name="view_details">View details</string>
 
     <string name="receive_coin">Receive %1$s</string>
     <string name="receive_coin_description">Send only %1$s and tokens in TON network to this address, or you might lose your funds.</string>

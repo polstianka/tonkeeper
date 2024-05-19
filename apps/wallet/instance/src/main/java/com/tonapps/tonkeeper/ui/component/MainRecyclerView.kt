@@ -96,7 +96,10 @@ class MainRecyclerView @JvmOverloads constructor(
     private fun applyBlurBounds() {
         val viewWidth = measuredWidth.toFloat()
         val viewHeight = measuredHeight.toFloat()
-        topBlur?.setBounds( 0f, 0f, viewWidth, topPadding.toFloat())
+        if (viewWidth == 0f || viewHeight == 0f) {
+            return
+        }
+        topBlur?.setBounds(0f, 0f, viewWidth, topPadding.toFloat())
         bottomBlur?.setBounds(0f, viewHeight - bottomPadding, viewWidth, viewHeight)
     }
 }

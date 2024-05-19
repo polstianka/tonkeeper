@@ -57,6 +57,10 @@ data class RatesEntity(
         return value * rateValue(token)
     }
 
+    fun convert(token: String, value: Double): Float {
+        return (value * rateValue(token)).toFloat()
+    }
+
     fun getRate(token: String): Float {
         return rateValue(token)
     }
