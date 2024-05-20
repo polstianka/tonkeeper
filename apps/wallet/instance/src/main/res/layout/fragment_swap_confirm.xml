@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <uikit.widget.ModalHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_swap"
+        android:id="@+id/fragment_swap_confirm_header"/>
+
+</uikit.widget.ColumnLayout>

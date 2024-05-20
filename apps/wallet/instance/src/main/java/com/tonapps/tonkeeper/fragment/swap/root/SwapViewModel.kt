@@ -159,7 +159,17 @@ class SwapViewModel(
         swapSettings.value = result.settings
     }
 
-    fun onConfirmClicked() {
-        Log.wtf("###", "onConfirmClicked")
+    fun onConfirmClicked() = viewModelScope.launch {
+        val sendToken = _pickedSendAsset.value ?: return@launch
+        val receiveToken = _pickedReceiveAsset.value ?: return@launch
+        val amount = sendAmount.value
+        val settings = swapSettings.value
+        val event = SwapEvent.NavigateToConfirm(
+            sendToken,
+            receiveToken,
+            settings,
+            amount
+        )
+        _events.emit(event)
     }
 }

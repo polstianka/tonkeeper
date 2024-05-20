@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
+import com.tonapps.tonkeeper.fragment.swap.confirm.ConfirmSwapFragment
 import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
@@ -152,7 +153,13 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             is SwapEvent.NavigateToPickAsset -> event.handle()
             is SwapEvent.NavigateToSwapSettings -> event.handle()
             is SwapEvent.FillInput -> event.handle()
+            is SwapEvent.NavigateToConfirm -> event.handle()
         }
+    }
+
+    private fun SwapEvent.NavigateToConfirm.handle() {
+        val fragment = ConfirmSwapFragment.newInstance(sendAsset, receiveAsset, amount, settings)
+        navigation?.add(fragment)
     }
 
     private fun SwapEvent.FillInput.handle() {
