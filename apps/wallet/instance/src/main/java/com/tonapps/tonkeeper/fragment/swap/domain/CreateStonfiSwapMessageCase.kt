@@ -110,6 +110,13 @@ class CreateStonfiSwapMessageCase(
                     .address
             }
 
+            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.JETTON -> {
+                val a = sendAsset.contractAddress
+                val b = walletLegacy.address
+                stonfiApi.jetton.getWalletAddress(a, b)
+                    .address
+            }
+
             else -> TODO()
         }
     }
@@ -148,10 +155,15 @@ class CreateStonfiSwapMessageCase(
                     .address
             }
 
-            sendAsset.type == DexAssetType.TON &&
-                    receiveAsset.type == DexAssetType.JETTON -> TODO()
+            sendAsset.type == DexAssetType.JETTON &&
+                    receiveAsset.type == DexAssetType.JETTON -> {
+                val a = receiveAsset.contractAddress
+                val b = getRouterAddress(testnet)
+                stonfiApi.jetton.getWalletAddress(a, b)
+                    .address
+            }
 
-            else -> TODO()
+            else -> throw IllegalStateException("${sendAsset.type} -> ${receiveAsset.type}")
         }
     }
 
