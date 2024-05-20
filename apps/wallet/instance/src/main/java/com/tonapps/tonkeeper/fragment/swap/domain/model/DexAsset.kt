@@ -47,3 +47,7 @@ fun DexAssetType.recommendedForwardTon(receiveType: DexAssetType): BigDecimal {
         )
     }
 }
+
+fun DexAsset.getRecommendedGasValues(receiveAsset: DexAsset): BigDecimal {
+    return type.recommendedForwardTon(receiveAsset.type) + BigDecimal("0.06")
+}

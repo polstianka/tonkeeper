@@ -4,6 +4,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
+import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.tonkeeper.fragment.swap.domain.model.recommendedForwardTon
 import com.tonapps.wallet.api.StonfiAPI
 import io.stonfiapi.models.AssetInfoSchema
@@ -107,13 +108,10 @@ class DexAssetsRepository(
             receivedAsset = receiveAsset,
             liquidityProviderFee = BigDecimal(feeUnits).movePointLeft(receiveAsset.decimals),
             sentAsset = sentAsset,
-            blockchainFee = getRecommendedGasValues(sentAsset, receiveAsset)
+            blockchainFee = sentAsset.getRecommendedGasValues(receiveAsset)
         )
     }
 
-    private fun getRecommendedGasValues(sendAsset: DexAsset, receiveAsset: DexAsset): BigDecimal {
-        return sendAsset.type.recommendedForwardTon(receiveAsset.type) + BigDecimal("0.06")
-    }
 
     private fun AssetInfoSchema.isValid(): Boolean {
         return dexPriceUsd != null && !blacklisted && !deprecated
