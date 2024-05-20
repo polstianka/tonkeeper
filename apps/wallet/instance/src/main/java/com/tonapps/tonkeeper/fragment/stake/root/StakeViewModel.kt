@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
+import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.localization.R
@@ -37,7 +38,7 @@ class StakeViewModel(
     getRateFlowCase: GetRateFlowCase,
     walletRepository: WalletRepository,
     tokenRepository: TokenRepository,
-    private val stakingRepository: StakingRepository
+    private val stakingRepository: StakingRepository,
 ) : ViewModel() {
 
     companion object {
@@ -96,7 +97,10 @@ class StakeViewModel(
 
     private fun loadStakingServices() = viewModelScope.launch {
         val activeWallet = activeWallet.first()
-        val stakingServices = stakingRepository.getStakingPools(activeWallet.accountId)
+        val stakingServices = stakingRepository.getStakingPools(
+            accountId = activeWallet.accountId,
+            testnet = activeWallet.testnet
+        )
         this@StakeViewModel.stakingServices.value = stakingServices
         pickedPool.emit(stakingServices.maxApy())
     }

@@ -59,7 +59,7 @@ class DexAssetsRepository(
     private val assetBalances = mutableListOf<AssetBalance.Entity>()
     fun getAssetBalance(
         walletAddress: String,
-        contractAddress: String
+        asset: DexAsset
     ) = flow {
         if (assetBalances.isEmpty()) {
             emit(AssetBalance.Loading)
@@ -67,12 +67,17 @@ class DexAssetsRepository(
                 api.wallets.getWalletAssets(walletAddress)
                     .assetList
                     .filter { it.isValid() && it.balance != null }
-                    .map { AssetBalance.Entity(it.toDomain(), it.balance!!.toLongOrNull() ?: 0L) }
+                    .map {
+                        val c = it.toDomain()
+                        val a = it.balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO
+                        val b = a.movePointLeft(c.decimals)
+                        AssetBalance.Entity(c, b)
+                    }
             }
             assetBalances.clear()
             assetBalances.addAll(assets)
         }
-        val balance = assetBalances.firstOrNull { it.asset.contractAddress == contractAddress }
+        val balance = assetBalances.firstOrNull { it.asset.contractAddress == asset.contractAddress }
         emit(balance)
     }
 

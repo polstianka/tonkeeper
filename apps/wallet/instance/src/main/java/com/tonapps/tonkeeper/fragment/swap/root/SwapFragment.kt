@@ -63,6 +63,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_send_token_button)
     private val detailsView: SwapDetailsView?
         get() = view?.findViewById(R.id.fragment_swap_new_swap_details)
+    private val maxButton: TextView?
+        get() = view?.findViewById(R.id.fragment_swap_new_max_button)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +94,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         footer?.applyNavBottomPadding()
 
         confirmButton?.setThrottleClickListener { viewModel.onConfirmClicked() }
+
+        maxButton?.setThrottleClickListener { viewModel.onMaxClicked() }
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.isLoading) { updateLoading(it) }
@@ -132,8 +136,10 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     private fun updateBalance(balance: AssetBalance?) {
         when (balance) {
             is AssetBalance.Entity ->
-                balanceTextView?.text = balance.balance
-                    .formatCurrency(balance.asset)
+                balanceTextView?.text = CurrencyFormatter.format(
+                    balance.asset.symbol,
+                    balance.balance
+                )
 
             AssetBalance.Loading,
             null -> balanceTextView?.text = ""

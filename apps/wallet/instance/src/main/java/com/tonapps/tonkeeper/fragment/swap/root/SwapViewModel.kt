@@ -3,10 +3,12 @@ package com.tonapps.tonkeeper.fragment.swap.root
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
+import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
@@ -58,9 +60,9 @@ class SwapViewModel(
         if (asset == null) {
             flowOf(null)
         } else {
-            repository.getAssetBalance(wallet.address, asset.contractAddress)
+            repository.getAssetBalance(wallet.address, asset)
         }
-    }
+    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val receiveAmount = combine(
         sendAmount,
         pickedSendAsset,
@@ -180,5 +182,16 @@ class SwapViewModel(
             simulation
         )
         _events.emit(event)
+    }
+
+    fun onMaxClicked() = viewModelScope.launch {
+        val balance = pickedTokenBalance.first() as? AssetBalance.Entity ?: return@launch
+        sendAmount.value = balance.balance
+        ignoreNextUpdate = true
+        _events.emit(
+            SwapEvent.FillInput(
+                CurrencyFormatter.format(balance.balance, 2)
+            )
+        )
     }
 }

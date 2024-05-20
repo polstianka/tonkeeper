@@ -13,12 +13,12 @@ class StakingRepository(
     private val mapper: StakingServiceMapper
 ) {
 
-    companion object {
-        const val isTestNet = false // todo
-    }
     // todo add caching
-    suspend fun getStakingPools(accountId: String) = withContext(Dispatchers.IO) {
-        val result = api.getStakingPools(accountId, isTestNet)
+    suspend fun getStakingPools(
+        accountId: String,
+        testnet: Boolean
+    ) = withContext(Dispatchers.IO) {
+        val result = api.getStakingPools(accountId, testnet)
         val implementationsByPool = PoolImplementationType.entries
             .associateWith { mutableSetOf<PoolInfo>() }
 
