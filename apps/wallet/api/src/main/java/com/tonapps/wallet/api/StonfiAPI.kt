@@ -8,6 +8,7 @@ import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.stonfiapi.apis.DexApi
+import io.stonfiapi.apis.JettonApi
 import io.stonfiapi.apis.StatsApi
 import io.stonfiapi.apis.WalletsApi
 import kotlinx.coroutines.CoroutineScope
@@ -46,4 +47,6 @@ class StonfiAPI(
         get() = provider.dex
     val wallets: WalletsApi
         get() = provider.wallets
+    val jetton: JettonApi
+        get() = provider.jetton
 }

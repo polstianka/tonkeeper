@@ -4,6 +4,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
+import com.tonapps.tonkeeper.fragment.swap.domain.model.recommendedForwardTon
 import com.tonapps.wallet.api.StonfiAPI
 import io.stonfiapi.models.AssetInfoSchema
 import io.stonfiapi.models.AssetKindSchema
@@ -111,24 +112,7 @@ class DexAssetsRepository(
     }
 
     private fun getRecommendedGasValues(sendAsset: DexAsset, receiveAsset: DexAsset): BigDecimal {
-        return getRecommendedForwardTon(sendAsset, receiveAsset) + BigDecimal("0.06")
-    }
-
-    private fun getRecommendedForwardTon(sendAsset: DexAsset, receiveAsset: DexAsset): BigDecimal {
-        return when {
-            sendAsset.type == DexAssetType.TON &&
-                    receiveAsset.type == DexAssetType.JETTON -> BigDecimal("0.215")
-
-            sendAsset.type == DexAssetType.JETTON &&
-                    receiveAsset.type == DexAssetType.JETTON -> BigDecimal("0.205")
-
-            sendAsset.type == DexAssetType.JETTON &&
-                    receiveAsset.type == DexAssetType.TON -> BigDecimal("0.125")
-
-            else -> throw IllegalStateException(
-                "illegal exchange detected: ${sendAsset.type} -> ${receiveAsset.type}"
-            )
-        }
+        return sendAsset.type.recommendedForwardTon(receiveAsset.type) + BigDecimal("0.06")
     }
 
     private fun AssetInfoSchema.isValid(): Boolean {

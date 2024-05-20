@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class EmulateStakingCase(
-    private val getStakeWalletTransferCase: GetStakeWalletTransferCase,
+    private val getStakeWalletTransferCase: CreateWalletTransferCase,
     private val api: API
 ) {
 
@@ -21,9 +21,9 @@ class EmulateStakingCase(
         amount: BigDecimal
     ): MessageConsequences = withContext(Dispatchers.IO) {
         val cell = pool.serviceType.addStakeCellProducer.produce()
-        val walletTransfer = getStakeWalletTransferCase.getWalletTransfer(
+        val walletTransfer = getStakeWalletTransferCase.execute(
             walletLegacy,
-            pool,
+            pool.address,
             amount,
             cell
         )

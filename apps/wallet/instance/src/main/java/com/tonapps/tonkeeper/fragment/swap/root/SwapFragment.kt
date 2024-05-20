@@ -158,7 +158,13 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     }
 
     private fun SwapEvent.NavigateToConfirm.handle() {
-        val fragment = ConfirmSwapFragment.newInstance(sendAsset, receiveAsset, amount, settings)
+        val fragment = ConfirmSwapFragment.newInstance(
+            sendAsset,
+            receiveAsset,
+            amount,
+            settings,
+            simulation
+        )
         navigation?.add(fragment)
     }
 

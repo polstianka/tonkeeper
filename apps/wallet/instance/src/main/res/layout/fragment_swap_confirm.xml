@@ -1,11 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <uikit.widget.ModalHeader
+        android:id="@+id/fragment_swap_confirm_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/confirm_swap"
-        android:id="@+id/fragment_swap_confirm_header"/>
+        android:text="@string/confirm_swap" />
 
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_content"
+        android:padding="16dp">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/fragment_swap_confirm_send_amount_fiat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor"
+                tools:text="$6,010.01" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
+                android:id="@+id/fragment_swap_confirm_send_token_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top" />
+
+            <TextView
+                android:id="@+id/fragment_swap_confirm_send_amount_crypto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.NUM2"
+                android:textAlignment="textEnd"
+                android:textColor="?textPrimaryColor"
+                tools:text="14,787.32" />
+        </uikit.widget.RowLayout>
+    </uikit.widget.ColumnLayout>
+
+
+    <uikit.widget.ColumnLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_content"
+        android:padding="16dp">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/fragment_swap_confirm_receive_amount_fiat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor"
+                tools:text="$6,010.01" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
+                android:id="@+id/fragment_swap_confirm_receive_token_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/fragment_swap_confirm_receive_amount_crypto"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.NUM2"
+                android:textAlignment="textEnd"
+                android:textColor="?textPrimaryColor"
+                tools:text="14,787.32" />
+        </uikit.widget.RowLayout>
+
+        <com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_swap_confirm_details"/>
+    </uikit.widget.ColumnLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <uikit.widget.RowLayout
+        android:id="@+id/fragment_swap_confirm_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <Button
+            android:id="@+id/fragment_swap_confirm_button_negative"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor" />
+
+        <Button
+            android:id="@+id/fragment_swap_confirm_button_positive"
+            style="@style/Widget.App.Button"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor" />
+    </uikit.widget.RowLayout>
 </uikit.widget.ColumnLayout>

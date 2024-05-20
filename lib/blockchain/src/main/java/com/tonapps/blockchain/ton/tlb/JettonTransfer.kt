@@ -13,14 +13,15 @@ import org.ton.tlb.TlbPrettyPrinter
 import org.ton.tlb.loadTlb
 import org.ton.tlb.providers.TlbConstructorProvider
 import org.ton.tlb.storeTlb
+import java.math.BigInteger
 
 data class JettonTransfer(
-    val queryId: Long,
+    val queryId: BigInteger,
     val coins: Coins,
     val toAddress: MsgAddressInt,
     val responseAddress: MsgAddressInt,
     val forwardAmount: Coins,
-    val comment: String?
+    val forwardPayload: Cell?
 ) : TlbObject {
 
     override fun print(printer: TlbPrettyPrinter): TlbPrettyPrinter = printer.type("JettonTransfer") {
@@ -29,7 +30,7 @@ data class JettonTransfer(
         field("toAddress", toAddress)
         field("responseAddress", responseAddress)
         field("forwardAmount", forwardAmount)
-        field("comment", comment)
+        field("forward payload", forwardPayload)
     }
 
     companion object : TlbConstructorProvider<JettonTransfer> by JettonTransferTlbConstructor {
@@ -53,11 +54,11 @@ private object JettonTransferTlbConstructor : TlbConstructor<JettonTransfer>(
         storeTlb(MsgAddressInt, value.responseAddress)
         storeBit(false)
         storeTlb(Coins, value.forwardAmount)
-        if (value.comment.isNullOrEmpty()) {
+        if (value.forwardPayload == null) {
             storeBit(false)
         } else {
             storeBit(true)
-            storeTlb(StringTlbConstructor, value.comment)
+            storeRef(value.forwardPayload)
         }
     }
 
@@ -65,13 +66,13 @@ private object JettonTransferTlbConstructor : TlbConstructor<JettonTransfer>(
         cellSlice: CellSlice
     ): JettonTransfer = cellSlice {
         loadUInt32()
-        val queryId = loadUInt64().toLong()
+        val queryId = loadUInt64().toLong().toBigInteger()
         val coins = loadTlb(Coins)
         val toAddress = loadTlb(MsgAddressInt)
         val responseAddress = loadTlb(MsgAddressInt)
         loadBit()
         val forwardAmount = loadTlb(Coins)
-        val comment = if (loadBit()) loadTlb(StringTlbConstructor) else null
+        val comment = if (loadBit()) loadRef() else null
         JettonTransfer(queryId, coins, toAddress, responseAddress, forwardAmount, comment)
     }
 }

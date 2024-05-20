@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
+import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
@@ -18,12 +19,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -90,6 +94,7 @@ class SwapViewModel(
             val (amount, settings) = b
             repository.emulateSwap(sendAsset, receiveAsset, amount, settings.slippagePercent)
         }
+        .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
 
     init {
@@ -164,11 +169,13 @@ class SwapViewModel(
         val receiveToken = _pickedReceiveAsset.value ?: return@launch
         val amount = sendAmount.value
         val settings = swapSettings.value
+        val simulation = simulation.first() as? SwapSimulation.Result ?: return@launch
         val event = SwapEvent.NavigateToConfirm(
             sendToken,
             receiveToken,
             settings,
-            amount
+            amount,
+            simulation
         )
         _events.emit(event)
     }

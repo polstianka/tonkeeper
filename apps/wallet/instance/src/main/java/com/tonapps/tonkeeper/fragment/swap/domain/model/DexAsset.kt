@@ -29,3 +29,21 @@ fun Long.formatCurrency(asset: DexAsset): String {
     val value = BigDecimal(this).movePointLeft(asset.decimals)
     return CurrencyFormatter.format(asset.symbol, value).toString()
 }
+
+fun DexAssetType.recommendedForwardTon(receiveType: DexAssetType): BigDecimal {
+    return when {
+
+        this == DexAssetType.TON &&
+                receiveType == DexAssetType.JETTON -> BigDecimal("0.215")
+
+        this == DexAssetType.JETTON &&
+                receiveType == DexAssetType.JETTON -> BigDecimal("0.205")
+
+        this == DexAssetType.JETTON &&
+                receiveType == DexAssetType.TON -> BigDecimal("0.125")
+
+        else -> throw IllegalStateException(
+            "illegal exchange detected: $this -> $receiveType"
+        )
+    }
+}

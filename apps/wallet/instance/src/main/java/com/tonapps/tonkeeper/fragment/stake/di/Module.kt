@@ -4,7 +4,7 @@ import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeListHelper
 import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeListItemMapper
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.EmulateStakingCase
-import com.tonapps.tonkeeper.fragment.stake.domain.GetStakeWalletTransferCase
+import com.tonapps.tonkeeper.fragment.stake.domain.CreateWalletTransferCase
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStateInitCase
 import com.tonapps.tonkeeper.fragment.stake.domain.StakeCase
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
@@ -18,6 +18,6 @@ val stakingModule = module {
     single { GetStateInitCase() }
     single { StakeCase(get(), get(), get()) }
     single { GetStateInitCase() }
-    single { GetStakeWalletTransferCase(get(), get()) }
+    single { CreateWalletTransferCase(get(), get()) }
     single { EmulateStakingCase(get(), get()) }
 }

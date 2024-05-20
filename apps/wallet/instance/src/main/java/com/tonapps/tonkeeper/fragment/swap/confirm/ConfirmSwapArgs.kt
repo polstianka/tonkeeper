@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.swap.confirm
 import android.os.Bundle
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
+import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.toBundle
 import com.tonapps.tonkeeper.fragment.swap.domain.model.toSwapSettings
 import uikit.base.BaseArgs
@@ -12,7 +13,8 @@ data class ConfirmSwapArgs(
     val sendAsset: DexAsset,
     val receiveAsset: DexAsset,
     val settings: SwapSettings,
-    val amount: BigDecimal
+    val amount: BigDecimal,
+    val simulation: SwapSimulation.Result
 ) : BaseArgs() {
 
     companion object {
@@ -20,6 +22,7 @@ data class ConfirmSwapArgs(
         private const val KEY_RECEIVE_ASSET = "KEY_RECEIVE_ASSET"
         private const val KEY_SETTINGS = "KEY_SETTINGS"
         private const val KEY_AMOUNT = "KEY_AMOUNT"
+        private const val KEY_SIMULATION = "KEY_SIMULATION"
     }
 
     override fun toBundle(): Bundle {
@@ -28,6 +31,7 @@ data class ConfirmSwapArgs(
             putParcelable(KEY_RECEIVE_ASSET, receiveAsset)
             putBundle(KEY_SETTINGS, settings.toBundle())
             putSerializable(KEY_AMOUNT, amount)
+            putParcelable(KEY_SIMULATION, simulation)
         }
     }
 
@@ -35,6 +39,7 @@ data class ConfirmSwapArgs(
         sendAsset = bundle.getParcelable(KEY_SEND_ASSET)!!,
         receiveAsset = bundle.getParcelable(KEY_RECEIVE_ASSET)!!,
         settings = bundle.getBundle(KEY_SETTINGS)!!.toSwapSettings(),
-        amount = bundle.getSerializable(KEY_AMOUNT) as BigDecimal
+        amount = bundle.getSerializable(KEY_AMOUNT) as BigDecimal,
+        simulation = bundle.getParcelable(KEY_SIMULATION)!!
     )
 }
