@@ -68,38 +68,11 @@
             android:layout_height="wrap_content"
             android:paddingBottom="12dp">
 
-            <uikit.widget.RowLayout
+            <com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
                 android:id="@+id/fragment_swap_new_send_token_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:background="@drawable/bg_button_tertiary"
-                android:minHeight="36dp"
-                android:padding="4dp">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/fragment_swap_new_send_icon"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    app:roundedCornerRadius="14dp"
-                    tools:background="#f00" />
-
-                <TextView
-                    android:id="@+id/fragment_swap_new_send_token_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginEnd="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAllCaps="true"
-                    android:textAppearance="@style/TextAppearance.Label1"
-                    android:textColor="?buttonTertiaryForegroundColor"
-                    tools:text="ton" />
-
-            </uikit.widget.RowLayout>
-
+                android:layout_gravity="top" />
 
             <View
                 android:layout_width="0dp"
@@ -157,40 +130,11 @@
             android:layout_height="wrap_content"
             android:paddingBottom="12dp">
 
-            <uikit.widget.RowLayout
-                android:id="@+id/fragment_swap_new_receive_token_button"
+            <com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:background="@drawable/bg_button_tertiary"
-                android:minHeight="36dp"
-                android:padding="4dp">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/fragment_swap_new_receive_icon"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    app:roundedCornerRadius="14dp"
-                    tools:background="#f00" />
-
-                <TextView
-                    android:id="@+id/fragment_swap_new_receive_token_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginEnd="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/choose"
-                    android:textAllCaps="true"
-                    android:textAppearance="@style/TextAppearance.Label1"
-                    android:textColor="?buttonTertiaryForegroundColor"
-                    tools:text="choose" />
-
-            </uikit.widget.RowLayout>
-
-
+                android:id="@+id/fragment_swap_new_receive_token_button"
+                android:layout_gravity="top"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -353,11 +297,11 @@
     <FrameLayout
         android:id="@+id/fragment_swap_new_footer"
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp">
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/fragment_swap_new_confirm_button"

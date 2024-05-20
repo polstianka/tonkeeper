@@ -17,6 +17,7 @@ import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsFragment
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
+import com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -40,22 +41,14 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_header)
     private val loaderView: ProcessTaskView?
         get() = view?.findViewById(R.id.fragment_swap_new_process_task_view)
-    private val sendAssetIcon: SimpleDraweeView?
-        get() = view?.findViewById(R.id.fragment_swap_new_send_icon)
-    private val sendAssetText: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_send_token_text)
     private val sendGroup: View?
         get() = view?.findViewById(R.id.fragment_swap_new_send_group)
     private val sendButton: View?
         get() = view?.findViewById(R.id.fragment_swap_new_send_token_button)
-    private val receiveButton: View?
+    private val receiveButton: SwapTokenButton?
         get() = view?.findViewById(R.id.fragment_swap_new_receive_token_button)
     private val swapButton: View?
         get() = view?.findViewById(R.id.fragment_swap_new_swap_button)
-    private val receiveAssetIcon: SimpleDraweeView?
-        get() = view?.findViewById(R.id.fragment_swap_new_receive_icon)
-    private val receiveAssetText: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_receive_token_text)
     private val sendInput: AmountInput?
         get() = view?.findViewById(R.id.fragment_swap_new_send_input)
     private val receiveInput: TextView?
@@ -84,6 +77,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_confirm_button)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_swap_new_footer)
+    private val sendTokenButton: SwapTokenButton?
+        get() = view?.findViewById(R.id.fragment_swap_new_send_token_button)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +111,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.isLoading) { updateLoading(it) }
-        observeFlow(viewModel.pickedSendAsset) { updateSendAsset(it) }
-        observeFlow(viewModel.pickedReceiveAsset) { updateReceiveAsset(it) }
+        observeFlow(viewModel.pickedSendAsset) { sendTokenButton?.asset = it }
+        observeFlow(viewModel.pickedReceiveAsset) { receiveButton?.asset = it }
         observeFlow(viewModel.pickedTokenBalance) { updateBalance(it) }
         observeFlow(viewModel.receiveAmount) { pair ->
             val text = when {
@@ -183,20 +178,6 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             AssetBalance.Loading,
             null -> balanceTextView?.text = ""
         }
-    }
-
-    private fun updateReceiveAsset(asset: DexAsset?) {
-        receiveAssetIcon?.isVisible = asset != null
-        asset?.imageUrl?.let { receiveAssetIcon?.setImageURI(it) }
-        val text = asset?.symbol ?: getString(LocalizationR.string.choose)
-        receiveAssetText?.text = text
-    }
-
-    private fun updateSendAsset(asset: DexAsset?) {
-        sendAssetIcon?.isVisible = asset != null
-        asset?.imageUrl?.let { sendAssetIcon?.setImageURI(it) }
-        val text = asset?.symbol ?: getString(LocalizationR.string.choose)
-        sendAssetText?.text = text
     }
 
     private fun updateLoading(isLoading: Boolean) {
