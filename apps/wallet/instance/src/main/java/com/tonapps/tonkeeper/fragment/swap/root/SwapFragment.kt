@@ -5,30 +5,27 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsFragment
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
+import com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
-import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
+import uikit.widget.HeaderView
 import uikit.widget.ProcessTaskView
-import java.math.BigDecimal
-import com.tonapps.wallet.localization.R as LocalizationR
 
 class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.BottomSheet {
 
@@ -57,28 +54,14 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_balance_label)
     private val receiveGroup: View?
         get() = view?.findViewById(R.id.fragment_swap_new_receive_group)
-    private val simulationGroup: View?
-        get() = view?.findViewById(R.id.fragment_swap_new_simulation_group)
-    private val simulationLoader: View?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_loader)
-    private val simulationDetails: View?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_details)
-    private val simulationDetailsExchangeRateTitle: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_details_exchange_rate_title)
-    private val simulationDetailsExchangeRateValue: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_details_exchange_rate_value)
-    private val simulationDetailsMinReceived: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_min_received)
-    private val simulationDetailsLiquidityProviderFee: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_liquidity_provider_fee)
-    private val simulationDetailsBlockchainFee: TextView?
-        get() = view?.findViewById(R.id.fragment_swap_new_exchange_simulation_blockchain_fee)
     private val confirmButton: Button?
         get() = view?.findViewById(R.id.fragment_swap_new_confirm_button)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_swap_new_footer)
     private val sendTokenButton: SwapTokenButton?
         get() = view?.findViewById(R.id.fragment_swap_new_send_token_button)
+    private val detailsView: SwapDetailsView?
+        get() = view?.findViewById(R.id.fragment_swap_new_swap_details)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,37 +108,13 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     }
 
     private fun SwapSimulation?.updateSimulation() {
-        simulationGroup?.isVisible = this != null
+        detailsView?.updateState(this)
         when (this) {
             SwapSimulation.Loading -> {
-                simulationLoader?.isVisible = true
-                simulationDetails?.isVisible = false
                 confirmButton?.isActivated = false
                 confirmButton?.isEnabled = false
             }
             is SwapSimulation.Result -> {
-                simulationLoader?.isVisible = false
-                simulationDetails?.isVisible = true
-                simulationDetailsExchangeRateTitle?.text = CurrencyFormatter.format(
-                    sentAsset.symbol,
-                    BigDecimal.ONE
-                )
-                simulationDetailsExchangeRateValue?.text = CurrencyFormatter.format(
-                    receivedAsset.symbol,
-                    exchangeRate
-                )
-                simulationDetailsMinReceived?.text = CurrencyFormatter.format(
-                    receivedAsset.symbol,
-                    minimumReceivedAmount
-                )
-                simulationDetailsLiquidityProviderFee?.text = CurrencyFormatter.format(
-                    receivedAsset.symbol,
-                    liquidityProviderFee
-                )
-                simulationDetailsBlockchainFee?.text = CurrencyFormatter.format(
-                    "TON",
-                    blockchainFee
-                )
                 confirmButton?.isActivated = true
                 confirmButton?.isEnabled = true
                 confirmButton?.text = getString(

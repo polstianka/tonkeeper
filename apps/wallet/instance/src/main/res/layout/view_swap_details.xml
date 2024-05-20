@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.widget.FrameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <uikit.widget.ProcessTaskView
+        android:id="@+id/view_swap_details_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:visibility="gone" />
+
+    <uikit.widget.ColumnLayout
+        android:id="@+id/view_swap_details_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <uikit.widget.DividerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/view_swap_details_rate_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor"
+                tools:text="1 TON" />
+
+            <TextView
+                android:id="@+id/view_swap_details_rate_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="~6.01 USDT" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.DividerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minimum_received"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/view_swap_details_min_received"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="~6.01 USDT" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/liquidity_provider_fee"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/view_swap_details_liquidity_provider_fee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="~6.01 USDT" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blockchain_fee"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/view_swap_details_blockchain_fee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="~6.01 USDT" />
+        </uikit.widget.RowLayout>
+    </uikit.widget.ColumnLayout>
+</merge>
