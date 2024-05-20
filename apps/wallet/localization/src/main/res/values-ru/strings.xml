@@ -282,4 +282,10 @@
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
     <string name="expert_mode">Expert mode</string>
     <string name="expert_mode_description">Allows high price impact trades. Use at your own risk.</string>
+    <string name="price_impact">Price impact</string>
+    <string name="minimum_received">Minimum received</string>
+    <string name="liquidity_provider_fee">Liquidity provider fee</string>
+    <string name="blockchain_fee">Blockchain fee</string>
+    <string name="route">Route</string>
+    <string name="provider">Provider</string>
 </resources>

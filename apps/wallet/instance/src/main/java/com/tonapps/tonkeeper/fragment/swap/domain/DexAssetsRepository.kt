@@ -3,15 +3,18 @@ package com.tonapps.tonkeeper.fragment.swap.domain
 import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
+import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.wallet.api.StonfiAPI
 import io.stonfiapi.models.AssetInfoSchema
 import io.stonfiapi.models.AssetKindSchema
+import io.stonfiapi.models.DexReverseSimulateSwap200Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 class DexAssetsRepository(
     private val api: StonfiAPI
@@ -69,6 +72,63 @@ class DexAssetsRepository(
         }
         val balance = assetBalances.firstOrNull { it.asset.contractAddress == contractAddress }
         emit(balance)
+    }
+
+    suspend fun emulateSwap(
+        sendAsset: DexAsset,
+        receiveAsset: DexAsset,
+        amount: BigDecimal,
+        slippageTolerancePercent: Int
+    ) = flow {
+        emit(SwapSimulation.Loading)
+        kotlinx.coroutines.delay(1000L)
+        val result = withContext(Dispatchers.IO) {
+            api.dex.dexSimulateSwap(
+                sendAsset.contractAddress,
+                receiveAsset.contractAddress,
+                amount.movePointRight(sendAsset.decimals)
+                    .setScale(0, RoundingMode.FLOOR)
+                    .toPlainString(),
+                BigDecimal(slippageTolerancePercent).movePointLeft(2).toPlainString()
+            )
+        }
+        emit(result.toDomain(sendAsset, receiveAsset))
+    }
+
+    private fun DexReverseSimulateSwap200Response.toDomain(
+        sentAsset: DexAsset,
+        receiveAsset: DexAsset
+    ): SwapSimulation.Result {
+        return SwapSimulation.Result(
+            exchangeRate = BigDecimal(swapRate),
+            priceImpact = BigDecimal(priceImpact),
+            minimumReceivedAmount = BigDecimal(minAskUnits).movePointLeft(receiveAsset.decimals),
+            receivedAsset = receiveAsset,
+            liquidityProviderFee = BigDecimal(feeUnits).movePointLeft(receiveAsset.decimals),
+            sentAsset = sentAsset,
+            blockchainFee = getRecommendedGasValues(sentAsset, receiveAsset)
+        )
+    }
+
+    private fun getRecommendedGasValues(sendAsset: DexAsset, receiveAsset: DexAsset): BigDecimal {
+        return getRecommendedForwardTon(sendAsset, receiveAsset) + BigDecimal("0.06")
+    }
+
+    private fun getRecommendedForwardTon(sendAsset: DexAsset, receiveAsset: DexAsset): BigDecimal {
+        return when {
+            sendAsset.type == DexAssetType.TON &&
+                    receiveAsset.type == DexAssetType.JETTON -> BigDecimal("0.215")
+
+            sendAsset.type == DexAssetType.JETTON &&
+                    receiveAsset.type == DexAssetType.JETTON -> BigDecimal("0.205")
+
+            sendAsset.type == DexAssetType.JETTON &&
+                    receiveAsset.type == DexAssetType.TON -> BigDecimal("0.125")
+
+            else -> throw IllegalStateException(
+                "illegal exchange detected: ${sendAsset.type} -> ${receiveAsset.type}"
+            )
+        }
     }
 
     private fun AssetInfoSchema.isValid(): Boolean {

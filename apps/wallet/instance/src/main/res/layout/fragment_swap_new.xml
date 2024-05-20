@@ -206,6 +206,126 @@
                 android:textSize="28sp"
                 tools:text="0" />
         </uikit.widget.RowLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_swap_new_simulation_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <uikit.widget.ProcessTaskView
+                android:id="@+id/fragment_swap_new_exchange_simulation_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                tools:visibility="gone" />
+
+            <uikit.widget.ColumnLayout
+                android:id="@+id/fragment_swap_new_exchange_simulation_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <uikit.widget.DividerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:id="@+id/fragment_swap_new_exchange_simulation_details_exchange_rate_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor"
+                        tools:text="1 TON" />
+
+                    <TextView
+                        android:id="@+id/fragment_swap_new_exchange_simulation_details_exchange_rate_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="~6.01 USDT" />
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.DividerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/minimum_received"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor" />
+
+                    <TextView
+                        android:id="@+id/fragment_swap_new_exchange_simulation_min_received"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="~6.01 USDT" />
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/liquidity_provider_fee"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor" />
+
+                    <TextView
+                        android:id="@+id/fragment_swap_new_exchange_simulation_liquidity_provider_fee"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="~6.01 USDT" />
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/blockchain_fee"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor" />
+
+                    <TextView
+                        android:id="@+id/fragment_swap_new_exchange_simulation_blockchain_fee"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="~6.01 USDT" />
+                </uikit.widget.RowLayout>
+            </uikit.widget.ColumnLayout>
+        </FrameLayout>
     </uikit.widget.ColumnLayout>
 
     <ImageView
@@ -227,6 +347,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_swap_new_header" />
+        app:layout_constraintTop_toBottomOf="@id/fragment_swap_new_header"
+        tools:visibility="gone" />
 
+    <FrameLayout
+        android:id="@+id/fragment_swap_new_footer"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <Button
+            android:id="@+id/fragment_swap_new_confirm_button"
+            style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_action"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
