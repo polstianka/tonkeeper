@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.details
 
 import androidx.lifecycle.ViewModel
 import com.tonapps.wallet.data.stake.StakeRepository

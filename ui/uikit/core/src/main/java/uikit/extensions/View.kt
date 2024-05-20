@@ -2,6 +2,7 @@ package uikit.extensions
 
 import android.animation.ValueAnimator
 import android.graphics.Outline
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -15,6 +16,7 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.Px
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
@@ -135,6 +137,31 @@ fun View.circle() {
     clipToOutline = true
 }
 
+fun View.cutRightBottom(@Px radius: Float, @Px offset: Float) {
+    outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val path = Path()
+            val width = view.width
+            val height = view.height
+            path.addRect(
+                0f,
+                0f,
+                width.toFloat(),
+                height.toFloat(),
+                Path.Direction.CW
+            )
+            path.addCircle(
+                width - offset,
+                height - offset,
+                radius,
+                Path.Direction.CCW
+            )
+            outline.setConvexPath(path)
+        }
+    }
+    clipToOutline = true
+}
+
 fun View.getDrawable(@DrawableRes resId: Int): Drawable {
     return AppCompatResources.getDrawable(context, resId)!!
 }
@@ -238,11 +265,13 @@ fun View.reject() {
     hapticReject()
 }
 
-inline fun View.doKeyboardAnimation(crossinline block: (
-    offset: Int,
-    progress: Float,
-    isShowing: Boolean
-) -> Unit) {
+inline fun View.doKeyboardAnimation(
+    crossinline block: (
+        offset: Int,
+        progress: Float,
+        isShowing: Boolean
+    ) -> Unit
+) {
     val animationCallback = object : KeyboardAnimationCallback(this) {
         override fun onKeyboardOffsetChanged(offset: Int, progress: Float, isShowing: Boolean) {
             block(offset, progress, isShowing)

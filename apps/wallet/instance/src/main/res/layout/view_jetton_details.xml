@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/offsetMedium"
+    android:background="@drawable/bg_wallet_bubble_no_ripple"
+    android:paddingVertical="8dp">
+
+    <com.tonapps.tonkeeper.ui.screen.stake.view.PoolDetailView
+        android:id="@+id/first_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.tonapps.tonkeeper.ui.screen.stake.view.PoolDetailView
+        android:id="@+id/second_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</uikit.widget.ColumnLayout>

@@ -31,7 +31,6 @@ import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.GooglePushService
 import com.tonapps.wallet.data.settings.SettingsRepository
-import com.tonapps.wallet.data.stake.StakeRepository
 import com.tonapps.wallet.data.swap.WalletAssetsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
@@ -80,7 +79,6 @@ class RootViewModel(
     private val walletPickerAdapter: WalletPickerAdapter,
     private val tokenRepository: TokenRepository,
     private val walletAssetsRepository: WalletAssetsRepository,
-    private val stakeRepository: StakeRepository
 ) : AndroidViewModel(application) {
 
     data class Passcode(
@@ -151,7 +149,6 @@ class RootViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             walletAssetsRepository.getRemote()
-            stakeRepository.getRemote()
         }
     }
 

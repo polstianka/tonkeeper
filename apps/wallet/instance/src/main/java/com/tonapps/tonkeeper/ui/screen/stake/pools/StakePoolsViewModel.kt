@@ -1,4 +1,4 @@
-package com.tonapps.tonkeeper.ui.screen.stake
+package com.tonapps.tonkeeper.ui.screen.stake.pools
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

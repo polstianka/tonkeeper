@@ -146,6 +146,7 @@
     <string name="options">Опции</string>
     <string name="liquid_staking">Liquid Staking</string>
     <string name="links">Ссылки</string>
+    <string name="staked_jetton_description">Когда вы стейкаете TON в пуле Tonstakers, вы получаете токен tsTON, который представляет собой вашу долю в пуле. По мере того как пул накапливает прибыль, ваш tsTON представляет собой большее количество TON.</string>
     <string name="slippage">Скольжение</string>
     <string name="slippage_description">Величина, на которую цена может измениться в неблагоприятную сторону до возврата сделки</string>
     <string name="recipient">Получатель</string>

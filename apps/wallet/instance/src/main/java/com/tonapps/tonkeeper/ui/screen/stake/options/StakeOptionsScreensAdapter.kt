@@ -2,8 +2,8 @@ package com.tonapps.tonkeeper.ui.screen.stake.options
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.tonapps.tonkeeper.ui.screen.stake.PoolDetailsScreen
-import com.tonapps.tonkeeper.ui.screen.stake.StakePoolsScreen
+import com.tonapps.tonkeeper.ui.screen.stake.details.PoolDetailsScreen
+import com.tonapps.tonkeeper.ui.screen.stake.pools.StakePoolsScreen
 
 class StakeOptionsScreensAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

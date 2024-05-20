@@ -181,6 +181,7 @@
     <string name="fee_placeholder" translatable="false">≈ %1$s</string>
     <string name="community">Community</string>
     <string name="twitter" translatable="false">Twitter</string>
+    <string name="staked_jetton_description">When you stake TON in a Tonstakers pool, you receive a token called tsTON that represents your share in the pool. As the pool accumulates profits, your tsTON represents larger amount of TON.</string>
 
     <string name="slippage">Slippage</string>
     <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>

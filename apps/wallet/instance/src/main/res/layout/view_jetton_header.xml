@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="130dp"
-    android:padding="@dimen/offsetMedium"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="horizontal"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="@dimen/offsetMedium">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -44,13 +47,30 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/icon"
+    <FrameLayout
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="@drawable/bg_oval"
-        android:backgroundTint="?attr/backgroundContentColor"
-        app:roundAsCircle="true" />
+        android:layout_gravity="center">
 
+        <uikit.widget.FrescoView
+            android:id="@+id/icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_oval"
+            android:backgroundTint="?attr/backgroundContentTintColor"
+            app:roundAsCircle="true" />
+
+        <uikit.widget.FrescoView
+            android:id="@+id/badge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/bg_oval"
+            android:backgroundTint="?attr/backgroundContentTintColor"
+            android:visibility="gone"
+            app:roundAsCircle="true"
+            tools:visibility="visible" />
+    </FrameLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

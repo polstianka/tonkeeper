@@ -7,17 +7,19 @@ import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.api.entity.StakePoolsEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.entities.WalletEvent
 import com.tonapps.wallet.data.core.ScreenCacheSource
-import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.wallet.data.push.entities.AppPushEntity
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.stake.StakeRepository
 import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +50,8 @@ class WalletViewModel(
     private val networkMonitor: NetworkMonitor,
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
-    private val screenCacheSource: ScreenCacheSource
+    private val screenCacheSource: ScreenCacheSource,
+    private val stakeRepository: StakeRepository,
 ): ViewModel() {
 
     private data class Tokens(
@@ -62,6 +65,10 @@ class WalletViewModel(
 
     private val _tokensFlow = MutableStateFlow<Tokens?>(null)
     private val tokensFlow = _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }
+
+    private val _poolsFlow = MutableStateFlow<StakePoolsEntity?>(null)
+    private val poolsFlow =
+        _poolsFlow.asStateFlow().filterNotNull().filter { it.pools.isNotEmpty() }
 
     private val _lastLtFlow = MutableStateFlow<Long>(0)
     private val lastLtFlow = _lastLtFlow.asStateFlow()
@@ -124,7 +131,9 @@ class WalletViewModel(
             if (!isOnline) {
                 return@combine null
             }
-
+            getRemotePools()?.let {
+                _poolsFlow.value = it
+            }
             getRemoteTokens(wallet, currency, pushes)?.let { tokens ->
                 setStatus(Item.Status.Default)
                 _tokensFlow.value = tokens
@@ -134,8 +143,14 @@ class WalletViewModel(
         combine(
             tokensFlow,
             statusFlow,
-        ) { tokens, status ->
-            val (fiatBalance, uiItems) = buildUiItems(tokens.currency, tokens.wallet.testnet, tokens.list)
+            poolsFlow
+        ) { tokens, status, pools ->
+            val (fiatBalance, uiItems) = buildUiItems(
+                tokens.currency,
+                tokens.wallet.testnet,
+                tokens.list,
+                pools
+            )
             val balanceFormat = if (tokens.wallet.testnet) {
                 CurrencyFormatter.formatFiat("TON", fiatBalance)
             } else {
@@ -202,6 +217,14 @@ class WalletViewModel(
         }
     }
 
+    private suspend fun getRemotePools(): StakePoolsEntity? = withContext(Dispatchers.IO) {
+        try {
+            stakeRepository.getRemote()
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
     private fun getApps(wallet: WalletEntity, events: List<AppPushEntity>): List<DAppEntity> {
         val dappUrls = events.map { it.dappUrl }
         return tonConnectRepository.getApps(dappUrls, wallet)
@@ -211,6 +234,7 @@ class WalletViewModel(
         currency: WalletCurrency,
         testnet: Boolean,
         tokens: List<AccountTokenEntity>,
+        pools: StakePoolsEntity,
     ): Pair<Float, List<Item.Token>> {
         var fiatBalance = 0f
         if (testnet) {
@@ -222,22 +246,28 @@ class WalletViewModel(
 
             val balanceFormat = CurrencyFormatter.format(value = token.balance.value)
             val fiatFormat = CurrencyFormatter.formatFiat(currency.code, token.fiat)
+            val poolInfo = getPoolInfo(token, pools)
+            val isStaked = poolInfo != null
+            val symbol = if (isStaked) "Staked" else token.symbol
+            val subtitle = if (isStaked) poolInfo!!.name
+            else CurrencyFormatter.formatFiat(currency.code, token.rateNow)
 
             val item = Item.Token(
                 position = ListCell.getPosition(tokens.size, index),
                 iconUri = token.imageUri,
                 address = token.address,
-                symbol = token.symbol,
+                symbol = symbol,
                 name = token.name,
                 balance = token.balance.value,
                 balanceFormat = balanceFormat,
                 fiat = token.fiat,
                 fiatFormat = fiatFormat,
-                rate = CurrencyFormatter.formatFiat(currency.code, token.rateNow),
+                rate = subtitle,
                 rateDiff24h = token.rateDiff24h,
                 verified = token.verified,
                 testnet = testnet,
-                hiddenBalance = settings.hiddenBalances
+                hiddenBalance = settings.hiddenBalances,
+                staked = isStaked,
             )
             uiItems.add(item)
         }
@@ -279,6 +309,14 @@ class WalletViewModel(
 
     private fun setCached(wallet: WalletEntity, items: List<Item>) {
         screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, items)
+    }
+
+    private fun getPoolInfo(
+        token: AccountTokenEntity,
+        pools: StakePoolsEntity
+    ): StakePoolsEntity.PoolInfo? {
+        val pool = pools.pools.firstOrNull { it.liquidJettonMaster == token.address }
+        return pool
     }
 
     companion object {
