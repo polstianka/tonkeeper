@@ -19,12 +19,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SwapViewModel(
@@ -99,14 +101,28 @@ class SwapViewModel(
         emit(_events, event)
     }
 
-    fun onSwapTokensClicked() {
+    fun onSwapTokensClicked() = viewModelScope.launch {
         val toSend = _pickedSendAsset.value
+        val toReceiveAmount = receiveAmount.first()
         _pickedSendAsset.value = _pickedReceiveAsset.value
         _pickedReceiveAsset.value = toSend
+        when (toReceiveAmount) {
+            null -> Unit
+            else -> {
+                sendAmount.value = toReceiveAmount.second
+                ignoreNextUpdate = true
+                _events.emit(SwapEvent.FillInput(toReceiveAmount.second.setScale(2, RoundingMode.FLOOR).toPlainString()))
+            }
+        }
     }
 
+    private var ignoreNextUpdate = false
     fun onSendAmountChanged(amount: BigDecimal) {
         if (sendAmount.value == amount) return
+        if (ignoreNextUpdate) {
+            ignoreNextUpdate = false
+            return
+        }
         sendAmount.value = amount
     }
 

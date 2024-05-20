@@ -135,7 +135,12 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             SwapEvent.NavigateBack -> finish()
             is SwapEvent.NavigateToPickAsset -> event.handle()
             is SwapEvent.NavigateToSwapSettings -> event.handle()
+            is SwapEvent.FillInput -> event.handle()
         }
+    }
+
+    private fun SwapEvent.FillInput.handle() {
+        sendInput?.setText(text)
     }
 
     private fun SwapEvent.NavigateToSwapSettings.handle() {

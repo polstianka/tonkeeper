@@ -6,6 +6,7 @@ import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 sealed class SwapEvent {
 
     object NavigateBack : SwapEvent()
+    data class FillInput(val text: String) : SwapEvent()
     data class NavigateToPickAsset(val type: PickAssetType) : SwapEvent()
     data class NavigateToSwapSettings(val settings: SwapSettings) : SwapEvent()
 }
