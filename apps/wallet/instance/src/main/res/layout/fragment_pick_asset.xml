@@ -9,6 +9,12 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_token" />
 
+    <uikit.widget.SearchInput
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/fragment_pick_asset_search_input"/>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:id="@+id/fragment_pick_asset_rv_container"

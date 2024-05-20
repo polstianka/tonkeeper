@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.applyNavBottomPadding
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
+import uikit.widget.SearchInput
 
 class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragment.BottomSheet {
 
@@ -30,6 +31,8 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
     private val adapter = TokenAdapter { viewModel.onItemClicked(it) }
     private val recyclerViewContainer: View?
         get() = view?.findViewById(R.id.fragment_pick_asset_rv_container)
+    private val searchInput: SearchInput?
+        get() = view?.findViewById(R.id.fragment_pick_asset_search_input)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,8 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
         recyclerView?.adapter = adapter
 
         recyclerViewContainer?.applyNavBottomPadding()
+
+        searchInput?.doOnTextChanged = { viewModel.onSearchTextChanged(it) }
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.items) { adapter.submitList(it) }

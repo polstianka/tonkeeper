@@ -36,9 +36,9 @@ class ConfirmSwapViewModel(
         createStonfiSwapMessageCase.execute(
             args.sendAsset,
             args.receiveAsset,
-            args.settings,
             args.amount,
-            wallet
+            wallet,
+            args.simulation
         )
     }
 

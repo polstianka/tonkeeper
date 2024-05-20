@@ -126,11 +126,13 @@ class SwapViewModel(
 
     fun onSwapTokensClicked() = viewModelScope.launch {
         val toSend = _pickedSendAsset.value
+        val toSendAmount = sendAmount.value
         val toReceiveAmount = receiveAmount.first()
         _pickedSendAsset.value = _pickedReceiveAsset.value
         _pickedReceiveAsset.value = toSend
-        when (toReceiveAmount) {
-            null -> Unit
+        when {
+            toSendAmount == BigDecimal.ZERO -> Unit
+            toReceiveAmount == null -> Unit
             else -> {
                 sendAmount.value = toReceiveAmount.second
                 ignoreNextUpdate = true

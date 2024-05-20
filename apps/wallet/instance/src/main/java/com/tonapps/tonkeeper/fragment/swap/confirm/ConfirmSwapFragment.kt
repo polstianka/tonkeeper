@@ -96,7 +96,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
         receiveAmountFiatTextView?.text = CurrencyFormatter.format("USD", sendAmountFiat)
         receiveTokenButton?.asset = args.receiveAsset
-        val receiveAmountCrypto = args.amount * args.sendAsset.dexUsdPrice / args.sendAsset.dexUsdPrice
+        val receiveAmountCrypto = args.amount * args.sendAsset.dexUsdPrice / args.receiveAsset.dexUsdPrice
         receiveAmountCryptoTextView?.text = CurrencyFormatter.format(receiveAmountCrypto, 2)
         swapDetailsView?.updateState(args.simulation)
     }

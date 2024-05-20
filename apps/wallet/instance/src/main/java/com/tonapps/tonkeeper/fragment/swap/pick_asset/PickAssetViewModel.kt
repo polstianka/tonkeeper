@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
+import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListHelper
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListItem
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.list.ListCell
@@ -15,7 +17,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PickAssetViewModel(
-    private val dexAssetsRepository: DexAssetsRepository
+    private val dexAssetsRepository: DexAssetsRepository,
+    private val listHelper: TokenListHelper
 ) : ViewModel() {
 
     private val args = MutableSharedFlow<PickAssetArgs>(replay = 1)
@@ -23,21 +26,12 @@ class PickAssetViewModel(
 
     val events: Flow<PickAssetEvent>
         get() = _events
-    val items = dexAssetsRepository.nonCommunityItems
-        .map { list ->
-            list.mapIndexed { index, item ->
-                TokenListItem(
-                    model = item,
-                    iconUrl = item.imageUrl,
-                    symbol = item.symbol,
-                    amountCrypto = "",
-                    name = item.displayName,
-                    amountFiat = "",
-                    amountCryptoColor = com.tonapps.uikit.color.R.attr.textPrimaryColor,
-                    position = ListCell.getPosition(list.size, index)
-                )
-            }
-        }
+    val items = listHelper.items
+
+    init {
+        observeFlow(dexAssetsRepository.nonCommunityItems) { listHelper.submitItems(it) }
+    }
+
     fun provideArgs(args: PickAssetArgs) {
         emit(this.args, args)
     }
@@ -50,5 +44,10 @@ class PickAssetViewModel(
         val args = args.first()
         val event = PickAssetEvent.ReturnResult(item.model, args.type)
         _events.emit(event)
+    }
+
+    fun onSearchTextChanged(text: CharSequence?) {
+        text ?: return
+        listHelper.setSearchText(text.toString())
     }
 }

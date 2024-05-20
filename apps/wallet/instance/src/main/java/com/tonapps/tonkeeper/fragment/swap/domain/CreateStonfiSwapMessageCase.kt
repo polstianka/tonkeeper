@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.CreateWalletTransferCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
+import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.tonkeeper.fragment.swap.domain.model.recommendedForwardTon
 import com.tonapps.wallet.api.API
@@ -42,16 +43,13 @@ class CreateStonfiSwapMessageCase(
     suspend fun execute(
         sendAsset: DexAsset,
         receiveAsset: DexAsset,
-        settings: SwapSettings,
         offerAmount: BigDecimal,
-        walletLegacy: WalletLegacy
+        walletLegacy: WalletLegacy,
+        simulation: SwapSimulation.Result
     ) = withContext(Dispatchers.IO) {
         val userWalletAddress = walletLegacy.address
 
-        val a = offerAmount * sendAsset.dexUsdPrice / receiveAsset.dexUsdPrice
-        val b = BigDecimal(settings.slippagePercent).movePointLeft(2)
-        val c = a * (BigDecimal.ONE - b)
-        val minAskAmount = c.toCoins(receiveAsset.decimals)
+        val minAskAmount = simulation.minimumReceivedAmount.toCoins(receiveAsset.decimals)
 
         val queryId = TransactionData.getWalletQueryId()
         val jettonToWalletAddress = getJettonToWalletAddress(
