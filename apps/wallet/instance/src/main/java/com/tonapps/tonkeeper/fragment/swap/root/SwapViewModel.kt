@@ -56,30 +56,19 @@ class SwapViewModel(
             repository.getAssetBalance(wallet.address, asset.contractAddress)
         }
     }
-    private val exchangeRate = combine(pickedSendAsset, pickedReceiveAsset) { toSend, toReceive ->
-        when {
-            toSend == null -> null
-            toReceive == null -> null
-            else -> toSend to toReceive
-        }
-    }.filterNotNull()
-        .flatMapLatest { (toSend, toReceive) ->
-            getRateFlowCase.execute(
-                initialTokens = listOf(
-                    toSend.contractAddress,
-                    toReceive.contractAddress
-                )
-            ).map { Triple(it, toSend, toReceive) }
-        }
     val receiveAmount = combine(
         sendAmount,
-        exchangeRate,
-    ) { amount, (rate, toSend, toReceive) ->
-        val sendRate = rate.rate(toSend.contractAddress)!!
-        val receiveRate = rate.rate(toReceive.contractAddress)!!
-        val sendAmount = sendRate.value * amount
-        val receiveAmount = sendAmount / receiveRate.value
-        receiveAmount to toReceive.symbol
+        pickedSendAsset,
+        pickedReceiveAsset
+    ) { amount, sendAsset, receiveAsset  ->
+        when {
+            sendAsset == null -> null
+            receiveAsset == null -> null
+            else -> {
+                val amount = amount * sendAsset.dexUsdPrice / receiveAsset.dexUsdPrice
+                receiveAsset to amount
+            }
+        }
     }
 
 

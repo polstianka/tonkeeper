@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 
 class DexAssetsRepository(
     private val api: StonfiAPI
@@ -34,8 +35,7 @@ class DexAssetsRepository(
         val notCommunity = mutableListOf<AssetInfoSchema>()
         response.assetList.forEach { asset ->
             when {
-                asset.blacklisted -> Unit
-                asset.deprecated -> Unit
+                !asset.isValid() -> Unit
                 asset.community -> community.add(asset)
                 else -> notCommunity.add(asset)
             }
@@ -61,13 +61,18 @@ class DexAssetsRepository(
             val assets = withContext(Dispatchers.IO) {
                 api.wallets.getWalletAssets(walletAddress)
                     .assetList
-                    .map { AssetBalance.Entity(it.toDomain(), it.balance?.toLongOrNull() ?: 0L) }
+                    .filter { it.isValid() && it.balance != null }
+                    .map { AssetBalance.Entity(it.toDomain(), it.balance!!.toLongOrNull() ?: 0L) }
             }
             assetBalances.clear()
             assetBalances.addAll(assets)
         }
         val balance = assetBalances.firstOrNull { it.asset.contractAddress == contractAddress }
         emit(balance)
+    }
+
+    private fun AssetInfoSchema.isValid(): Boolean {
+        return dexPriceUsd != null && !blacklisted && !deprecated
     }
 
     private fun AssetInfoSchema.toDomain(): DexAsset {
@@ -79,7 +84,8 @@ class DexAssetsRepository(
             type = kind.toDomain(),
             symbol = symbol,
             imageUrl = imageUrl!!,
-            displayName = displayName!!
+            displayName = displayName!!,
+            dexUsdPrice = BigDecimal(dexPriceUsd)
         )
     }
 

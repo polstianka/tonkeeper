@@ -16,6 +16,7 @@ data class DexAsset(
     val symbol: String,
     val imageUrl: String,
     val displayName: String,
+    val dexUsdPrice: BigDecimal
 ): Parcelable
 
 enum class DexAssetType {

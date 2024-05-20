@@ -91,8 +91,12 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         observeFlow(viewModel.pickedSendAsset) { updateSendAsset(it) }
         observeFlow(viewModel.pickedReceiveAsset) { updateReceiveAsset(it) }
         observeFlow(viewModel.pickedTokenBalance) { updateBalance(it) }
-        observeFlow(viewModel.receiveAmount) { (amount, token) ->
-            receiveInput?.text = CurrencyFormatter.format(token, amount)
+        observeFlow(viewModel.receiveAmount) { pair ->
+            val text = when {
+                pair == null ->  ""
+                else ->  CurrencyFormatter.format(pair.first.symbol, pair.second)
+            }
+            receiveInput?.text = text
         }
     }
 
