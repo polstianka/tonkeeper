@@ -103,6 +103,12 @@ class StakeViewModel(
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
+    fun setAddress(address: String?) {
+        address?.let {
+            repository.select(it)
+        }
+    }
+
     fun selectToken(tokenAddress: String) {
         _uiState.update {
             it.copy(
@@ -138,7 +144,7 @@ class StakeViewModel(
 
             val body = when (poolInfo.implementation) {
                 PoolImplementationType.whales -> Transfer.stakeDepositWhales(queryId)
-                PoolImplementationType.tf -> Transfer.stakeDepositTf(queryId)
+                PoolImplementationType.tf -> Transfer.stakeDepositTf()
                 PoolImplementationType.liquidTF -> Transfer.stakeDepositLiquidTf(queryId)
             }
 

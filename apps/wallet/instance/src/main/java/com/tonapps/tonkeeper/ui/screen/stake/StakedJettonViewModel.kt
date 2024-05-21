@@ -1,12 +1,13 @@
 package com.tonapps.tonkeeper.ui.screen.stake
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
-import com.tonapps.tonkeeper.api.getAddress
 import com.tonapps.tonkeeper.api.jetton.JettonRepository
 import com.tonapps.tonkeeper.api.parsedBalance
+import com.tonapps.tonkeeper.api.symbol
 import com.tonapps.tonkeeper.api.withRetry
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
@@ -20,6 +21,7 @@ import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.stake.StakeRepository
+import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.localization.Localization
 import core.ResourceManager
 import io.tonapi.models.AccountEvents
@@ -40,6 +42,7 @@ class StakedJettonViewModel(
     private val settingsRepository: SettingsRepository,
     private val stakeRepository: StakeRepository,
     private val resourceManager: ResourceManager,
+    private val tokenRepository: TokenRepository,
     private val api: API
 ) : ViewModel() {
 
@@ -49,16 +52,16 @@ class StakedJettonViewModel(
     fun load(address: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = walletManager.getWalletInfo() ?: error("Wallet not found")
-            val accountId = wallet.accountId
-            val jetton = jettonRepository.getByAddress(accountId, address, wallet.testnet)
-                ?: throw IllegalStateException("Jetton not found")
+            val jetton = jettonRepository.getByAddress(wallet.accountId, address, wallet.testnet)
+                ?: error("Jetton not found")
             val currency = settingsRepository.currency
-            val balance = jetton.parsedBalance
-            val jettonAddress = jetton.getAddress(wallet.testnet)
+            val token = tokenRepository.get(currency, wallet.accountId, wallet.testnet)
+                .first { it.address == address }
 
-            val rates = ratesRepository.getRates(currency, address)
+            val currencyBalance = ratesRepository
+                .getRates(currency, address)
+                .convert(address, jetton.parsedBalance)
 
-            val currencyBalance = rates.convert(address, balance)
             val historyItems = getEvents(wallet, address)
 
             val stakePoolsEntity = stakeRepository.get()
@@ -72,13 +75,17 @@ class StakedJettonViewModel(
                 stakePoolsEntity.implementations.getValue(pool.implementation.value)
             val links = implementation.socials + implementation.url
 
+            val formatFiat = CurrencyFormatter.formatFiat(currency.code, currencyBalance)
+            val rateFormat = CurrencyFormatter.formatRate(currency.code, token.rateNow)
+
             _uiState.update {
                 it.copy(
                     walletAddress = wallet.address,
+                    poolAddress = pool.address,
                     walletType = wallet.type,
                     asyncState = AsyncState.Default,
                     jetton = jetton,
-                    currencyBalance = CurrencyFormatter.formatFiat(currency.code, currencyBalance),
+                    currencyBalance = formatFiat,
                     historyItems = historyItems,
                     isMaxApy = isMaxApy,
                     apy = resourceManager.getString(
@@ -89,8 +96,17 @@ class StakedJettonViewModel(
                     links = links
                 )
             }
+            val token1 = JettonItem.Token(
+                iconUri = Uri.parse(jetton.jetton.image),
+                symbol = jetton.symbol,
+                name = jetton.jetton.name,
+                balanceFormat = _uiState.value.balance,
+                fiatFormat = formatFiat,
+                rate = rateFormat,
+                rateDiff24h = token.rateDiff24h
+            )
             _uiState.update {
-                it.copy(items = it.getItems(resourceManager))
+                it.copy(items = it.getItems(resourceManager, token1))
             }
         }
     }
@@ -126,6 +142,7 @@ class StakedJettonViewModel(
 
 data class StakedJettonState(
     val walletAddress: String = "",
+    val poolAddress: String = "",
     val walletType: WalletType = WalletType.Default,
     val asyncState: AsyncState = AsyncState.Loading,
     val jetton: JettonBalance? = null,
@@ -135,7 +152,7 @@ data class StakedJettonState(
     val apy: String = "",
     val minDeposit: String = "",
     val links: List<String> = emptyList(),
-    val items: List<JettonItem> = emptyList()
+    val items: List<JettonItem> = emptyList(),
 ) {
     val balance: CharSequence
         get() {
@@ -148,7 +165,10 @@ data class StakedJettonState(
         }
 
     companion object {
-        fun StakedJettonState.getItems(resourceManager: ResourceManager): List<JettonItem> {
+        fun StakedJettonState.getItems(
+            resourceManager: ResourceManager,
+            token: JettonItem.Token?
+        ): List<JettonItem> {
             val jetton = jetton ?: return emptyList()
             val items = mutableListOf<JettonItem>()
             items.add(
@@ -161,7 +181,8 @@ data class StakedJettonState(
                     staked = true
                 )
             )
-            items.add(JettonItem.ActionsStaked(walletAddress, jetton, walletType))
+            items.add(JettonItem.ActionsStaked(walletAddress, jetton, walletType, poolAddress))
+            token?.let { items.add(it) }
             items.add(JettonItem.Description(resourceManager.getString(Localization.staked_jetton_description)))
             items.add(JettonItem.Details(isApyMax = isMaxApy, apy = apy, minDeposit = minDeposit))
             items.add(JettonItem.Description(resourceManager.getString(Localization.pool_details_disclaimer)))

@@ -54,6 +54,7 @@ class StakedJettonScreen : BaseFragment(R.layout.fragment_staked_jetton), BaseFr
         collectFlow(listView.topScrolled, headerView::setDivider)
         collectFlow(stakedJettonViewModel.uiState) { state ->
             if (state.asyncState == AsyncState.Default) {
+                listView.post { listView.scrollToPosition(0) }
                 jettonAdapter.submitList(state.items)
                 historyAdapter.submitList(state.historyItems) {
                     toggleVisibilityAnimation(shimmerView, listView)

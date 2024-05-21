@@ -21,16 +21,13 @@ typealias TitleIconData = Pair<String, Int>
 class SocialLinkView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = 0
+    defStyle: Int = 0,
 ) : LinearLayoutCompat(context, attrs, defStyle) {
 
     private val textView: AppCompatTextView
     private val iconView: AppCompatImageView
 
     init {
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-            setMargins(8.dp, 8.dp, 0, 0)
-        }
         background = ContextCompat.getDrawable(context, R.drawable.bg_social_link)
         orientation = HORIZONTAL
         setPaddingHorizontal(16.dp)
@@ -64,12 +61,12 @@ class SocialLinkView @JvmOverloads constructor(
 
     private fun getTitleAndIcon(host: String): TitleIconData {
         return when {
-            host.contains("t.me/") -> TitleIconData(
+            host.contains("t.me") -> TitleIconData(
                 context.getString(Localization.community),
                 com.tonapps.uikit.icon.R.drawable.ic_telegram_16
             )
 
-            host.contains("twitter.com/") -> TitleIconData(
+            host.contains("twitter.com") -> TitleIconData(
                 context.getString(Localization.twitter),
                 com.tonapps.uikit.icon.R.drawable.ic_twitter_16
             )

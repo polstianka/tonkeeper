@@ -42,6 +42,7 @@ import com.tonapps.tonkeeper.ui.screen.stake.details.PoolDetailsViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsMainViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.pools.StakePoolsViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.unstake.UnstakeViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapSettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.SwapViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.WalletAssetsPickerViewModel
@@ -130,5 +131,18 @@ val koinModel = module {
     viewModel { StakeConfirmationViewModel(get()) }
     viewModel { StakeMainViewModel(get()) }
     viewModel { StakeOptionsMainViewModel(get()) }
-    viewModel { StakedJettonViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel {
+        StakedJettonViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
+    viewModel { UnstakeViewModel(get(), get(), get(), get(), get(), get(), get()) }
 }

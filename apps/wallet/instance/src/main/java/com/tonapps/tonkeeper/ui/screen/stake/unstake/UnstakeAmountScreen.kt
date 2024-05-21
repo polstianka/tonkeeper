@@ -1,18 +1,15 @@
-package com.tonapps.tonkeeper.ui.screen.stake.amount
+package com.tonapps.tonkeeper.ui.screen.stake.unstake
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
-import com.tonapps.tonkeeper.helper.NumberFormatter
 import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
-import com.tonapps.tonkeeper.ui.screen.stake.model.icon
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonPrimaryBackgroundColor
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
@@ -22,28 +19,27 @@ import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.collectFlow
-import uikit.widget.ActionCellView
 
-class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
-    private val stakeViewModel: StakeViewModel by viewModel()
+class UnstakeAmountScreen : Fragment(R.layout.fragment_unstake) {
+    private val stakeViewModel: UnstakeViewModel by viewModel()
     private val stakeMainViewModel: StakeMainViewModel by activityViewModel()
 
-    private lateinit var selectedPool: ActionCellView
     private lateinit var valueCurrencyView: AppCompatTextView
     private lateinit var rateView: AppCompatTextView
     private lateinit var availableView: AppCompatTextView
     private lateinit var maxButton: Button
     private lateinit var continueButton: Button
     private lateinit var valueView: AmountInput
+    private lateinit var disclaimerView: AppCompatTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        stakeViewModel.setAddress(stakeMainViewModel.preselectedAddress)
+        stakeViewModel.load(stakeMainViewModel.preselectedAddress)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        selectedPool = view.findViewById(R.id.selected_pool)
         valueCurrencyView = view.findViewById(R.id.value_currency)
+        disclaimerView = view.findViewById(R.id.unstake_disclaimer)
 
         valueView = view.findViewById(R.id.value)
         valueView.doOnTextChanged { _, _, _, _ ->
@@ -69,6 +65,8 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
             rateView.text = state.rate
             valueView.setMaxLength(stakeViewModel.decimals)
             valueCurrencyView.text = state.selectedTokenCode
+            disclaimerView.text =
+                getString(Localization.unstake_disclaimer_placeholder, state.disclaimerTimerValue)
 
             if (state.insufficientBalance) {
                 availableView.setText(Localization.insufficient_balance)
@@ -90,25 +88,6 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
             }
 
             maxButton.isActivated = state.maxActive
-            selectedPool.isVisible = state.selectedPool != null
-            if (state.selectedPool != null) {
-                with(selectedPool) {
-                    title = state.selectedPool.pool.name
-                    titleBadgeText = getString(Localization.max_apy).takeIf {
-                        state.selectedPool.isMaxApy
-                    }
-                    iconRes = state.selectedPool.pool.implementation.icon
-                    iconTint = 0
-                    isRoundedIcon = true
-                    actionTint = com.tonapps.uikit.color.R.attr.iconTertiaryColor
-                    subtitle = getString(
-                        Localization.apy_percent_placeholder,
-                        NumberFormatter.format(state.selectedPool.pool.apy)
-                    )
-                    setOnClickListener { stakeMainViewModel.openOptions() }
-                }
-            }
-
             if (state.confirmScreenArgs != null) {
                 stakeMainViewModel.onConfirmationArgsReceived(state.confirmScreenArgs)
             }
@@ -142,6 +121,6 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
     }
 
     companion object {
-        fun newInstance() = StakeAmountScreen()
+        fun newInstance() = UnstakeAmountScreen()
     }
 }

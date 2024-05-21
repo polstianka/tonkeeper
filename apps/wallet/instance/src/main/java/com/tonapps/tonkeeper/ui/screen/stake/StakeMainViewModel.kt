@@ -25,9 +25,11 @@ class StakeMainViewModel(
     private val _confirmationArgs = MutableStateFlow<ConfirmationArgs?>(null)
     val confirmationArgs: StateFlow<ConfirmationArgs?> = _confirmationArgs
 
-    fun setCurrentPage(index: Int) {
+    var preselectedAddress: String? = null
+
+    fun setCurrentPage(index: Int, unstake: Boolean) {
         val header = when (index) {
-            StakeScreensAdapter.POSITION_AMOUNT -> resourceManager.getString(Localization.stake)
+            StakeScreensAdapter.POSITION_AMOUNT -> resourceManager.getString(if (unstake) Localization.unstake else Localization.stake)
             else -> ""
         }
         _uiState.update { it.copy(currentPage = index, headerTitle = header) }

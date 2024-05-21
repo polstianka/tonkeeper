@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.flexbox.FlexboxLayout
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.helper.NumberFormatter
 import com.tonapps.tonkeeper.ui.screen.stake.model.DetailsArgs
@@ -18,7 +19,9 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.drawable.SpaceDrawable
 import uikit.extensions.collectFlow
+import uikit.extensions.dp
 
 class PoolDetailsScreen : Fragment(R.layout.fragment_pool_details) {
 
@@ -26,7 +29,7 @@ class PoolDetailsScreen : Fragment(R.layout.fragment_pool_details) {
     private val optionsMainViewModel: StakeOptionsMainViewModel by activityViewModel()
 
     private lateinit var topDetails: ViewGroup
-    private lateinit var socialLinks: ViewGroup
+    private lateinit var socialLinks: FlexboxLayout
     private lateinit var socialLinksTitle: AppCompatTextView
     private lateinit var chooseButton: Button
 
@@ -52,6 +55,7 @@ class PoolDetailsScreen : Fragment(R.layout.fragment_pool_details) {
     private fun addLinks(args: DetailsArgs) {
         socialLinksTitle.isVisible = args.links.isNotEmpty()
         socialLinks.removeAllViews()
+        socialLinks.setDividerDrawable(SpaceDrawable(8.dp))
         args.links.forEach {
             socialLinks.addView(SocialLinkView(requireContext()).apply {
                 setLink(it)

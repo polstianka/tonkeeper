@@ -8,6 +8,7 @@ import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonDetailsHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonDividerHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonHeaderHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonLinksHolder
+import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonTokenHolder
 import com.tonapps.uikit.list.BaseListAdapter
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.uikit.list.BaseListItem
@@ -22,6 +23,7 @@ class JettonAdapter : BaseListAdapter() {
             JettonItem.TYPE_DESCRIPTION -> JettonDescriptionHolder(parent)
             JettonItem.TYPE_DETAILS -> JettonDetailsHolder(parent)
             JettonItem.TYPE_LINKS -> JettonLinksHolder(parent)
+            JettonItem.TYPE_TOKEN -> JettonTokenHolder(parent)
             else -> throw IllegalArgumentException("Unknown viewType: $viewType")
         }
     }

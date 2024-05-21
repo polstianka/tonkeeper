@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
 import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsMainScreen
 import com.tonapps.tonkeeperx.R
@@ -24,7 +25,7 @@ class StakeMainScreen : BaseFragment(R.layout.fragment_stake_pager), BaseFragmen
     private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            stakeMainViewModel.setCurrentPage(position)
+            stakeMainViewModel.setCurrentPage(position, arguments?.getBoolean(UNSTAKE_KEY) ?: false)
             if (position == 0) {
                 headerView.setDefault()
                 headerView.setIcon(UIKitIcon.ic_information_circle_16)
@@ -36,7 +37,8 @@ class StakeMainScreen : BaseFragment(R.layout.fragment_stake_pager), BaseFragmen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pagerAdapter = StakeScreensAdapter(this)
+        pagerAdapter = StakeScreensAdapter(this, arguments?.getBoolean(UNSTAKE_KEY) ?: false)
+        stakeMainViewModel.preselectedAddress = arguments?.getString(ADDRESS_KEY)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,6 +75,14 @@ class StakeMainScreen : BaseFragment(R.layout.fragment_stake_pager), BaseFragmen
     }
 
     companion object {
-        fun newInstance() = StakeMainScreen()
+        private val ADDRESS_KEY = "address"
+        private val UNSTAKE_KEY = "unstake"
+        fun newInstance(address: String? = null, unstake: Boolean = false) =
+            StakeMainScreen().apply {
+                arguments = bundleOf(
+                    ADDRESS_KEY to address,
+                    UNSTAKE_KEY to unstake
+                )
+            }
     }
 }

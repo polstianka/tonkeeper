@@ -88,10 +88,29 @@ object Transfer {
         }
     }
 
-    fun stakeDepositTf(queryId: BigInteger = BigInteger.ZERO): Cell {
+    fun stakeDepositTf(): Cell {
         return buildCell {
             storeUInt(0, 32)
             storeBytes("d".toByteArray())
+        }
+    }
+
+    fun unstakeLiquidTf(
+        queryId: BigInteger = BigInteger.ZERO,
+        amount: Coins,
+        responseAddress: MsgAddressInt
+    ): Cell {
+        val body = buildCell {
+            storeUInt(1, 1)
+            storeUInt(0, 1)
+        }
+        return buildCell {
+            storeUInt(0x595f07bc, 32)
+            storeUInt(queryId, 64)
+            storeTlb(Coins, amount)
+            storeTlb(MsgAddressInt, responseAddress)
+            storeBit(true)
+            storeRef(AnyTlbConstructor, CellRef(body))
         }
     }
 
