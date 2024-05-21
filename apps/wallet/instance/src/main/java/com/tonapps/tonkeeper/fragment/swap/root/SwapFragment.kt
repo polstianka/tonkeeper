@@ -169,7 +169,10 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             receiveAsset,
             amount,
             settings,
-            simulation
+            simulation,
+            currency = currency,
+            ratesEntity = ratesCurrency,
+            ratesUsd = ratesUsd
         )
         navigation?.add(fragment)
     }

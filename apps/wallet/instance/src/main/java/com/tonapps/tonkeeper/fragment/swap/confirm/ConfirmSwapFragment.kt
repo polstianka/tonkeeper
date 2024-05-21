@@ -13,6 +13,8 @@ import com.tonapps.tonkeeper.fragment.swap.root.SwapFragment
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.entity.RatesEntity
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import java.math.BigDecimal
@@ -29,10 +31,22 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
             receiveToken: DexAsset,
             amount: BigDecimal,
             settings: SwapSettings,
-            simulation: SwapSimulation.Result
+            simulation: SwapSimulation.Result,
+            currency: WalletCurrency,
+            ratesEntity: RatesEntity,
+            ratesUsd: RatesEntity
         ) = ConfirmSwapFragment().apply {
             setArgs(
-                ConfirmSwapArgs(sendToken, receiveToken, settings, amount, simulation)
+                ConfirmSwapArgs(
+                    sendToken,
+                    receiveToken,
+                    settings,
+                    amount,
+                    simulation,
+                    currency,
+                    ratesEntity = ratesEntity,
+                    ratesUsd = ratesUsd
+                )
             )
         }
     }
@@ -85,16 +99,19 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
     }
 
     private fun updateState(args: ConfirmSwapArgs) {
-        val sendAmountFiat = args.sendAsset.dexUsdPrice * args.amount
-        sendAmountFiatTextView?.text = CurrencyFormatter.format(
-            "USD",
-            sendAmountFiat
-        )
+        val sendAmountUsd = args.sendAsset.dexUsdPrice * args.amount
+
+        val tonToCurrency = args.ratesEntity.getRate("TON")
+        val tonToUsd = args.ratesUsd.getRate("TON")
+        val sendAmountCurrency = sendAmountUsd / tonToUsd * tonToCurrency
+        val sendAmountFiatText = CurrencyFormatter.format(args.currency.code, sendAmountCurrency)
+
+        sendAmountFiatTextView?.text = sendAmountFiatText
         sendTokenButton?.asset = args.sendAsset
         val sendAmountCrypto = CurrencyFormatter.format(args.amount, 2)
         sendAmountCryptoTextView?.text = sendAmountCrypto
 
-        receiveAmountFiatTextView?.text = CurrencyFormatter.format("USD", sendAmountFiat)
+        receiveAmountFiatTextView?.text = sendAmountFiatText
         receiveTokenButton?.asset = args.receiveAsset
         val receiveAmountCrypto = args.amount * args.sendAsset.dexUsdPrice / args.receiveAsset.dexUsdPrice
         receiveAmountCryptoTextView?.text = CurrencyFormatter.format(receiveAmountCrypto, 2)
