@@ -56,7 +56,10 @@ class PoolDetailsViewModel(
         }
     }
     val liquidJetton = args.map { args ->
-        getStakingPoolLiquidJettonCase.execute(args.pool)
+        getStakingPoolLiquidJettonCase.execute(
+            args.pool,
+            args.currency
+        )
     }
 
     fun provideArgs(args: PoolDetailsFragmentArgs) {

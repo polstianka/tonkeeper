@@ -126,7 +126,8 @@ class StakeViewModel(
     fun onDropdownClicked() = viewModelScope.launch {
         val items = stakingServices.value
         val pickedValue = pickedPool.first()
-        emit(_events, StakeEvent.PickStakingOption(items, pickedValue))
+        val currency = currency.first()
+        emit(_events, StakeEvent.PickStakingOption(items, pickedValue, currency))
     }
 
     fun onPoolPicked(result: PoolDetailsFragmentResult) {

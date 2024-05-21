@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.fragment.stake.pick_pool.PickPoolFragment
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.uikit.icon.UIKitIcon
+import com.tonapps.wallet.data.core.WalletCurrency
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -23,10 +24,11 @@ class PickStakingOptionFragment : BaseListFragment(), BaseFragment.BottomSheet {
     companion object {
         fun newInstance(
             options: List<StakingService>,
-            picked: StakingPool
+            picked: StakingPool,
+            currency: WalletCurrency
         ) = PickStakingOptionFragment().apply {
             setArgs(
-                PickStakingOptionFragmentArgs(options, picked)
+                PickStakingOptionFragmentArgs(options, picked, currency)
             )
         }
     }
@@ -70,12 +72,12 @@ class PickStakingOptionFragment : BaseListFragment(), BaseFragment.BottomSheet {
     }
 
     private fun PickStakingOptionEvent.ShowPoolPicker.handle() {
-        val fragment = PickPoolFragment.newInstance(service, pickedPool)
+        val fragment = PickPoolFragment.newInstance(service, pickedPool, currency)
         navigation?.add(fragment)
     }
 
     private fun PickStakingOptionEvent.ShowPoolDetails.handle() {
-        val fragment = PoolDetailsFragment.newInstance(service, pool)
+        val fragment = PoolDetailsFragment.newInstance(service, pool, currency)
         navigation?.add(fragment)
     }
 }

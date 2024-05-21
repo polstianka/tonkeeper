@@ -4,15 +4,19 @@ import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.rates.entity.RateEntity
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.PoolInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
 
 class StakingRepository(
     private val api: API,
-    private val mapper: StakingServiceMapper
+    private val mapper: StakingServiceMapper,
+    private val ratesRepository: RatesRepository
 ) {
 
     // todo add caching
@@ -53,17 +57,32 @@ class StakingRepository(
     suspend fun getJetton(
         masterAddress: String,
         poolName: String,
+        currency: WalletCurrency,
         testnet: Boolean
     ): StakingPoolLiquidJetton = withContext(Dispatchers.IO) {
-        val response = api.jettons(testnet)
-            .getJettonInfo(masterAddress)
+        val deferredJettonInfo = async { api.jettons(testnet).getJettonInfo(masterAddress) }
+        val deferredRate = async { getRate(currency, masterAddress) }
+        val jettonInfo = deferredJettonInfo.await()
+        val rate = deferredRate.await()
+
 
         StakingPoolLiquidJetton(
             address = masterAddress,
-            iconUrl = response.metadata.image ?: "",
-            symbol = response.metadata.symbol,
-            price = BigDecimal.ONE, // todo
-            poolName = poolName
+            iconUrl = jettonInfo.metadata.image ?: "",
+            symbol = jettonInfo.metadata.symbol,
+            price = rate?.value,
+            poolName = poolName,
+            currency = currency
         )
+    }
+
+    private suspend fun getRate(
+        currency: WalletCurrency,
+        masterAddress: String
+    ): RateEntity? {
+        val cachedValue = ratesRepository.cache(currency, listOf(masterAddress))
+            .rate(masterAddress)
+        return cachedValue ?: ratesRepository.getRates(currency, masterAddress)
+            .rate(masterAddress)
     }
 }

@@ -113,7 +113,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     }
 
     private fun StakeEvent.PickStakingOption.handle() {
-        val fragment = PickStakingOptionFragment.newInstance(items, picked)
+        val fragment = PickStakingOptionFragment.newInstance(items, picked, currency)
         navigation?.add(fragment)
     }
 }

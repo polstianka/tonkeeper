@@ -24,6 +24,7 @@ import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
 import com.tonapps.uikit.color.iconPrimaryColor
 import com.tonapps.uikit.color.stateList
 import com.tonapps.uikit.color.textPrimaryColor
+import com.tonapps.wallet.data.core.WalletCurrency
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -38,10 +39,11 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         const val REQUEST_KEY_PICK_POOL = "REQUEST_KEY_PICK_POOL "
         fun newInstance(
             service: StakingService,
-            pool: StakingPool
+            pool: StakingPool,
+            currency: WalletCurrency
         ) = PoolDetailsFragment().apply {
             setArgs(
-                PoolDetailsFragmentArgs(service, pool)
+                PoolDetailsFragmentArgs(service, pool, currency)
             )
         }
     }
@@ -102,10 +104,12 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         liquidJetton ?: return
         liquidJettonIcon?.setImageURI(liquidJetton.iconUrl)
         liquidJettonTitle?.text = liquidJetton.symbol
-        liquidJettonPrice?.text = CurrencyFormatter.format(
-            "USD", //todo
-            liquidJetton.price
-        )
+        liquidJetton.price?.let {
+            liquidJettonPrice?.text = CurrencyFormatter.format(
+                liquidJetton.currency.code,
+                liquidJetton.price
+            )
+        }
         liquidJettonDescription?.text = getString(
             com.tonapps.wallet.localization.R.string.liquid_staking_description,
             liquidJetton.poolName,

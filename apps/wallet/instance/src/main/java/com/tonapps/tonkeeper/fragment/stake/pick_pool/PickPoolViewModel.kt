@@ -49,7 +49,7 @@ class PickPoolViewModel : ViewModel() {
         val args = args.first()
         val service = args.service
         val pool = service.pools.first { it.address == item.address }
-        val event = PickPoolEvents.NavigateToPoolDetails(service, pool)
+        val event = PickPoolEvents.NavigateToPoolDetails(service, pool, args.currency)
         _events.emit(event)
     }
 }

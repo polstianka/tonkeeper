@@ -50,15 +50,18 @@ class PickStakingOptionViewModel : ViewModel() {
         val args = args.first()
         val domainItem = args.options.first { it.type == item.stakingServiceType }
         val pickedItem = args.picked
+        val currency = args.currency
         val event = if (domainItem.pools.size == 1) {
             PickStakingOptionEvent.ShowPoolDetails(
                 domainItem,
-                domainItem.pools.first()
+                domainItem.pools.first(),
+                currency
             )
         } else {
             PickStakingOptionEvent.ShowPoolPicker(
                 domainItem,
-                pickedItem
+                pickedItem,
+                currency
             )
         }
         _events.emit(event)

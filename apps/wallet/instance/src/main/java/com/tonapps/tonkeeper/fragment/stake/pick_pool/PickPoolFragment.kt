@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolAdapter
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.uikit.icon.UIKitIcon
+import com.tonapps.wallet.data.core.WalletCurrency
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import uikit.base.BaseListFragment
@@ -22,10 +23,11 @@ class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
     companion object {
         fun newInstance(
             service: StakingService,
-            picked: StakingPool
+            picked: StakingPool,
+            currency: WalletCurrency
         ) = PickPoolFragment().apply {
             setArgs(
-                PickPoolFragmentArgs(service, picked)
+                PickPoolFragmentArgs(service, picked, currency)
             )
         }
     }
@@ -66,7 +68,7 @@ class PickPoolFragment : BaseListFragment(), BaseFragment.BottomSheet {
     }
 
     private fun PickPoolEvents.NavigateToPoolDetails.handle() {
-        val fragment = PoolDetailsFragment.newInstance(service, pool)
+        val fragment = PoolDetailsFragment.newInstance(service, pool, currency)
         navigation?.add(fragment)
     }
 }
