@@ -3,15 +3,20 @@ package com.tonapps.tonkeeper.fragment.trade.root.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.tonapps.tonkeeper.fragment.country.CountryScreen
+import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellEvent
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellTabs
 import com.tonapps.tonkeeper.fragment.trade.root.vm.BuySellViewModel
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.TabLayoutEx
 import com.tonapps.wallet.localization.R as LocalizationR
 
@@ -20,6 +25,8 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
 
     companion object {
         fun newInstance() = BuySellFragment()
+
+        private const val REQUEST_KEY = "BuySellFragment"
     }
 
     private val viewModel: BuySellViewModel by viewModel()
@@ -29,11 +36,25 @@ class BuySellFragment : BaseFragment(R.layout.fragment_trade), BaseFragment.Bott
         get() = view?.findViewById(R.id.tab_layout)
     private val viewPager: ViewPager2?
         get() = view?.findViewById(R.id.trade_view_pager)
+    private val countryLabel: TextView?
+        get() = view?.findViewById(R.id.fragment_trade_country_label)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         closeButton?.setOnClickListener { finish() }
+
+        countryLabel?.setThrottleClickListener { viewModel.onCountryLabelClicked() }
         prepareTabs()
+        observeFlow(viewModel.events) { handleEvent(it) }
+        observeFlow(viewModel.country) { countryLabel?.text = it }
+    }
+
+    private fun handleEvent(event: BuySellEvent) {
+        when (event) {
+            BuySellEvent.NavigateToPickCountry -> {
+                navigation?.add(CountryScreen.newInstance(REQUEST_KEY))
+            }
+        }
     }
 
     private fun prepareTabs() {

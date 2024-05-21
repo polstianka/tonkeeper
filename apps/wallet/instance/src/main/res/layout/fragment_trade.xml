@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,6 +9,20 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_secondary"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:textAllCaps="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/fragment_trade_country_label"
+            android:textAppearance="@style/TextAppearance.Label2"
+            android:textColor="?textPrimaryColor"
+            tools:text="FR" />
 
         <uikit.widget.TabLayoutEx
             android:id="@+id/tab_layout"
@@ -44,7 +59,7 @@
         android:id="@+id/trade_view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#0f0"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#0f0" />
 
 </uikit.widget.ColumnLayout>

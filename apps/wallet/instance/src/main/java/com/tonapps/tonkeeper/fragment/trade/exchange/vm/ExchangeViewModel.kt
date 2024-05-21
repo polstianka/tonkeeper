@@ -31,7 +31,7 @@ class ExchangeViewModel(
         private const val TOKEN_TON = "TON"
     }
     private val args = MutableSharedFlow<ExchangeFragmentArgs>(replay = 1)
-    private val country = MutableStateFlow(settingsRepository.country)
+    private val country = settingsRepository.countryFlow
     private val currency = settingsRepository.currencyFlow
     private val methodsDomain = combine(country, args) { country, argument ->
         getExchangeMethodsCase.execute(country, argument.direction)
@@ -80,7 +80,7 @@ class ExchangeViewModel(
             ExchangeEvent.NavigateToPickOperator(
                 paymentMethodId = paymentMethod.id,
                 paymentMethodName = paymentMethod.title,
-                country = country.value,
+                country = country.first(),
                 currencyCode = currency.code,
                 amount = amount.value,
                 direction = direction
