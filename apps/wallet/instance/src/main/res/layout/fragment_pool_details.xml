@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?backgroundPageColor"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?backgroundPageColor">
 
     <uikit.widget.HeaderView
         android:id="@+id/fragment_pool_details_header"
@@ -13,113 +13,193 @@
         android:action="@drawable/ic_close_16"
         android:icon="@drawable/ic_chevron_left_16" />
 
-    <uikit.widget.ColumnLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/bg_content">
-
-        <uikit.widget.RowLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/apy"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?textSecondaryColor" />
-
-            <uikit.widget.ChipView
-                android:id="@+id/fragment_pool_details_chip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
-                app:color="?accentGreenColor"
-                app:text="@string/max" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/fragment_pool_details_apy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?textPrimaryColor"
-                tools:text="~5.01%" />
-        </uikit.widget.RowLayout>
-
-        <uikit.widget.RowLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/minimal_deposit"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?textSecondaryColor" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/fragment_pool_details_minimal_deposit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="?textPrimaryColor"
-                tools:text="1 TON" />
-        </uikit.widget.RowLayout>
-    </uikit.widget.ColumnLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/staking_note"
-        android:textAppearance="@style/TextAppearance.Body3"
-        android:textColor="?textTertiaryColor" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.H3"
-        android:textColor="?textPrimaryColor"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"
-        android:text="@string/links"/>
-
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_pool_details_chip_group"
-        android:layout_marginHorizontal="16dp"/>
-
-    <View
-        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
 
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <uikit.widget.ColumnLayout
+                android:id="@+id/fragment_pool_details_liquid_staking_group"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp">
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_content"
+                    android:padding="16dp">
+
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+
+                        android:id="@+id/fragment_pool_details_liquid_staking_icon"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="16dp"
+                        app:roundedCornerRadius="12dp"
+                        tools:background="#f00" />
+
+                    <uikit.widget.ColumnLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+
+                        <uikit.widget.RowLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/fragment_pool_details_token_symbol"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textAppearance="@style/TextAppearance.Label1"
+                                android:textColor="?textPrimaryColor"
+                                tools:text="Tonstakers" />
+
+                        </uikit.widget.RowLayout>
+
+                        <TextView
+                            android:id="@+id/fragment_pool_details_token_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="@style/TextAppearance.Body2"
+                            android:textColor="?textSecondaryColor"
+                            tools:text="APY ~5.01% | 50.01 TON" />
+
+                    </uikit.widget.ColumnLayout>
+                </uikit.widget.RowLayout>
+
+                <TextView
+                    android:id="@+id/fragment_pool_details_liquid_staking_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textAppearance="@style/TextAppearance.Body3"
+                    android:textColor="?textTertiaryColor"
+                    tools:text="@string/liquid_staking_description" />
+
+            </uikit.widget.ColumnLayout>
+
+            <uikit.widget.ColumnLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/bg_content">
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apy"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor" />
+
+                    <uikit.widget.ChipView
+                        android:id="@+id/fragment_pool_details_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="6dp"
+                        app:color="?accentGreenColor"
+                        app:text="@string/max" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/fragment_pool_details_apy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="~5.01%" />
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/minimal_deposit"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/fragment_pool_details_minimal_deposit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="1 TON" />
+                </uikit.widget.RowLayout>
+            </uikit.widget.ColumnLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/staking_note"
+                android:textAppearance="@style/TextAppearance.Body3"
+                android:textColor="?textTertiaryColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:text="@string/links"
+                android:textAppearance="@style/TextAppearance.H3"
+                android:textColor="?textPrimaryColor" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/fragment_pool_details_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:layout_marginHorizontal="16dp" />
+
+        </uikit.widget.ColumnLayout>
+
+    </androidx.core.widget.NestedScrollView>
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="16dp"
         android:id="@+id/fragment_pool_details_footer"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
 
         <Button
             android:id="@+id/fragment_pool_details_button"

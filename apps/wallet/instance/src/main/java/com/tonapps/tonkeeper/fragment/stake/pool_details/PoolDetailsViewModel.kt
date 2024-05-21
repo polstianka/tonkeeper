@@ -1,11 +1,11 @@
 package com.tonapps.tonkeeper.fragment.stake.pool_details
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCase
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingSocial
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingSocialType
@@ -15,16 +15,27 @@ import com.tonapps.tonkeeper.fragment.stake.presentation.minStakingText
 import com.tonapps.uikit.icon.UIKitIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.net.URI
 import com.tonapps.wallet.localization.R as LocalizationR
 
-class PoolDetailsViewModel : ViewModel() {
+class PoolDetailsViewModel(
+    getStakingPoolLiquidJettonCase: GetStakingPoolLiquidJettonCase
+) : ViewModel() {
 
     private val _events = MutableSharedFlow<PoolDetailsEvent>()
     private val args = MutableSharedFlow<PoolDetailsFragmentArgs>(replay = 1)
+    private val socials = args.map { args ->
+        args.service.socials +
+                StakingSocial(
+                    type = StakingSocialType.TONVIEWER,
+                    link = "https://tonviewer.com/${args.pool.address}"
+                )
+    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     val events: Flow<PoolDetailsEvent>
         get() = _events
@@ -33,13 +44,6 @@ class PoolDetailsViewModel : ViewModel() {
     val isMaxApyVisible = args.map { it.pool.isMaxApy }
     val minimalDeposit = args.map { args ->
         args.pool.minStakingText()
-    }
-    private val socials = args.map { args ->
-        args.service.socials +
-                StakingSocial(
-                    type = StakingSocialType.TONVIEWER,
-                    link = "https://tonviewer.com/${args.pool.address}"
-                )
     }
     val chips = socials.map { socials ->
         val args = args.first()
@@ -50,6 +54,9 @@ class PoolDetailsViewModel : ViewModel() {
                 url = social.link
             )
         }
+    }
+    val liquidJetton = args.map { args ->
+        getStakingPoolLiquidJettonCase.execute(args.pool)
     }
 
     fun provideArgs(args: PoolDetailsFragmentArgs) {
@@ -93,6 +100,7 @@ private fun StakingSocialType.getText(service: StakingService): TextWrapper {
             val uri = URI.create(social.link)
             TextWrapper.PlainString(uri.host)
         }
+
         StakingSocialType.TWITTER -> TextWrapper.StringResource(LocalizationR.string.twitter)
         StakingSocialType.TELEGRAM -> TextWrapper.StringResource(LocalizationR.string.community)
         StakingSocialType.TONVIEWER -> TextWrapper.StringResource(LocalizationR.string.tonviewer)

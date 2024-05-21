@@ -8,11 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
@@ -58,6 +61,16 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         get() = view?.findViewById(R.id.fragment_pool_details_button)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_pool_details_footer)
+    private val liquidJettonGroup: View?
+        get() = view?.findViewById(R.id.fragment_pool_details_liquid_staking_group)
+    private val liquidJettonIcon: SimpleDraweeView?
+        get() = view?.findViewById(R.id.fragment_pool_details_liquid_staking_icon)
+    private val liquidJettonTitle: TextView?
+        get() = view?.findViewById(R.id.fragment_pool_details_token_symbol)
+    private val liquidJettonPrice: TextView?
+        get() = view?.findViewById(R.id.fragment_pool_details_token_price)
+    private val liquidJettonDescription: TextView?
+        get() = view?.findViewById(R.id.fragment_pool_details_liquid_staking_description)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +86,7 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
 
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
 
-        footer?.applyNavBottomPadding(32f.dp)
+        footer?.applyNavBottomPadding()
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.title) { header?.title = it }
@@ -81,6 +94,24 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         observeFlow(viewModel.isMaxApyVisible) { chip?.isVisible = it }
         observeFlow(viewModel.minimalDeposit) { minimalDepositTextView?.text = it }
         observeFlow(viewModel.chips) { applyChips(it) }
+        observeFlow(viewModel.liquidJetton) { applyLiquidJetton(it) }
+    }
+
+    private fun applyLiquidJetton(liquidJetton: StakingPoolLiquidJetton?) {
+        liquidJettonGroup?.isVisible = liquidJetton != null
+        liquidJetton ?: return
+        liquidJettonIcon?.setImageURI(liquidJetton.iconUrl)
+        liquidJettonTitle?.text = liquidJetton.symbol
+        liquidJettonPrice?.text = CurrencyFormatter.format(
+            "USD", //todo
+            liquidJetton.price
+        )
+        liquidJettonDescription?.text = getString(
+            com.tonapps.wallet.localization.R.string.liquid_staking_description,
+            liquidJetton.poolName,
+            liquidJetton.symbol,
+            liquidJetton.symbol
+        )
     }
 
     private fun applyChips(chips: List<LinksChipModel>) {

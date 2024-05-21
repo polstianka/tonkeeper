@@ -79,6 +79,8 @@ class API(
 
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
+    fun jettons(testnet: Boolean) = provider.jettons.get(testnet)
+
     fun rates() = provider.rates.get(false)
 
     fun staking(testnet: Boolean) = provider.staking.get(testnet)
