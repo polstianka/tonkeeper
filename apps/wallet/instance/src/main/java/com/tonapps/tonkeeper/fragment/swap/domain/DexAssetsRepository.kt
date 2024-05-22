@@ -43,7 +43,7 @@ class DexAssetsRepository(
             .asSequence()
             .filter { it.isValid() }
             .map { it.toDomain() }
-            .sortedByDescending { it.balance }
+            .sortedWith(dexAssetComparator)
             .toList()
 
         _isLoading.value = false
@@ -51,6 +51,14 @@ class DexAssetsRepository(
 
     fun getDefaultAsset(): DexAsset {
         return _items.value.first { it.type == DexAssetType.TON }
+    }
+
+    private val dexAssetComparator = Comparator<DexAsset> { o1, o2 ->
+        val f1 = o1.balance * o1.dexUsdPrice
+        val f2 = o2.balance * o2.dexUsdPrice
+        f2.compareTo(f1)
+            .takeUnless { it == 0 }
+            ?: o1.displayName.compareTo(o2.displayName)
     }
 
 
