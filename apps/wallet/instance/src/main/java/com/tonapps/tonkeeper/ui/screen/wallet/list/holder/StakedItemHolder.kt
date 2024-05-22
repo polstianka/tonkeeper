@@ -6,11 +6,13 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.fragment.stake.balance.StakedBalanceFragment
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.item.BaseItemView
 
 class StakedItemHolder(
@@ -25,7 +27,11 @@ class StakedItemHolder(
     private val baseItemView: BaseItemView = itemView as BaseItemView
     override fun onBind(item: Item.StakedItem) {
         baseItemView.position = item.position
-        baseItemView.setThrottleClickListener { Log.wtf("###", "onItemClicked: $item") }
+        baseItemView.setThrottleClickListener {
+            context.navigation?.add(
+                StakedBalanceFragment.newInstance(item.balance)
+            )
+        }
         iconBig.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
         iconSmall.setImageURI(item.balance.pool.serviceType.getIconUrl())
         poolName.text = item.balance.pool.name

@@ -10,5 +10,5 @@ data class StakedBalance(
     val pool: StakingPool,
     val service: StakingService,
     val balance: BigDecimal,
-    val asset: DexAsset?
+    val asset: DexAsset
 ) : Parcelable

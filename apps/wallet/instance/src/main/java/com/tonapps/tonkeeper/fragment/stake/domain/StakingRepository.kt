@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.stake.domain
 
-import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
@@ -103,9 +102,6 @@ class StakingRepository(
         walletAddress: String,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
-        val nominatorsDeferred = async {
-            api.staking(testnet).getAccountNominatorsPools(walletAddress)
-        }
         val poolsDeferred = async {
             getStakingPools(walletAddress, testnet)
         }
@@ -114,7 +110,6 @@ class StakingRepository(
                 .first()
             dexAssetsRepository.positiveBalance.first()
         }
-        val nominators = nominatorsDeferred.await()
         val stakingServices = poolsDeferred.await()
         val pools = stakingServices.flatMap { it.pools }
         val jettonBalances = jettonBalancesDeferred.await()
@@ -135,15 +130,7 @@ class StakingRepository(
                 )
             }
         }
-        val normalStaking = nominators.pools.mapNotNull { stakingInfo ->
-            val pool = pools.firstOrNull { it.name == stakingInfo.pool } ?: return@mapNotNull null
-            StakedBalance(
-                pool = pool,
-                service = stakingServices.first { it.type == pool.serviceType },
-                balance = stakingInfo.amount.toBigDecimal().movePointLeft(Coin.TON_DECIMALS),
-                asset = null
-            )
-        }
+        val normalStaking = emptyList<StakedBalance>() // todo
         _stakedBalances.value = liquidStaking + normalStaking
     }
 }

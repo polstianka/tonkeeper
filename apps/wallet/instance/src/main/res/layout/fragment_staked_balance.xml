@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.HeaderView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_staked_balance_header"
+        android:icon="@drawable/ic_chevron_left_16"/>
+
+
+</uikit.widget.ColumnLayout>
