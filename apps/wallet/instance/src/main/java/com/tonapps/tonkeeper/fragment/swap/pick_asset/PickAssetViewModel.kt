@@ -7,9 +7,13 @@ import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListHelper
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class PickAssetViewModel(
@@ -23,9 +27,11 @@ class PickAssetViewModel(
     val events: Flow<PickAssetEvent>
         get() = _events
     val items = listHelper.items
+        .flowOn(Dispatchers.Default)
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
     init {
-        observeFlow(dexAssetsRepository.nonCommunityItems) { listHelper.submitItems(it) }
+        observeFlow(dexAssetsRepository.items) { listHelper.submitItems(it) }
     }
 
     fun provideArgs(args: PickAssetArgs) {
@@ -42,8 +48,8 @@ class PickAssetViewModel(
         _events.emit(event)
     }
 
-    fun onSearchTextChanged(text: CharSequence?) {
-        text ?: return
+    fun onSearchTextChanged(text: CharSequence?) = viewModelScope.launch {
+        text ?: return@launch
         listHelper.setSearchText(text.toString())
     }
 }

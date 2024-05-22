@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.swap.root
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -8,9 +7,7 @@ import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
-import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
-import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
@@ -20,15 +17,11 @@ import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -64,13 +57,6 @@ class SwapViewModel(
         get() = _pickedSendAsset
     val pickedReceiveAsset: Flow<DexAsset?>
         get() = _pickedReceiveAsset
-    val pickedTokenBalance = pairFlow.flatMapLatest { (wallet, asset) ->
-        if (asset == null) {
-            flowOf(null)
-        } else {
-            repository.getAssetBalance(wallet.address, asset)
-        }
-    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val receiveAmount = combine(
         sendAmount,
         pickedSendAsset,
@@ -197,12 +183,12 @@ class SwapViewModel(
     }
 
     fun onMaxClicked() = viewModelScope.launch {
-        val balance = pickedTokenBalance.first() as? AssetBalance.Entity ?: return@launch
-        sendAmount.value = balance.balance
+        val balance = _pickedSendAsset.value?.balance ?: return@launch
+        sendAmount.value = balance
         ignoreNextUpdate = true
         _events.emit(
             SwapEvent.FillInput(
-                CurrencyFormatter.format(balance.balance, 2)
+                CurrencyFormatter.format(balance, 2)
             )
         )
     }

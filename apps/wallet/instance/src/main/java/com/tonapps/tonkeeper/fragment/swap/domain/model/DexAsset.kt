@@ -16,18 +16,14 @@ data class DexAsset(
     val symbol: String,
     val imageUrl: String,
     val displayName: String,
-    val dexUsdPrice: BigDecimal
+    val dexUsdPrice: BigDecimal,
+    val balance: BigDecimal
 ): Parcelable
 
 enum class DexAssetType {
     JETTON,
     WTON,
     TON
-}
-
-fun Long.formatCurrency(asset: DexAsset): String {
-    val value = BigDecimal(this).movePointLeft(asset.decimals)
-    return CurrencyFormatter.format(asset.symbol, value).toString()
 }
 
 fun DexAssetType.recommendedForwardTon(receiveType: DexAssetType): BigDecimal {

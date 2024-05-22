@@ -54,7 +54,8 @@ class WalletViewModel(
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
     private val screenCacheSource: ScreenCacheSource,
-    private val dexAssetsRepository: DexAssetsRepository
+    private val dexAssetsRepository: DexAssetsRepository,
+    private val walletManager: WalletManager
 ): ViewModel() {
 
     private data class Tokens(
@@ -68,7 +69,13 @@ class WalletViewModel(
 
     init {
         viewModelScope.launch(context = Dispatchers.IO) {
-            dexAssetsRepository.loadAssets()
+            val wallet = walletManager.getWalletInfo()
+            dexAssetsRepository.loadAssets(wallet!!.address)
+
+            val a = api.staking(true).getAccountNominatorsPools(wallet.address)
+            Log.wtf("###", "a: $a")
+            val b = api.staking(false).getAccountNominatorsPools(wallet.address)
+            Log.wtf("###", "b: $b")
         }
     }
 

@@ -9,9 +9,8 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.swap.confirm.ConfirmSwapFragment
-import com.tonapps.tonkeeper.fragment.swap.domain.model.AssetBalance
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
-import com.tonapps.tonkeeper.fragment.swap.domain.model.formatCurrency
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsFragment
@@ -99,9 +98,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.isLoading) { updateLoading(it) }
-        observeFlow(viewModel.pickedSendAsset) { sendTokenButton?.asset = it }
+        observeFlow(viewModel.pickedSendAsset) { updatePickedSendAsset(it) }
         observeFlow(viewModel.pickedReceiveAsset) { receiveButton?.asset = it }
-        observeFlow(viewModel.pickedTokenBalance) { updateBalance(it) }
         observeFlow(viewModel.receiveAmount) { pair ->
             val text = when {
                 pair == null ->  ""
@@ -110,6 +108,16 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             receiveInput?.text = text
         }
         observeFlow(viewModel.simulation) { it.updateSimulation() }
+    }
+
+    private fun updatePickedSendAsset(asset: DexAsset?) {
+        sendTokenButton?.asset = asset
+        balanceTextView?.isVisible = asset != null
+        asset ?: return
+        balanceTextView?.text = CurrencyFormatter.format(
+            asset.symbol,
+            asset.balance.movePointLeft(asset.decimals)
+        )
     }
 
     private fun SwapSimulation?.updateSimulation() {
@@ -130,19 +138,6 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
                 confirmButton?.isActivated = false
                 confirmButton?.isEnabled = false
             }
-        }
-    }
-
-    private fun updateBalance(balance: AssetBalance?) {
-        when (balance) {
-            is AssetBalance.Entity ->
-                balanceTextView?.text = CurrencyFormatter.format(
-                    balance.asset.symbol,
-                    balance.balance
-                )
-
-            AssetBalance.Loading,
-            null -> balanceTextView?.text = ""
         }
     }
 

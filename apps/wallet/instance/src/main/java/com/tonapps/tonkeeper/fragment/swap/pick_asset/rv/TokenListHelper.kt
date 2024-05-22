@@ -2,10 +2,12 @@ package com.tonapps.tonkeeper.fragment.swap.pick_asset.rv
 
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.uikit.list.ListCell
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.withContext
 
 class TokenListHelper {
 
@@ -29,7 +31,7 @@ class TokenListHelper {
             }
         }
 
-    fun submitItems(domainItems: List<DexAsset>) {
+    suspend fun submitItems(domainItems: List<DexAsset>) = withContext(Dispatchers.Default) {
         _items.value = domainItems.mapIndexed { index, item ->
             TokenListItem(
                 model = item,
@@ -44,7 +46,7 @@ class TokenListHelper {
         }
     }
 
-    fun setSearchText(text: String) {
+    suspend fun setSearchText(text: String) = withContext(Dispatchers.Default) {
         searchText.value = text
     }
 
