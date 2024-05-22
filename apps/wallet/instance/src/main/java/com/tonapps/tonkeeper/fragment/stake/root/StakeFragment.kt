@@ -79,7 +79,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
 
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
 
-        footer?.applyNavBottomPadding(32f.dp)
+        footer?.applyNavBottomPadding()
 
         observeFlow(viewModel.events, ::handleEvent)
         observeFlow(viewModel.fiatAmount) { fiatTextView?.text = it }

@@ -6,18 +6,13 @@
     <uikit.widget.HeaderView
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-    <androidx.core.widget.NestedScrollView
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <uikit.widget.SimpleRecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="@dimen/offsetMedium"/>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="@dimen/offsetMedium" />
 
 </uikit.widget.ColumnLayout>

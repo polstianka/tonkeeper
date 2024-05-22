@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class TokenListHelper {
@@ -18,18 +18,27 @@ class TokenListHelper {
             when {
                 searchText.isBlank() -> items
                 else -> {
-                    val itemsUpdated = items.filter {
+                    val itemsUpdated = items.asSequence()
+                        .filter {
                             it.symbol.contains(
                                 searchText,
                                 ignoreCase = true
                             ) || it.name.contains(searchText, ignoreCase = true)
                         }
-                    itemsUpdated.mapIndexed { index, item ->
-                        item.copy(position = ListCell.getPosition(itemsUpdated.size, index))
+                        .toMutableList()
+                    val iterator = itemsUpdated.listIterator()
+                    while (iterator.hasNext()) {
+                        val current = iterator.next()
+                        val pos = ListCell.getPosition(itemsUpdated.size, iterator.previousIndex())
+                        if (pos != current.position) {
+                            val updatedItem = current.copy(position = pos)
+                            iterator.set(updatedItem)
+                        }
                     }
+                    itemsUpdated
                 }
             }
-        }
+        }.flowOn(Dispatchers.Default)
 
     suspend fun submitItems(domainItems: List<DexAsset>) = withContext(Dispatchers.Default) {
         _items.value = domainItems.mapIndexed { index, item ->
@@ -49,5 +58,4 @@ class TokenListHelper {
     suspend fun setSearchText(text: String) = withContext(Dispatchers.Default) {
         searchText.value = text
     }
-
 }

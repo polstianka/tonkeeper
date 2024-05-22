@@ -29,8 +29,6 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
     private val recyclerView: RecyclerView?
         get() = view?.findViewById(R.id.fragment_pick_asset_rv)
     private val adapter = TokenAdapter { viewModel.onItemClicked(it) }
-    private val recyclerViewContainer: View?
-        get() = view?.findViewById(R.id.fragment_pick_asset_rv_container)
     private val searchInput: SearchInput?
         get() = view?.findViewById(R.id.fragment_pick_asset_search_input)
 
@@ -48,8 +46,7 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
         header?.onCloseClick = { viewModel.onCloseClicked() }
 
         recyclerView?.adapter = adapter
-
-        recyclerViewContainer?.applyNavBottomPadding()
+        recyclerView?.applyNavBottomPadding()
 
         searchInput?.doOnTextChanged = { viewModel.onSearchTextChanged(it) }
 

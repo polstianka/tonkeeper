@@ -98,6 +98,7 @@
             style="@style/Widget.App.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:text="@string/continue_action"
             android:textAppearance="@style/TextAppearance.Label1"
             android:textColor="?attr/textPrimaryColor" />
