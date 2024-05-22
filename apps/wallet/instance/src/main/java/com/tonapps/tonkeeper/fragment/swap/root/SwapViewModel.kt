@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.swap.root
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
@@ -12,7 +13,6 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
-import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
@@ -29,11 +29,11 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
+import com.tonapps.wallet.localization.R as LocalizationR
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SwapViewModel(
     private val repository: DexAssetsRepository,
-    walletManager: WalletRepository,
     getDefaultSwapSettingsCase: GetDefaultSwapSettingsCase,
     settingsRepository: SettingsRepository,
     private val ratesRepository: RatesRepository
@@ -42,11 +42,12 @@ class SwapViewModel(
     private val swapSettings = MutableStateFlow(getDefaultSwapSettingsCase.execute())
     private val _pickedSendAsset = MutableStateFlow<DexAsset?>(null)
     private val _pickedReceiveAsset = MutableStateFlow<DexAsset?>(null)
+    private val swapPair = combine(_pickedSendAsset, _pickedReceiveAsset) { toSend, toReceive ->
+        toSend ?: return@combine null
+        toReceive ?: return@combine null
+        toSend to toReceive
+    }
     private val _events = MutableSharedFlow<SwapEvent>()
-    private val activeWallet = walletManager.activeWalletFlow
-        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
-    private val pairFlow = combine(activeWallet, _pickedSendAsset) { a, b -> a to b }
-        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     private val sendAmount = MutableStateFlow(BigDecimal.ZERO)
     private val currency = settingsRepository.currencyFlow
 
@@ -59,30 +60,21 @@ class SwapViewModel(
         get() = _pickedReceiveAsset
     val receiveAmount = combine(
         sendAmount,
-        pickedSendAsset,
-        pickedReceiveAsset
-    ) { amount, sendAsset, receiveAsset  ->
-        when {
-            sendAsset == null -> null
-            receiveAsset == null -> null
-            else -> {
-                val amount = amount * sendAsset.dexUsdPrice / receiveAsset.dexUsdPrice
-                receiveAsset to amount
-            }
-        }
+        swapPair
+    ) { sendAmount, swapPair ->
+        val (toSend, toReceive) = swapPair ?: return@combine null
+        val amount = sendAmount * toSend.dexUsdPrice / toReceive.dexUsdPrice
+        toReceive to amount
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val simulation = combine(
-        pickedSendAsset,
-        pickedReceiveAsset,
+        swapPair,
         sendAmount,
         swapSettings
-    ) { sendAsset, receiveAsset, amount, settings ->
-        sendAsset ?: return@combine null
-        receiveAsset ?: return@combine null
+    ) { swapPair, amount, settings ->
+        swapPair ?: return@combine null
         if (amount == BigDecimal.ZERO) return@combine null
-        val a = sendAsset to receiveAsset
-        val b = amount to settings
-        a to b
+        val pair = amount to settings
+        swapPair to pair
     }
         .flatMapLatest { c ->
             val (a, b) = c ?: return@flatMapLatest flowOf(null)
@@ -91,6 +83,29 @@ class SwapViewModel(
             repository.emulateSwap(sendAsset, receiveAsset, amount, settings.slippagePercent)
         }
         .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
+    val buttonState = combine(sendAmount, swapPair, simulation) { amount, pair, simulation ->
+        when {
+            amount == BigDecimal.ZERO -> {
+                val text = TextWrapper.StringResource(LocalizationR.string.enter_amount)
+                text to false
+            }
+
+            pair == null -> {
+                val text = TextWrapper.StringResource(LocalizationR.string.choose_token)
+                text to false
+            }
+
+            simulation == null || simulation is SwapSimulation.Loading -> {
+                val text = TextWrapper.StringResource(LocalizationR.string.please_wait)
+                text to false
+            }
+
+            else -> {
+                val text = TextWrapper.StringResource(LocalizationR.string.continue_action)
+                text to true
+            }
+        }
+    }
 
 
     init {
@@ -132,7 +147,14 @@ class SwapViewModel(
             else -> {
                 sendAmount.value = toReceiveAmount.second
                 ignoreNextUpdate = true
-                _events.emit(SwapEvent.FillInput(toReceiveAmount.second.setScale(2, RoundingMode.FLOOR).toPlainString()))
+                _events.emit(
+                    SwapEvent.FillInput(
+                        toReceiveAmount.second.setScale(
+                            2,
+                            RoundingMode.FLOOR
+                        ).toPlainString()
+                    )
+                )
             }
         }
     }
@@ -152,6 +174,7 @@ class SwapViewModel(
             PickAssetType.SEND -> {
                 _pickedSendAsset.value = result.asset
             }
+
             PickAssetType.RECEIVE -> {
                 _pickedReceiveAsset.value = result.asset
             }
@@ -163,15 +186,14 @@ class SwapViewModel(
     }
 
     fun onConfirmClicked() = viewModelScope.launch {
-        val sendToken = _pickedSendAsset.value ?: return@launch
-        val receiveToken = _pickedReceiveAsset.value ?: return@launch
+        val (toSend, toReceive) = swapPair.first() ?: return@launch
         val amount = sendAmount.value
         val settings = swapSettings.value
         val simulation = simulation.first() as? SwapSimulation.Result ?: return@launch
         val currency = currency.first()
         val event = SwapEvent.NavigateToConfirm(
-            sendToken,
-            receiveToken,
+            toSend,
+            toReceive,
             settings,
             amount,
             simulation,

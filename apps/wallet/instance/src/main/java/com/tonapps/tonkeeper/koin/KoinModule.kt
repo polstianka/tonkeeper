@@ -114,7 +114,7 @@ val koinModel = module {
     viewModel { ConfirmStakeViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StakedBalanceViewModel(get()) }
 
-    viewModel { SwapViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SwapViewModel(get(), get(), get(), get()) }
     viewModel { PickAssetViewModel(get(), get()) }
     viewModel { SwapSettingsViewModel() }
     viewModel { ConfirmSwapViewModel(get(), get()) }

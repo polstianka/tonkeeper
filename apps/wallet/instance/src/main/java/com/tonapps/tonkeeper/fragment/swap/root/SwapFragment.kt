@@ -6,6 +6,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.core.TextWrapper
+import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.swap.confirm.ConfirmSwapFragment
@@ -108,6 +110,13 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
             receiveInput?.text = text
         }
         observeFlow(viewModel.simulation) { it.updateSimulation() }
+        observeFlow(viewModel.buttonState) { updateButtonState(it) }
+    }
+
+    private fun updateButtonState(pair: Pair<TextWrapper.StringResource, Boolean>) {
+        confirmButton?.isEnabled = pair.second
+        confirmButton?.isActivated = pair.second
+        confirmButton?.text = toString(pair.first)
     }
 
     private fun updatePickedSendAsset(asset: DexAsset?) {
@@ -122,23 +131,6 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
 
     private fun SwapSimulation?.updateSimulation() {
         detailsView?.updateState(this)
-        when (this) {
-            SwapSimulation.Loading -> {
-                confirmButton?.isActivated = false
-                confirmButton?.isEnabled = false
-            }
-            is SwapSimulation.Result -> {
-                confirmButton?.isActivated = true
-                confirmButton?.isEnabled = true
-                confirmButton?.text = getString(
-                    com.tonapps.wallet.localization.R.string.continue_action
-                )
-            }
-            null -> {
-                confirmButton?.isActivated = false
-                confirmButton?.isEnabled = false
-            }
-        }
     }
 
     private fun updateLoading(isLoading: Boolean) {
