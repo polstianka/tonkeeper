@@ -303,4 +303,5 @@
     <string name="confirm_swap">Confirm Swap</string>
     <string name="liquid_staking_description">When you stake TON in a %1s pool, you receive a token called %2s that represents your share in the pool. As the pool accumulates profits, your %2s represents larger amount of TON.</string>
     <string name="staked">Staked</string>
+    <string name="min_amount_mask">Min. amount: %1s</string>
 </resources>

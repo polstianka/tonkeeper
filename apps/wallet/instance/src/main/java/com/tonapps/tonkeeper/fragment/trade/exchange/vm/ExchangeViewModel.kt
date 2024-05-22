@@ -14,9 +14,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
@@ -30,35 +33,40 @@ class ExchangeViewModel(
     companion object {
         private const val TOKEN_TON = "TON"
     }
-    private val args = MutableSharedFlow<ExchangeFragmentArgs>(replay = 1)
-    private val country = settingsRepository.countryFlow
-    private val currency = settingsRepository.currencyFlow
-    private val methodsDomain = combine(country, args) { country, argument ->
-        getExchangeMethodsCase.execute(country, argument.direction)
-    }
-    val methods = exchangeItems.items
-    private val _events = MutableSharedFlow<ExchangeEvent>()
-    val events: Flow<ExchangeEvent>
-        get() = _events
-
-
-    init {
-        observeFlow(methodsDomain) { exchangeItems.submitItems(it) }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val rate = currency.flatMapLatest { getRateFlowCase.execute(it) }
 
     private val amount = MutableStateFlow(BigDecimal.ZERO)
+    private val args = MutableSharedFlow<ExchangeFragmentArgs>(replay = 1)
+    private val country = settingsRepository.countryFlow
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val currency = settingsRepository.currencyFlow
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val rate = currency.flatMapLatest { getRateFlowCase.execute(it) }
+    private val methodsDomain = combine(country, args) { country, argument ->
+        getExchangeMethodsCase.execute(country, argument.direction)
+    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val _events = MutableSharedFlow<ExchangeEvent>()
+    private val pickedItem = exchangeItems.pickedItem
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
+    val methods = exchangeItems.items.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    val minAmount = pickedItem.map { it.method.minAmount }
     val totalFiat = formattedRate(
         rateFlow = rate,
         amountFlow = amount,
         token = TOKEN_TON
     )
-    val isButtonActive = combine(amount, exchangeItems.pickedItem) { currentAmount, _ ->
-        currentAmount != BigDecimal.ZERO
+    val isButtonActive = combine(amount, minAmount) { currentAmount, minAmount ->
+        currentAmount >= minAmount
     }
+    val events: Flow<ExchangeEvent>
+        get() = _events
+
+    init {
+        observeFlow(methodsDomain) { exchangeItems.submitItems(it) }
+    }
+
+
 
     fun onAmountChanged(newAmount: BigDecimal) {
         val oldAmount = this.amount.value
@@ -72,7 +80,7 @@ class ExchangeViewModel(
     }
 
     fun onButtonClicked() = viewModelScope.launch {
-        val paymentMethod = exchangeItems.pickedItem.first()
+        val paymentMethod = pickedItem.first()
         val currency = currency.first()
         val direction = args.first().direction
         emit(

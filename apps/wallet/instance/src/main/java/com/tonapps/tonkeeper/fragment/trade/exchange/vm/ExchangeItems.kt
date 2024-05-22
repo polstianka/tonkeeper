@@ -14,10 +14,11 @@ class ExchangeItems(
 ) {
 
     private val _items = MutableStateFlow(emptyList<ExchangeMethodListItem>())
-    val items: Flow<List<BaseListItem>>
+    val items: Flow<List<ExchangeMethodListItem>>
         get() = _items
-    val pickedItem = items.map { it.filterIsInstance<ExchangeMethodListItem>() }
-        .mapNotNull { it.firstOrNull { it.isChecked } }
+    val pickedItem = items.mapNotNull { list ->
+        list.firstOrNull { it.isChecked }
+    }
 
     fun submitItems(domainItems: List<ExchangeMethod>) {
         val size = domainItems.size

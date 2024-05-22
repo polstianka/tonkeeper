@@ -17,7 +17,8 @@ class ExchangeMethodMapper {
                 false,
                 name,
                 iconUrl,
-                position = ListCell.getPosition(listSize, index)
+                position = ListCell.getPosition(listSize, index),
+                method = model
             )
         }
     }

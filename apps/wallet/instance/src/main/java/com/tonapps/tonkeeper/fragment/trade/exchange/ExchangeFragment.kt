@@ -3,7 +3,9 @@ package com.tonapps.tonkeeper.fragment.trade.exchange
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
@@ -22,6 +24,8 @@ import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.SimpleRecyclerView
+import java.math.BigDecimal
+import com.tonapps.wallet.localization.R as LocalizationR
 
 class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
     companion object {
@@ -40,7 +44,8 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
         get() = view?.findViewById(R.id.fragment_exchange_rv)
     private val button: Button?
         get() = view?.findViewById(R.id.fragment_exchange_button)
-    // todo min amount
+    private val minAmountLabel: TextView?
+        get() = view?.findViewById(R.id.fragment_exchange_min_amount)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_exchange_footer)
 
@@ -59,10 +64,19 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
         observeFlow(viewModel.methods) { adapter.submitList(it) }
         observeFlow(viewModel.isButtonActive) { button?.isEnabled = it }
         observeFlow(viewModel.events) { handleEvent(it) }
+        observeFlow(viewModel.minAmount) { updateMinAmount(it) }
         // clip children ripple effect
         recyclerView?.round(requireContext().cornerMedium)
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
         footer?.applyNavBottomPadding(16f.dp.toInt())
+    }
+
+    private fun updateMinAmount(minAmount: BigDecimal) {
+        val amount = CurrencyFormatter.format(
+            "TON",
+            minAmount
+        )
+        minAmountLabel?.text = getString(LocalizationR.string.min_amount_mask, amount)
     }
 
     private fun handleEvent(event: ExchangeEvent) {
