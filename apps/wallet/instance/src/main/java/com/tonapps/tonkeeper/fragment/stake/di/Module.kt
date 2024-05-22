@@ -13,7 +13,7 @@ import org.koin.dsl.module
 
 val stakingModule = module {
     single { StakingServiceMapper() }
-    single { StakingRepository(get(), get(), get()) }
+    single { StakingRepository(get(), get(), get(), get()) }
     single { ConfirmStakeListItemMapper() }
     factory { ConfirmStakeListHelper(get()) }
     single { GetStateInitCase() }

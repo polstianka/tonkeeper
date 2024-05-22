@@ -3,22 +3,24 @@ package com.tonapps.tonkeeper.fragment.swap.domain.model
 import android.os.Parcelable
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.stake.root.StakeViewModel
+import com.tonapps.wallet.api.entity.TokenEntity
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize
 data class DexAsset(
-    val isCommunity: Boolean,
-    val contractAddress: String,
-    val decimals: Int,
     val hasDefaultSymbol: Boolean,
     val type: DexAssetType,
-    val symbol: String,
-    val imageUrl: String,
-    val displayName: String,
     val dexUsdPrice: BigDecimal,
-    val balance: BigDecimal
-): Parcelable
+    val balance: BigDecimal,
+    val tokenEntity: TokenEntity
+): Parcelable {
+    val decimals = tokenEntity.decimals
+    val contractAddress = tokenEntity.address
+    val imageUri = tokenEntity.imageUri
+    val symbol = tokenEntity.symbol
+    val displayName = tokenEntity.name
+}
 
 enum class DexAssetType {
     JETTON,

@@ -40,7 +40,7 @@ class SwapTokenButton
 
     private fun updateState(asset: DexAsset?) {
         iconView?.isVisible = asset != null
-        asset?.imageUrl?.let { iconView?.setImageURI(it) }
+        asset?.imageUri?.let { iconView?.setImageURI(it) }
         val text = asset?.symbol ?: context.getString(LocalizationR.string.choose)
         textView?.text = text
     }

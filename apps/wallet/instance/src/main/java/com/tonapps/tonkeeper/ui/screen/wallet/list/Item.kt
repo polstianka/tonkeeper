@@ -12,6 +12,7 @@ import com.tonapps.extensions.writeArrayCompat
 import com.tonapps.extensions.writeBooleanCompat
 import com.tonapps.extensions.writeCharSequenceCompat
 import com.tonapps.extensions.writeEnum
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.TokenEntity
@@ -29,6 +30,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         const val TYPE_SPACE = 3
         const val TYPE_SKELETON = 4
         const val TYPE_PUSH = 5
+        const val TYPE_STAKED = 6
 
         fun createFromParcel(parcel: Parcel): Item {
             return when (parcel.readInt()) {
@@ -38,6 +40,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
                 TYPE_SPACE -> Space(parcel)
                 TYPE_SKELETON -> Skeleton(parcel)
                 TYPE_PUSH -> Push(parcel)
+                TYPE_STAKED -> StakedItem(parcel)
                 else -> throw IllegalArgumentException("Unknown type")
             }
         }
@@ -187,6 +190,32 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
                 return arrayOfNulls(size)
             }
         }
+    }
+
+    data class StakedItem(
+        val position: ListCell.Position,
+        val balance: StakedBalance,
+        val balanceFiat: BigDecimal
+    ) : Item(TYPE_STAKED) {
+
+        companion object CREATOR : Parcelable.Creator<StakedItem> {
+            override fun createFromParcel(source: Parcel) = StakedItem(source)
+
+            override fun newArray(size: Int): Array<StakedItem?> {
+                return arrayOfNulls(size)
+            }
+        }
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeEnum(position)
+            dest.writeParcelable(balance, flags)
+            dest.writeSerializable(balanceFiat)
+        }
+
+        constructor(parcel: Parcel) : this(
+            position = parcel.readEnum(ListCell.Position::class.java)!!,
+            balance = parcel.readParcelableCompat()!!,
+            balanceFiat = parcel.readSerializable() as BigDecimal
+        )
     }
 
     data class Space(val value: Boolean = true): Item(TYPE_SPACE) {

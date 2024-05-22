@@ -1,10 +1,12 @@
 package com.tonapps.tonkeeper.fragment.swap.domain
 
+import android.net.Uri
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.wallet.api.StonfiAPI
+import com.tonapps.wallet.api.entity.TokenEntity
 import io.stonfiapi.models.AssetInfoSchema
 import io.stonfiapi.models.AssetKindSchema
 import io.stonfiapi.models.DexReverseSimulateSwap200Response
@@ -12,7 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -28,6 +32,7 @@ class DexAssetsRepository(
         get() = _isLoading
     val items: Flow<List<DexAsset>>
         get() = _items
+    val positiveBalance = items.map { it.filter { it.balance > BigDecimal.ZERO } }
 
     suspend fun loadAssets(
         walletAddress: String
@@ -87,22 +92,40 @@ class DexAssetsRepository(
 
 
     private fun AssetInfoSchema.isValid(): Boolean {
-        return dexPriceUsd != null && !blacklisted && !deprecated
+        return dexPriceUsd != null &&
+                !blacklisted &&
+                !deprecated &&
+                imageUrl?.isNotBlank() == true &&
+                displayName?.isNotBlank() == true
     }
 
     private fun AssetInfoSchema.toDomain(): DexAsset {
         return DexAsset(
-            isCommunity = community,
-            contractAddress = contractAddress,
-            decimals = decimals,
             hasDefaultSymbol = defaultSymbol,
             type = kind.toDomain(),
-            symbol = symbol,
-            imageUrl = imageUrl!!,
-            displayName = displayName!!,
             dexUsdPrice = BigDecimal(dexPriceUsd),
-            balance = balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO
+            balance = balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO,
+            tokenEntity = toTokenEntity()
         )
+    }
+
+    private fun AssetInfoSchema.toTokenEntity(): TokenEntity {
+        return TokenEntity(
+            address = contractAddress,
+            name = displayName!!,
+            symbol = symbol,
+            imageUri = Uri.parse(imageUrl!!),
+            decimals = decimals,
+            verification = verification()
+        )
+    }
+
+    private fun AssetInfoSchema.verification(): TokenEntity.Verification {
+        return if (community) {
+            TokenEntity.Verification.whitelist
+        } else {
+            TokenEntity.Verification.none
+        }
     }
 
     private fun AssetKindSchema.toDomain(): DexAssetType {

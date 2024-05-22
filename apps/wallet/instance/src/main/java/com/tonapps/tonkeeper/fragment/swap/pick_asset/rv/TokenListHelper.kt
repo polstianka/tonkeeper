@@ -35,7 +35,7 @@ class TokenListHelper {
         _items.value = domainItems.mapIndexed { index, item ->
             TokenListItem(
                 model = item,
-                iconUrl = item.imageUrl,
+                iconUrl = item.imageUri,
                 symbol = item.symbol,
                 amountCrypto = "",
                 name = item.displayName,
