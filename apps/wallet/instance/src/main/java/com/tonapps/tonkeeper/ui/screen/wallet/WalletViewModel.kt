@@ -8,6 +8,7 @@ import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.isAddressEqual
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
@@ -59,7 +60,7 @@ class WalletViewModel(
     private val dexAssetsRepository: DexAssetsRepository,
     private val walletManager: WalletManager,
     private val stakingRepository: StakingRepository
-): ViewModel() {
+) : ViewModel() {
 
     private data class Tokens(
         val wallet: WalletEntity,
@@ -74,20 +75,20 @@ class WalletViewModel(
         viewModelScope.launch(context = Dispatchers.IO) {
             val wallet = walletManager.getWalletInfo()
             dexAssetsRepository.loadAssets(wallet!!.address)
-            val result = stakingRepository.loadStakedBalances(wallet.address, wallet.testnet)
-            Log.wtf("###", "$result")
         }
     }
 
     private val _tokensFlow = MutableStateFlow<Tokens?>(null)
-    private val tokensFlow = _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }
+    private val tokensFlow =
+        _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }
 
     private val _lastLtFlow = MutableStateFlow<Long>(0)
     private val lastLtFlow = _lastLtFlow.asStateFlow()
 
     private val stakedBalancesFlow = stakingRepository.stakedBalance
 
-    private val _statusFlow = MutableSharedFlow<Item.Status>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _statusFlow =
+        MutableSharedFlow<Item.Status>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     private val statusFlow = _statusFlow.asSharedFlow()
 
     private val _uiItemsFlow = MutableStateFlow<List<Item>>(emptyList())
@@ -96,13 +97,15 @@ class WalletViewModel(
     val uiLabelFlow = walletRepository.activeWalletFlow.map { it.label }
 
     init {
-        walletRepository.activeWalletFlow.map { screenCacheSource.getWalletScreen(it) }.flowOn(Dispatchers.IO).onEach { items ->
-            if (items.isNullOrEmpty()) {
-                _uiItemsFlow.value = listOf(Item.Skeleton(true))
-            } else {
-                _uiItemsFlow.value = items
-            }
-        }.launchIn(viewModelScope)
+        walletRepository.activeWalletFlow.map { screenCacheSource.getWalletScreen(it) }
+            .flowOn(Dispatchers.IO)
+            .onEach { items ->
+                if (items.isNullOrEmpty()) {
+                    _uiItemsFlow.value = listOf(Item.Skeleton(true))
+                } else {
+                    _uiItemsFlow.value = items
+                }
+            }.launchIn(viewModelScope)
 
         collectFlow(settings.hiddenBalancesFlow.drop(1)) { hiddenBalance ->
             val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: return@collectFlow
@@ -127,6 +130,14 @@ class WalletViewModel(
                 _lastLtFlow.value = event.lt
             }
         }
+
+        combine(walletRepository.activeWalletFlow, settings.currencyFlow) { activeWallet, currency ->
+            stakingRepository.loadStakedBalances(
+                activeWallet.address,
+                currency,
+                activeWallet.testnet
+            )
+        }.launchIn(viewModelScope)
 
         combine(
             walletRepository.activeWalletFlow,
@@ -274,12 +285,12 @@ class WalletViewModel(
         val tokensSize = tokenItemsPre.size
         val size = tokensSize + stakedBalances.size
         val stakedBalanceItems = stakedBalances.mapIndexed { index, stakedBalance ->
-             Item.StakedItem(
+            Item.StakedItem(
                 position = ListCell.getPosition(size, tokensSize + index),
                 balance = stakedBalance,
-                balanceFiat = BigDecimal.ZERO // todo
             )
         }
+        stakedBalanceItems.forEach { fiatBalance += it.balance.getFiatBalance() }
         val tokenItems = tokenItemsPre.mapIndexed { index, it ->
             it.copy(position = ListCell.getPosition(size, index))
         }
@@ -295,20 +306,24 @@ class WalletViewModel(
         apps: List<DAppEntity>,
     ) {
         val items = mutableListOf<Item>()
-        items.add(Item.Balance(
-            balance = balance,
-            address = wallet.address,
-            walletType = wallet.type,
-            status = status,
-            hiddenBalance = settings.hiddenBalances
-        ))
-        items.add(Item.Actions(
-            address = wallet.address,
-            token = TokenEntity.TON,
-            walletType = wallet.type,
-            swapUri = api.config.swapUri,
-            disableSwap = api.config.flags.disableSwap
-        ))
+        items.add(
+            Item.Balance(
+                balance = balance,
+                address = wallet.address,
+                walletType = wallet.type,
+                status = status,
+                hiddenBalance = settings.hiddenBalances
+            )
+        )
+        items.add(
+            Item.Actions(
+                address = wallet.address,
+                token = TokenEntity.TON,
+                walletType = wallet.type,
+                swapUri = api.config.swapUri,
+                disableSwap = api.config.flags.disableSwap
+            )
+        )
         if (push.isNotEmpty()) {
             items.add(Item.Push(push, apps))
         }

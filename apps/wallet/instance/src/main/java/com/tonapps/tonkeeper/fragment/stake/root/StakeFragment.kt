@@ -96,7 +96,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     private fun handleEvent(event: StakeEvent) {
         when (event) {
             StakeEvent.NavigateBack -> finish()
-            StakeEvent.ShowInfo -> Log.wtf("###", "showInfo")
+            StakeEvent.ShowInfo -> navigation?.openURL("https://ton.org/stake", true)
             is StakeEvent.SetInputValue -> event.handle()
             is StakeEvent.PickStakingOption -> event.handle()
             is StakeEvent.NavigateToConfirmFragment -> event.handle()

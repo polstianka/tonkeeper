@@ -195,7 +195,6 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
     data class StakedItem(
         val position: ListCell.Position,
         val balance: StakedBalance,
-        val balanceFiat: BigDecimal
     ) : Item(TYPE_STAKED) {
 
         companion object CREATOR : Parcelable.Creator<StakedItem> {
@@ -208,13 +207,11 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         override fun marshall(dest: Parcel, flags: Int) {
             dest.writeEnum(position)
             dest.writeParcelable(balance, flags)
-            dest.writeSerializable(balanceFiat)
         }
 
         constructor(parcel: Parcel) : this(
             position = parcel.readEnum(ListCell.Position::class.java)!!,
             balance = parcel.readParcelableCompat()!!,
-            balanceFiat = parcel.readSerializable() as BigDecimal
         )
     }
 

@@ -100,8 +100,10 @@ class StakingRepository(
 
     suspend fun loadStakedBalances(
         walletAddress: String,
+        currency: WalletCurrency,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
+        _stakedBalances.value = emptyList()
         val poolsDeferred = async {
             getStakingPools(walletAddress, testnet)
         }
@@ -122,11 +124,17 @@ class StakingRepository(
             if (jetton == null) {
                 null
             } else {
+                val tokens = mutableListOf("TON", jetton.contractAddress)
+                ratesRepository.load(currency, tokens)
+                val rates = ratesRepository.getRates(currency, tokens)
                 StakedBalance(
                     poolWithJetton,
                     stakingServices.first { it.type == poolWithJetton.serviceType },
                     balance = jetton.balance,
-                    asset = jetton
+                    asset = jetton,
+                    assetRate = rates.rate(jetton.contractAddress)!!,
+                    tonRate = rates.rate("TON")!!,
+                    currency = currency
                 )
             }
         }

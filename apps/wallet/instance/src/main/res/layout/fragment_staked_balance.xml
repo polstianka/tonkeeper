@@ -1,13 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <uikit.widget.HeaderView
+        android:id="@+id/fragment_staked_balance_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_staked_balance_header"
-        android:icon="@drawable/ic_chevron_left_16"/>
+        android:icon="@drawable/ic_chevron_left_16" />
 
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="24dp"
+            android:paddingBottom="24dp">
+
+            <uikit.widget.ColumnLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/fragment_staked_balance_balance_crypto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.H2"
+                    android:textColor="?textPrimaryColor"
+                    tools:text="1,000.01 TON" />
+
+                <TextView
+                    android:id="@+id/fragment_staked_balance_balance_fiat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?textSecondaryColor"
+                    tools:text="$8,801.17" />
+            </uikit.widget.ColumnLayout>
+
+            <FrameLayout
+                android:layout_width="68dp"
+                android:layout_height="68dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/fragment_staked_balance_icon_big"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="top|start"
+                    app:roundedCornerRadius="32dp"
+                    tools:background="#f00" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/fragment_staked_balance_icon_small"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="bottom|end"
+                    app:roundedCornerRadius="12dp"
+                    tools:background="#0f0" />
+            </FrameLayout>
+        </uikit.widget.RowLayout>
+    </uikit.widget.ColumnLayout>
 </uikit.widget.ColumnLayout>
