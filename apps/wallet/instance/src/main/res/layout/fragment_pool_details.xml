@@ -31,87 +31,11 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="16dp"/>
 
-            <uikit.widget.ColumnLayout
+            <com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:background="@drawable/bg_content">
-
-                <uikit.widget.RowLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/apy"
-                        android:textAppearance="@style/TextAppearance.Body2"
-                        android:textColor="?textSecondaryColor" />
-
-                    <uikit.widget.ChipView
-                        android:id="@+id/fragment_pool_details_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="6dp"
-                        app:color="?accentGreenColor"
-                        app:text="@string/max" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/fragment_pool_details_apy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Body2"
-                        android:textColor="?textPrimaryColor"
-                        tools:text="~5.01%" />
-                </uikit.widget.RowLayout>
-
-                <uikit.widget.RowLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/minimal_deposit"
-                        android:textAppearance="@style/TextAppearance.Body2"
-                        android:textColor="?textSecondaryColor" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/fragment_pool_details_minimal_deposit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Body2"
-                        android:textColor="?textPrimaryColor"
-                        tools:text="1 TON" />
-                </uikit.widget.RowLayout>
-            </uikit.widget.ColumnLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/staking_note"
-                android:textAppearance="@style/TextAppearance.Body3"
-                android:textColor="?textTertiaryColor" />
+                android:id="@+id/fragment_pool_details_pool_details"/>
 
             <TextView
                 android:layout_width="wrap_content"

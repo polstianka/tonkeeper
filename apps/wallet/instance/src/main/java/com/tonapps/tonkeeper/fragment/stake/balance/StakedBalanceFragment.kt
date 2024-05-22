@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getCryptoBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
+import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
@@ -49,6 +50,8 @@ class StakedBalanceFragment : BaseFragment(
         get() = view?.findViewById(R.id.fragment_staked_balance_unstake_button)
     private val liquidStakingDetailsView: LiquidStakingDetailsView?
         get() = view?.findViewById(R.id.fragment_staked_balance_liquid_staking_details)
+    private val poolDetailsView: PoolDetailsView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pool_details)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +89,7 @@ class StakedBalanceFragment : BaseFragment(
         )
         iconBig?.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
         iconSmall?.setImageURI(args.stakedBalance.pool.serviceType.getIconUrl())
-
+        poolDetailsView?.setPool(args.stakedBalance.pool)
     }
 
     private fun handleEvent(event: StakedBalanceEvent) {

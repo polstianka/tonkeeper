@@ -40,11 +40,7 @@ class PoolDetailsViewModel(
     val events: Flow<PoolDetailsEvent>
         get() = _events
     val title = args.map { it.pool.name }
-    val apy = args.map { "${it.pool.formatApy()}%" }
-    val isMaxApyVisible = args.map { it.pool.isMaxApy }
-    val minimalDeposit = args.map { args ->
-        args.pool.minStakingText()
-    }
+    val pool = args.map { it.pool }
     val chips = socials.map { socials ->
         val args = args.first()
         socials.map { social ->

@@ -126,5 +126,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
         android:id="@+id/fragment_staked_balance_liquid_staking_details"/>
+
+    <com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/fragment_staked_balance_pool_details"/>
 </uikit.widget.ColumnLayout>

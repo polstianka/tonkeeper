@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
+import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.buttonSecondaryBackgroundColor
 import com.tonapps.uikit.color.iconPrimaryColor
@@ -47,12 +48,6 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
     private val viewModel: PoolDetailsViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_pool_details_header)
-    private val apyTextView: TextView?
-        get() = view?.findViewById(R.id.fragment_pool_details_apy)
-    private val chip: View?
-        get() = view?.findViewById(R.id.fragment_pool_details_chip)
-    private val minimalDepositTextView: TextView?
-        get() = view?.findViewById(R.id.fragment_pool_details_minimal_deposit)
     private val chipGroup: ChipGroup?
         get() = view?.findViewById(R.id.fragment_pool_details_chip_group)
     private val button: Button?
@@ -61,6 +56,8 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
         get() = view?.findViewById(R.id.fragment_pool_details_footer)
     private val liquidStakingDetailsView: LiquidStakingDetailsView?
         get() = view?.findViewById(R.id.fragment_pool_details_liquid_staking_details)
+    private val poolDetails: PoolDetailsView?
+        get() = view?.findViewById(R.id.fragment_pool_details_pool_details)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +77,7 @@ class PoolDetailsFragment : BaseFragment(R.layout.fragment_pool_details), BaseFr
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.title) { header?.title = it }
-        observeFlow(viewModel.apy) { apyTextView?.text = it }
-        observeFlow(viewModel.isMaxApyVisible) { chip?.isVisible = it }
-        observeFlow(viewModel.minimalDeposit) { minimalDepositTextView?.text = it }
+        observeFlow(viewModel.pool) { poolDetails?.setPool(it) }
         observeFlow(viewModel.chips) { applyChips(it) }
         observeFlow(viewModel.liquidJetton) { liquidStakingDetailsView?.applyLiquidJetton(it) }
     }
