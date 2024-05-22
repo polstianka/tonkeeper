@@ -43,7 +43,7 @@ class FiatModalFragment: BaseFragment(R.layout.dialog_fiat), BaseFragment.Modal 
 
     private suspend fun requestItems() {
         val country = com.tonapps.tonkeeper.App.settings.country
-        val items = com.tonapps.tonkeeper.App.fiat.getMethods(country)
+        val items = com.tonapps.tonkeeper.App.fiat.getBuyMethods(country)
 
         adapter.submit(items)
     }

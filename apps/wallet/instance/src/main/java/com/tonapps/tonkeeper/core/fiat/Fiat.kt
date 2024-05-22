@@ -74,11 +74,17 @@ class Fiat(
         fiatMethodsRepository.get(countryCode)
     }
 
-    suspend fun getMethods(
+    suspend fun getBuyMethods(
         countryCode: String
     ): List<FiatItem> {
         val data = getData(countryCode) ?: return emptyList()
-        val layout = data.layoutByCountry(countryCode)
-        return data.getBuyItemsByMethods(layout.methods)
+        return data.buy.first().items
+    }
+
+    suspend fun getSellMethods(
+        countryCode: String
+    ): List<FiatItem> {
+        val data = getData(countryCode) ?: return emptyList()
+        return data.sell.first().items
     }
 }

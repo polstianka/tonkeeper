@@ -11,20 +11,20 @@ class GetPaymentOperatorsCase {
         currencyCode: String,
         direction: ExchangeDirection
     ): List<PaymentOperator> {
-        return App.fiat.getMethods(country)
-            .map {
-                PaymentOperator(
-                    id = it.id,
-                    name = when (direction) {
-                        ExchangeDirection.BUY -> it.title
-                        ExchangeDirection.SELL -> it.title + "hehe"
-                    },
-                    description = it.description,
-                    iconUrl = it.iconUrl,
-                    url = it.actionButton.url,
-                    successUrlPattern = it.successUrlPattern,
-                    rate = "2.333 $currencyCode for 1 TON" // todo replace with real data
-                )
-            }
+        val methods = when (direction) {
+            ExchangeDirection.BUY -> App.fiat.getBuyMethods(country)
+            ExchangeDirection.SELL -> App.fiat.getSellMethods(country)
+        }
+        return methods.map {
+            PaymentOperator(
+                id = it.id,
+                name = it.title,
+                description = it.description,
+                iconUrl = it.iconUrl,
+                url = it.actionButton.url,
+                successUrlPattern = it.successUrlPattern,
+                rate = "2.333 $currencyCode for 1 TON" // todo replace with real data
+            )
+        }
     }
 }
