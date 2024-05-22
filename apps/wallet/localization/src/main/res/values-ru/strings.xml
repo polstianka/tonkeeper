@@ -153,6 +153,7 @@
     <string name="recipient">Получатель</string>
     <string name="recipient_address">Адрес получателя</string>
 
+    <string name="slide_to_confirm">Сдвиньте для подтверждения</string>
     <string name="sender">Отправитель</string>
     <string name="sender_address">Адрес отправителя</string>
 

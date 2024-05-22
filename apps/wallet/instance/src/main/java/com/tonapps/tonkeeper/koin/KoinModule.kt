@@ -144,5 +144,5 @@ val koinModel = module {
             get()
         )
     }
-    viewModel { UnstakeViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { UnstakeViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

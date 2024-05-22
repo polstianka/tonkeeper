@@ -12,6 +12,7 @@ import com.tonapps.tonkeeper.ui.component.keyvalue.KeyValueRowAdapter
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,6 +33,7 @@ class StakeConfirmationScreen : Fragment(R.layout.fragment_stake_confirmation) {
     private lateinit var detailsRecycler: SimpleRecyclerView
     private lateinit var slideActionView: SlideActionView
     private lateinit var poolImage: AppCompatImageView
+    private lateinit var title: AppCompatTextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         amountTon = view.findViewById(R.id.amount_ton)
@@ -39,6 +41,7 @@ class StakeConfirmationScreen : Fragment(R.layout.fragment_stake_confirmation) {
         slideActionView = view.findViewById(R.id.confirm_button)
         detailsRecycler = view.findViewById(R.id.details_recycler_view)
         poolImage = view.findViewById(R.id.pool_image)
+        title = view.findViewById(R.id.confirmation_title)
 
         collectFlow(stakeMainViewModel.confirmationArgs) { args ->
             if (args != null) {
@@ -47,7 +50,10 @@ class StakeConfirmationScreen : Fragment(R.layout.fragment_stake_confirmation) {
                 poolImage.setImageResource(args.imageRes)
                 poolImage.circle()
 
-                slideActionView.text = "Slide to confirm"
+                title.text = if (args.unstake) getString(Localization.unstake)
+                else getString(Localization.stake)
+
+                slideActionView.text = getString(Localization.slide_to_confirm)
 
                 val adapter = KeyValueRowAdapter()
                 detailsRecycler.adapter = adapter
@@ -74,5 +80,6 @@ data class ConfirmationArgs(
     val amountInCurrency: String,
     @DrawableRes val imageRes: Int,
     val details: List<KeyValueModel>,
-    val walletTransfer: WalletTransfer
+    val walletTransfer: WalletTransfer,
+    val unstake: Boolean
 )

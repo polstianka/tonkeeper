@@ -2,12 +2,9 @@ package com.tonapps.wallet.data.swap
 
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.TonNetwork
-import com.tonapps.extensions.toByteArray
-import com.tonapps.security.Security
-import com.tonapps.security.hex
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
-import com.tonapps.wallet.data.account.legacy.WalletLegacy
+import com.tonapps.wallet.data.account.SeqnoHelper
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,14 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.ton.block.Coins
 import org.ton.block.MsgAddressInt
-import org.ton.block.StateInit
-import org.ton.cell.Cell
-import org.ton.contract.wallet.WalletTransfer
-import org.ton.contract.wallet.WalletTransferBuilder
-import ton.SendMode
+import ton.Swap
+import ton.TransactionHelper
 import ton.transfer.Transfer
 import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.time.Duration.Companion.seconds
 
 //router address == owner address
@@ -57,7 +50,6 @@ class SwapRepository(
     private var receiveInput: String = "0"
     private var tolerance: Float = 0.05f
     private var testnet: Boolean = false
-    private var lastSeqno = -1
 
     init {
         scope.launch {
@@ -117,7 +109,7 @@ class SwapRepository(
                 }.await()
 
                 val userWallet = walletManager.getWalletInfo()!!
-                val swapPayload = Transfer.swap(
+                val swapPayload = Swap.swap(
                     askAddress = MsgAddressInt.parse(askJettonAddress),
                     userAddressInt = MsgAddressInt.parse(userWallet.address),
                     coins = Coins.Companion.ofNano(
@@ -130,14 +122,13 @@ class SwapRepository(
                     toAddress = MsgAddressInt.parse(routerAddress),
                     responseAddress = null,
                     forwardAmount = Commission, //commission?
-                    queryId = getWalletQueryId(),
+                    queryId = TransactionHelper.getWalletQueryId(),
                     body = swapPayload
                 )
 
-                lastSeqno = getSeqno(userWallet)
-                val gift = buildWalletTransfer(
+                val gift = TransactionHelper.buildWalletTransfer(
                     destination = MsgAddressInt.parse(proxyTonAddress),
-                    stateInit = getStateInitIfNeed(userWallet),
+                    stateInit = SeqnoHelper.getStateInitIfNeed(userWallet, api),
                     body = transferPayload,
                     coins = Coins.Companion.ofNano(outputValue + Commission)
                 )
@@ -150,71 +141,7 @@ class SwapRepository(
                 )
 
                 _signRequestEntity.value = signRequestEntity
-
-                /*                val emulate = userWallet.emulate(api, gift)
-                                val feeInTon = emulate.totalFees
-                                val amount = Coin.toCoins(feeInTon)
-                                println("@@@ $amount")
-                                val privateKey = walletManager.getPrivateKey(userWallet.id)
-                                val details = historyHelper.create(userWallet, emulate, RatesEntity.empty(settingsRepository.currency))
-                                println(details)*/
-                /*userWallet.sendToBlockchain(api, privateKey, gift)
-                    ?: throw Exception("failed to send to blockchain")
-                println("@@@ success")*/
             }
-        }
-    }
-
-    private fun buildWalletTransfer(
-        destination: MsgAddressInt,
-        stateInit: StateInit?,
-        body: Cell,
-        coins: Coins
-    ): WalletTransfer {
-        val builder = WalletTransferBuilder()
-        builder.bounceable = true
-        builder.destination = destination
-        builder.body = body
-        builder.sendMode = SendMode.PAY_GAS_SEPARATELY.value + SendMode.IGNORE_ERRORS.value
-        builder.coins = coins
-        builder.stateInit = stateInit
-        return builder.build()
-    }
-
-    private suspend fun getStateInitIfNeed(wallet: WalletLegacy): StateInit? {
-        if (lastSeqno == -1) {
-            lastSeqno = getSeqno(wallet)
-        }
-        if (lastSeqno == 0) {
-            return wallet.contract.stateInit
-        }
-        return null
-    }
-
-    private suspend fun getSeqno(wallet: WalletLegacy): Int {
-        if (lastSeqno == 0) {
-            lastSeqno = wallet.getSeqno(api)
-        }
-        return lastSeqno
-    }
-
-    private suspend fun WalletLegacy.getSeqno(api: API): Int {
-        return try {
-            api.getAccountSeqno(accountId, testnet)
-        } catch (e: Throwable) {
-            0
-        }
-    }
-
-    private fun getWalletQueryId(): BigInteger {
-        try {
-            val tonkeeperSignature = 0x546de4ef.toByteArray()
-            val randomBytes = Security.randomBytes(4)
-            val value = tonkeeperSignature + randomBytes
-            val hexString = hex(value)
-            return BigInteger(hexString, 16)
-        } catch (e: Throwable) {
-            return BigInteger.ZERO
         }
     }
 
@@ -229,7 +156,6 @@ class SwapRepository(
         _swapState.value = SwapState()
         tolerance = 0.05f
         _signRequestEntity.value = null
-        lastSeqno = 0
     }
 
     private fun runSimulateSwapConditionally(units: String) {

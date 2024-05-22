@@ -66,7 +66,7 @@ class UnstakeAmountScreen : Fragment(R.layout.fragment_unstake) {
             valueView.setMaxLength(stakeViewModel.decimals)
             valueCurrencyView.text = state.selectedTokenCode
             disclaimerView.text =
-                getString(Localization.unstake_disclaimer_placeholder, state.disclaimerTimerValue)
+                getString(Localization.unstake_disclaimer_placeholder, state.timerValue)
 
             if (state.insufficientBalance) {
                 availableView.setText(Localization.insufficient_balance)

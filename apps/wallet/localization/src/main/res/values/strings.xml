@@ -192,6 +192,8 @@
     <string name="recipient">Recipient</string>
     <string name="recipient_address">Recipient address</string>
 
+    <string name="slide_to_confirm">Slide to confirm</string>
+
     <string name="sender">Sender</string>
     <string name="sender_address">Sender address</string>
 

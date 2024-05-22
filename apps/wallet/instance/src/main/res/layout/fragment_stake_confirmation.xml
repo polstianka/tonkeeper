@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/deposit_title"
+        android:id="@+id/confirmation_title"
         style="@style/TextAppearance.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:textColor="?attr/textPrimaryColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deposit_title"
+        app:layout_constraintTop_toBottomOf="@id/confirmation_title"
         tools:text="1,000.01 TON" />
 
     <androidx.appcompat.widget.AppCompatTextView

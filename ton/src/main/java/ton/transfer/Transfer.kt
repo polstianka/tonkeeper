@@ -63,57 +63,6 @@ object Transfer {
         }
     }
 
-    fun swap(askAddress: MsgAddressInt, userAddressInt: MsgAddressInt, coins: Coins): Cell {
-        return buildCell {
-            storeUInt(0x25938561, 32)
-            storeTlb(MsgAddressInt, askAddress)
-            storeTlb(Coins, coins)
-            storeTlb(MsgAddressInt, userAddressInt)
-            storeBit(false)
-        }
-    }
-
-    fun stakeDepositLiquidTf(queryId: BigInteger = BigInteger.ZERO): Cell {
-        return buildCell {
-            storeUInt(0x47d54391, 32)
-            storeUInt(queryId, 64)
-        }
-    }
-
-    fun stakeDepositWhales(queryId: BigInteger = BigInteger.ZERO): Cell {
-        return buildCell {
-            storeUInt(2077040623, 32)
-            storeUInt(queryId, 64)
-            storeTlb(Coins, Coins.ofNano(100000))
-        }
-    }
-
-    fun stakeDepositTf(): Cell {
-        return buildCell {
-            storeUInt(0, 32)
-            storeBytes("d".toByteArray())
-        }
-    }
-
-    fun unstakeLiquidTf(
-        queryId: BigInteger = BigInteger.ZERO,
-        amount: Coins,
-        responseAddress: MsgAddressInt
-    ): Cell {
-        val body = buildCell {
-            storeUInt(1, 1)
-            storeUInt(0, 1)
-        }
-        return buildCell {
-            storeUInt(0x595f07bc, 32)
-            storeUInt(queryId, 64)
-            storeTlb(Coins, amount)
-            storeTlb(MsgAddressInt, responseAddress)
-            storeBit(true)
-            storeRef(AnyTlbConstructor, CellRef(body))
-        }
-    }
-
     fun nft(
         newOwnerAddress: MsgAddressInt,
         excessesAddress: MsgAddressInt,
