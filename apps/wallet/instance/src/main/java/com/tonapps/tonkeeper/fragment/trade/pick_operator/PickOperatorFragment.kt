@@ -81,14 +81,19 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonContainer?.applyNavBottomPadding(32f.dp)
+        buttonContainer?.applyNavBottomPadding()
+
         header?.setAction(UIKitIcon.ic_close_16)
         header?.doOnActionClick = { viewModel.onCrossClicked() }
         header?.setIcon(UIKitIcon.ic_chevron_left_16)
         header?.doOnCloseClick = { viewModel.onChevronClicked() }
+
         currencyDropdown?.setThrottleClickListener { viewModel.onCurrencyDropdownClicked() }
+
         button?.setOnClickListener { viewModel.onButtonClicked() }
+
         recyclerView?.adapter = adapter
+
         observeFlows()
     }
 

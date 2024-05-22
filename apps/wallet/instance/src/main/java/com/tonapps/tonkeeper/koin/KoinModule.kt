@@ -103,7 +103,7 @@ val koinModel = module {
     viewModel { AmountScreenFeature(get(), get()) }
     viewModel { BuySellViewModel(get()) }
 
-    viewModel { ExchangeViewModel(get(), get(), get(), get()) }
+    viewModel { ExchangeViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { PickOperatorViewModel(get(), get(), get()) }
     viewModel { PickCurrencyViewModel(get()) }
 

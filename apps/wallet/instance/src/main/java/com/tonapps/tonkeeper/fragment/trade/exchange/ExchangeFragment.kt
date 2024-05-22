@@ -58,17 +58,20 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         input?.doOnAmountChange { viewModel.onAmountChanged(it) }
+
         recyclerView?.adapter = adapter
+
+        button?.setThrottleClickListener { viewModel.onButtonClicked() }
+
+        footer?.applyNavBottomPadding()
+
         observeFlow(viewModel.totalFiat) { rateTextView?.text = it }
         observeFlow(viewModel.methods) { adapter.submitList(it) }
         observeFlow(viewModel.isButtonActive) { button?.isEnabled = it }
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.minAmount) { updateMinAmount(it) }
-        // clip children ripple effect
-        recyclerView?.round(requireContext().cornerMedium)
-        button?.setThrottleClickListener { viewModel.onButtonClicked() }
-        footer?.applyNavBottomPadding(16f.dp.toInt())
     }
 
     private fun updateMinAmount(minAmount: BigDecimal) {

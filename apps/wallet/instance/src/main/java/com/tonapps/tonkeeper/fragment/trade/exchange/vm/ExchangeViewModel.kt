@@ -7,15 +7,19 @@ import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.trade.domain.GetExchangeMethodsCase
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
+import com.tonapps.tonkeeper.fragment.trade.domain.model.ExchangeDirection
 import com.tonapps.tonkeeper.fragment.trade.exchange.ExchangeFragmentArgs
 import com.tonapps.tonkeeper.fragment.trade.ui.rv.model.ExchangeMethodListItem
+import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.token.TokenRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -27,7 +31,9 @@ class ExchangeViewModel(
     getRateFlowCase: GetRateFlowCase,
     settingsRepository: SettingsRepository,
     getExchangeMethodsCase: GetExchangeMethodsCase,
-    private val exchangeItems: ExchangeItems
+    private val exchangeItems: ExchangeItems,
+    tokenRepository: TokenRepository,
+    walletRepository: WalletRepository
 ) : ViewModel() {
 
     companion object {
@@ -48,6 +54,20 @@ class ExchangeViewModel(
     private val _events = MutableSharedFlow<ExchangeEvent>()
     private val pickedItem = exchangeItems.pickedItem
         .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val activeWallet = walletRepository.activeWalletFlow
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val balance = combine(activeWallet, currency) { wallet, currency ->
+        tokenRepository.get(currency, wallet.accountId, wallet.testnet)
+            .firstOrNull { it.isTon }
+    }.filterNotNull()
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    private val isRightAmount = combine(args, balance, amount) { args, balance, amount ->
+        if (args.direction == ExchangeDirection.SELL) {
+            amount <=balance.balance.value
+        } else {
+            true
+        }
+    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     val methods = exchangeItems.items.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val minAmount = pickedItem.map { it.method.minAmount }
@@ -56,8 +76,8 @@ class ExchangeViewModel(
         amountFlow = amount,
         token = TOKEN_TON
     )
-    val isButtonActive = combine(amount, minAmount) { currentAmount, minAmount ->
-        currentAmount >= minAmount
+    val isButtonActive = combine(amount, minAmount, isRightAmount) { currentAmount, minAmount, isRightAmount ->
+        (currentAmount >= minAmount) && isRightAmount
     }
     val events: Flow<ExchangeEvent>
         get() = _events
