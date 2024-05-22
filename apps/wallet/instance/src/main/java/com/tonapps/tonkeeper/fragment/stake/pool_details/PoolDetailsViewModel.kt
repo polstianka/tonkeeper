@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCase
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingSocial
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingSocialType
+import com.tonapps.tonkeeper.fragment.stake.domain.model.tonViewerSocial
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import com.tonapps.tonkeeper.fragment.stake.presentation.formatApy
 import com.tonapps.tonkeeper.fragment.stake.presentation.minStakingText
@@ -29,28 +31,12 @@ class PoolDetailsViewModel(
 
     private val _events = MutableSharedFlow<PoolDetailsEvent>()
     private val args = MutableSharedFlow<PoolDetailsFragmentArgs>(replay = 1)
-    private val socials = args.map { args ->
-        args.service.socials +
-                StakingSocial(
-                    type = StakingSocialType.TONVIEWER,
-                    link = "https://tonviewer.com/${args.pool.address}"
-                )
-    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     val events: Flow<PoolDetailsEvent>
         get() = _events
     val title = args.map { it.pool.name }
     val pool = args.map { it.pool }
-    val chips = socials.map { socials ->
-        val args = args.first()
-        socials.map { social ->
-            LinksChipModel(
-                iconResId = social.type.getIconResId(),
-                text = social.type.getText(args.service),
-                url = social.link
-            )
-        }
-    }
+    val chips = args.map { it.service.chipModels(it.pool) }
     val liquidJetton = args.map { args ->
         getStakingPoolLiquidJettonCase.execute(
             args.pool,
@@ -80,6 +66,19 @@ class PoolDetailsViewModel(
         val event = PoolDetailsEvent.PickPool(pool)
         _events.emit(event)
     }
+}
+
+fun StakingService.chipModels(pool: StakingPool): List<LinksChipModel> {
+    val completeSocials = socials + pool.tonViewerSocial()
+    return completeSocials.map { it.toChipModel(this) }
+}
+
+fun StakingSocial.toChipModel(service: StakingService): LinksChipModel {
+ return LinksChipModel(
+        iconResId = type.getIconResId(),
+        text = type.getText(service),
+        url = link
+    )
 }
 
 @DrawableRes

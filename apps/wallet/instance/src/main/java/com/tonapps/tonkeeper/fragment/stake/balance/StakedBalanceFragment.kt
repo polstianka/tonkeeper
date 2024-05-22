@@ -12,11 +12,13 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
+import com.tonapps.tonkeeper.fragment.stake.ui.PoolLinksView
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import uikit.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 
 class StakedBalanceFragment : BaseFragment(
@@ -52,6 +54,8 @@ class StakedBalanceFragment : BaseFragment(
         get() = view?.findViewById(R.id.fragment_staked_balance_liquid_staking_details)
     private val poolDetailsView: PoolDetailsView?
         get() = view?.findViewById(R.id.fragment_staked_balance_pool_details)
+    private val poolLinksView: PoolLinksView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_links)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,9 +76,12 @@ class StakedBalanceFragment : BaseFragment(
 
         unstakeButton?.setThrottleClickListener { viewModel.onUnstakeClicked() }
 
+        poolLinksView?.setOnChipClicked { viewModel.onChipClicked(it) }
+
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.args) { updateState(it) }
         observeFlow(viewModel.jetton) { liquidStakingDetailsView?.applyLiquidJetton(it) }
+        observeFlow(viewModel.chips) { poolLinksView?.applyChips(it) }
     }
 
     private fun updateState(args: StakedBalanceArgs) {
@@ -96,6 +103,7 @@ class StakedBalanceFragment : BaseFragment(
         when (event) {
             StakedBalanceEvent.NavigateBack -> finish()
             is StakedBalanceEvent.NavigateToStake -> Log.wtf("###", "navigateToStake: $event")
+            is StakedBalanceEvent.NavigateToLink -> navigation?.openURL(event.url, true)
         }
     }
 }

@@ -11,4 +11,5 @@ sealed class StakedBalanceEvent {
         val service: StakingService,
         val stakingDirection: StakingDirection
     ) : StakedBalanceEvent()
+    data class NavigateToLink(val url: String) : StakedBalanceEvent()
 }

@@ -37,21 +37,12 @@
                 android:layout_marginHorizontal="16dp"
                 android:id="@+id/fragment_pool_details_pool_details"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.tonapps.tonkeeper.fragment.stake.ui.PoolLinksView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="16dp"
-                android:text="@string/links"
-                android:textAppearance="@style/TextAppearance.H3"
-                android:textColor="?textPrimaryColor" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/fragment_pool_details_chip_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:layout_marginHorizontal="16dp" />
+                android:id="@+id/fragment_pool_details_links"/>
 
         </uikit.widget.ColumnLayout>
 

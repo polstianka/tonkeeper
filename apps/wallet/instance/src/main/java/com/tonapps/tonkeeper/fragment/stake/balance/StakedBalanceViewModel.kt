@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCase
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingDirection
+import com.tonapps.tonkeeper.fragment.stake.pool_details.chipModels
+import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ class StakedBalanceViewModel(
             it.stakedBalance.currency
         )
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    val chips = args.map {  it.stakedBalance.service.chipModels(it.stakedBalance.pool) }
 
     fun provideArgs(args: StakedBalanceArgs) {
         emit(this.args, args)
@@ -56,5 +58,9 @@ class StakedBalanceViewModel(
             StakingDirection.UNSTAKE
         )
         _events.emit(event)
+    }
+
+    fun onChipClicked(chip: LinksChipModel) {
+        emit(_events, StakedBalanceEvent.NavigateToLink(chip.url))
     }
 }

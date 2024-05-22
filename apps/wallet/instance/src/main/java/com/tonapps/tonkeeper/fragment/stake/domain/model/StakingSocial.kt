@@ -8,3 +8,10 @@ data class StakingSocial(
     val type: StakingSocialType,
     val link: String
 ) : Parcelable
+
+fun StakingPool.tonViewerSocial(): StakingSocial {
+    return StakingSocial(
+        type = StakingSocialType.TONVIEWER,
+        link = "https://tonviewer.com/$address"
+    )
+}
