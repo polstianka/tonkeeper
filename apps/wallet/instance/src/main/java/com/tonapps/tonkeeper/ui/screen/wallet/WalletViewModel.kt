@@ -27,7 +27,10 @@ import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -44,6 +47,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newCoroutineContext
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
 import java.math.BigDecimal
@@ -95,6 +99,9 @@ class WalletViewModel(
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
 
     val uiLabelFlow = walletRepository.activeWalletFlow.map { it.label }
+    private val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Log.wtf("###", "error: ${throwable.message}")
+    }
 
     init {
         walletRepository.activeWalletFlow.map { screenCacheSource.getWalletScreen(it) }
@@ -137,7 +144,7 @@ class WalletViewModel(
                 currency,
                 activeWallet.testnet
             )
-        }.launchIn(viewModelScope)
+        }.launchIn(CoroutineScope(viewModelScope.coroutineContext + errorHandler))
 
         combine(
             walletRepository.activeWalletFlow,

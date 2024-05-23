@@ -15,7 +15,6 @@ import com.tonapps.tonkeeper.fragment.stake.presentation.description
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
-import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.localization.R
@@ -87,9 +86,7 @@ class StakeViewModel(
     val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
     val optionTitle = pickedPool.map { it.name }
     val optionSubtitle = pickedPool.map { it.description() }
-    val isMaxApy = combine(stakingServices, pickedPool) { list, item ->
-        list.maxApy() === item
-    }
+    val isMaxApy = pickedPool.map { it.isMaxApy }
 
     init {
         loadStakingServices()
@@ -115,11 +112,18 @@ class StakeViewModel(
 
     fun onAmountChanged(amount: BigDecimal) {
         if (amount == this.amount.value) return
+        if (ignoreNextUpdate) {
+            ignoreNextUpdate = false
+            return
+        }
         this.amount.value = amount
     }
 
+    private var ignoreNextUpdate = false
     fun onMaxClicked() = viewModelScope.launch {
         val balance = balance.first().balance.value
+        ignoreNextUpdate = true
+        amount.value = balance
         _events.emit(StakeEvent.SetInputValue(balance))
     }
 
@@ -138,10 +142,12 @@ class StakeViewModel(
     fun onButtonClicked() = viewModelScope.launch {
         val pool = pickedPool.first()
         val amount = amount.value
+        val balance = balance.first()
         val event = StakeEvent.NavigateToConfirmFragment(
             pool = pool,
             amount = amount,
-            type = StakingTransactionType.DEPOSIT // todo
+            type = StakingTransactionType.DEPOSIT,
+            isSendAll = balance.balance.value == amount
         )
         _events.emit(event)
     }

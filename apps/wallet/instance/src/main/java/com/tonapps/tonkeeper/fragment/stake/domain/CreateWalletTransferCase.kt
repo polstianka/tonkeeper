@@ -4,8 +4,8 @@ import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.extensions.getSeqno
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
-import org.ton.block.AddrStd
 import org.ton.block.Coins
+import org.ton.block.MsgAddressInt
 import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
 import org.ton.contract.wallet.WalletTransferBuilder
@@ -19,16 +19,15 @@ class CreateWalletTransferCase(
 
     suspend fun execute(
         wallet: WalletLegacy,
-        destinationAddress: String,
+        destinationAddress: MsgAddressInt,
         amount: BigDecimal,
         bodyCell: Cell
     ): WalletTransfer {
         val seqno = wallet.getSeqno(api)
         val stateInit = getStateInitCase.execute(seqno, wallet)
-//        val poolAddress = "0:d5d4b4d4d2c5a88e60d45781ee96b9583e9c4b59252333a177954bab31bc216a"
         return WalletTransferBuilder().apply {
             bounceable = true
-            destination = AddrStd.parse(destinationAddress)
+            destination = destinationAddress
             body = bodyCell
             sendMode = SendMode.PAY_GAS_SEPARATELY.value + SendMode.IGNORE_ERRORS.value
             coins = Coins.ofNano(Coin.toNano(amount))

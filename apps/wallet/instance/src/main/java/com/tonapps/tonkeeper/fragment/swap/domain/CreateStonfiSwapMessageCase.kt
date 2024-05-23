@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.swap.domain
 
-import android.util.Log
 import com.tonapps.blockchain.ton.tlb.JettonTransfer
 import com.tonapps.tonkeeper.core.toCoins
 import com.tonapps.tonkeeper.extensions.sendToBlockchain
@@ -8,7 +7,6 @@ import com.tonapps.tonkeeper.fragment.send.TransactionData
 import com.tonapps.tonkeeper.fragment.stake.domain.CreateWalletTransferCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
-import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.tonkeeper.fragment.swap.domain.model.recommendedForwardTon
@@ -22,7 +20,6 @@ import org.ton.block.MsgAddressInt
 import org.ton.cell.buildCell
 import org.ton.tlb.storeTlb
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 class CreateStonfiSwapMessageCase(
     private val createSwapCellCase: CreateSwapCellCase,
@@ -72,11 +69,12 @@ class CreateStonfiSwapMessageCase(
             forwardAmount = forwardAmount.toCoins(),
             forwardPayload = swapCell
         )
-        val jettonFromWalletAddress = getJettonFromWalletAddress(
+        val jettonFromWalletAddressString = getJettonFromWalletAddress(
             sendAsset,
             receiveAsset,
             walletLegacy
         )
+        val jettonFromWalletAddress = MsgAddressInt.parse(jettonFromWalletAddressString)
         val walletTransfer = createWalletTransferCase.execute(
             walletLegacy,
             jettonFromWalletAddress,
@@ -85,7 +83,6 @@ class CreateStonfiSwapMessageCase(
         )
         val privateKey = walletManager.getPrivateKey(walletLegacy.id)
         val response = walletLegacy.sendToBlockchain(api, privateKey, walletTransfer)
-        Log.wtf("###", "$response")
     }
 
     private suspend fun getJettonFromWalletAddress(

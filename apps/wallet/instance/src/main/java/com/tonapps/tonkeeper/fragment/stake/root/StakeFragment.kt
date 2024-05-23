@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake.root
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -9,20 +8,16 @@ import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
-import com.tonapps.tonkeeper.extensions.doOnAmountChange
-import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeFragment
 import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionFragment
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment.Companion.REQUEST_KEY_PICK_POOL
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
 import com.tonapps.tonkeeper.fragment.stake.ui.StakeInputView
 import com.tonapps.tonkeeperx.R
-import com.tonapps.uikit.color.resolveColor
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
-import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -96,12 +91,12 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     }
 
     private fun StakeEvent.NavigateToConfirmFragment.handle() {
-        val fragment = ConfirmStakeFragment.newInstance(pool, amount, type)
+        val fragment = ConfirmStakeFragment.newInstance(pool, amount, type, isSendAll)
         navigation?.add(fragment)
     }
 
     private fun StakeEvent.SetInputValue.handle() {
-        input?.setInputText(CurrencyFormatter.format(value, value.scale()))
+        input?.setInputText(CurrencyFormatter.format(value, 2))
     }
 
     private fun StakeEvent.PickStakingOption.handle() {

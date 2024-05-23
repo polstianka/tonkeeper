@@ -1,14 +1,13 @@
 package com.tonapps.tonkeeper.fragment.stake.confirm
 
 import com.tonapps.blockchain.Coin
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.extensions.formatRate
-import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeItemType
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeListItem
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.withdrawalFee
-import com.tonapps.tonkeeper.fragment.stake.presentation.formatTon
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import kotlinx.coroutines.flow.Flow
@@ -28,19 +27,24 @@ class ConfirmStakeListHelper(
     }
 
     fun setFee(
-        fee: Long,
+        feeLong: Long,
         rate: RatesEntity,
         pool: StakingPool
     ) {
-        val totalFee = fee + pool.serviceType.withdrawalFee
+        val feeBigDecimal = BigDecimal(feeLong).movePointLeft(Coin.TON_DECIMALS)
+        val totalFee = feeBigDecimal + pool.serviceType.withdrawalFee
         val state = _items.value.toMutableList()
         val iterator = state.listIterator()
         while (iterator.hasNext()) {
             val current = iterator.next()
             if (current.itemType == ConfirmStakeItemType.FEE) {
-                val textCrypto = "~ ${totalFee.formatTon()}"
+                val amountCrypto = CurrencyFormatter.format(
+                    "TON",
+                    totalFee
+                )
+                val textCrypto = "~ $amountCrypto"
                 val wrapperCrypto = TextWrapper.PlainString(textCrypto)
-                val textFiat = "~ ${formatRate(rate, BigDecimal(totalFee).movePointLeft(Coin.TON_DECIMALS), "TON")}"
+                val textFiat = "~ ${formatRate(rate, totalFee, "TON")}"
                 val updatedItem = current.copy(
                     textPrimary = wrapperCrypto,
                     textSecondary = textFiat

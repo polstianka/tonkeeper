@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.fragment.stake.confirm
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +13,11 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
-import uikit.widget.HeaderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
+import uikit.widget.HeaderView
 import uikit.widget.ProcessTaskView
 import uikit.widget.SlideActionView
 import java.math.BigDecimal
@@ -29,10 +28,11 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         fun newInstance(
             pool: StakingPool,
             amount: BigDecimal,
-            type: StakingTransactionType
+            type: StakingTransactionType,
+            isSendAll: Boolean
         ) = ConfirmStakeFragment().apply {
             setArgs(
-                ConfirmStakeArgs(pool, amount, type)
+                ConfirmStakeArgs(pool, amount, type, isSendAll)
             )
         }
     }

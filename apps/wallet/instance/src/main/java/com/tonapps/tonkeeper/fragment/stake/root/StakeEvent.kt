@@ -18,6 +18,7 @@ sealed class StakeEvent {
     data class NavigateToConfirmFragment(
         val pool: StakingPool,
         val amount: BigDecimal,
-        val type: StakingTransactionType
+        val type: StakingTransactionType,
+        val isSendAll: Boolean
     ) : StakeEvent()
 }

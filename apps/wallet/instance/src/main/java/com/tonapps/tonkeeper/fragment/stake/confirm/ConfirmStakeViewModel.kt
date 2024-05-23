@@ -68,7 +68,13 @@ class ConfirmStakeViewModel(
         viewModelScope.launch {
             val wallet = walletManager.getWalletInfo()!!
             val args = args.first()
-            val result = emulateCase.execute(wallet, args.pool, args.amount)
+            val result = emulateCase.execute(
+                wallet,
+                args.pool,
+                args.amount,
+                args.type,
+                args.isSendAll
+            )
             fee.emit(result.totalFees)
         }
         observeFlow(feeUpdate) {
@@ -95,7 +101,14 @@ class ConfirmStakeViewModel(
         val args = args.first()
         val state: ProcessTaskView.State
         val event: ConfirmStakeEvent
-        if (stakeCase.execute(walletInfo, args.pool, args.amount)) {
+        val didStake = stakeCase.execute(
+            walletInfo,
+            args.pool,
+            args.amount,
+            args.type,
+            args.isSendAll
+        )
+        if (didStake) {
             state = ProcessTaskView.State.SUCCESS
             event = ConfirmStakeEvent.CloseFlow
         } else {

@@ -36,7 +36,7 @@ class StakingRepository(
         accountId: String,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
-        val result = api.getStakingPools(accountId, testnet)
+        val result = api.getStakingPools(accountId, false)
         val implementationsByPool = PoolImplementationType.entries
             .associateWith { mutableSetOf<PoolInfo>() }
 
