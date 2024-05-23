@@ -14,43 +14,74 @@ import io.stonfiapi.models.DexReverseSimulateSwap200Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.write
 
 class DexAssetsRepository(
     private val api: StonfiAPI
 ) {
 
-    private val _isLoading = MutableStateFlow(false)
-    private val _items = MutableStateFlow<List<DexAsset>>(emptyList())
+    private val isLoadingFlows = mutableMapOf<String, MutableStateFlow<Boolean>>()
+    private val assetsFlowLock = ReentrantReadWriteLock()
+    private val assetsFlows = mutableMapOf<String, MutableStateFlow<List<DexAsset>>>()
 
-    val isLoading: StateFlow<Boolean>
-        get() = _isLoading
-    val items: Flow<List<DexAsset>>
-        get() = _items
-    val positiveBalance = items.map { it.filter { it.balance > BigDecimal.ZERO } }
+    fun getIsLoadingFlow(walletAddress: String): Flow<Boolean> {
+        return getIsLoadingMutableFlow(walletAddress)
+    }
+
+    fun getAssetsFlow(walletAddress: String): Flow<List<DexAsset>> {
+        return getAssetsMutableFlow(walletAddress)
+    }
+
+    fun getPositiveBalanceFlow(walletAddress: String): Flow<List<DexAsset>> {
+        return getAssetsFlow(walletAddress)
+            .map { list -> list.filter { it.balance > BigDecimal.ZERO } }
+    }
+
+    private fun getIsLoadingMutableFlow(
+        walletAddress: String
+    ) = assetsFlowLock.write {
+        if (!isLoadingFlows.containsKey(walletAddress)) {
+            isLoadingFlows[walletAddress] = MutableStateFlow(false)
+        }
+        isLoadingFlows[walletAddress]!!
+    }
+
+    private fun getAssetsMutableFlow(
+        walletAddress: String
+    ) = assetsFlowLock.write {
+        if (!assetsFlows.containsKey(walletAddress)) {
+            assetsFlows[walletAddress] = MutableStateFlow(emptyList())
+        }
+        assetsFlows[walletAddress]!!
+    }
 
     suspend fun loadAssets(
         walletAddress: String
     ) = withContext(Dispatchers.IO) {
-        _isLoading.value = true
+        val items = getAssetsMutableFlow(walletAddress)
+        val isLoading = getIsLoadingMutableFlow(walletAddress)
+
+        isLoading.value = items.value.isEmpty()
         val response = api.wallets.getWalletAssets(walletAddress)
-        _items.value = response.assetList
+        items.value = response.assetList
             .asSequence()
             .filter { it.isValid() }
             .map { it.toDomain() }
             .sortedWith(dexAssetComparator)
             .toList()
 
-        _isLoading.value = false
+        isLoading.value = false
     }
 
-    fun getDefaultAsset(): DexAsset {
-        return _items.value.first { it.type == DexAssetType.TON }
+    fun getDefaultAsset(walletAddress: String): DexAsset {
+        val items = getAssetsMutableFlow(walletAddress)
+        return items.value.first { it.type == DexAssetType.TON }
     }
 
     private val dexAssetComparator = Comparator<DexAsset> { o1, o2 ->

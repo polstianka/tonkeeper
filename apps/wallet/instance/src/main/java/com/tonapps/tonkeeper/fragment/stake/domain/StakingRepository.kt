@@ -111,9 +111,11 @@ class StakingRepository(
             getStakingPools(walletAddress, testnet)
         }
         val jettonBalancesDeferred = async {
-            dexAssetsRepository.isLoading.filter { !it }
+            dexAssetsRepository.getIsLoadingFlow(walletAddress)
+                .filter { !it }
                 .first()
-            dexAssetsRepository.positiveBalance.first()
+            dexAssetsRepository.getPositiveBalanceFlow(walletAddress)
+                .first()
         }
         val stakingServices = poolsDeferred.await()
         val pools = stakingServices.flatMap { it.pools }

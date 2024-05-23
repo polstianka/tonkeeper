@@ -13,6 +13,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
+import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -36,7 +38,8 @@ class SwapViewModel(
     private val repository: DexAssetsRepository,
     getDefaultSwapSettingsCase: GetDefaultSwapSettingsCase,
     settingsRepository: SettingsRepository,
-    private val ratesRepository: RatesRepository
+    private val ratesRepository: RatesRepository,
+    private val walletRepository: WalletRepository
 ) : ViewModel() {
 
     private val swapSettings = MutableStateFlow(getDefaultSwapSettingsCase.execute())
@@ -51,7 +54,8 @@ class SwapViewModel(
     private val sendAmount = MutableStateFlow(BigDecimal.ZERO)
     private val currency = settingsRepository.currencyFlow
 
-    val isLoading = repository.isLoading
+    val isLoading = walletRepository.activeWalletFlow
+        .flatMapLatest { repository.getIsLoadingFlow(it.address) }
     val events: Flow<SwapEvent>
         get() = _events
     val pickedSendAsset: Flow<DexAsset?>
@@ -109,10 +113,13 @@ class SwapViewModel(
 
 
     init {
-        observeFlow(isLoading) { isLoading ->
-            if (isLoading) return@observeFlow
-            _pickedSendAsset.emit(repository.getDefaultAsset())
+        observeFlow(walletRepository.activeWalletFlow) { wallet ->
+            repository.loadAssets(wallet.address)
         }
+        combine(isLoading, walletRepository.activeWalletFlow) { isLoading, wallet ->
+            if (isLoading) return@combine
+            _pickedSendAsset.emit(repository.getDefaultAsset(wallet.address))
+        }.launchIn(viewModelScope)
     }
 
     fun onSettingsClicked() {

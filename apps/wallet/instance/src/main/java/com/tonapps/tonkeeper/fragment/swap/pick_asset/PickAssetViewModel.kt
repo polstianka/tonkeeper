@@ -7,18 +7,21 @@ import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListHelper
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListItem
+import com.tonapps.wallet.data.account.WalletRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class PickAssetViewModel(
     private val dexAssetsRepository: DexAssetsRepository,
-    private val listHelper: TokenListHelper
+    private val listHelper: TokenListHelper,
+    walletRepository: WalletRepository
 ) : ViewModel() {
 
     private val args = MutableSharedFlow<PickAssetArgs>(replay = 1)
@@ -29,9 +32,11 @@ class PickAssetViewModel(
     val items = listHelper.items
         .flowOn(Dispatchers.Default)
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+    private val domainItems = walletRepository.activeWalletFlow
+        .flatMapLatest { dexAssetsRepository.getAssetsFlow(it.address) }
 
     init {
-        observeFlow(dexAssetsRepository.items) { listHelper.submitItems(it) }
+        observeFlow(domainItems) { listHelper.submitItems(it) }
     }
 
     fun provideArgs(args: PickAssetArgs) {
