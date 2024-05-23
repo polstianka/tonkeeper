@@ -2,27 +2,19 @@ package uikit.widget
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.PathInterpolator
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.core.math.MathUtils
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
-import androidx.customview.widget.ViewDragHelper
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import uikit.R
-import uikit.base.BaseFragment
 import uikit.extensions.activity
 import uikit.extensions.dp
 import uikit.extensions.getDimensionPixelSize
@@ -49,6 +41,7 @@ class BottomSheetLayout @JvmOverloads constructor(
     var doOnAnimationEnd: (() -> Unit)? = null
     var doOnDragging: (() -> Unit)? = null
     var fragment: Fragment? = null
+    var scaleBackground: Boolean = false
 
     private val parentRootView: View? by lazy {
         val v = context.activity?.findViewById<View>(R.id.root_container)
@@ -140,6 +133,9 @@ class BottomSheetLayout @JvmOverloads constructor(
     }
 
     private fun onAnimationUpdateParent(progress: Float) {
+        if (!scaleBackground) {
+            return
+        }
         val parentView = parentRootView ?: return
         val radius = context.getDimensionPixelSize(R.dimen.cornerMedium)
         parentView.roundTop(progress.range(0, radius))

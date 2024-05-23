@@ -2,10 +2,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <uikit.widget.webview.bridge.BridgeWebView
-        android:id="@+id/web"
+    <uikit.widget.ColumnLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="16dp">
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/swap"
+            android:icon="@drawable/ic_sliders_16"
+            android:action="@drawable/ic_close_16"/>
+    </uikit.widget.ColumnLayout>
+
+
+<!--        <uikit.widget.webview.bridge.BridgeWebView-->
+<!--        android:id="@+id/web"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
 
 </FrameLayout>

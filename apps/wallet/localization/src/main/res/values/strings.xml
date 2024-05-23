@@ -267,4 +267,14 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+
+    <string name="slippage">Slippage</string>
+    <string name="slippage_secondary">The amount the price can change\nunfavorably before the trade reverts</string>
+    <string name="slippage_hint">Custom %</string>
+    <string name="expert_mode">Expert Mode</string>
+    <string name="expert_mode_description">Allows high price impact trades.\nUse at your own risk.</string>
+    <string name="one_percent" translatable="false">1%</string>
+    <string name="three_percent" translatable="false">3%</string>
+    <string name="five_percent" translatable="false">5%</string>
+    <string name="slippage_save">Save</string>
 </resources>

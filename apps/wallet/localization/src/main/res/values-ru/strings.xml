@@ -263,4 +263,11 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+
+    <string  name="slippage">Проскальзывание</string>
+    <string  name="slippage_secondary">Сумма, на которую цена может измениться в неблагоприятную сторону до возобновления сделки</string>
+    <string name="slippage_hint" translatable="false">Собственный %</string>
+    <string name="expert_mode" translatable="false">Режим эксперта</string>
+    <string name="expert_mode_description" translatable="false">Позволяет совершать сделки с высоким ценовым воздействием.\nИспользуйте на свой страх и риск.</string>
+    <string name="slippage_save">Сохранить</string>
 </resources>

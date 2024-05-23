@@ -29,7 +29,12 @@ class IconButtonView @JvmOverloads constructor(
 
         context.useAttributes(attrs, R.styleable.IconButtonView) {
             iconView.setImageResource(it.getResourceId(R.styleable.IconButtonView_android_icon, 0))
-            titleView.text = it.getString(R.styleable.IconButtonView_android_title)
+            if(it.getString(R.styleable.IconButtonView_android_title) == ""){
+                titleView.visibility = INVISIBLE
+            }
+            else{
+                titleView.text = it.getString(R.styleable.IconButtonView_android_title)
+            }
             isEnabled = it.getBoolean(R.styleable.IconButtonView_android_enabled, true)
 
             val tintColor = it.getColor(R.styleable.IconButtonView_android_tint, 0)

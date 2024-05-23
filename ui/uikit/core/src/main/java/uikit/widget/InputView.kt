@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextWatcher
-import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -27,6 +26,7 @@ import uikit.extensions.range
 import uikit.extensions.scale
 import uikit.extensions.setCursorColor
 import uikit.extensions.useAttributes
+
 
 class InputView @JvmOverloads constructor(
     context: Context,
@@ -99,6 +99,7 @@ class InputView @JvmOverloads constructor(
     private val iconView: AppCompatImageView
     private val clearView: AppCompatImageView
     private val loaderView: LoaderView
+    private var initializedDecimalFilter = false
 
     var error: Boolean
         get() = inputDrawable.error
@@ -128,6 +129,18 @@ class InputView @JvmOverloads constructor(
                 }
             }
         }
+
+    fun setDecimalFilter(maxValue: Int) {
+        if(!initializedDecimalFilter){
+            editText.filters = editText.filters.plus(DecimalDigitsInputFilter(maxValue))
+            initializedDecimalFilter = true
+        }
+        else{
+            editText.filters =
+                editText.filters.filter{ it.javaClass != DecimalDigitsInputFilter::class.java}.toTypedArray()
+            editText.filters = editText.filters.plus(DecimalDigitsInputFilter(maxValue))
+        }
+    }
 
     private var actionValue: String? = null
         set(value) {
@@ -181,7 +194,8 @@ class InputView @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                editText.filters = if (value > 0) arrayOf(InputFilter.LengthFilter(value)) else emptyArray()
+                editText.filters =
+                    if (value > 0) arrayOf(InputFilter.LengthFilter(value)) else emptyArray()
             }
         }
 
@@ -273,8 +287,12 @@ class InputView @JvmOverloads constructor(
     override fun onAnimationUpdate(animation: ValueAnimator) {
         val progress = animation.animatedValue as Float
         hintView.scale = progress.range(expandHintConfig.hintScale, reduceHintConfig.hintScale)
-        hintView.translationY = progress.range(expandHintConfig.hintTranslationY, reduceHintConfig.hintTranslationY)
-        editText.translationY = progress.range(expandHintConfig.editTextTranslationY, reduceHintConfig.editTextTranslationY)
+        hintView.translationY =
+            progress.range(expandHintConfig.hintTranslationY, reduceHintConfig.hintTranslationY)
+        editText.translationY = progress.range(
+            expandHintConfig.editTextTranslationY,
+            reduceHintConfig.editTextTranslationY
+        )
     }
 
     private data class HintConfig(
@@ -296,4 +314,39 @@ class InputView @JvmOverloads constructor(
         doOnTextChange?.invoke(s.toString())
     }
 
+}
+
+class DecimalDigitsInputFilter(private var maxValue: Int) : InputFilter {
+    override fun filter(
+        source: CharSequence?,
+        start: Int,
+        end: Int,
+        dest: Spanned?,
+        dstart: Int,
+        dend: Int
+    ): CharSequence? {
+        try {
+            val input: String =
+                dest!!.subSequence(0, dstart).toString() + source.toString() + dest.subSequence(
+                    dend,
+                    dest.length
+                )
+            if (input.isEmpty()) {
+                return null
+            }
+            val value = input.toFloat()
+            if (input.contains(".") && input.substring(input.indexOf(".") + 1).length > 1) {
+                return ""
+            }
+            if (!input.contains(".") && input.toInt().toString().length < input.length) {
+                return ""
+            }
+            if (value > maxValue) {
+                return ""
+            }
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+        return null
+    }
 }

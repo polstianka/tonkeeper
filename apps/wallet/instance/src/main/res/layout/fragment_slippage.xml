@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="16dp">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:title="@string/settings" />
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetSmall"
+            android:paddingHorizontal="@dimen/offsetMedium">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/slippage"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="@color/textPrimaryBlue" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/slippage_secondary"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="@color/textSecondaryBlue" />
+
+            <uikit.widget.InputView
+                android:id="@+id/percent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetSmall"
+                android:hint="@string/slippage_hint"
+                android:singleLine="true"
+                android:inputType="number" />
+
+            <uikit.widget.RowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:layout_marginTop="@dimen/offsetSmall">
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/one"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/one_percent"
+                    android:textAppearance="@style/TextAppearance.Body1" />
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/three"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/three_percent"
+                    android:textAppearance="@style/TextAppearance.Body1" />
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/five"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/five_percent"
+                    android:textAppearance="@style/TextAppearance.Body1" />
+            </uikit.widget.RowLayout>
+
+            <uikit.widget.RowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_secondary"
+                android:layout_marginTop="@dimen/offsetLarge"
+                android:padding="@dimen/offsetMedium">
+                <uikit.widget.ColumnLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_mode"
+                        android:gravity="center_vertical"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?attr/textPrimaryColor" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_mode_description"
+                        android:gravity="center_vertical"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?attr/textSecondaryColor" />
+                </uikit.widget.ColumnLayout>
+                <uikit.widget.SwitchView
+                    android:id="@+id/check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </uikit.widget.RowLayout>
+        </uikit.widget.ColumnLayout>
+    </uikit.widget.ColumnLayout>
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/save_button"
+        android:layout_margin="@dimen/offsetMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/buttonPrimaryForegroundColor"
+        android:layout_gravity="bottom"/>
+</FrameLayout>
