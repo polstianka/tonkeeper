@@ -35,6 +35,8 @@ class SwapDetailsView
         get() = findViewById(R.id.view_swap_details_blockchain_fee)
     private val priceImpactTextView: TextView?
         get() = findViewById(R.id.view_swap_details_price_impact)
+    private val routeTextView: TextView?
+        get() = findViewById(R.id.view_swap_details_route)
 
     init {
         inflate(context, R.layout.view_swap_details, this)
@@ -77,6 +79,7 @@ class SwapDetailsView
                 priceImpactTextView?.text = priceImpact.movePointRight(2)
                     .toPlainString()
                     .let { "$it%" }
+                routeTextView?.text = "${sentAsset.symbol} >> ${receivedAsset.symbol}"
             }
             null -> Unit
         }
