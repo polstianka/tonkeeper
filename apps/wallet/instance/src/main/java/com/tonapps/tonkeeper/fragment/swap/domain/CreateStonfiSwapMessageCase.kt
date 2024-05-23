@@ -11,7 +11,6 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.tonkeeper.fragment.swap.domain.model.recommendedForwardTon
 import com.tonapps.wallet.api.API
-import com.tonapps.wallet.api.StonfiAPI
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +23,9 @@ import java.math.BigDecimal
 class CreateStonfiSwapMessageCase(
     private val createSwapCellCase: CreateSwapCellCase,
     private val createWalletTransferCase: CreateWalletTransferCase,
-    private val stonfiApi: StonfiAPI,
     private val api: API,
-    private val walletManager: WalletManager
+    private val walletManager: WalletManager,
+    private val jettonWalletAddressRepository: JettonWalletAddressRepository
 ) {
 
     companion object {
@@ -82,7 +81,7 @@ class CreateStonfiSwapMessageCase(
             buildCell { storeTlb(JettonTransfer.tlbCodec(), jettonTransferData) }
         )
         val privateKey = walletManager.getPrivateKey(walletLegacy.id)
-        val response = walletLegacy.sendToBlockchain(api, privateKey, walletTransfer)
+        walletLegacy.sendToBlockchain(api, privateKey, walletTransfer)
     }
 
     private suspend fun getJettonFromWalletAddress(
@@ -90,30 +89,19 @@ class CreateStonfiSwapMessageCase(
         receiveAsset: DexAsset,
         walletLegacy: WalletLegacy
     ): String {
-        return when {
-            sendAsset.type == DexAssetType.TON && receiveAsset.type == DexAssetType.JETTON -> {
-                val a = ADDRESS_TON_PROXY
-                val b = getRouterAddress(walletLegacy.testnet)
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+        val (a, b) = when {
+            sendAsset.type == DexAssetType.TON && receiveAsset.type == DexAssetType.JETTON ->
+                ADDRESS_TON_PROXY to getRouterAddress(walletLegacy.testnet)
 
-            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.TON -> {
-                val a = sendAsset.contractAddress
-                val b = walletLegacy.address
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.TON ->
+                sendAsset.contractAddress to walletLegacy.address
 
-            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.JETTON -> {
-                val a = sendAsset.contractAddress
-                val b = walletLegacy.address
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.JETTON ->
+                sendAsset.contractAddress to walletLegacy.address
 
-            else -> TODO()
+            else -> throw IllegalStateException("${sendAsset.type} -> ${receiveAsset.type}")
         }
+        return jettonWalletAddressRepository.getJettonAddress(a, b)
     }
 
     private fun getAttachedAmount(
@@ -133,33 +121,19 @@ class CreateStonfiSwapMessageCase(
         receiveAsset: DexAsset,
         testnet: Boolean
     ): String {
-        return when {
-            sendAsset.type == DexAssetType.TON &&
-                    receiveAsset.type == DexAssetType.JETTON -> {
-                val a = receiveAsset.contractAddress
-                val b = getRouterAddress(testnet)
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+        val (a, b) = when {
+            sendAsset.type == DexAssetType.TON && receiveAsset.type == DexAssetType.JETTON ->
+                receiveAsset.contractAddress to getRouterAddress(testnet)
 
-            sendAsset.type == DexAssetType.JETTON &&
-                    receiveAsset.type == DexAssetType.TON -> {
-                val a = ADDRESS_TON_PROXY
-                val b = getRouterAddress(testnet)
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.TON ->
+                ADDRESS_TON_PROXY to getRouterAddress(testnet)
 
-            sendAsset.type == DexAssetType.JETTON &&
-                    receiveAsset.type == DexAssetType.JETTON -> {
-                val a = receiveAsset.contractAddress
-                val b = getRouterAddress(testnet)
-                stonfiApi.jetton.getWalletAddress(a, b)
-                    .address
-            }
+            sendAsset.type == DexAssetType.JETTON && receiveAsset.type == DexAssetType.JETTON ->
+                receiveAsset.contractAddress to getRouterAddress(testnet)
 
             else -> throw IllegalStateException("${sendAsset.type} -> ${receiveAsset.type}")
         }
+        return jettonWalletAddressRepository.getJettonAddress(a, b)
     }
 
     private fun getRouterAddress(testnet: Boolean): String {

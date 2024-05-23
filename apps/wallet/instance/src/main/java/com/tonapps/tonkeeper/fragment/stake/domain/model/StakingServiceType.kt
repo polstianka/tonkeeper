@@ -44,9 +44,9 @@ fun StakingServiceType.getAmount(
 
 fun StakingPool.getDestinationAddress(
     direction: StakingTransactionType,
-): MsgAddressInt {
+): MsgAddressInt? {
     return if (liquidJettonMaster != null && direction == StakingTransactionType.UNSTAKE) {
-        MsgAddressInt.parse(liquidJettonMaster)
+        null
     } else {
         MsgAddressInt.parse(address)
     }

@@ -1,9 +1,6 @@
 package com.tonapps.blockchain
 
-import android.util.Log
 import java.math.BigDecimal
-import java.math.BigInteger
-import java.math.MathContext
 import java.math.RoundingMode
 import kotlin.math.pow
 
@@ -75,6 +72,7 @@ object Coin {
         decimals: Int = TON_DECIMALS
     ): Long {
         return value.movePointRight(decimals)
+            .setScale(0, RoundingMode.FLOOR)
             .longValueExact()
     }
 
