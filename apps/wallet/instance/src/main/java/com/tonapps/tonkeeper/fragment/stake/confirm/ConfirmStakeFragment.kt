@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
+import com.tonapps.tonkeeper.fragment.stake.balance.StakedBalanceFragment
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeAdapter
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
@@ -107,9 +108,13 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
     }
 
     private fun ConfirmStakeEvent.CloseFlow.handle() {
+        val fragment = when (type) {
+            StakingTransactionType.DEPOSIT -> StakeFragment::class
+            StakingTransactionType.UNSTAKE -> StakedBalanceFragment::class
+        }
         popBackToRootFragment(
             true,
-            StakeFragment::class
+            fragment
         )
         finish()
     }

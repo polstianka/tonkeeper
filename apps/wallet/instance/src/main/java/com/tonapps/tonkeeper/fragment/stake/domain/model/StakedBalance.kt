@@ -13,6 +13,7 @@ data class StakedBalance(
     val pool: StakingPool,
     val service: StakingService,
     val liquidBalance: StakedLiquidBalance?,
+    val solidBalance: NominatorPool?,
     val fiatCurrency: WalletCurrency,
     val tonRate: RateEntity
 ) : Parcelable
@@ -24,10 +25,16 @@ data class StakedLiquidBalance(
 ) : Parcelable
 
 fun StakedBalance.getFiatBalance(): BigDecimal {
-    return when {
-        liquidBalance == null -> BigDecimal.ZERO // todo
-        else -> with(liquidBalance) { assetRate.value * asset.balance }
+    var total = BigDecimal.ZERO
+    if (liquidBalance != null) {
+        total += with(liquidBalance) { assetRate.value * asset.balance }
     }
+    if (solidBalance != null) {
+        total += with(solidBalance) {
+            amount + pendingDeposit + pendingWithdraw + readyWithdraw
+        } * tonRate.value
+    }
+    return total
 }
 
 fun StakedBalance.hasAddress(address: String): Boolean {
@@ -39,7 +46,7 @@ fun StakedBalance.hasAddress(address: String): Boolean {
 
 fun StakedBalance.getCryptoBalance(): BigDecimal {
     return when {
-        liquidBalance == null -> BigDecimal.ZERO // todo
+        tonRate.value == BigDecimal.ZERO -> BigDecimal.ZERO
         else -> getFiatBalance() / tonRate.value
     }
 }

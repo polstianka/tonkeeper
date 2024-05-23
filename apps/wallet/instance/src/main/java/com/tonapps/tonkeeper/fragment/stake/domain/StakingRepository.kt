@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.fragment.stake.domain
 
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
@@ -193,8 +192,6 @@ class StakingRepository(
         val jettonBalances = jettonBalancesDeferred.await()
         val nominatorPools = nominatorPoolsDeferred.await()
 
-        Log.wtf("###", "$nominatorPools")
-
         val pools = stakingServices.flatMap { it.pools }
         val poolsWithJettons = pools.filter { it.liquidJettonMaster != null }
         val tokens = jettonBalances.map { it.contractAddress }
@@ -204,33 +201,41 @@ class StakingRepository(
         ratesRepository.load(currency, tokens)
         val rates = ratesRepository.getRates(currency, tokens)
         val tonRate = rates.rate("TON")!!
-        val liquidStaking = poolsWithJettons.mapNotNull { poolWithJetton ->
-            val liquidJettonAddressParsed = MsgAddressInt.parse(poolWithJetton.liquidJettonMaster!!)
-            val jetton = jettonBalances.firstOrNull {
-                liquidJettonAddressParsed.isAddressEqual(it.contractAddress)
-            }
-            if (jetton == null) {
-                null
-            } else {
-                StakedBalance(
-                    poolWithJetton,
-                    stakingServices.first { it.type == poolWithJetton.serviceType },
-                    liquidBalance = jetton.stakedLiquidBalance(rates),
-                    fiatCurrency = currency,
-                    tonRate = tonRate
-                )
-            }
-        }
-        val normalStaking = nominatorPools.map { pool ->
+
+        val activePoolAddresses = mutableSetOf<String>()
+        nominatorPools.forEach { activePoolAddresses.add(it.stakingPool.address) }
+        poolsWithJettons.filter { pool ->
+            val poolAddress = MsgAddressInt.parse(pool.liquidJettonMaster!!)
+            jettonBalances.any { poolAddress.isAddressEqual(it.contractAddress) }
+        }.forEach { activePoolAddresses.add(it.address) }
+
+        stateFlow.value = activePoolAddresses.map { poolAddress ->
+            val pool = pools.first { it.address == poolAddress }
+            val service = stakingServices.first { it.type == pool.serviceType }
+            val liquidBalance = liquidBalance(pool, jettonBalances, rates)
+            val solidBalance = nominatorPools.firstOrNull { it.stakingPool.address == poolAddress }
             StakedBalance(
-                pool.stakingPool,
-                stakingServices.first { it.type == pool.stakingPool.serviceType },
-                liquidBalance = null,
+                pool = pool,
+                service = service,
+                liquidBalance = liquidBalance,
+                solidBalance = solidBalance,
                 fiatCurrency = currency,
                 tonRate = tonRate
             )
         }
-        stateFlow.value = liquidStaking + normalStaking
+    }
+
+    private fun liquidBalance(
+        pool: StakingPool,
+        jettonBalances: List<DexAsset>,
+        rates: RatesEntity
+    ): StakedLiquidBalance? {
+        val address = pool.liquidJettonMaster ?: return null
+        val addressMAI = MsgAddressInt.parse(address)
+        val jetton = jettonBalances.firstOrNull {
+            addressMAI.isAddressEqual(it.contractAddress)
+        } ?: return null
+        return jetton.stakedLiquidBalance(rates)
     }
 
     private fun DexAsset.stakedLiquidBalance(
