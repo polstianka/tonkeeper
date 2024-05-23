@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -53,7 +55,8 @@ class StakeViewModel(
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
-    private val stakingServices = MutableStateFlow(listOf<StakingService>())
+    private val stakingServices = stakingRepository.stakingPools
+        .filter { it.isNotEmpty() }
     private val pickedPool = MutableSharedFlow<StakingPool>(replay = 1)
 
     val events: Flow<StakeEvent>
@@ -87,17 +90,12 @@ class StakeViewModel(
     val isMaxApy = pickedPool.map { it.isMaxApy }
 
     init {
-        loadStakingServices()
-    }
-
-    private fun loadStakingServices() = viewModelScope.launch {
-        val activeWallet = activeWallet.first()
-        val stakingServices = stakingRepository.getStakingPools(
-            accountId = activeWallet.accountId,
-            testnet = activeWallet.testnet
-        )
-        this@StakeViewModel.stakingServices.value = stakingServices
-        pickedPool.emit(stakingServices.maxApy())
+        observeFlow(activeWallet) {
+            stakingRepository.loadStakingPools(it.address, it.testnet)
+        }
+        observeFlow(stakingServices) {
+            pickedPool.emit(it.maxApy())
+        }
     }
 
     fun onCloseClicked() {
@@ -126,7 +124,7 @@ class StakeViewModel(
     }
 
     fun onDropdownClicked() = viewModelScope.launch {
-        val items = stakingServices.value
+        val items = stakingServices.first()
         val pickedValue = pickedPool.first()
         val currency = currency.first()
         emit(_events, StakeEvent.PickStakingOption(items, pickedValue, currency))

@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.stake.domain
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.wallet.api.API
@@ -28,43 +29,50 @@ class StakingRepository(
     private val ratesRepository: RatesRepository,
     private val dexAssetsRepository: DexAssetsRepository
 ) {
-
     private val stakedBalancesLock = ReentrantReadWriteLock()
     private val stakedBalancesFlows = mutableMapOf<String, MutableStateFlow<List<StakedBalance>>>()
+    private val stakingPoolsLock = ReentrantReadWriteLock()
+    private val _stakingPools = MutableStateFlow<List<StakingService>>(emptyList())
 
-    // todo add caching
-    suspend fun getStakingPools(
+    val stakingPools: Flow<List<StakingService>>
+        get() = _stakingPools
+
+    suspend fun loadStakingPools(
         accountId: String,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
-        val result = api.getStakingPools(accountId, false)
-        val implementationsByPool = PoolImplementationType.entries
-            .associateWith { mutableSetOf<PoolInfo>() }
+        stakingPoolsLock.write {
+            if (_stakingPools.value.isNotEmpty()) return@withContext
 
-        result.pools.forEach { pool ->
-            implementationsByPool[pool.implementation]?.add(pool)
-        }
+            val result = api.getStakingPools(accountId, false)
+            val implementationsByPool = PoolImplementationType.entries
+                .associateWith { mutableSetOf<PoolInfo>() }
 
-        implementationsByPool.asSequence()
-            .filter { it.value.isNotEmpty() }
-            .map { mapper.map(it, result.implementations) }
-            .sortedByDescending { it.maxAPY }
-            .mapIndexed { index1, item1 ->
-                if (index1 == 0) {
-                    item1.copy(
-                        pools = item1.pools.mapIndexed { index, item ->
-                            if (index == 0) {
-                                item.copy(isMaxApy = true)
-                            } else {
-                                item
-                            }
-                        }
-                    )
-                } else {
-                    item1
-                }
+            result.pools.forEach { pool ->
+                implementationsByPool[pool.implementation]?.add(pool)
             }
-            .toList()
+
+            _stakingPools.value = implementationsByPool.asSequence()
+                .filter { it.value.isNotEmpty() }
+                .map { mapper.map(it, result.implementations) }
+                .sortedByDescending { it.maxAPY }
+                .mapIndexed { index1, item1 ->
+                    if (index1 == 0) {
+                        item1.copy(
+                            pools = item1.pools.mapIndexed { index, item ->
+                                if (index == 0) {
+                                    item.copy(isMaxApy = true)
+                                } else {
+                                    item
+                                }
+                            }
+                        )
+                    } else {
+                        item1
+                    }
+                }
+                .toList()
+        }
     }
 
     suspend fun getJetton(
@@ -108,7 +116,8 @@ class StakingRepository(
         val stateFlow = getStakedBalance(key)
 
         val poolsDeferred = async {
-            getStakingPools(walletAddress, testnet)
+            loadStakingPools(walletAddress, testnet)
+            _stakingPools.value
         }
         val jettonBalancesDeferred = async {
             dexAssetsRepository.getIsLoadingFlow(walletAddress)
