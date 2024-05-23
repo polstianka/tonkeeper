@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCase
-import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingDirection
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.pool_details.chipModels
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import kotlinx.coroutines.flow.Flow
@@ -43,9 +43,8 @@ class StakedBalanceViewModel(
     fun onStakeClicked() = viewModelScope.launch {
         val args = args.first()
         val event = StakedBalanceEvent.NavigateToStake(
-            args.stakedBalance.pool,
-            args.stakedBalance.service,
-            StakingDirection.STAKE
+            args.stakedBalance,
+            StakingTransactionType.DEPOSIT
         )
         _events.emit(event)
     }
@@ -53,9 +52,8 @@ class StakedBalanceViewModel(
     fun onUnstakeClicked() = viewModelScope.launch {
         val args = args.first()
         val event = StakedBalanceEvent.NavigateToStake(
-            args.stakedBalance.pool,
-            args.stakedBalance.service,
-            StakingDirection.UNSTAKE
+            args.stakedBalance,
+            StakingTransactionType.UNSTAKE
         )
         _events.emit(event)
     }

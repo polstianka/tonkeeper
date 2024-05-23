@@ -1,11 +1,11 @@
 package com.tonapps.tonkeeper.fragment.stake.balance
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getCryptoBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
@@ -13,10 +13,11 @@ import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolLinksView
+import com.tonapps.tonkeeper.fragment.stake.unstake.UnstakeFragment
 import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -102,8 +103,16 @@ class StakedBalanceFragment : BaseFragment(
     private fun handleEvent(event: StakedBalanceEvent) {
         when (event) {
             StakedBalanceEvent.NavigateBack -> finish()
-            is StakedBalanceEvent.NavigateToStake -> Log.wtf("###", "navigateToStake: $event")
+            is StakedBalanceEvent.NavigateToStake -> event.handle()
             is StakedBalanceEvent.NavigateToLink -> navigation?.openURL(event.url, true)
         }
+    }
+
+    private fun StakedBalanceEvent.NavigateToStake.handle() {
+        val fragment = when (stakingDirection) {
+            StakingTransactionType.DEPOSIT -> TODO()
+            StakingTransactionType.UNSTAKE -> UnstakeFragment.newInstance(balance)
+        }
+        navigation?.add(fragment)
     }
 }
