@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.ui.screen.settings.slippage
 
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
@@ -13,11 +12,12 @@ import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
 import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.setPaddingHorizontal
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 import uikit.widget.InputView
 import uikit.widget.SwitchView
 
-class SlippageScreen: BaseFragment(R.layout.fragment_slippage), BaseFragment.BottomSheet {
+class SlippageScreen(val requestKey: String): BaseFragment(R.layout.fragment_slippage), BaseFragment.BottomSheet {
 
     private lateinit var headerTitle: AppCompatTextView
     private lateinit var headerClose: View
@@ -45,7 +45,7 @@ class SlippageScreen: BaseFragment(R.layout.fragment_slippage), BaseFragment.Bot
         headerView = view.findViewById(R.id.header)
         switchView = view.findViewById(R.id.check)
 
-        headerView.doOnActionClick = { this.finish() }
+        headerView.doOnActionClick = { finish() }
         headerView.clipToPadding = false
         headerView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetExtraExtraSmall))
 
@@ -78,7 +78,12 @@ class SlippageScreen: BaseFragment(R.layout.fragment_slippage), BaseFragment.Bot
         }
 
         saveButton.setOnClickListener{
-            Log.d("SaveSlippage", inputView.text)
+            navigation?.setFragmentResult(requestKey, Bundle().apply {
+                if(inputView.text != ""){
+                    putFloat("reply", inputView.text.toFloat())
+                }
+            })
+            finish()
         }
         oneButton.setOnClickListener{
             inputView.text = "1"
@@ -92,6 +97,6 @@ class SlippageScreen: BaseFragment(R.layout.fragment_slippage), BaseFragment.Bot
     }
 
     companion object {
-        fun newInstance() = SlippageScreen()
+        fun newInstance(requestKey: String) = SlippageScreen(requestKey)
     }
 }

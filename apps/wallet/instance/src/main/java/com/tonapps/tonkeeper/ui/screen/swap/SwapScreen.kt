@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -25,12 +26,21 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
     private lateinit var headerView: HeaderView
     private var navigation: Navigation? = null
 
+    private var slippage = 0.1f
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         headerView = view.findViewById(R.id.header)
         navigation = Navigation.from(view.context)
         headerView.doOnCloseClick = {
-            navigation?.add(SlippageScreen.newInstance())
+            val requestKey = "sign_request"
+            navigation?.setFragmentResultListener(requestKey) { bundle ->
+               if(bundle.containsKey("reply")){
+                   slippage = bundle.getFloat("reply")
+                   Log.d("slippage", slippage.toString())
+               }
+            }
+            navigation?.add(SlippageScreen.newInstance(requestKey))
         }
         headerView.doOnActionClick = { this.finish() }
         headerView.clipToPadding = false
