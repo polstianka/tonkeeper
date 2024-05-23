@@ -19,7 +19,7 @@ data class StakedBalance(
 ) : Parcelable
 
 fun StakedBalance.getFiatBalance(): BigDecimal {
-    return assetRate.value * balance.movePointLeft(asset.decimals)
+    return assetRate.value * balance
 }
 
 fun StakedBalance.getCryptoBalance(): BigDecimal {

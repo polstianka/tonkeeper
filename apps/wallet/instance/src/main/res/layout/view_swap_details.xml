@@ -57,6 +57,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/price_impact"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/view_swap_details_price_impact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textPrimaryColor"
+                tools:text="0.001%" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/minimum_received"
                 android:textAppearance="@style/TextAppearance.Body2"
                 android:textColor="?textSecondaryColor" />

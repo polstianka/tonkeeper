@@ -67,6 +67,13 @@ object Coin {
         return BigDecimal(value).movePointLeft(decimals)
     }
 
+    fun toCoins(
+        value: String,
+        decimals: Int = TON_DECIMALS
+    ): BigDecimal {
+        return BigDecimal(value).movePointLeft(decimals)
+    }
+
     fun toNano(
         value: BigDecimal,
         decimals: Int = TON_DECIMALS

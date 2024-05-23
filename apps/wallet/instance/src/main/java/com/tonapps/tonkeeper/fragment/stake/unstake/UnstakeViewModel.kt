@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.fragment.stake.unstake
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
@@ -74,7 +73,7 @@ class UnstakeViewModel : ViewModel() {
 
     private fun calculateBalance(args: UnstakeArgs): BigDecimal {
         return with(args.balance) {
-            asset.balance.movePointLeft(Coin.TON_DECIMALS) * assetRate.value / tonRate.value
+            asset.balance * assetRate.value / tonRate.value
         }
     }
 

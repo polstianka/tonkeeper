@@ -9,7 +9,6 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingSocialType
 import io.tonapi.models.PoolImplementation
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.PoolInfo
-import java.math.BigDecimal
 import java.net.URI
 
 class StakingServiceMapper {
@@ -65,7 +64,7 @@ class StakingServiceMapper {
             serviceType = stakingServiceType,
             liquidJettonMaster = liquidJettonMaster,
             maxNominators = maxNominators,
-            minStake = BigDecimal(minStake).movePointLeft(Coin.TON_DECIMALS),
+            minStake = Coin.toCoins(minStake),
             name = name,
             nominatorsStake = nominatorsStake,
             totalAmount = totalAmount,

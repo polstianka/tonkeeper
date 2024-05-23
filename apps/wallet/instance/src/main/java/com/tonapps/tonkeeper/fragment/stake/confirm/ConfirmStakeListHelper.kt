@@ -12,7 +12,6 @@ import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.math.BigDecimal
 
 class ConfirmStakeListHelper(
     private val mapper: ConfirmStakeListItemMapper
@@ -31,7 +30,7 @@ class ConfirmStakeListHelper(
         rate: RatesEntity,
         pool: StakingPool
     ) {
-        val feeBigDecimal = BigDecimal(feeLong).movePointLeft(Coin.TON_DECIMALS)
+        val feeBigDecimal = Coin.toCoins(feeLong)
         val totalFee = feeBigDecimal + pool.serviceType.withdrawalFee
         val state = _items.value.toMutableList()
         val iterator = state.listIterator()

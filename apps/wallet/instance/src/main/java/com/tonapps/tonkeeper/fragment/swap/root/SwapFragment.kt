@@ -125,7 +125,7 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         asset ?: return
         balanceTextView?.text = CurrencyFormatter.format(
             asset.symbol,
-            asset.balance.movePointLeft(asset.decimals)
+            asset.balance
         )
     }
 

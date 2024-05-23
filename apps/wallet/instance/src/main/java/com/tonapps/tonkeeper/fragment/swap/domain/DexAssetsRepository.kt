@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.fragment.swap.domain
 
 import android.net.Uri
+import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
@@ -14,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -90,9 +90,9 @@ class DexAssetsRepository(
         return SwapSimulation.Result(
             exchangeRate = BigDecimal(swapRate),
             priceImpact = BigDecimal(priceImpact),
-            minimumReceivedAmount = BigDecimal(minAskUnits).movePointLeft(receiveAsset.decimals),
+            minimumReceivedAmount = Coin.toCoins(minAskUnits, receiveAsset.decimals),
             receivedAsset = receiveAsset,
-            liquidityProviderFee = BigDecimal(feeUnits).movePointLeft(receiveAsset.decimals),
+            liquidityProviderFee = Coin.toCoins(feeUnits, receiveAsset.decimals),
             sentAsset = sentAsset,
             blockchainFee = sentAsset.getRecommendedGasValues(receiveAsset)
         )
@@ -108,12 +108,13 @@ class DexAssetsRepository(
     }
 
     private fun AssetInfoSchema.toDomain(): DexAsset {
+        val tokenEntity = toTokenEntity()
         return DexAsset(
             hasDefaultSymbol = defaultSymbol,
             type = kind.toDomain(),
             dexUsdPrice = BigDecimal(dexPriceUsd),
-            balance = balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO,
-            tokenEntity = toTokenEntity()
+            balance = balance?.let { Coin.toCoins(it, tokenEntity.decimals) } ?: BigDecimal.ZERO,
+            tokenEntity = tokenEntity
         )
     }
 
