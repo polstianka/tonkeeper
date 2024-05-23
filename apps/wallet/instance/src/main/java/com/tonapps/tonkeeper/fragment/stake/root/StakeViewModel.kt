@@ -17,7 +17,7 @@ import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
-import com.tonapps.wallet.localization.R
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -54,34 +53,33 @@ class StakeViewModel(
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
-    private val availableText = balance.map {
-        val amount = CurrencyFormatter.format(it.balance.token.name, it.balance.value)
-        TextWrapper.StringResource(R.string.stake_fragment_available_mask, amount)
-    }
-    private val isValid = combine(balance, amount) { balance, amount ->
-        balance.balance.value >= amount
-    }
     private val stakingServices = MutableStateFlow(listOf<StakingService>())
     private val pickedPool = MutableSharedFlow<StakingPool>(replay = 1)
 
     val events: Flow<StakeEvent>
         get() = _events
     val fiatAmount = formattedRate(exchangeRate, amount, TOKEN_TON)
-    val labelTextColorAttribute = isValid.map { isValid ->
-        if (isValid) {
-            com.tonapps.uikit.color.R.attr.textSecondaryColor
-        } else {
-            com.tonapps.uikit.color.R.attr.accentRedColor
+    val labelTextColorAttribute = combine(balance, amount) { balance, amount ->
+        val red = com.tonapps.uikit.color.R.attr.accentRedColor
+        val normal = com.tonapps.uikit.color.R.attr.textSecondaryColor
+        when {
+            balance.balance.value < amount -> red
+            else -> normal
         }
     }
-    val labelText = isValid.flatMapLatest { isValid ->
-        if (isValid) {
-            availableText
-        } else {
-            flowOf(
-                TextWrapper.StringResource(R.string.insufficient_balance)
-            )
+    val labelText = combine(balance, amount) { balance, amount ->
+        val balanceAmount = balance.balance.value
+        when {
+            amount > balanceAmount ->
+                TextWrapper.StringResource(Localization.insufficient_balance)
+
+            else -> balanceAmount
+                .let { CurrencyFormatter.format("TON", it) }
+                .let { TextWrapper.StringResource(Localization.available_balance, it) }
         }
+    }
+    val isButtonActive = combine(balance, amount, pickedPool) { balance, amount, pool ->
+        balance.balance.value >= amount && amount >= pool.minStake
     }
     val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
     val optionTitle = pickedPool.map { it.name }
@@ -138,7 +136,6 @@ class StakeViewModel(
         emit(pickedPool, result.pickedPool)
     }
 
-    // todo add minstake validation
     fun onButtonClicked() = viewModelScope.launch {
         val pool = pickedPool.first()
         val amount = amount.value

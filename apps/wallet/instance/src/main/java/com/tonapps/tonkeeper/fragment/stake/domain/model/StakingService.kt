@@ -19,6 +19,3 @@ data class StakingService(
  * */
 val StakingService.maxAPY: BigDecimal
     get() = pools.first().apy
-
-val StakingService.minStake: Long
-    get() = pools.minOf { it.minStake }

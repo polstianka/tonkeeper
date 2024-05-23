@@ -15,7 +15,7 @@ data class StakingPool(
     val serviceType: StakingServiceType,
     val liquidJettonMaster: String?,
     val maxNominators: Int,
-    val minStake: Long,
+    val minStake: BigDecimal,
     val name: String,
     val nominatorsStake: Long,
     val totalAmount: Long,
