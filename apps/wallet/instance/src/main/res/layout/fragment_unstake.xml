@@ -12,6 +12,7 @@
         android:title="@string/unstake" />
 
     <com.tonapps.tonkeeper.fragment.stake.ui.StakeInputView
+        android:id="@+id/fragment_unstake_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -42,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
         android:id="@+id/fragment_unstake_footer">
 
         <Button
