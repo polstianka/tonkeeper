@@ -19,18 +19,17 @@ import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.entities.WalletEvent
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.core.ScreenCacheSource
-import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.wallet.data.push.entities.AppPushEntity
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,12 +41,12 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newCoroutineContext
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
 import java.math.BigDecimal
@@ -88,8 +87,15 @@ class WalletViewModel(
 
     private val _lastLtFlow = MutableStateFlow<Long>(0)
     private val lastLtFlow = _lastLtFlow.asStateFlow()
+    private val walletCurrencyPair = combine(
+        walletRepository.activeWalletFlow,
+        settings.currencyFlow
+    ) { a, b -> a to b }
 
-    private val stakedBalancesFlow = stakingRepository.stakedBalance
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val stakedBalancesFlow = walletCurrencyPair.flatMapLatest { (wallet, currency) ->
+        stakingRepository.getStakedBalanceFlow(wallet.address, currency, wallet.testnet)
+    }
 
     private val _statusFlow =
         MutableSharedFlow<Item.Status>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -138,13 +144,13 @@ class WalletViewModel(
             }
         }
 
-        combine(walletRepository.activeWalletFlow, settings.currencyFlow) { activeWallet, currency ->
+        collectFlow(walletCurrencyPair) { (activeWallet, currency) ->
             stakingRepository.loadStakedBalances(
                 activeWallet.address,
                 currency,
                 activeWallet.testnet
             )
-        }.launchIn(CoroutineScope(viewModelScope.coroutineContext + errorHandler))
+        }
 
         combine(
             walletRepository.activeWalletFlow,

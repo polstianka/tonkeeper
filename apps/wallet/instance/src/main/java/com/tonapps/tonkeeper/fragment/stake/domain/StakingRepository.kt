@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.ton.block.MsgAddressInt
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.write
 
 class StakingRepository(
     private val api: API,
@@ -27,9 +29,8 @@ class StakingRepository(
     private val dexAssetsRepository: DexAssetsRepository
 ) {
 
-    private val _stakedBalances = MutableStateFlow<List<StakedBalance>>(emptyList())
-    val stakedBalance: Flow<List<StakedBalance>>
-        get() = _stakedBalances
+    private val stakedBalancesLock = ReentrantReadWriteLock()
+    private val stakedBalancesFlows = mutableMapOf<String, MutableStateFlow<List<StakedBalance>>>()
 
     // todo add caching
     suspend fun getStakingPools(
@@ -103,7 +104,9 @@ class StakingRepository(
         currency: WalletCurrency,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
-        _stakedBalances.value = emptyList()
+        val key = getStakedBalanceKey(walletAddress, currency, testnet)
+        val stateFlow = getStakedBalance(key)
+
         val poolsDeferred = async {
             getStakingPools(walletAddress, testnet)
         }
@@ -139,8 +142,34 @@ class StakingRepository(
             }
         }
         val normalStaking = emptyList<StakedBalance>() // todo
-        _stakedBalances.value = liquidStaking + normalStaking
+        stateFlow.value = liquidStaking + normalStaking
     }
+
+    fun getStakedBalanceFlow(
+        walletAddress: String,
+        currency: WalletCurrency,
+        testnet: Boolean
+    ): Flow<List<StakedBalance>> {
+        val key = getStakedBalanceKey(walletAddress, currency, testnet)
+        return getStakedBalance(key)
+    }
+
+    private fun getStakedBalance(
+        key: String
+    ): MutableStateFlow<List<StakedBalance>> = stakedBalancesLock.write {
+        if (stakedBalancesFlows.containsKey(key)) {
+            stakedBalancesFlows[key]!!
+        } else {
+            val result = MutableStateFlow<List<StakedBalance>>(emptyList())
+            stakedBalancesFlows[key] = result
+            result
+        }
+    }
+    private fun getStakedBalanceKey(
+        walletAddress: String, 
+        currency: WalletCurrency, 
+        testnet: Boolean
+    ) = "$walletAddress${currency.code}$testnet"
 }
 
 fun String.isAddressEqual(another: String): Boolean {
