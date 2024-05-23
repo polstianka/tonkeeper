@@ -38,7 +38,7 @@ class StakedItemHolder(
         val balanceCrypto = item.balance.getCryptoBalance()
         balanceCryptoTextView.text = CurrencyFormatter.format(balanceCrypto, 2)
         balanceFiatTextView.text = CurrencyFormatter.format(
-            item.balance.currency.code,
+            item.balance.fiatCurrency.code,
             balanceFiat
         )
     }

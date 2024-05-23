@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
-import com.tonapps.tonkeeper.fragment.stake.domain.isAddressEqual
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasAddress
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
@@ -270,7 +270,7 @@ class WalletViewModel(
         }
         val tokenItemsPre = mutableListOf<Item.Token>()
         for ((index, token) in tokens.withIndex()) {
-            if (!token.isTon && stakedBalances.any { it.asset?.contractAddress?.isAddressEqual(token.address) == true }) {
+            if (!token.isTon && stakedBalances.any { it.hasAddress(token.address) }) {
                 continue
             }
             fiatBalance += token.fiat

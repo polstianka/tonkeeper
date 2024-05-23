@@ -92,7 +92,7 @@ class StakedBalanceFragment : BaseFragment(
             args.stakedBalance.getCryptoBalance()
         )
         balanceFiat?.text = CurrencyFormatter.format(
-            args.stakedBalance.currency.code,
+            args.stakedBalance.fiatCurrency.code,
             args.stakedBalance.getFiatBalance()
         )
         iconBig?.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)

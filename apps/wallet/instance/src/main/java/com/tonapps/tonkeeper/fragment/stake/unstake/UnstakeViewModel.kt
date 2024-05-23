@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getCryptoBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -51,8 +53,8 @@ class UnstakeViewModel : ViewModel() {
         balance - amount
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val fiatText = combine(args, amount) { args, amount ->
-        val fiatAmount = args.balance.tonRate.value * amount
-        CurrencyFormatter.format(args.balance.currency.code, fiatAmount)
+        val fiatAmount = args.balance.getFiatBalance()
+        CurrencyFormatter.format(args.balance.fiatCurrency.code, fiatAmount)
     }
     val isButtonEnabled = combine(amount, available) { amount, available ->
         amount > BigDecimal.ZERO && available >= BigDecimal.ZERO
@@ -72,9 +74,7 @@ class UnstakeViewModel : ViewModel() {
     }
 
     private fun calculateBalance(args: UnstakeArgs): BigDecimal {
-        return with(args.balance) {
-            asset.balance * assetRate.value / tonRate.value
-        }
+        return args.balance.getCryptoBalance()
     }
 
     fun provideArgs(args: UnstakeArgs) {

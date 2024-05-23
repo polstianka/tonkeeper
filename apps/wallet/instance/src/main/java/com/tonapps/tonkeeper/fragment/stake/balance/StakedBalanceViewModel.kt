@@ -27,7 +27,7 @@ class StakedBalanceViewModel(
     val jetton = args.map {
         getStakingPoolLiquidJettonCase.execute(
             it.stakedBalance.pool,
-            it.stakedBalance.currency
+            it.stakedBalance.fiatCurrency
         )
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val chips = args.map {  it.stakedBalance.service.chipModels(it.stakedBalance.pool) }

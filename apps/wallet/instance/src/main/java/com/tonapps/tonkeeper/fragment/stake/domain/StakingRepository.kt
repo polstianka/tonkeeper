@@ -1,18 +1,22 @@
 package com.tonapps.tonkeeper.fragment.stake.domain
 
+import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedLiquidBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RateEntity
+import com.tonapps.wallet.data.rates.entity.RatesEntity
 import io.tonapi.models.AccountStakingInfo
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.PoolInfo
@@ -44,6 +48,14 @@ class StakingRepository(
 
     val stakingPools: Flow<List<StakingService>>
         get() = _stakingPools
+
+    suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
+        loadStakingPools(walletAddress, testnet)
+        val stakingPools = _stakingPools.value.flatMap { it.pools }
+        val key = getNominatorPoolKey(walletAddress, testnet)
+        val stateFlow = getNominatorPoolsMutableFlow(key)
+        stateFlow.value = getNominatorPools(walletAddress, testnet, stakingPools)
+    }
 
     suspend fun loadStakingPools(
         accountId: String,
@@ -110,14 +122,6 @@ class StakingRepository(
         return getNominatorPoolsMutableFlow(key)
     }
 
-    private suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
-        loadStakingPools(walletAddress, testnet)
-        val stakingPools = _stakingPools.value.flatMap { it.pools }
-        val key = getNominatorPoolKey(walletAddress, testnet)
-        val stateFlow = getNominatorPoolsMutableFlow(key)
-        stateFlow.value = getNominatorPools(walletAddress, testnet, stakingPools)
-    }
-
     private fun getNominatorPoolsMutableFlow(key: String) = nominatorPoolsLock.write {
         if (!nominatorPoolsFlows.containsKey(key)) {
             nominatorPoolsFlows[key] = MutableStateFlow(emptyList())
@@ -178,10 +182,28 @@ class StakingRepository(
             dexAssetsRepository.getPositiveBalanceFlow(walletAddress)
                 .first()
         }
+        val nominatorPoolsDeferred = async {
+            loadNominatorPools(walletAddress, testnet)
+            getNominatorPoolKey(walletAddress, testnet)
+                .let { getNominatorPoolsMutableFlow(it) }
+                .value
+        }
+
         val stakingServices = poolsDeferred.await()
-        val pools = stakingServices.flatMap { it.pools }
         val jettonBalances = jettonBalancesDeferred.await()
+        val nominatorPools = nominatorPoolsDeferred.await()
+
+        Log.wtf("###", "$nominatorPools")
+
+        val pools = stakingServices.flatMap { it.pools }
         val poolsWithJettons = pools.filter { it.liquidJettonMaster != null }
+        val tokens = jettonBalances.map { it.contractAddress }
+            .toMutableList()
+            .apply { addAll(poolsWithJettons.mapNotNull { it.liquidJettonMaster }) }
+            .apply { add("TON") }
+        ratesRepository.load(currency, tokens)
+        val rates = ratesRepository.getRates(currency, tokens)
+        val tonRate = rates.rate("TON")!!
         val liquidStaking = poolsWithJettons.mapNotNull { poolWithJetton ->
             val liquidJettonAddressParsed = MsgAddressInt.parse(poolWithJetton.liquidJettonMaster!!)
             val jetton = jettonBalances.firstOrNull {
@@ -190,22 +212,34 @@ class StakingRepository(
             if (jetton == null) {
                 null
             } else {
-                val tokens = mutableListOf("TON", jetton.contractAddress)
-                ratesRepository.load(currency, tokens)
-                val rates = ratesRepository.getRates(currency, tokens)
                 StakedBalance(
                     poolWithJetton,
                     stakingServices.first { it.type == poolWithJetton.serviceType },
-                    balance = jetton.balance,
-                    asset = jetton,
-                    assetRate = rates.rate(jetton.contractAddress)!!,
-                    tonRate = rates.rate("TON")!!,
-                    currency = currency
+                    liquidBalance = jetton.stakedLiquidBalance(rates),
+                    fiatCurrency = currency,
+                    tonRate = tonRate
                 )
             }
         }
-        val normalStaking = emptyList<StakedBalance>() // todo
+        val normalStaking = nominatorPools.map { pool ->
+            StakedBalance(
+                pool.stakingPool,
+                stakingServices.first { it.type == pool.stakingPool.serviceType },
+                liquidBalance = null,
+                fiatCurrency = currency,
+                tonRate = tonRate
+            )
+        }
         stateFlow.value = liquidStaking + normalStaking
+    }
+
+    private fun DexAsset.stakedLiquidBalance(
+        rates: RatesEntity
+    ): StakedLiquidBalance {
+        return StakedLiquidBalance(
+            asset = this,
+            assetRate = rates.rate(contractAddress)!!,
+        )
     }
 
     fun getStakedBalanceFlow(
