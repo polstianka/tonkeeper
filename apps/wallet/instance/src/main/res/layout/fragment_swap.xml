@@ -2,23 +2,224 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <uikit.widget.ColumnLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="16dp">
+
         <uikit.widget.HeaderView
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title="@string/swap"
+            android:action="@drawable/ic_close_16"
             android:icon="@drawable/ic_sliders_16"
-            android:action="@drawable/ic_close_16"/>
+            android:title="@string/swap" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <uikit.widget.ColumnLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <uikit.widget.ColumnLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:background="@drawable/bg_button_secondary">
+
+                    <uikit.widget.RowLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="@dimen/offsetMedium"
+                            android:paddingTop="@dimen/offsetMedium"
+                            android:text="@string/send"
+                            android:textAppearance="@style/TextAppearance.Body2"
+                            android:textColor="?attr/textSecondaryColor" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Balance: 100,000.01"
+                            android:textAlignment="textEnd"
+                            android:textAppearance="@style/TextAppearance.Body2"
+                            android:textColor="?attr/textSecondaryColor" />
+
+                        <TextView
+                            android:id="@+id/max_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/cornerExtraSmall"
+                            android:layout_marginEnd="@dimen/offsetMedium"
+                            android:layout_weight="0.1"
+                            android:text="@string/max"
+                            android:textAlignment="textEnd"
+                            android:textAppearance="@style/TextAppearance.Label2"
+                            android:textColor="?attr/textAccentColor" />
+                    </uikit.widget.RowLayout>
+
+                    <uikit.widget.RowLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/cornerExtraSmall"
+                        android:layout_marginBottom="@dimen/iconSize">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/button_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/offsetMedium"
+                            android:background="@drawable/bg_button_tertiary"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/icon"
+                                android:layout_width="@dimen/iconSize"
+                                android:layout_height="@dimen/iconSize"
+                                android:layout_gravity="center"
+                                android:layout_marginVertical="@dimen/cornerExtraExtraSmall"
+                                android:layout_marginStart="@dimen/offsetExtraSmall"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_ton_with_bg" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="@dimen/offsetExtraSmall"
+                                android:layout_marginEnd="@dimen/cornerSmall"
+                                android:layout_marginVertical="@dimen/offsetExtraSmall"
+                                android:singleLine="true"
+                                android:text="@string/ton"
+                                android:textAppearance="@style/TextAppearance.Label1"
+                                android:textColor="?attr/buttonTertiaryForegroundColor" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/offsetMedium"
+                            android:background="@null"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="0"
+                            android:textAlignment="textEnd"
+                            android:textAppearance="@style/TextAppearance.NUM2"
+                            android:textColor="?attr/textPrimaryColor"
+                            android:textCursorDrawable="@drawable/cursor" />
+                    </uikit.widget.RowLayout>
+                </uikit.widget.ColumnLayout>
+                <uikit.widget.ColumnLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:layout_marginTop="@dimen/cornerExtraSmall"
+                    android:background="@drawable/bg_button_secondary">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/offsetMedium"
+                        android:paddingTop="@dimen/iconSize"
+                        android:text="@string/receive"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?attr/textSecondaryColor" />
+
+                    <uikit.widget.RowLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/cornerExtraSmall"
+                        android:layout_marginBottom="@dimen/offsetMedium">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/choose_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/offsetMedium"
+                            android:background="@drawable/bg_button_tertiary"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/choose_icon"
+                                android:layout_width="@dimen/iconSize"
+                                android:layout_height="@dimen/iconSize"
+                                android:layout_gravity="center"
+                                android:layout_marginVertical="@dimen/cornerExtraExtraSmall"
+                                android:layout_marginStart="@dimen/offsetExtraSmall"
+                                android:scaleType="centerInside"
+                                android:visibility="gone"
+                                android:src="@drawable/ic_usd_28" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/choose_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginHorizontal="@dimen/cornerSmall"
+                                android:layout_marginVertical="@dimen/offsetExtraSmall"
+                                android:singleLine="true"
+                                android:text="CHOOSE"
+                                android:textAppearance="@style/TextAppearance.Label1"
+                                android:textColor="?attr/buttonTertiaryForegroundColor" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/choose_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/offsetMedium"
+                            android:background="@null"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="0"
+                            android:textAlignment="textEnd"
+                            android:textAppearance="@style/TextAppearance.NUM2"
+                            android:textColor="?attr/textTertiaryColor" />
+                    </uikit.widget.RowLayout>
+                </uikit.widget.ColumnLayout>
+            </uikit.widget.ColumnLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/itemSwapSize"
+                android:layout_height="@dimen/itemSwapSize"
+                android:layout_marginEnd="@dimen/itemHeight"
+                android:layout_gravity="center|end"
+                android:padding="6dp"
+                android:tint="?attr/buttonTertiaryForegroundColor"
+                android:backgroundTint="?attr/buttonTertiaryBackgroundColor"
+                android:background="@drawable/bg_oval_button_secondary"
+                android:src="@drawable/ic_swap_horizontal_outline_28"
+                android:scaleType="centerInside"
+                android:alpha="1"/>
+        </FrameLayout>
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/choose"
+            android:layout_marginTop="@dimen/offsetLarge"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Token"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/buttonSecondaryForegroundColor"
+            android:layout_gravity="bottom"/>
     </uikit.widget.ColumnLayout>
 
-
-<!--        <uikit.widget.webview.bridge.BridgeWebView-->
-<!--        android:id="@+id/web"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
 
 </FrameLayout>

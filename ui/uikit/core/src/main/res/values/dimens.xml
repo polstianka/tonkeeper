@@ -2,6 +2,7 @@
 <resources>
     <dimen name="actionSize">32dp</dimen>
     <dimen name="itemHeight">56dp</dimen>
+    <dimen name="itemSwapSize">40dp</dimen>
     <dimen name="barHeight">64dp</dimen>
     <dimen name="shadowSize">3dp</dimen>
     <dimen name="tertiaryHeight">36dp</dimen>

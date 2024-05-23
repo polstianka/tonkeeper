@@ -4,6 +4,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.slippage.SlippageScreen
@@ -24,12 +27,20 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
     private val rootViewModel: RootViewModel by activityViewModel()
 
     private lateinit var headerView: HeaderView
+    private lateinit var sendView: View
+    private lateinit var sendLayout: LinearLayoutCompat
+    private lateinit var sendTitle: AppCompatTextView
+    private lateinit var sendImage: AppCompatImageView
     private var navigation: Navigation? = null
 
     private var slippage = 0.1f
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sendLayout = view.findViewById(R.id.button_layout)
+        sendTitle = sendLayout.findViewById(R.id.title)
+        sendImage = sendLayout.findViewById(R.id.icon)
+
         headerView = view.findViewById(R.id.header)
         navigation = Navigation.from(view.context)
         headerView.doOnCloseClick = {
@@ -45,16 +56,6 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         headerView.doOnActionClick = { this.finish() }
         headerView.clipToPadding = false
         headerView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetExtraExtraSmall))
-
-//        webView = view.findViewById(R.id.web)
-//        webView.clipToPadding = false
-//        webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
-//        webView.loadUrl(getUri().toString())
-//        webView.jsBridge = StonfiBridge2(
-//            address = args.address,
-//            close = ::finish,
-//            sendTransaction = ::sing
-//        )
     }
 
     private fun getUri(): Uri {

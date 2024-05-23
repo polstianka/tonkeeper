@@ -26,14 +26,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/slippage"
                 android:textAppearance="@style/TextAppearance.Label1"
-                android:textColor="@color/textPrimaryBlue" />
+                android:textColor="?attr/textPrimaryColor" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/slippage_secondary"
                 android:textAppearance="@style/TextAppearance.Body2"
-                android:textColor="@color/textSecondaryBlue" />
+                android:textColor="?attr/textSecondaryColor" />
 
             <uikit.widget.InputView
                 android:id="@+id/percent"
