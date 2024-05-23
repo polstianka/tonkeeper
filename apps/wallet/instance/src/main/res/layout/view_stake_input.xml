@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:parentTag="uikit.widget.ColumnLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_content"
+        android:padding="@dimen/offsetMedium">
+
+        <uikit.widget.RowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                android:id="@+id/view_stake_input_input"
+                android:layout_width="wrap_content"
+                android:layout_height="48.76dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="12dp"
+                android:background="@null"
+                android:digits="0123456789."
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center_vertical"
+                android:hint="0"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:textColor="?attr/textPrimaryColor"
+                android:textCursorDrawable="@drawable/cursor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:text="@string/ton"
+                android:textAppearance="@style/TextAppearance.NUM2"
+                android:textColor="?attr/textSecondaryColor" />
+
+        </uikit.widget.RowLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/view_stake_input_fiat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_island_border"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingVertical="12dp"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor" />
+
+    </uikit.widget.ColumnLayout>
+
+    <uikit.widget.RowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/view_stake_input_max_button"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_secondary_24"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="20dp"
+            android:text="@string/max"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/buttonSecondaryForegroundColor"
+            app:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/view_stake_input_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?textSecondaryColor"
+            tools:text="Available: 100,000.01 TON" />
+    </uikit.widget.RowLayout>
+</merge>

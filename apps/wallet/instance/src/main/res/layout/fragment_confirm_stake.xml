@@ -22,10 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/fragment_confirm_stake_icon"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
+                app:roundAsCircle="true"
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@null" />
 

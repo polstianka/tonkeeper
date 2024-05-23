@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.stake.confirm.rv.ConfirmStakeAdapter
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
@@ -36,11 +37,10 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         }
     }
 
-    // todo add circle cropping for icons
     private val viewModel: ConfirmStakeViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_header)
-    private val icon: ImageView?
+    private val icon: SimpleDraweeView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_icon)
     private val operationTextView: TextView?
         get() = view?.findViewById(R.id.fragment_confirm_stake_operation)
@@ -83,7 +83,7 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
         footer?.applyNavBottomPadding(16f.dp)
 
         observeFlow(viewModel.events) { handleEvent(it) }
-        observeFlow(viewModel.icon) { icon?.setImageResource(it) }
+        observeFlow(viewModel.icon) { icon?.setActualImageResource(it) }
         observeFlow(viewModel.operationText) { operationTextView?.setText(it) }
         observeFlow(viewModel.amountCryptoText) { amountCryptoTextView?.text = it }
         observeFlow(viewModel.amountFiatText) { amountFiatTextView?.text = it }

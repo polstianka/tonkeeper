@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeFragment
 import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionFragment
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment.Companion.REQUEST_KEY_PICK_POOL
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
+import com.tonapps.tonkeeper.fragment.stake.ui.StakeInputView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.resolveColor
 import core.extensions.observeFlow
@@ -35,14 +36,6 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     private val viewModel: StakeViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_stake_header)
-    private val input: AmountInput?
-        get() = view?.findViewById(R.id.fragment_stake_input)
-    private val fiatTextView: TextView?
-        get() = view?.findViewById(R.id.fragment_stake_fiat)
-    private val maxButton: View?
-        get() = view?.findViewById(R.id.fragment_stake_max)
-    private val availableLabel: TextView?
-        get() = view?.findViewById(R.id.fragment_stake_available)
     private val optionIconView: SimpleDraweeView?
         get() = view?.findViewById(R.id.fragment_stake_option_icon)
     private val optionTitle: TextView?
@@ -57,6 +50,8 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         get() = view?.findViewById(R.id.fragment_stake_button)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_stake_footer)
+    private val input: StakeInputView?
+        get() = view?.findViewById(R.id.fragment_stake_input)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,9 +66,8 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         header?.doOnActionClick = { viewModel.onCloseClicked() }
         header?.doOnCloseClick = { viewModel.onInfoClicked() }
 
-        input?.doOnAmountChange { viewModel.onAmountChanged(it) }
-
-        maxButton?.setThrottleClickListener { viewModel.onMaxClicked() }
+        input?.setOnAmountChangedListener { viewModel.onAmountChanged(it) }
+        input?.setOnMaxClickedListener { viewModel.onMaxClicked() }
 
         optionDropdown?.setThrottleClickListener { viewModel.onDropdownClicked() }
 
@@ -82,11 +76,9 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         footer?.applyNavBottomPadding()
 
         observeFlow(viewModel.events, ::handleEvent)
-        observeFlow(viewModel.fiatAmount) { fiatTextView?.text = it }
-        observeFlow(viewModel.labelText) { availableLabel?.text = toString(it) }
-        observeFlow(viewModel.labelTextColorAttribute) { attr ->
-            availableLabel?.setTextColor(requireContext().resolveColor(attr))
-        }
+        observeFlow(viewModel.fiatAmount) { input?.setFiatText(it.toString()) }
+        observeFlow(viewModel.labelText) { input?.setLabelText(toString(it)) }
+        observeFlow(viewModel.labelTextColorAttribute) { input?.setLabelTextColorAttribute(it) }
         observeFlow(viewModel.iconUrl) { optionIconView?.setImageURI(it) }
         observeFlow(viewModel.optionTitle) { optionTitle?.text = it }
         observeFlow(viewModel.optionSubtitle) { optionSubtitle?.text = toString(it) }
@@ -109,7 +101,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     }
 
     private fun StakeEvent.SetInputValue.handle() {
-        input?.setText(CurrencyFormatter.format(value, value.scale()))
+        input?.setInputText(CurrencyFormatter.format(value, value.scale()))
     }
 
     private fun StakeEvent.PickStakingOption.handle() {
