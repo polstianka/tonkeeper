@@ -24,7 +24,25 @@ data class StakedLiquidBalance(
     val assetRate: RateEntity,
 ) : Parcelable
 
-fun StakedBalance.getFiatBalance(): BigDecimal {
+fun StakedBalance.getAvailableCryptoBalance(): BigDecimal {
+    return when {
+        tonRate.value == BigDecimal.ZERO -> BigDecimal.ZERO
+        else -> getAvailableFiatBalance() / tonRate.value
+    }
+}
+
+fun StakedBalance.getAvailableFiatBalance(): BigDecimal {
+    var total = BigDecimal.ZERO
+    if (liquidBalance != null) {
+        total += with(liquidBalance) { assetRate.value * asset.balance }
+    }
+    if (solidBalance != null) {
+        total += solidBalance.amount * tonRate.value
+    }
+    return total
+}
+
+fun StakedBalance.getTotalFiatBalance(): BigDecimal {
     var total = BigDecimal.ZERO
     if (liquidBalance != null) {
         total += with(liquidBalance) { assetRate.value * asset.balance }
@@ -39,14 +57,33 @@ fun StakedBalance.getFiatBalance(): BigDecimal {
 
 fun StakedBalance.hasAddress(address: String): Boolean {
     return when {
-        liquidBalance == null -> false // todo
+        liquidBalance == null -> false
         else -> liquidBalance.asset.contractAddress.isAddressEqual(address)
     }
 }
 
-fun StakedBalance.getCryptoBalance(): BigDecimal {
-    return when {
-        tonRate.value == BigDecimal.ZERO -> BigDecimal.ZERO
-        else -> getFiatBalance() / tonRate.value
-    }
+fun StakedBalance.hasPendingStake(): Boolean {
+    return solidBalance?.pendingDeposit != null &&
+            solidBalance.pendingDeposit.compareTo(BigDecimal.ZERO) == 1
+}
+
+fun StakedBalance.getPendingStakeBalance(): BigDecimal {
+    return solidBalance?.pendingDeposit ?: BigDecimal.ZERO
+}
+
+fun StakedBalance.getPendingStakeBalanceFiat(): BigDecimal {
+    return tonRate.value * getPendingStakeBalance()
+}
+
+fun StakedBalance.hasPendingUnstake(): Boolean {
+    return solidBalance?.pendingWithdraw != null &&
+            solidBalance.pendingWithdraw.compareTo(BigDecimal.ZERO) == 1
+}
+
+fun StakedBalance.getPendingUnstakeBalance(): BigDecimal {
+    return solidBalance?.pendingWithdraw ?: BigDecimal.ZERO
+}
+
+fun StakedBalance.getPendingUnstakeBalanceFiat(): BigDecimal {
+    return tonRate.value * getPendingUnstakeBalance()
 }

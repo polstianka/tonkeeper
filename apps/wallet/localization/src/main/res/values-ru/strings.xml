@@ -295,4 +295,9 @@
     <string name="enter_amount">Enter Amount</string>
     <string name="please_wait">Please wait</string>
     <string name="unstake_description">Unstake request will be processed after the end of the validation cycle in %1s</string>
+    <string name="pending_unstake">Pending unstake</string>
+    <string name="after_the_end_of_cycle">after the end of the cycle</string>
+    <string name="pending_stake">Pending stake</string>
+    <string name="has_pending_stake">Has pending stake</string>
+    <string name="has_pending_unstake">Has pending unstake</string>
 </resources>

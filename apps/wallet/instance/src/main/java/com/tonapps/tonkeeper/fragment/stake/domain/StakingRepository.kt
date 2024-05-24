@@ -63,7 +63,7 @@ class StakingRepository(
         stakingPoolsLock.write {
             if (_stakingPools.value.isNotEmpty()) return@withContext
 
-            val result = api.getStakingPools(accountId, false)
+            val result = api.getStakingPools(accountId, testnet)
             val implementationsByPool = PoolImplementationType.entries
                 .associateWith { mutableSetOf<PoolInfo>() }
 

@@ -7,7 +7,7 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
-import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getTotalFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasAddress
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
@@ -303,7 +303,11 @@ class WalletViewModel(
                 balance = stakedBalance,
             )
         }
-        stakedBalanceItems.forEach { fiatBalance += it.balance.getFiatBalance() }
+        if (!testnet) {
+            stakedBalanceItems.forEach {
+                fiatBalance += it.balance.getTotalFiatBalance()
+            }
+        }
         val tokenItems = tokenItemsPre.mapIndexed { index, it ->
             it.copy(position = ListCell.getPosition(size, index))
         }

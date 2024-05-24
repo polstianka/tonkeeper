@@ -3,12 +3,19 @@ package com.tonapps.tonkeeper.fragment.stake.balance
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
-import com.tonapps.tonkeeper.fragment.stake.domain.model.getCryptoBalance
-import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableCryptoBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingStakeBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingStakeBalanceFiat
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalanceFiat
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
@@ -57,6 +64,18 @@ class StakedBalanceFragment : BaseFragment(
         get() = view?.findViewById(R.id.fragment_staked_balance_pool_details)
     private val poolLinksView: PoolLinksView?
         get() = view?.findViewById(R.id.fragment_staked_balance_links)
+    private val pendingStakeGroup: View?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_stake_group)
+    private val pendingUnstakeGroup: View?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_unstake_group)
+    private val pendingUnstakeCrypto: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_unstake_amount_crypto)
+    private val pendingStakeCrypto: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_stake_amount_crypto)
+    private val pendingUnstakeFiat: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_unstake_amount_fiat)
+    private val pendingStakeFiat: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_pending_stake_amount_fiat)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,15 +108,46 @@ class StakedBalanceFragment : BaseFragment(
         header?.title = args.stakedBalance.pool.name
         balanceCrypto?.text = CurrencyFormatter.format(
             "TON",
-            args.stakedBalance.getCryptoBalance()
+            args.stakedBalance.getAvailableCryptoBalance()
         )
         balanceFiat?.text = CurrencyFormatter.format(
             args.stakedBalance.fiatCurrency.code,
-            args.stakedBalance.getFiatBalance()
+            args.stakedBalance.getAvailableFiatBalance()
         )
         iconBig?.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
         iconSmall?.setImageURI(args.stakedBalance.pool.serviceType.getIconUrl())
         poolDetailsView?.setPool(args.stakedBalance.pool)
+
+        updatePendingDepositView(args.stakedBalance)
+        updatePendingWithdrawView(args.stakedBalance)
+    }
+
+    private fun updatePendingWithdrawView(stakedBalance: StakedBalance) {
+        val isVisible = stakedBalance.hasPendingUnstake()
+        pendingUnstakeGroup?.isVisible = isVisible
+        if (!isVisible) return
+        pendingUnstakeCrypto?.text = CurrencyFormatter.format(
+            "TON",
+            stakedBalance.getPendingUnstakeBalance()
+        )
+        pendingUnstakeFiat?.text = CurrencyFormatter.format(
+            stakedBalance.fiatCurrency.code,
+            stakedBalance.getPendingUnstakeBalanceFiat()
+        )
+    }
+
+    private fun updatePendingDepositView(stakedBalance: StakedBalance) {
+        val isVisible = stakedBalance.hasPendingStake()
+        pendingStakeGroup?.isVisible = isVisible
+        if (!isVisible) return
+        pendingStakeCrypto?.text = CurrencyFormatter.format(
+            "TON",
+            stakedBalance.getPendingStakeBalance()
+        )
+        pendingStakeFiat?.text = CurrencyFormatter.format(
+            stakedBalance.fiatCurrency.code,
+            stakedBalance.getPendingStakeBalanceFiat()
+        )
     }
 
     private fun handleEvent(event: StakedBalanceEvent) {

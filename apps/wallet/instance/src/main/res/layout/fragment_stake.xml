@@ -57,7 +57,8 @@
 
                     <TextView
                         android:id="@+id/fragment_stake_option_title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"

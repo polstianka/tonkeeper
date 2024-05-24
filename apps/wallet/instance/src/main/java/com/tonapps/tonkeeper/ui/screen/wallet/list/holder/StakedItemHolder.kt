@@ -5,11 +5,14 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.stake.balance.StakedBalanceFragment
-import com.tonapps.tonkeeper.fragment.stake.domain.model.getCryptoBalance
-import com.tonapps.tonkeeper.fragment.stake.domain.model.getFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableCryptoBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableFiatBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.localization.Localization
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.item.BaseItemView
@@ -33,9 +36,20 @@ class StakedItemHolder(
         }
         iconBig.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
         iconSmall.setImageURI(item.balance.pool.serviceType.getIconUrl())
-        poolName.text = item.balance.pool.name
-        val balanceFiat = item.balance.getFiatBalance()
-        val balanceCrypto = item.balance.getCryptoBalance()
+
+        val stringBuilder = StringBuilder(item.balance.pool.name)
+        if (item.balance.hasPendingStake()) {
+            stringBuilder.append('\n')
+            stringBuilder.append(getString(Localization.has_pending_stake))
+        }
+        if (item.balance.hasPendingUnstake()) {
+            stringBuilder.append('\n')
+            stringBuilder.append(getString(Localization.has_pending_unstake))
+        }
+        poolName.text = stringBuilder.toString()
+
+        val balanceFiat = item.balance.getAvailableFiatBalance()
+        val balanceCrypto = item.balance.getAvailableCryptoBalance()
         balanceCryptoTextView.text = CurrencyFormatter.format(balanceCrypto, 2)
         balanceFiatTextView.text = CurrencyFormatter.format(
             item.balance.fiatCurrency.code,
