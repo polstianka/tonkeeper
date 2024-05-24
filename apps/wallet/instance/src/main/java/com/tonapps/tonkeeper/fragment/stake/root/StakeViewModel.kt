@@ -7,7 +7,6 @@ import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.extensions.formattedRate
-import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingServicesRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
@@ -40,7 +39,6 @@ class StakeViewModel(
     getRateFlowCase: GetRateFlowCase,
     walletRepository: WalletRepository,
     tokenRepository: TokenRepository,
-    private val stakingRepository: StakingRepository,
     private val stakingServicesRepository: StakingServicesRepository
 ) : ViewModel() {
 
@@ -59,8 +57,9 @@ class StakeViewModel(
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
-    private val stakingServices = stakingServicesRepository.stakingPools
-        .filter { it.isNotEmpty() }
+    private val stakingServices = activeWallet.flatMapLatest {
+        stakingServicesRepository.getStakingServicesFlow(it.testnet, it.address)
+    }.filter { it.isNotEmpty() }
     private val pickedPool = MutableSharedFlow<StakingPool>(replay = 1)
 
     val events: Flow<StakeEvent>

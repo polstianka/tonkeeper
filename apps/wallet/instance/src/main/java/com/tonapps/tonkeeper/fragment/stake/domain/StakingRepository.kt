@@ -40,7 +40,7 @@ class StakingRepository(
 
     suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
         stakingServicesRepository.loadStakingPools(walletAddress, testnet)
-        val stakingPools = stakingServicesRepository.stakingPools
+        val stakingPools = stakingServicesRepository.getStakingServicesFlow(testnet, walletAddress)
             .first()
             .flatMap { it.pools }
         val key = getNominatorPoolKey(walletAddress, testnet)
@@ -126,7 +126,8 @@ class StakingRepository(
 
         val poolsDeferred = async {
             stakingServicesRepository.loadStakingPools(walletAddress, testnet)
-            stakingServicesRepository.stakingPools.first()
+            stakingServicesRepository.getStakingServicesFlow(testnet, walletAddress)
+                .first()
         }
         val jettonBalancesDeferred = async {
             dexAssetsRepository.getIsLoadingFlow(walletAddress)
