@@ -8,6 +8,7 @@ import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.extensions.formattedRate
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingServicesRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
@@ -40,6 +41,7 @@ class StakeViewModel(
     walletRepository: WalletRepository,
     tokenRepository: TokenRepository,
     private val stakingRepository: StakingRepository,
+    private val stakingServicesRepository: StakingServicesRepository
 ) : ViewModel() {
 
     companion object {
@@ -57,7 +59,7 @@ class StakeViewModel(
             .firstOrNull { it.isTon }
     }
         .filterNotNull()
-    private val stakingServices = stakingRepository.stakingPools
+    private val stakingServices = stakingServicesRepository.stakingPools
         .filter { it.isNotEmpty() }
     private val pickedPool = MutableSharedFlow<StakingPool>(replay = 1)
 
@@ -96,7 +98,7 @@ class StakeViewModel(
 
     init {
         observeFlow(activeWallet) {
-            stakingRepository.loadStakingPools(it.address, it.testnet)
+            stakingServicesRepository.loadStakingPools(it.address, it.testnet)
         }
         combine(stakingServices, args) { services, args ->
             val pool = args.pool ?: services.maxApy()

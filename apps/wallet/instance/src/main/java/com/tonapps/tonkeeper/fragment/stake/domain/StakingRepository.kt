@@ -2,14 +2,11 @@ package com.tonapps.tonkeeper.fragment.stake.domain
 
 import android.net.Uri
 import com.tonapps.blockchain.Coin
-import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedLiquidBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
-import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
-import com.tonapps.tonkeeper.fragment.stake.domain.model.maxAPY
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.wallet.api.API
@@ -18,8 +15,6 @@ import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RateEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import io.tonapi.models.AccountStakingInfo
-import io.tonapi.models.PoolImplementationType
-import io.tonapi.models.PoolInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -33,66 +28,24 @@ import kotlin.concurrent.write
 
 class StakingRepository(
     private val api: API,
-    private val mapper: StakingServiceMapper,
     private val ratesRepository: RatesRepository,
-    private val dexAssetsRepository: DexAssetsRepository
+    private val dexAssetsRepository: DexAssetsRepository,
+    private val stakingServicesRepository: StakingServicesRepository
 ) {
     private val stakedBalancesLock = ReentrantReadWriteLock()
     private val stakedBalancesFlows = mutableMapOf<String, MutableStateFlow<List<StakedBalance>>>()
 
-    private val stakingPoolsLock = ReentrantReadWriteLock()
-    private val _stakingPools = MutableStateFlow<List<StakingService>>(emptyList())
-
     private val nominatorPoolsFlows = mutableMapOf<String, MutableStateFlow<List<NominatorPool>>>()
     private val nominatorPoolsLock = ReentrantReadWriteLock()
 
-    val stakingPools: Flow<List<StakingService>>
-        get() = _stakingPools
-
     suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
-        loadStakingPools(walletAddress, testnet)
-        val stakingPools = _stakingPools.value.flatMap { it.pools }
+        stakingServicesRepository.loadStakingPools(walletAddress, testnet)
+        val stakingPools = stakingServicesRepository.stakingPools
+            .first()
+            .flatMap { it.pools }
         val key = getNominatorPoolKey(walletAddress, testnet)
         val stateFlow = getNominatorPoolsMutableFlow(key)
         stateFlow.value = getNominatorPools(walletAddress, testnet, stakingPools)
-    }
-
-    suspend fun loadStakingPools(
-        accountId: String,
-        testnet: Boolean
-    ) = withContext(Dispatchers.IO) {
-        stakingPoolsLock.write {
-            if (_stakingPools.value.isNotEmpty()) return@withContext
-
-            val result = api.getStakingPools(accountId, testnet)
-            val implementationsByPool = PoolImplementationType.entries
-                .associateWith { mutableSetOf<PoolInfo>() }
-
-            result.pools.forEach { pool ->
-                implementationsByPool[pool.implementation]?.add(pool)
-            }
-
-            _stakingPools.value = implementationsByPool.asSequence()
-                .filter { it.value.isNotEmpty() }
-                .map { mapper.map(it, result.implementations) }
-                .sortedByDescending { it.maxAPY }
-                .mapIndexed { index1, item1 ->
-                    if (index1 == 0) {
-                        item1.copy(
-                            pools = item1.pools.mapIndexed { index, item ->
-                                if (index == 0) {
-                                    item.copy(isMaxApy = true)
-                                } else {
-                                    item
-                                }
-                            }
-                        )
-                    } else {
-                        item1
-                    }
-                }
-                .toList()
-        }
     }
 
     suspend fun getJetton(
@@ -172,8 +125,8 @@ class StakingRepository(
         val stateFlow = getStakedBalance(key)
 
         val poolsDeferred = async {
-            loadStakingPools(walletAddress, testnet)
-            _stakingPools.value
+            stakingServicesRepository.loadStakingPools(walletAddress, testnet)
+            stakingServicesRepository.stakingPools.first()
         }
         val jettonBalancesDeferred = async {
             dexAssetsRepository.getIsLoadingFlow(walletAddress)

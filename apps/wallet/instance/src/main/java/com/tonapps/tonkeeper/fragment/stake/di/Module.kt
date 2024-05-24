@@ -10,6 +10,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCas
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStateInitCase
 import com.tonapps.tonkeeper.fragment.stake.domain.StakeCase
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
+import com.tonapps.tonkeeper.fragment.stake.domain.StakingServicesRepository
 import org.koin.dsl.module
 
 val stakingModule = module {
@@ -24,4 +25,5 @@ val stakingModule = module {
     single { EmulateStakingCase(get(), get()) }
     single { GetStakingPoolLiquidJettonCase(get(), get()) }
     single { GetStakeWalletTransferCase(get(), get()) }
+    single { StakingServicesRepository(get(), get()) }
 }
