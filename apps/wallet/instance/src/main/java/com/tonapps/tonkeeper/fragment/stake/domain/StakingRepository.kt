@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake.domain
 
 import android.net.Uri
-import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedLiquidBalance
@@ -15,7 +14,6 @@ import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RateEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
-import io.tonapi.models.AccountStakingInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -31,23 +29,11 @@ class StakingRepository(
     private val api: API,
     private val ratesRepository: RatesRepository,
     private val dexAssetsRepository: DexAssetsRepository,
-    private val stakingServicesRepository: StakingServicesRepository
+    private val stakingServicesRepository: StakingServicesRepository,
+    private val nominatorPoolsRepository: NominatorPoolsRepository
 ) {
     private val stakedBalancesLock = ReentrantReadWriteLock()
     private val stakedBalancesFlows = mutableMapOf<String, MutableStateFlow<List<StakedBalance>>>()
-
-    private val nominatorPoolsFlows = mutableMapOf<String, MutableStateFlow<List<NominatorPool>>>()
-    private val nominatorPoolsLock = ReentrantReadWriteLock()
-
-    suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
-        stakingServicesRepository.loadStakingPools(walletAddress, testnet)
-        val stakingPools = stakingServicesRepository.getStakingServicesFlow(testnet, walletAddress)
-            .first()
-            .flatMap { it.pools }
-        val key = getNominatorPoolKey(walletAddress, testnet)
-        val stateFlow = getNominatorPoolsMutableFlow(key)
-        stateFlow.value = getNominatorPools(walletAddress, testnet, stakingPools)
-    }
 
     suspend fun getJetton(
         masterAddress: String,
@@ -68,42 +54,6 @@ class StakingRepository(
             price = rate?.value,
             poolName = poolName,
             currency = currency
-        )
-    }
-
-    private fun getNominatorPoolsFlow(walletAddress: String, testnet: Boolean): Flow<List<NominatorPool>> {
-        val key = getNominatorPoolKey(walletAddress, testnet)
-        return getNominatorPoolsMutableFlow(key)
-    }
-
-    private fun getNominatorPoolsMutableFlow(key: String) = nominatorPoolsLock.write {
-        if (!nominatorPoolsFlows.containsKey(key)) {
-            nominatorPoolsFlows[key] = MutableStateFlow(emptyList())
-        }
-        nominatorPoolsFlows[key]!!
-    }
-
-    private suspend fun getNominatorPools(
-        walletAddress: String,
-        testnet: Boolean,
-        pools: List<StakingPool>
-    ): List<NominatorPool> = withContext(Dispatchers.IO) {
-        api.staking(testnet)
-            .getAccountNominatorsPools(walletAddress)
-            .pools.mapNotNull { it.toDomain(pools) }
-    }
-
-    private fun AccountStakingInfo.toDomain(
-        pools: List<StakingPool>
-    ): NominatorPool? {
-        val stakingPool = pools.firstOrNull { it.address == pool }
-            ?: return null
-        return NominatorPool(
-            stakingPool = stakingPool,
-            amount = Coin.toCoins(amount),
-            pendingDeposit = Coin.toCoins(pendingDeposit),
-            pendingWithdraw = Coin.toCoins(pendingWithdraw),
-            readyWithdraw = Coin.toCoins(readyWithdraw)
         )
     }
 
@@ -138,10 +88,9 @@ class StakingRepository(
                 .first()
         }
         val nominatorPoolsDeferred = async {
-            loadNominatorPools(walletAddress, testnet)
-            getNominatorPoolKey(walletAddress, testnet)
-                .let { getNominatorPoolsMutableFlow(it) }
-                .value
+            nominatorPoolsRepository.loadNominatorPools(walletAddress, testnet)
+            nominatorPoolsRepository.getNominatorPoolsFlow(walletAddress, testnet)
+                .first()
         }
 
         val stakingServices = poolsDeferred.await()
@@ -244,11 +193,6 @@ class StakingRepository(
         currency: WalletCurrency,
         testnet: Boolean
     ) = "$walletAddress${currency.code}$testnet"
-
-    private fun getNominatorPoolKey(
-        walletAddress: String,
-        testnet: Boolean
-    ) = "$walletAddress$testnet"
 }
 
 fun String.isAddressEqual(another: String): Boolean {
