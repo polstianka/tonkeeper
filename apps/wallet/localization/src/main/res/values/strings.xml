@@ -42,6 +42,7 @@
     <string name="unsubscribed">Unsubscribed</string>
     <string name="subscribed">Subscribed</string>
     <string name="received">Received</string>
+    <string name="forecast">Forecast</string>
 
     <string name="continue_action">Continue</string>
     <string name="get_started">Get started</string>

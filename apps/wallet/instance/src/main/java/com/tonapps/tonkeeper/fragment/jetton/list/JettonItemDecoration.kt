@@ -6,8 +6,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.core.history.list.holder.HistoryHolder
 import uikit.R
+import uikit.extensions.dp
 import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.horizontal
+import uikit.extensions.vertical
 
 class JettonItemDecoration(
     context: Context
@@ -25,6 +27,7 @@ class JettonItemDecoration(
         val holder = parent.getChildViewHolder(view)
         if (holder is HistoryHolder<*>) {
             outRect.horizontal = offset
+            outRect.vertical = 6.dp
         }
     }
 }

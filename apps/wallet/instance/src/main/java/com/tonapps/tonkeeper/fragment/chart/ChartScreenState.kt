@@ -5,6 +5,7 @@ import com.tonapps.tonkeeper.api.chart.ChartEntity
 import com.tonapps.tonkeeper.api.chart.ChartPeriod
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.fragment.chart.list.ChartItem
+import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.mvi.AsyncState
 import uikit.mvi.UiState
@@ -29,7 +30,7 @@ data class ChartScreenState(
 
     fun getTopItems(): List<ChartItem> {
         val items = mutableListOf<ChartItem>()
-        items.add(ChartItem.Header(balance, currencyBalance))
+        items.add(ChartItem.Header(balance, currencyBalance, TokenEntity.TON.imageUri.toString()))
         // items.add(ChartItem.Divider)
         items.add(ChartItem.Actions(swapUri, address, walletType, disableSwap, disableBuyOrSell))
         // items.add(ChartItem.Divider)
