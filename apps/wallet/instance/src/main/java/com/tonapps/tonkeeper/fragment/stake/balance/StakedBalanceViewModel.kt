@@ -73,4 +73,11 @@ class StakedBalanceViewModel(
     fun onChipClicked(chip: LinksChipModel) {
         emit(_events, StakedBalanceEvent.NavigateToLink(chip.url))
     }
+
+    fun onTokenClicked() = viewModelScope.launch {
+        val args = args.first()
+        val token = args.stakedBalance.liquidBalance?.asset ?: return@launch
+        val event = StakedBalanceEvent.NavigateToToken(token)
+        _events.emit(event)
+    }
 }

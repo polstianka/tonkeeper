@@ -1,21 +1,14 @@
 package uikit.widget
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
-import com.tonapps.uikit.color.backgroundContentColor
 import uikit.R
-import uikit.extensions.cornerMedium
+import uikit.extensions.applySelectableBgContent
 import uikit.extensions.dp
-import uikit.extensions.round
-import uikit.extensions.selectableItemBackground
 import uikit.extensions.useAttributes
 
 class DropdownButton @JvmOverloads constructor(
@@ -28,7 +21,7 @@ class DropdownButton @JvmOverloads constructor(
 
     init {
         orientation = HORIZONTAL
-        prepareBackground(context)
+        applySelectableBgContent()
 
         val icon = ImageView(context)
         this.icon = icon
@@ -68,19 +61,5 @@ class DropdownButton @JvmOverloads constructor(
                 )
             }
         }
-    }
-
-    private fun prepareBackground(context: Context) {
-        val selectableItemBackgroundDrawable = context.selectableItemBackground
-        val backgroundContentColor = context.backgroundContentColor
-        if (selectableItemBackgroundDrawable == null) {
-            setBackgroundColor(backgroundContentColor)
-        } else {
-            val colorDrawable = ColorDrawable(backgroundContentColor)
-            val array = arrayOf(colorDrawable, selectableItemBackgroundDrawable)
-            val layeredDrawable = LayerDrawable(array)
-            background = layeredDrawable
-        }
-        round(context.cornerMedium)
     }
 }

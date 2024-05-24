@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.fragment.jetton.JettonScreen
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableCryptoBalance
@@ -99,6 +100,8 @@ class StakedBalanceFragment : BaseFragment(
 
         poolLinksView?.setOnChipClicked { viewModel.onChipClicked(it) }
 
+        liquidStakingDetailsView?.setOnTokenAreaClickListener { viewModel.onTokenClicked() }
+
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.args) { updateState(it) }
         observeFlow(viewModel.jetton) { liquidStakingDetailsView?.applyLiquidJetton(it) }
@@ -121,6 +124,9 @@ class StakedBalanceFragment : BaseFragment(
 
         updatePendingDepositView(args.stakedBalance)
         updatePendingWithdrawView(args.stakedBalance)
+        args.stakedBalance.liquidBalance?.let {
+            liquidStakingDetailsView?.setAmount(it.asset.balance, it.assetRate)
+        }
     }
 
     private fun updatePendingWithdrawView(stakedBalance: StakedBalance) {
@@ -156,7 +162,17 @@ class StakedBalanceFragment : BaseFragment(
             StakedBalanceEvent.NavigateBack -> finish()
             is StakedBalanceEvent.NavigateToStake -> event.handle()
             is StakedBalanceEvent.NavigateToLink -> navigation?.openURL(event.url, true)
+            is StakedBalanceEvent.NavigateToToken -> event.handle()
         }
+    }
+
+    private fun StakedBalanceEvent.NavigateToToken.handle() {
+        val fragment = JettonScreen.newInstance(
+            asset.contractAddress,
+            asset.displayName,
+            asset.symbol
+        )
+        navigation?.add(fragment)
     }
 
     private fun StakedBalanceEvent.NavigateToStake.handle() {

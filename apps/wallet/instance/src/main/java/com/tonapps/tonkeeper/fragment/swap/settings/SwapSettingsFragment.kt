@@ -1,7 +1,5 @@
 package com.tonapps.tonkeeper.fragment.swap.settings
 
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -10,15 +8,12 @@ import android.widget.Button
 import android.widget.EditText
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeperx.R
-import com.tonapps.uikit.color.backgroundContentColor
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.drawable.InputDrawable
 import uikit.extensions.applyNavBottomPadding
-import uikit.extensions.cornerMedium
-import uikit.extensions.round
-import uikit.extensions.selectableItemBackground
+import uikit.extensions.applySelectableBgContent
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.InputView
@@ -89,27 +84,12 @@ class SwapSettingsFragment : BaseFragment(R.layout.fragment_swap_settings), Base
         editText?.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL + InputType.TYPE_CLASS_NUMBER
 
         expertModeGroup?.setThrottleClickListener { viewModel.onExpertModeChecked() }
-        prepareExpertModeGroupBackground()
+        expertModeGroup?.applySelectableBgContent()
 
         button?.setOnClickListener { viewModel.onButtonClicked() }
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.screenState) { handleState(it) }
-    }
-
-    private fun prepareExpertModeGroupBackground() {
-        val context = requireContext()
-        val selectableItemBackgroundDrawable = context.selectableItemBackground
-        val backgroundContentColor = context.backgroundContentColor
-        if (selectableItemBackgroundDrawable == null) {
-            expertModeGroup?.setBackgroundColor(backgroundContentColor)
-        } else {
-            val colorDrawable = ColorDrawable(backgroundContentColor)
-            val array = arrayOf(colorDrawable, selectableItemBackgroundDrawable)
-            val layeredDrawable = LayerDrawable(array)
-            expertModeGroup?.background = layeredDrawable
-        }
-        expertModeGroup?.round(context.cornerMedium)
     }
 
     private fun handleState(settings: SwapSettings) {

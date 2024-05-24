@@ -2,7 +2,9 @@ package uikit.extensions
 
 import android.animation.ValueAnimator
 import android.graphics.Outline
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.View
@@ -26,6 +28,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
+import com.tonapps.uikit.color.backgroundContentColor
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -290,4 +293,17 @@ private class ThrottleClickListener(
     private fun shouldHandle(): Boolean = (now() - previousClick) > delayMillis
 
     private fun now() = System.currentTimeMillis()
+}
+fun View.applySelectableBgContent() {
+    val selectableItemBackgroundDrawable = context.selectableItemBackground
+    val backgroundContentColor = context.backgroundContentColor
+    if (selectableItemBackgroundDrawable == null) {
+        setBackgroundColor(backgroundContentColor)
+    } else {
+        val colorDrawable = ColorDrawable(backgroundContentColor)
+        val array = arrayOf(colorDrawable, selectableItemBackgroundDrawable)
+        val layeredDrawable = LayerDrawable(array)
+        background = layeredDrawable
+    }
+    round(context.cornerMedium)
 }

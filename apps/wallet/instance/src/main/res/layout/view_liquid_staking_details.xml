@@ -7,6 +7,7 @@
 
         <uikit.widget.RowLayout
             android:layout_width="match_parent"
+            android:id="@+id/view_liquid_staking_details_clickable_area"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_content"
             android:padding="16dp">
@@ -26,25 +27,59 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1">
-                <TextView
-                    android:id="@+id/view_liquid_staking_details_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Label1"
-                    android:textColor="?textPrimaryColor"
-                    tools:text="Tonstakers" />
 
-                <TextView
-                    android:id="@+id/view_liquid_staking_details_subtitle"
+                <uikit.widget.RowLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Body2"
-                    android:textColor="?textSecondaryColor"
-                    tools:text="APY ~5.01% | 50.01 TON" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/view_liquid_staking_details_title"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="Tonstakers" />
+
+                    <TextView
+                        android:id="@+id/view_liquid_staking_details_amount_crypto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?textPrimaryColor"
+                        tools:text="2.010263745" />
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/view_liquid_staking_details_subtitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor"
+                        tools:text="APY ~5.01% | 50.01 TON" />
+
+
+                    <TextView
+                        android:id="@+id/view_liquid_staking_details_amount_fiat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor"
+                        tools:text="$12.6" />
+                </uikit.widget.RowLayout>
 
             </uikit.widget.ColumnLayout>
         </uikit.widget.RowLayout>
