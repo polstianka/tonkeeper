@@ -16,12 +16,12 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
-import java.math.BigDecimal
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.setThrottleClickListener
 import uikit.widget.ModalHeader
+import java.math.BigDecimal
 
 class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFragment.BottomSheet {
 
@@ -122,7 +122,13 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
         when (event) {
             is ConfirmSwapEvent.CloseFlow -> event.handle()
             ConfirmSwapEvent.NavigateBack -> finish()
+            is ConfirmSwapEvent.FinishFlow -> event.handle()
         }
+    }
+
+    private fun ConfirmSwapEvent.FinishFlow.handle() {
+        popBackToRootFragment(includingRoot = true, SwapFragment::class)
+        finish()
     }
 
     private fun ConfirmSwapEvent.CloseFlow.handle() {

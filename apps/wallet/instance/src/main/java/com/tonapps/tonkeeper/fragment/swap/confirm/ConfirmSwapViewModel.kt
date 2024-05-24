@@ -33,13 +33,17 @@ class ConfirmSwapViewModel(
     fun onConfirmClicked() = viewModelScope.launch {
         val args = _args.first()
         val wallet = walletManager.getWalletInfo()!!
-        createStonfiSwapMessageCase.execute(
+        val cell = createStonfiSwapMessageCase.execute(
             args.sendAsset,
             args.receiveAsset,
             args.amount,
             wallet,
             args.simulation
         )
+        val isSuccess = cell != null
+        if (isSuccess) {
+            _events.emit(ConfirmSwapEvent.CloseFlow)
+        }
     }
 
     fun onCancelClicked() {
