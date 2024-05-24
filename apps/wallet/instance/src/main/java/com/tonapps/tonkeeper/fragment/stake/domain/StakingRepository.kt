@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedLiquidBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.wallet.api.API
@@ -147,6 +148,21 @@ class StakingRepository(
         val jettonBalances = jettonBalancesDeferred.await()
         val nominatorPools = nominatorPoolsDeferred.await()
 
+        stateFlow.value = collectStakedBalances(
+            stakingServices,
+            jettonBalances,
+            nominatorPools,
+            currency
+        )
+    }
+
+    private suspend fun collectStakedBalances(
+        stakingServices: List<StakingService>,
+        jettonBalances: List<DexAsset>,
+        nominatorPools: List<NominatorPool>,
+        currency: WalletCurrency
+    ): List<StakedBalance> {
+
         val pools = stakingServices.flatMap { it.pools }
         val poolsWithJettons = pools.filter { it.liquidJettonMaster != null }
         val tokens = jettonBalances.map { it.contractAddress }
@@ -164,7 +180,7 @@ class StakingRepository(
             jettonBalances.any { poolAddress.isAddressEqual(it.contractAddress) }
         }.forEach { activePoolAddresses.add(it.address) }
 
-        stateFlow.value = activePoolAddresses.map { poolAddress ->
+        return activePoolAddresses.map { poolAddress ->
             val pool = pools.first { it.address == poolAddress }
             val service = stakingServices.first { it.type == pool.serviceType }
             val liquidBalance = liquidBalance(pool, jettonBalances, rates)
