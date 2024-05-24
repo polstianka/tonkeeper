@@ -4,6 +4,7 @@ import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.wallet.api.API
+import io.tonapi.infrastructure.ClientException
 import io.tonapi.models.AccountStakingInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,10 +44,18 @@ class NominatorPoolsRepository(
 
     suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
         val key = key(walletAddress, testnet)
-        val flow  = getStakingInfosFlow(key)
-        val response = api.staking(testnet)
+        getStakingInfosFlow(key).value = getStakingInfo(walletAddress, testnet)
+    }
+
+    private suspend fun getStakingInfo(
+        walletAddress: String,
+        testnet: Boolean
+    ): List<AccountStakingInfo> = try {
+        api.staking(testnet)
             .getAccountNominatorsPools(walletAddress)
-        flow.value = response.pools
+            .pools
+    } catch (serverError: ClientException) {
+        emptyList()
     }
 
     private fun AccountStakingInfo.toDomain(

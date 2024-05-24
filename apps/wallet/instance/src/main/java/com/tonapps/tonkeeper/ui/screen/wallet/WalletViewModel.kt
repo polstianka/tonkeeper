@@ -9,7 +9,6 @@ import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getTotalFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasAddress
-import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
@@ -17,7 +16,6 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.entities.WalletEvent
-import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.PushManager
@@ -46,6 +44,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
@@ -60,8 +59,6 @@ class WalletViewModel(
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
     private val screenCacheSource: ScreenCacheSource,
-    private val dexAssetsRepository: DexAssetsRepository,
-    private val walletManager: WalletManager,
     private val stakingRepository: StakingRepository
 ) : ViewModel() {
 
@@ -74,16 +71,9 @@ class WalletViewModel(
         val apps: List<DAppEntity>,
     )
 
-    init {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            val wallet = walletManager.getWalletInfo()
-            dexAssetsRepository.loadAssets(wallet!!.address)
-        }
-    }
-
     private val _tokensFlow = MutableStateFlow<Tokens?>(null)
-    private val tokensFlow =
-        _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }
+    private val tokensFlow = _tokensFlow.filterNotNull()
+        .filter { it.list.isNotEmpty() }
 
     private val _lastLtFlow = MutableStateFlow<Long>(0)
     private val lastLtFlow = _lastLtFlow.asStateFlow()
@@ -105,7 +95,7 @@ class WalletViewModel(
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
 
     val uiLabelFlow = walletRepository.activeWalletFlow.map { it.label }
-    private val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         Log.wtf("###", "error: ${throwable.message}")
     }
 
@@ -144,20 +134,17 @@ class WalletViewModel(
             }
         }
 
-        collectFlow(walletCurrencyPair) { (activeWallet, currency) ->
-            stakingRepository.loadStakedBalances(
-                activeWallet.address,
-                activeWallet.testnet
-            )
-        }
+        walletRepository.activeWalletFlow
+            .onEach { stakingRepository.loadStakedBalances(it.address, it.testnet) }
+            .retry { delay(500L); true }
+            .launchIn(viewModelScope)
 
         combine(
-            walletRepository.activeWalletFlow,
-            settings.currencyFlow,
+            walletCurrencyPair,
             networkMonitor.isOnlineFlow,
             lastLtFlow,
             pushManager.dAppPushFlow,
-        ) { wallet, currency, isOnline, lastLt, push ->
+        ) { (wallet, currency), isOnline, lastLt, push ->
             val pushes = push?.distinctBy { it.dappUrl } ?: emptyList()
 
             if (lastLt == 0L) {
