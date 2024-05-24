@@ -92,12 +92,14 @@ class ConfirmStakeViewModel(
     }
 
     fun onCrossClicked() = viewModelScope.launch {
-        _events.emit(closeEvent())
+        _events.emit(closeEvent(false))
     }
 
-    private suspend fun closeEvent(): ConfirmStakeEvent.CloseFlow {
+    private suspend fun closeEvent(
+        navigateToHistory: Boolean
+    ): ConfirmStakeEvent.CloseFlow {
         val args = args.first()
-        return ConfirmStakeEvent.CloseFlow(args.type)
+        return ConfirmStakeEvent.CloseFlow(args.type, navigateToHistory)
     }
 
     fun onSliderDone() = viewModelScope.launch {
@@ -115,7 +117,7 @@ class ConfirmStakeViewModel(
         )
         if (didStake) {
             state = ProcessTaskView.State.SUCCESS
-            event = closeEvent()
+            event = closeEvent(true)
         } else {
             state = ProcessTaskView.State.FAILED
             event = ConfirmStakeEvent.RestartSlider

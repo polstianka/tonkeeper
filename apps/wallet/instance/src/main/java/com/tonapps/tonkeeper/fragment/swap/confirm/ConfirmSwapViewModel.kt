@@ -27,7 +27,7 @@ class ConfirmSwapViewModel(
     }
 
     fun onCloseClicked() {
-        emit(_events, ConfirmSwapEvent.CloseFlow)
+        emit(_events, ConfirmSwapEvent.FinishFlow(false))
     }
 
     fun onConfirmClicked() = viewModelScope.launch {
@@ -42,7 +42,7 @@ class ConfirmSwapViewModel(
         )
         val isSuccess = cell != null
         if (isSuccess) {
-            _events.emit(ConfirmSwapEvent.CloseFlow)
+            _events.emit(ConfirmSwapEvent.FinishFlow(true))
         }
     }
 

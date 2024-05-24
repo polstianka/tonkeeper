@@ -20,6 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
 import java.math.BigDecimal
 
@@ -120,7 +121,6 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
     private fun handleEvent(event: ConfirmSwapEvent) {
         when (event) {
-            is ConfirmSwapEvent.CloseFlow -> event.handle()
             ConfirmSwapEvent.NavigateBack -> finish()
             is ConfirmSwapEvent.FinishFlow -> event.handle()
         }
@@ -129,13 +129,8 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
     private fun ConfirmSwapEvent.FinishFlow.handle() {
         popBackToRootFragment(includingRoot = true, SwapFragment::class)
         finish()
-    }
-
-    private fun ConfirmSwapEvent.CloseFlow.handle() {
-        popBackToRootFragment(
-            includingRoot = true,
-            SwapFragment::class
-        )
-        finish()
+        if (navigateToHistory) {
+            navigation?.openURL("tonkeeper://activity")
+        }
     }
 }

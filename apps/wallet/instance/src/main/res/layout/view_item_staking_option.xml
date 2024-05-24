@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
 
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/view_item_staking_option_icon"
         android:layout_width="44dp"
         android:layout_height="44dp"

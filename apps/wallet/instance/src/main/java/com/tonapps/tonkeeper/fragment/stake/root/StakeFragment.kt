@@ -3,12 +3,10 @@ package com.tonapps.tonkeeper.fragment.stake.root
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
-import coil.transform.RoundedCornersTransformation
+import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
-import com.tonapps.tonkeeper.core.loadUri
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
@@ -22,7 +20,6 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
-import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -43,7 +40,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
     private val viewModel: StakeViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_stake_header)
-    private val optionIconView: ImageView?
+    private val optionIconView: SimpleDraweeView?
         get() = view?.findViewById(R.id.fragment_stake_option_icon)
     private val optionTitle: TextView?
         get() = view?.findViewById(R.id.fragment_stake_option_title)
@@ -89,9 +86,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         observeFlow(viewModel.fiatAmount) { input?.setFiatText(it.toString()) }
         observeFlow(viewModel.labelText) { input?.setLabelText(toString(it)) }
         observeFlow(viewModel.labelTextColorAttribute) { input?.setLabelTextColorAttribute(it) }
-        observeFlow(viewModel.iconUri) {
-            optionIconView?.loadUri(it, RoundedCornersTransformation(22f.dp))
-        }
+        observeFlow(viewModel.iconUri) { optionIconView?.setImageURI(it) }
         observeFlow(viewModel.optionTitle) { optionTitle?.text = it }
         observeFlow(viewModel.optionSubtitle) { optionSubtitle?.text = toString(it) }
         observeFlow(viewModel.isMaxApy) { optionChip?.isVisible = it }

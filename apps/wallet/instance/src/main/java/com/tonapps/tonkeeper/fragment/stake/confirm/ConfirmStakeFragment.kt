@@ -18,6 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.dp
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 import uikit.widget.ProcessTaskView
 import uikit.widget.SlideActionView
@@ -117,5 +118,8 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
             fragment
         )
         finish()
+        if (navigateToHistory) {
+            navigation?.openURL("tonkeeper://activity")
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.api.totalFees
 import com.tonapps.tonkeeper.core.history.HistoryHelper
-import com.tonapps.tonkeeper.event.WalletStateUpdateEvent
 import com.tonapps.tonkeeper.extensions.emulate
 import com.tonapps.tonkeeper.extensions.label
 import com.tonapps.tonkeeper.extensions.sendToBlockchain
@@ -17,7 +16,6 @@ import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
-import core.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -145,11 +143,6 @@ class ConfirmScreenFeature(
             it.copy(
                 processState = ProcessTaskView.State.SUCCESS
             )
-        }
-
-        val emulatedEventItems = uiState.value.emulatedEventItems
-        if (emulatedEventItems.isNotEmpty()) {
-            EventBus.post(WalletStateUpdateEvent)
         }
 
         delay(1000)
