@@ -40,16 +40,15 @@ class TokenListHelper {
             }
         }.flowOn(Dispatchers.Default)
 
-    suspend fun submitItems(domainItems: List<DexAsset>) = withContext(Dispatchers.Default) {
+    suspend fun submitItems(
+        domainItems: List<DexAsset>
+    ) = withContext(Dispatchers.Default) {
         _items.value = domainItems.mapIndexed { index, item ->
             TokenListItem(
                 model = item,
                 iconUri = item.imageUri,
                 symbol = item.symbol,
-                amountCrypto = "",
                 name = item.displayName,
-                amountFiat = "",
-                amountCryptoColor = com.tonapps.uikit.color.R.attr.textPrimaryColor,
                 position = ListCell.getPosition(domainItems.size, index)
             )
         }
