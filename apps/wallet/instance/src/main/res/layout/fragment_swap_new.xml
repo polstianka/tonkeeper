@@ -119,11 +119,20 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/receive"
                 android:textAppearance="@style/TextAppearance.Body2"
                 android:textColor="?textSecondaryColor" />
+
+            <TextView
+                android:id="@+id/fragment_swap_new_receive_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?textSecondaryColor"
+                tools:text="Balance 100,000.01" />
         </uikit.widget.RowLayout>
 
         <uikit.widget.RowLayout
@@ -132,10 +141,11 @@
             android:paddingBottom="12dp">
 
             <com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
+                android:id="@+id/fragment_swap_new_receive_token_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/fragment_swap_new_receive_token_button"
-                android:layout_gravity="top"/>
+                android:layout_gravity="top" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -153,9 +163,9 @@
         </uikit.widget.RowLayout>
 
         <com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
+            android:id="@+id/fragment_swap_new_swap_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_swap_new_swap_details"/>
+            android:layout_height="wrap_content" />
     </uikit.widget.ColumnLayout>
 
     <ImageView

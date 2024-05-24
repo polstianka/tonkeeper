@@ -66,6 +66,8 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_swap_details)
     private val maxButton: TextView?
         get() = view?.findViewById(R.id.fragment_swap_new_max_button)
+    private val receiveBalance: TextView?
+        get() = view?.findViewById(R.id.fragment_swap_new_receive_balance)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +103,15 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.isLoading) { updateLoading(it) }
         observeFlow(viewModel.pickedSendAsset) { updatePickedSendAsset(it) }
-        observeFlow(viewModel.pickedReceiveAsset) { receiveButton?.asset = it }
+        observeFlow(viewModel.pickedReceiveAsset) {
+            receiveButton?.asset = it
+            val text = if (it == null) {
+                ""
+            } else {
+                CurrencyFormatter.format(it.symbol, it.balance)
+            }
+            receiveBalance?.text = text
+        }
         observeFlow(viewModel.receiveAmount) { pair ->
             val text = when {
                 pair == null ->  ""
