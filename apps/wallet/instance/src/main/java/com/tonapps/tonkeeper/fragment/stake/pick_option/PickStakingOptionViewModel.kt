@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.pick_option.rv.StakingOptionListItem
-import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +19,7 @@ class PickStakingOptionViewModel : ViewModel() {
     val items = args.map { args ->
         args.options.mapIndexed { index, item ->
             StakingOptionListItem(
-                iconUrl = item.type.getIconUrl(),
+                iconUrl = item.type.getIconUri(),
                 title = item.name,
                 isMaxApy = index == 0,
                 subtitle = item.description, // todo

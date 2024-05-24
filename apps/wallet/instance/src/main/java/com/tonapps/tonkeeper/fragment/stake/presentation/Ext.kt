@@ -1,12 +1,14 @@
 package com.tonapps.tonkeeper.fragment.stake.presentation
 
+import android.net.Uri
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingServiceType
 import com.tonapps.wallet.localization.R
 
-fun StakingServiceType.getIconUrl() = "res:/${getIconDrawableRes()}"
+fun StakingServiceType.getIconUri() = "res:/${getIconDrawableRes()}"
+    .let { Uri.parse(it) }
 
 fun StakingServiceType.getIconDrawableRes(): Int {
     return when (this) {

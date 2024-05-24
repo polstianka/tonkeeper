@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.pick_pool.rv.PickPoolListItem
 import com.tonapps.tonkeeper.fragment.stake.presentation.apyText
-import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +23,7 @@ class PickPoolViewModel : ViewModel() {
     val items = args.map { args ->
         args.service.pools.mapIndexed { index, item ->
             PickPoolListItem(
-                iconUrl = item.serviceType.getIconUrl(),
+                iconUri = item.serviceType.getIconUri(),
                 title = item.name,
                 subtitle = item.apyText(),
                 isChecked = args.pickedPool.address == item.address,

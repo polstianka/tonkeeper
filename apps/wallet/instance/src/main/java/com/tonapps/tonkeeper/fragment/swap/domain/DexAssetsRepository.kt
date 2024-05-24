@@ -134,6 +134,7 @@ class DexAssetsRepository(
         return dexPriceUsd != null &&
                 !blacklisted &&
                 !deprecated &&
+                !community &&
                 imageUrl?.isNotBlank() == true &&
                 displayName?.isNotBlank() == true
     }

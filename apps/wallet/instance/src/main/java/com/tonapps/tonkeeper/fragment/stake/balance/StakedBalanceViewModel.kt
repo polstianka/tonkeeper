@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.stake.domain.GetStakingPoolLiquidJettonCase
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeper.fragment.stake.pool_details.chipModels
 import com.tonapps.tonkeeper.fragment.stake.pool_details.presentation.LinksChipModel
 import kotlinx.coroutines.flow.Flow
@@ -25,10 +26,21 @@ class StakedBalanceViewModel(
         get() = _events
     val args = MutableSharedFlow<StakedBalanceArgs>(replay = 1)
     val jetton = args.map {
-        getStakingPoolLiquidJettonCase.execute(
-            it.stakedBalance.pool,
-            it.stakedBalance.fiatCurrency
-        )
+        when {
+            it.stakedBalance.pool.liquidJettonMaster == null -> null
+            it.stakedBalance.liquidBalance == null -> getStakingPoolLiquidJettonCase.execute(
+                it.stakedBalance.pool,
+                it.stakedBalance.fiatCurrency
+            )
+            else -> StakingPoolLiquidJetton(
+                address = it.stakedBalance.pool.liquidJettonMaster,
+                iconUri = it.stakedBalance.liquidBalance.asset.imageUri,
+                symbol = it.stakedBalance.liquidBalance.asset.symbol,
+                price = it.stakedBalance.liquidBalance.assetRate.value,
+                poolName = it.stakedBalance.pool.name,
+                currency = it.stakedBalance.fiatCurrency
+            )
+        }
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val chips = args.map {  it.stakedBalance.service.chipModels(it.stakedBalance.pool) }
 

@@ -313,4 +313,5 @@
     <string name="pending_stake">Pending stake</string>
     <string name="has_pending_stake">Has pending stake</string>
     <string name="has_pending_unstake">Has pending unstake</string>
+    <string name="stonfi" translatable="false">STON.fi</string>
 </resources>

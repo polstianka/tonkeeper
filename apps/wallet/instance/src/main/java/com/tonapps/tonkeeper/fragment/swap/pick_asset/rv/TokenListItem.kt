@@ -8,7 +8,7 @@ import com.tonapps.uikit.list.ListCell
 
 data class TokenListItem(
     val model: DexAsset,
-    val iconUrl: Uri,
+    val iconUri: Uri,
     val symbol: String,
     val amountCrypto: String,
     val name: String,

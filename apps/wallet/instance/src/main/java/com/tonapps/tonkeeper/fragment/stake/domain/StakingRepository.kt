@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.fragment.stake.domain
 
+import android.net.Uri
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.stake.data.mapper.StakingServiceMapper
 import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
@@ -108,7 +109,7 @@ class StakingRepository(
 
         StakingPoolLiquidJetton(
             address = masterAddress,
-            iconUrl = jettonInfo.metadata.image ?: "",
+            iconUri = jettonInfo.metadata.image?.let { Uri.parse(it) } ?: Uri.EMPTY,
             symbol = jettonInfo.metadata.symbol,
             price = rate?.value,
             poolName = poolName,

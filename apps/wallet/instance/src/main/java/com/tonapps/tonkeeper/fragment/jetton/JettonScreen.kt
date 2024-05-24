@@ -29,7 +29,11 @@ class JettonScreen : UiScreen<JettonScreenState, JettonScreenEffect, JettonScree
         private const val JETTON_NAME_KEY = "JETTON_NAME_KEY"
         private const val JETTON_SYMBOL_KEY = "JETTON_SYMBOL_KEY"
 
-        fun newInstance(jettonAddress: String, jettonName: String, jettonSymbol: String): BaseFragment {
+        fun newInstance(
+            jettonAddress: String,
+            jettonName: String,
+            jettonSymbol: String
+        ): BaseFragment {
             if (jettonAddress == "TON") {
                 return ChartScreen.newInstance()
             }

@@ -9,7 +9,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableCryptoBalan
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
-import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.localization.Localization
@@ -35,7 +35,7 @@ class StakedItemHolder(
             )
         }
         iconBig.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
-        iconSmall.setImageURI(item.balance.pool.serviceType.getIconUrl())
+        iconSmall.setImageURI(item.balance.pool.serviceType.getIconUri())
 
         val stringBuilder = StringBuilder(item.balance.pool.name)
         if (item.balance.hasPendingStake()) {

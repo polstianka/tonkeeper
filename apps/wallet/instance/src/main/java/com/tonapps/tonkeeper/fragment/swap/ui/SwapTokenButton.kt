@@ -2,10 +2,12 @@ package com.tonapps.tonkeeper.fragment.swap.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.facebook.drawee.view.SimpleDraweeView
+import coil.transform.RoundedCornersTransformation
+import com.tonapps.tonkeeper.core.loadUri
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
 import com.tonapps.tonkeeperx.R
 import uikit.extensions.dp
@@ -19,7 +21,7 @@ class SwapTokenButton
     defStyle: Int = 0,
 ) : RowLayout(context, attrs, defStyle) {
 
-    private val iconView: SimpleDraweeView?
+    private val iconView: ImageView?
         get() = findViewById(R.id.view_swap_token_icon)
     private val textView: TextView?
         get() = findViewById(R.id.view_swap_token_text)
@@ -40,7 +42,7 @@ class SwapTokenButton
 
     private fun updateState(asset: DexAsset?) {
         iconView?.isVisible = asset != null
-        asset?.imageUri?.let { iconView?.setImageURI(it) }
+        asset?.imageUri?.let { iconView?.loadUri(it, RoundedCornersTransformation(14f.dp)) }
         val text = asset?.symbol ?: context.getString(LocalizationR.string.choose)
         textView?.text = text
     }

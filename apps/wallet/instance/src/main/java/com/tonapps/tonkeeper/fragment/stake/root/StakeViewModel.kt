@@ -13,7 +13,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
 import com.tonapps.tonkeeper.fragment.stake.presentation.description
-import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.tonkeeper.fragment.trade.domain.GetRateFlowCase
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
@@ -78,7 +78,7 @@ class StakeViewModel(
             amount > balanceAmount ->
                 TextWrapper.StringResource(Localization.insufficient_balance)
 
-            else -> balanceAmount
+            else -> balanceAmount.minus(amount)
                 .let { CurrencyFormatter.format("TON", it) }
                 .let { TextWrapper.StringResource(Localization.available_balance, it) }
         }
@@ -86,7 +86,7 @@ class StakeViewModel(
     val isButtonActive = combine(balance, amount, pickedPool) { balance, amount, pool ->
         balance.balance.value >= amount && amount >= pool.minStake
     }
-    val iconUrl = pickedPool.map { it.serviceType.getIconUrl() }
+    val iconUri = pickedPool.map { it.serviceType.getIconUri() }
     val optionTitle = pickedPool.map { it.name }
     val optionSubtitle = pickedPool.map { it.description() }
     val isMaxApy = pickedPool.map { it.isMaxApy }

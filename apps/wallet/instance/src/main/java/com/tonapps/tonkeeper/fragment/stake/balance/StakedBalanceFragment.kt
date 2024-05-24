@@ -16,7 +16,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalanc
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalanceFiat
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
-import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
@@ -116,7 +116,7 @@ class StakedBalanceFragment : BaseFragment(
             args.stakedBalance.getAvailableFiatBalance()
         )
         iconBig?.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
-        iconSmall?.setImageURI(args.stakedBalance.pool.serviceType.getIconUrl())
+        iconSmall?.setImageURI(args.stakedBalance.pool.serviceType.getIconUri())
         poolDetailsView?.setPool(args.stakedBalance.pool)
 
         updatePendingDepositView(args.stakedBalance)

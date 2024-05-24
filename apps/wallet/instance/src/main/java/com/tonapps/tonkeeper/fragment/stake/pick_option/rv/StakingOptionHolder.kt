@@ -2,6 +2,9 @@ package com.tonapps.tonkeeper.fragment.stake.pick_option.rv
 
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import coil.transform.RoundedCornersTransformation
+import com.tonapps.tonkeeper.core.loadUri
+import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 
 class StakingOptionHolder(
@@ -11,7 +14,9 @@ class StakingOptionHolder(
 
     override fun onBind(item: StakingOptionListItem) {
         baseItemView.position = item.position
-        icon.setImageURI(item.iconUrl)
+
+        icon.loadUri(item.iconUrl, RoundedCornersTransformation(22f.dp))
+
         title.text = item.title
         subtitle.text = item.subtitle
         chip.isVisible = item.isMaxApy

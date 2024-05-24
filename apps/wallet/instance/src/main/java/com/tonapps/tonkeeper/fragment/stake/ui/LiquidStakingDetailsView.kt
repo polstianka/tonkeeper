@@ -2,12 +2,15 @@ package com.tonapps.tonkeeper.fragment.stake.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.facebook.drawee.view.SimpleDraweeView
+import coil.transform.RoundedCornersTransformation
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.core.loadUri
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeperx.R
+import uikit.extensions.dp
 import uikit.widget.ColumnLayout
 
 class LiquidStakingDetailsView @JvmOverloads constructor(
@@ -16,7 +19,7 @@ class LiquidStakingDetailsView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : ColumnLayout(context, attrs, defStyle){
 
-    private val icon: SimpleDraweeView?
+    private val icon: ImageView?
         get() = findViewById(R.id.view_liquid_staking_details_icon)
     private val title: TextView?
         get() = findViewById(R.id.view_liquid_staking_details_title)
@@ -33,7 +36,7 @@ class LiquidStakingDetailsView @JvmOverloads constructor(
 
         isVisible = liquidJetton != null
         liquidJetton ?: return
-        icon?.setImageURI(liquidJetton.iconUrl)
+        icon?.loadUri(liquidJetton.iconUri, RoundedCornersTransformation(24f.dp))
         title?.text = liquidJetton.symbol
         liquidJetton.price?.let {
             subtitle?.text = CurrencyFormatter.format(
