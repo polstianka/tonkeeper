@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
@@ -22,6 +23,7 @@ import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
+import uikit.widget.ProcessTaskView
 import java.math.BigDecimal
 
 class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFragment.BottomSheet {
@@ -75,6 +77,10 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
         get() = view?.findViewById(R.id.fragment_swap_confirm_button_negative)
     private val footer: View?
         get() = view?.findViewById(R.id.fragment_swap_confirm_footer)
+    private val buttonsGroup: View?
+        get() = view?.findViewById(R.id.fragment_swap_confirm_buttons_group)
+    private val loader: ProcessTaskView?
+        get() = view?.findViewById(R.id.fragment_swap_confirm_loader)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +103,11 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
         observeFlow(viewModel.events) { handleEvent(it) }
         observeFlow(viewModel.args) { updateState(it) }
+        observeFlow(viewModel.isLoading) { isLoading ->
+            buttonsGroup?.isVisible = !isLoading
+            loader?.isVisible = isLoading
+        }
+        observeFlow(viewModel.loaderState) { loader?.state = it }
     }
 
     private fun updateState(args: ConfirmSwapArgs) {

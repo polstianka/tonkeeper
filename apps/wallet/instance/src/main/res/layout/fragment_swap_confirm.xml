@@ -127,31 +127,44 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <uikit.widget.RowLayout
-        android:id="@+id/fragment_swap_confirm_footer"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp">
+        android:id="@+id/fragment_swap_confirm_footer"
+        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/fragment_swap_confirm_button_negative"
-            style="@style/Widget.App.Button.Secondary"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_marginEnd="16dp"
+        <uikit.widget.RowLayout
+            android:id="@+id/fragment_swap_confirm_buttons_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor" />
+            android:layout_marginHorizontal="16dp">
 
-        <Button
-            android:id="@+id/fragment_swap_confirm_button_positive"
-            style="@style/Widget.App.Button"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            <Button
+                android:id="@+id/fragment_swap_confirm_button_negative"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+
+            <Button
+                android:id="@+id/fragment_swap_confirm_button_positive"
+                style="@style/Widget.App.Button"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.ProcessTaskView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirm"
-            android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor" />
-    </uikit.widget.RowLayout>
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/fragment_swap_confirm_loader"
+            android:visibility="gone"/>
+    </FrameLayout>
 </uikit.widget.ColumnLayout>
