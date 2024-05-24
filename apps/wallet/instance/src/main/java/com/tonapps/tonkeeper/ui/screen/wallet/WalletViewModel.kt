@@ -147,7 +147,6 @@ class WalletViewModel(
         collectFlow(walletCurrencyPair) { (activeWallet, currency) ->
             stakingRepository.loadStakedBalances(
                 activeWallet.address,
-                currency,
                 activeWallet.testnet
             )
         }

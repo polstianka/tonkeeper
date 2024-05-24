@@ -5,56 +5,48 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.NominatorPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.wallet.api.API
 import io.tonapi.models.AccountStakingInfo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.combine
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.write
 
 class NominatorPoolsRepository(
     private val api: API,
-    private val stakingServicesRepository: StakingServicesRepository
+    private val repository: StakingServicesRepository
 ) {
-
-
-    private val nominatorPoolsFlows = mutableMapOf<String, MutableStateFlow<List<NominatorPool>>>()
-    private val nominatorPoolsLock = ReentrantReadWriteLock()
-
-    private fun getNominatorPoolsMutableFlow(key: String) = nominatorPoolsLock.write {
-        if (!nominatorPoolsFlows.containsKey(key)) {
-            nominatorPoolsFlows[key] = MutableStateFlow(emptyList())
-        }
-        nominatorPoolsFlows[key]!!
-    }
+    private val stakingInfosFlows =
+        mutableMapOf<String, MutableStateFlow<List<AccountStakingInfo>>>()
+    private val lock = ReentrantReadWriteLock()
 
     fun getNominatorPoolsFlow(
         walletAddress: String,
         testnet: Boolean
     ): Flow<List<NominatorPool>> {
-        val key = getNominatorPoolKey(walletAddress, testnet)
-        return getNominatorPoolsMutableFlow(key)
+        val key = key(walletAddress, testnet)
+        val stakingInfosFlow = getStakingInfosFlow(key)
+        val servicesFlow = repository.getStakingServicesFlow(testnet, walletAddress)
+        return combine(stakingInfosFlow, servicesFlow) { stakingInfos, services ->
+            val pools = services.flatMap { it.pools }
+            stakingInfos.mapNotNull { it.toDomain(pools) }
+        }
     }
 
-    private suspend fun getNominatorPools(
-        walletAddress: String,
-        testnet: Boolean,
-        pools: List<StakingPool>
-    ): List<NominatorPool> = withContext(Dispatchers.IO) {
-        api.staking(testnet)
-            .getAccountNominatorsPools(walletAddress)
-            .pools.mapNotNull { it.toDomain(pools) }
+    private fun getStakingInfosFlow(
+        key: String
+    ): MutableStateFlow<List<AccountStakingInfo>> = lock.write {
+        if (!stakingInfosFlows.containsKey(key)) {
+            stakingInfosFlows[key] = MutableStateFlow(emptyList())
+        }
+        stakingInfosFlows[key]!!
     }
 
     suspend fun loadNominatorPools(walletAddress: String, testnet: Boolean) {
-        stakingServicesRepository.loadStakingPools(walletAddress, testnet)
-        val stakingPools = stakingServicesRepository.getStakingServicesFlow(testnet, walletAddress)
-            .first()
-            .flatMap { it.pools }
-        val key = getNominatorPoolKey(walletAddress, testnet)
-        val stateFlow = getNominatorPoolsMutableFlow(key)
-        stateFlow.value = getNominatorPools(walletAddress, testnet, stakingPools)
+        val key = key(walletAddress, testnet)
+        val flow  = getStakingInfosFlow(key)
+        val response = api.staking(testnet)
+            .getAccountNominatorsPools(walletAddress)
+        flow.value = response.pools
     }
 
     private fun AccountStakingInfo.toDomain(
@@ -71,7 +63,7 @@ class NominatorPoolsRepository(
         )
     }
 
-    private fun getNominatorPoolKey(
+    private fun key(
         walletAddress: String,
         testnet: Boolean
     ) = "$walletAddress$testnet"
