@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -45,6 +46,7 @@ class StakeViewModel(
         const val TOKEN_TON = "TON"
     }
 
+    private val args = MutableSharedFlow<StakeArgs>(replay = 1)
     private val _events = MutableSharedFlow<StakeEvent>()
     private val currency = settingsRepository.currencyFlow
     private val exchangeRate = currency.flatMapLatest { getRateFlowCase.execute(it) }
@@ -93,9 +95,10 @@ class StakeViewModel(
         observeFlow(activeWallet) {
             stakingRepository.loadStakingPools(it.address, it.testnet)
         }
-        observeFlow(stakingServices) {
-            pickedPool.emit(it.maxApy())
-        }
+        combine(stakingServices, args) { services, args ->
+            val pool = args.pool ?: services.maxApy()
+            pickedPool.emit(pool)
+        }.launchIn(viewModelScope)
     }
 
     fun onCloseClicked() {
@@ -145,6 +148,10 @@ class StakeViewModel(
             isSendAll = balance.balance.value == amount
         )
         _events.emit(event)
+    }
+
+    fun provideArgs(stakeArgs: StakeArgs) {
+        emit(this.args, stakeArgs)
     }
 }
 

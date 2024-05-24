@@ -9,6 +9,8 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeFragment
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.stake.pick_option.PickStakingOptionFragment
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragment.Companion.REQUEST_KEY_PICK_POOL
 import com.tonapps.tonkeeper.fragment.stake.pool_details.PoolDetailsFragmentResult
@@ -25,7 +27,14 @@ import uikit.widget.HeaderView
 class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.BottomSheet {
 
     companion object {
-        fun newInstance() = StakeFragment()
+        fun newInstance(
+            pool: StakingPool? = null,
+            service: StakingService? = null
+        ) = StakeFragment().apply {
+            setArgs(
+                StakeArgs(pool, service)
+            )
+        }
     }
 
     private val viewModel: StakeViewModel by viewModel()
@@ -53,6 +62,9 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         navigation?.setFragmentResultListener(REQUEST_KEY_PICK_POOL) { bundle ->
             val result = PoolDetailsFragmentResult(bundle)
             viewModel.onPoolPicked(result)
+        }
+        if (savedInstanceState == null) {
+            viewModel.provideArgs(StakeArgs(requireArguments()))
         }
     }
 

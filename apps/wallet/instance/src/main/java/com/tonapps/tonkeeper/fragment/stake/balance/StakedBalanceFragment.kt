@@ -17,6 +17,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalanc
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUrl
+import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
 import com.tonapps.tonkeeper.fragment.stake.ui.PoolLinksView
@@ -160,7 +161,10 @@ class StakedBalanceFragment : BaseFragment(
 
     private fun StakedBalanceEvent.NavigateToStake.handle() {
         val fragment = when (stakingDirection) {
-            StakingTransactionType.DEPOSIT -> TODO()
+            StakingTransactionType.DEPOSIT -> StakeFragment.newInstance(
+                balance.pool,
+                balance.service
+            )
             StakingTransactionType.UNSTAKE -> UnstakeFragment.newInstance(balance)
         }
         navigation?.add(fragment)
