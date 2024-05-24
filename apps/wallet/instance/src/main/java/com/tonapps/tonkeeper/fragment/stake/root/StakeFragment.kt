@@ -96,6 +96,7 @@ class StakeFragment : BaseFragment(R.layout.fragment_stake), BaseFragment.Bottom
         observeFlow(viewModel.optionSubtitle) { optionSubtitle?.text = toString(it) }
         observeFlow(viewModel.isMaxApy) { optionChip?.isVisible = it }
         observeFlow(viewModel.isButtonActive) { button?.isEnabled = it }
+        observeFlow(viewModel.isMaxGlowing) { input?.setMaxButtonActivated(it) }
     }
 
     private fun handleEvent(event: StakeEvent) {

@@ -90,6 +90,9 @@ class StakeViewModel(
     val optionTitle = pickedPool.map { it.name }
     val optionSubtitle = pickedPool.map { it.description() }
     val isMaxApy = pickedPool.map { it.isMaxApy }
+    val isMaxGlowing = combine(balance, amount) { balance, amount ->
+        balance.balance.value.compareTo(amount) == 0
+    }
 
     init {
         observeFlow(activeWallet) {

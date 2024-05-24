@@ -69,6 +69,7 @@ class UnstakeFragment : BaseFragment(R.layout.fragment_unstake), BaseFragment.Bo
         }
         observeFlow(viewModel.fiatText) { input?.setFiatText(it.toString()) }
         observeFlow(viewModel.isButtonEnabled) { button?.isEnabled = it }
+        observeFlow(viewModel.isMax) { input?.setMaxButtonActivated(it) }
     }
 
     private fun updateLabelText(available: BigDecimal) {

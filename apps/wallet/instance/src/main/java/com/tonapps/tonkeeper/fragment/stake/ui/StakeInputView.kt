@@ -9,6 +9,8 @@ import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.resolveColor
+import uikit.extensions.dp
+import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
 import uikit.widget.ColumnLayout
 import java.math.BigDecimal
@@ -34,6 +36,7 @@ class StakeInputView  @JvmOverloads constructor(
         inflate(context, R.layout.view_stake_input, this)
         input?.doOnAmountChange { onAmountChangedAction?.invoke(it) }
         maxButton?.setThrottleClickListener { onMaxClickedAction?.invoke() }
+        maxButton?.round(24f.dp.toInt())
     }
 
     fun setInputText(inputText: String) {
@@ -58,5 +61,14 @@ class StakeInputView  @JvmOverloads constructor(
 
     fun setFiatText(text: String) {
         fiat?.text = text
+    }
+
+    fun setMaxButtonActivated(isActivated: Boolean) {
+        val bg = if (isActivated) {
+            uikit.R.drawable.bg_button_primary
+        } else {
+            uikit.R.drawable.bg_button_secondary
+        }
+        maxButton?.setBackgroundResource(bg)
     }
 }
