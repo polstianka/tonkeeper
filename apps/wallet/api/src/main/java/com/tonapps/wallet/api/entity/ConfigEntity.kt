@@ -23,6 +23,7 @@ data class ConfigEntity(
     val tonApiV2Key: String,
     val featuredPlayInterval: Int,
     val flags: FlagsEntity,
+    val faqUrl: String
 ): Parcelable {
 
     val swapUri: Uri
@@ -47,7 +48,8 @@ data class ConfigEntity(
             FlagsEntity()
         } else {
             FlagsEntity(json.getJSONObject("flags"))
-        }
+        },
+        faqUrl = json.getString("faq_url")
     )
 
     constructor() : this(
@@ -65,7 +67,8 @@ data class ConfigEntity(
         tonCommunityChatUrl = "https://t.me/toncoin_chat",
         tonApiV2Key = "",
         featuredPlayInterval = 3000,
-        flags = FlagsEntity()
+        flags = FlagsEntity(),
+        faqUrl = "https://tonkeeper.helpscoutdocs.com/"
     )
 
     companion object {

@@ -10,6 +10,12 @@
     <string name="enter_password">Enter Password</string>
     <string name="paste">Paste</string>
     <string name="done">Done</string>
+    <string name="update">Update</string>
+    <string name="later">Later</string>
+    <string name="update_signer">Update Signer</string>
+    <string name="update_signer_subtitle">New parameters are only supported in the latest version.</string>
+    <string name="emulation_qr">Scan the QR code to open the transaction emulation</string>
+    <string name="close">Close</string>
     <string name="continue_text">Continue</string>
     <string name="name_your_key">Name Your Key</string>
     <string name="name_your_key_subtitle">It will simplify the search for the necessary key in the list of keys.</string>

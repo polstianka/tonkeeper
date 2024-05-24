@@ -3,7 +3,10 @@ package com.tonapps.signer.deeplink
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import com.tonapps.blockchain.ton.extensions.base64
+import com.tonapps.blockchain.ton.extensions.hex
+import com.tonapps.security.hex
 import com.tonapps.signer.Key
 import org.ton.api.pub.PublicKeyEd25519
 
@@ -12,10 +15,10 @@ object TKDeepLink {
     private const val STORE_LINK = "https://play.google.com/store/apps/details?id=com.tonapps.tonkeeperx"
     private const val APP_SCHEME = "tonkeeper"
 
-    fun buildPublishUri(boc: String): Uri {
+    fun buildPublishUri(signature: ByteArray): Uri {
         val baseUri = Uri.parse("${APP_SCHEME}://publish")
         val builder = baseUri.buildUpon()
-        builder.appendQueryParameter(Key.BOC, boc)
+        builder.appendQueryParameter(Key.SIGN, hex(signature))
         return builder.build()
     }
 
@@ -26,7 +29,7 @@ object TKDeepLink {
     ): Uri {
         val baseUri = Uri.parse("${APP_SCHEME}://signer/link")
         val builder = baseUri.buildUpon()
-        builder.appendQueryParameter("pk", publicKey.base64())
+        builder.appendQueryParameter("pk", publicKey.hex())
         builder.appendQueryParameter("name", name)
         if (local) {
             builder.appendQueryParameter("local", "true")
@@ -37,7 +40,7 @@ object TKDeepLink {
     fun buildLinkUriWeb(publicKey: PublicKeyEd25519, name: String): Uri {
         val baseUri = Uri.parse("https://wallet.tonkeeper.com/signer/link")
         val builder = baseUri.buildUpon()
-        builder.appendQueryParameter("pk", publicKey.base64())
+        builder.appendQueryParameter("pk", publicKey.hex())
         builder.appendQueryParameter("name", name)
         builder.appendQueryParameter("local", "true")
         return builder.build()

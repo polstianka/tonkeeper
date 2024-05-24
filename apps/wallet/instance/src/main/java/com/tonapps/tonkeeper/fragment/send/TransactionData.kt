@@ -79,10 +79,8 @@ data class TransactionData(
 
     val amount: Coins
         get() {
-            /*val value = Coin.bigDecimal(amountRaw, decimals)
-            return Coins.ofNano(value.toLong())*/
-            val value = Coin.prepareValue(amountRaw).toFloatOrNull() ?: 0f
-            val nano = Coin.toNano(value, decimals)
+            val value = Coin.prepareValue(amountRaw).toDoubleOrNull() ?: 0.0
+            val nano = Coin.toNanoDouble(value, decimals)
             return Coins.ofNano(nano)
         }
 
@@ -110,22 +108,22 @@ data class TransactionData(
             coins = amount,
             toAddress = MsgAddressInt.parse(address!!),
             responseAddress = responseAddress,
-            queryId = getWalletQueryId(),
+            queryId = newWalletQueryId(),
             body = comment,
         )
     }
 
     private companion object {
 
-        fun getWalletQueryId(): BigInteger {
-            try {
+        fun newWalletQueryId(): BigInteger {
+            return try {
                 val tonkeeperSignature = 0x546de4ef.toByteArray()
                 val randomBytes = Security.randomBytes(4)
                 val value = tonkeeperSignature + randomBytes
                 val hexString = hex(value)
-                return BigInteger(hexString, 16)
+                BigInteger(hexString, 16)
             } catch (e: Throwable) {
-                return BigInteger.ZERO
+                BigInteger.ZERO
             }
         }
     }

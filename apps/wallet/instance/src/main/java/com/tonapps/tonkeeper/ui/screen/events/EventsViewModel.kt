@@ -94,7 +94,7 @@ class EventsViewModel(
             } ?: return@collectFlow
 
             _uiItemsFlow.value = uiItems.toList()
-            screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, uiItems)
+            screenCacheSource.set(CACHE_NAME, wallet.id, uiItems)
         }
     }
 
@@ -249,7 +249,7 @@ class EventsViewModel(
 
         _uiItemsFlow.value = uiItems.toList()
         if (!more) {
-            screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, uiItems)
+            screenCacheSource.set(CACHE_NAME, wallet.id, uiItems)
         }
     }
 
@@ -266,7 +266,7 @@ class EventsViewModel(
     }
 
     private fun getCached(wallet: WalletEntity): List<HistoryItem>? {
-        val items: List<HistoryItem> = screenCacheSource.get(CACHE_NAME, wallet.accountId, wallet.testnet) {
+        val items: List<HistoryItem> = screenCacheSource.get(CACHE_NAME, wallet.id) {
             HistoryItem.createFromParcel(it)
         }
         if (items.isEmpty()) {

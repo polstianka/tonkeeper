@@ -287,14 +287,14 @@ class WalletViewModel(
     }
 
     private fun setCached(wallet: WalletEntity, items: List<Item>) {
-        screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, items)
+        screenCacheSource.set(CACHE_NAME, wallet.id, items)
     }
 
     companion object {
         private const val CACHE_NAME = "wallet"
 
         fun ScreenCacheSource.getWalletScreen(wallet: WalletEntity): List<Item>? {
-            val items: List<Item> = get(CACHE_NAME, wallet.accountId, wallet.testnet) { parcel ->
+            val items: List<Item> = get(CACHE_NAME, wallet.id) { parcel ->
                 Item.createFromParcel(parcel)
             }.map {
                 if (it is Item.Balance) {

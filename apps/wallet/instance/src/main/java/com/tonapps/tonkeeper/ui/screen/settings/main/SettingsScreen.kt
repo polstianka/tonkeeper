@@ -66,6 +66,7 @@ class SettingsScreen: BaseListFragment(), BaseFragment.SwipeBack {
             is Item.DeleteWatchAccount -> deleteWatchAccount()
             is Item.Rate -> openRate()
             is Item.Notifications -> navigation?.add(NotificationsScreen.newInstance())
+            is Item.FAQ -> navigation?.openURL(item.url, true)
             else -> return
         }
     }

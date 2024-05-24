@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesScreen
 import com.tonapps.tonkeeper.ui.screen.events.EventsScreen
 import com.tonapps.tonkeeper.ui.screen.picker.PickerScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootEvent
+import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletScreen
 import com.tonapps.uikit.color.constantBlackColor
 import com.tonapps.uikit.color.drawable
@@ -112,6 +113,9 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
         }
         collectFlow(mainViewModel.childBottomScrolled, bottomTabsView::setDivider)
         collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.OpenTab>().map { mainDeepLinks[it.link] }.filterNotNull(), this::forceSelectTab)
+        collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.Swap>()) {
+            navigation?.add(SwapScreen.newInstance(it.uri, it.address, it.from, it.to))
+        }
         collectFlow(mainViewModel.browserTabEnabled) { enabled ->
             if (enabled) {
                 bottomTabsView.showItem(R.id.browser)

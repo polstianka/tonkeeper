@@ -18,20 +18,22 @@ val WalletLegacy.label: WalletLabel
     )
 
 suspend fun WalletLegacy.buildBody(
+    validUntil: Long,
     api: API,
     vararg gifts: WalletTransfer
 ): Pair<Cell, Int> {
     val seqno = getSeqno(api)
-    val cell = contract.createTransferUnsignedBody(seqno = seqno, gifts = gifts)
+    val cell = contract.createTransferUnsignedBody(seqno = seqno, gifts = gifts, validUntil = validUntil)
     return Pair(cell, seqno)
 }
 
 suspend fun WalletLegacy.sign(
+    validUntil: Long,
     api: API,
     privateKey: PrivateKeyEd25519 = EmptyPrivateKeyEd25519,
     vararg gifts: WalletTransfer
 ): Cell {
-    val (unsignedBody, seqno) = buildBody(api, *gifts)
+    val (unsignedBody, seqno) = buildBody(validUntil, api, *gifts)
     return sign(
         seqno = seqno,
         privateKey = privateKey,
@@ -52,18 +54,20 @@ suspend fun WalletLegacy.emulate(
 ) = emulate(api, cell.base64())
 
 suspend fun WalletLegacy.emulate(
+    validUntil: Long,
     api: API,
     vararg gifts: WalletTransfer
 ): MessageConsequences {
-    val cell = sign(api, gifts = gifts)
+    val cell = sign(validUntil, api, gifts = gifts)
     return emulate(api, cell)
 }
 
 suspend fun WalletLegacy.emulate(
+    validUntil: Long,
     api: API,
     gifts: List<WalletTransfer>
 ): MessageConsequences {
-    val cell = sign(api, gifts = gifts.toTypedArray())
+    val cell = sign(validUntil, api, gifts = gifts.toTypedArray())
     return emulate(api, cell)
 }
 
@@ -80,11 +84,12 @@ suspend fun WalletLegacy.sendToBlockchain(
 ) = sendToBlockchain(api, cell.base64())
 
 suspend fun WalletLegacy.sendToBlockchain(
+    validUntil: Long,
     api: API,
     privateKey: PrivateKeyEd25519,
     vararg gifts: WalletTransfer
 ): Cell? {
-    val cell = sign(api, privateKey = privateKey, gifts = gifts)
+    val cell = sign(validUntil, api, privateKey = privateKey, gifts = gifts)
     if (sendToBlockchain(api, cell)) {
         return cell
     }
@@ -92,11 +97,12 @@ suspend fun WalletLegacy.sendToBlockchain(
 }
 
 suspend fun WalletLegacy.sendToBlockchain(
+    validUntil: Long,
     api: API,
     privateKey: PrivateKeyEd25519,
     gifts: List<WalletTransfer>
 ): Cell? {
-    return sendToBlockchain(api, privateKey = privateKey, gifts = gifts.toTypedArray())
+    return sendToBlockchain(validUntil, api, privateKey = privateKey, gifts = gifts.toTypedArray())
 }
 
 suspend fun WalletLegacy.getSeqno(api: API): Int {

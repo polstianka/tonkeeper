@@ -150,6 +150,8 @@ class RootActivity: NavigationActivity() {
             is RootEvent.Browser -> add(WebFragment.newInstance(event.uri))
             is RootEvent.Transfer -> add(SendScreen.newInstance(event.address, event.text, event.amount ?: 0f, event.jettonAddress))
             is RootEvent.Transaction -> TransactionDialog.open(this, event.event)
+            is RootEvent.BuyOrSell -> fiatDialog.show()
+            is RootEvent.BuyOrSellDirect -> fiatDialog.openDirect(event.name)
             else -> { }
         }
     }

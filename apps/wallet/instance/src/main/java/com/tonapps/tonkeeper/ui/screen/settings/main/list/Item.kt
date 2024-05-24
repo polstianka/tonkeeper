@@ -98,6 +98,16 @@ sealed class Item(type: Int): BaseListItem(type) {
         secondaryIcon = false
     )
 
+    class FAQ(
+        position: ListCell.Position,
+        val url: String
+    ): Icon(
+        titleRes = Localization.faq,
+        iconRes = UIKitIcon.ic_question_28,
+        position = position,
+        secondaryIcon = false
+    )
+
     class News(
         position: ListCell.Position,
         val url: String

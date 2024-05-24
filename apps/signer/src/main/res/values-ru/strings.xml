@@ -8,6 +8,12 @@
     <string name="enter_password">Введите пароль</string>
     <string name="paste">Вставить</string>
     <string name="done">Готово</string>
+    <string name="close">Закрыть</string>
+    <string name="update">Обновить</string>
+    <string name="later">Позже</string>
+    <string name="update_signer">Обновление Signer</string>
+    <string name="update_signer_subtitle">Новые параметры поддерживаются только в последней версии.</string>
+    <string name="emulation_qr">Отсканируйте, чтобы открыть эмуляцию транзакции</string>
     <string name="continue_text">Продолжить</string>
     <string name="name_your_key">Добавьте имя ключа</string>
     <string name="name_your_key_subtitle">Это упростит поиск необходимого ключа в списке ключей.</string>

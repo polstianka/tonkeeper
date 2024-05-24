@@ -12,6 +12,7 @@
     <string name="push_notifications">Push notifications</string>
     <string name="push_notifications_description">Get notifications when you receive TON, tokens, and NFTs. Notifications from connected apps.</string>
 
+    <string name="faq" translatable="false">FAQ</string>
     <string name="failed">Failed</string>
     <string name="remove_dapp_confirm">Remove %1$s?</string>
     <string name="rate_tonkeeper">Rate Tonkeeper</string>

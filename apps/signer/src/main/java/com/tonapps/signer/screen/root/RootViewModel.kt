@@ -1,6 +1,7 @@
 package com.tonapps.signer.screen.root
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.signer.Key
@@ -54,12 +55,16 @@ class RootViewModel(
         }
     }
 
-    fun responseSignedBoc(boc: String) {
-        _action.tryEmit(RootAction.ResponseBoc(boc))
+    fun responseSignature(signature: ByteArray) {
+        _action.tryEmit(RootAction.ResponseSignature(signature))
     }
 
     fun processDeepLink(uri: Uri, fromApp: Boolean): Boolean {
         if (uri.scheme != Key.SCHEME) {
+            return false
+        }
+        if (uri.authority != "v1") { // if no authority, then it's a just open app
+            _action.tryEmit(RootAction.UpdateApp)
             return false
         }
         if (uri.query.isNullOrEmpty()) { // if no query, then it's a just open app

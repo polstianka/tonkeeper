@@ -1,6 +1,7 @@
 package com.tonapps.signer.deeplink.entities
 
 import android.net.Uri
+import android.util.Log
 import com.tonapps.blockchain.ton.extensions.safeParseCell
 import com.tonapps.blockchain.ton.extensions.safePublicKey
 import com.tonapps.signer.Key

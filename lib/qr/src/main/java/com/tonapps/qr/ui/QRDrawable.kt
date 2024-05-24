@@ -10,6 +10,7 @@ import android.graphics.drawable.Animatable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.tonapps.qr.QR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,6 +33,9 @@ class QRDrawable(
     private var currentIndex = -1
     private val currentBitmapDrawable: BitmapDrawable?
         get() = drawables.getOrNull(currentIndex)
+
+    var animation: Boolean = true
+    var errorCorrectionLevel = ErrorCorrectionLevel.M
 
     val isEmpty: Boolean
         get() = drawables.isEmpty()
@@ -61,7 +65,7 @@ class QRDrawable(
 
     fun setData(size: Int, content: String) {
         clear()
-        data = Data(size, content)
+        data = Data(size, content, animation)
         drawData()
     }
 
@@ -101,6 +105,7 @@ class QRDrawable(
         val builder = QR.Builder(content)
         builder.setSize(size)
         builder.setColor(color)
+        builder.setErrorCorrectionLevel(errorCorrectionLevel)
         builder.setWithCutout(withCutout)
         val drawable = builder.build(context)
         drawable.bounds = bounds
@@ -147,9 +152,18 @@ class QRDrawable(
         currentIndex = -1
     }
 
-    private data class Data(val size: Int, val content: String) {
+    private data class Data(
+        val size: Int,
+        val content: String,
+        val animation: Boolean
+    ) {
 
-        val chunks: List<String>
-            get() = content.chunked(CHUNK_SIZE)
+        val chunks: List<String> by lazy {
+            if (animation) {
+                content.chunked(CHUNK_SIZE)
+            } else {
+                listOf(content)
+            }
+        }
     }
 }

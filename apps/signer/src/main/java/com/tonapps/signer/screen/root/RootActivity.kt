@@ -21,9 +21,11 @@ import com.tonapps.signer.screen.intro.IntroFragment
 import com.tonapps.signer.screen.main.MainFragment
 import com.tonapps.signer.screen.root.action.RootAction
 import com.tonapps.signer.screen.sign.SignFragment
+import com.tonapps.signer.screen.update.UpdateFragment
 import kotlinx.coroutines.Job
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.api.pub.PublicKeyEd25519
+import org.ton.crypto.hex
 import uikit.dialog.alert.AlertDialog
 import uikit.extensions.collectFlow
 import uikit.extensions.primaryFragment
@@ -140,8 +142,9 @@ class RootActivity: NavigationActivity() {
     private fun onAction(action: RootAction) {
         when (action) {
             is RootAction.RequestBodySign -> requestSign(action)
-            is RootAction.ResponseBoc -> responseBoc(action.boc)
+            is RootAction.ResponseSignature -> responseSignature(action.signature)
             is RootAction.ResponseKey -> responseKey(action.publicKey, action.name)
+            is RootAction.UpdateApp -> updateDialog()
         }
     }
 
@@ -162,9 +165,9 @@ class RootActivity: NavigationActivity() {
         transaction.commitNow()
     }
 
-    private fun responseBoc(boc: String) {
+    private fun responseSignature(sign: ByteArray) {
         val intent = Intent()
-        intent.putExtra(Key.BOC, boc)
+        intent.putExtra(Key.SIGN, hex(sign))
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -189,6 +192,10 @@ class RootActivity: NavigationActivity() {
         if (!rootViewModel.processDeepLink(uri, fromApp)) {
             toast(R.string.wrong_url)
         }
+    }
+
+    private fun updateDialog() {
+        add(UpdateFragment.newInstance())
     }
 
     private fun handleIntent(intent: Intent) {

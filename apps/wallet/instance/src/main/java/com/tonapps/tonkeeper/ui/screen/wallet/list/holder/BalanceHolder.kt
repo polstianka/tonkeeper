@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.ui.screen.wallet.list.holder
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
@@ -17,6 +18,7 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.UIKitColor
 import com.tonapps.uikit.color.accentGreenColor
 import com.tonapps.uikit.color.accentOrangeColor
+import com.tonapps.uikit.color.accentPurpleColor
 import com.tonapps.uikit.color.iconSecondaryColor
 import com.tonapps.uikit.color.resolveColor
 import com.tonapps.uikit.color.stateList
@@ -88,10 +90,10 @@ class BalanceHolder(
             walletAddressView.text = address.shortAddress
             walletAddressView.setTextColor(context.textSecondaryColor)
             walletAddressView.setOnClickListener {
-                if (walletType == WalletType.Watch) {
-                    context.copyWithToast(address, context.accentOrangeColor)
-                } else {
+                if (walletType == WalletType.Default) {
                     context.copyWithToast(address)
+                } else {
+                    context.copyWithToast(address, getTypeColor(walletType))
                 }
             }
         }
@@ -108,8 +110,18 @@ class BalanceHolder(
             }
         }
 
+        val color = getTypeColor(type)
         walletTypeView.visibility = View.VISIBLE
+        walletTypeView.setTextColor(color)
+        walletTypeView.backgroundTintList = color.withAlpha(.16f).stateList
         walletTypeView.setText(resId)
+    }
+
+    private fun getTypeColor(type: WalletType): Int {
+        return when (type) {
+            WalletType.Signer -> context.accentPurpleColor
+            else -> context.accentOrangeColor
+        }
     }
 
     private class HiddenBalanceDrawable(context: Context): BaseDrawable() {

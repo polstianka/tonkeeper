@@ -27,9 +27,15 @@ object QR {
         private var cutoutFirstBlock = 0
         private var cutoutBlockCount = 0
         private var size = 100
+        private var errorCorrectionLevel = ErrorCorrectionLevel.M
 
         fun setSize(size: Int): Builder {
             this.size = size
+            return this
+        }
+
+        fun setErrorCorrectionLevel(errorCorrectionLevel: ErrorCorrectionLevel): Builder {
+            this.errorCorrectionLevel = errorCorrectionLevel
             return this
         }
 
@@ -57,7 +63,6 @@ object QR {
             val hints = HashMap<EncodeHintType, Any?>()
             hints[EncodeHintType.MARGIN] = 0
 
-            val errorCorrectionLevel = ErrorCorrectionLevel.M
             val qrCode = Encoder.encode(content, errorCorrectionLevel, hints)
             val matrix = qrCode.matrix
 

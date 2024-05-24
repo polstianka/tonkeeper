@@ -10,7 +10,9 @@ import com.tonapps.tonkeeper.extensions.copyToClipboard
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.accentOrangeColor
+import com.tonapps.uikit.color.accentPurpleColor
 import com.tonapps.uikit.color.backgroundContentTintColor
+import com.tonapps.uikit.color.stateList
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import com.tonapps.wallet.localization.Localization
@@ -61,10 +63,13 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
             walletTypeView.visibility = View.VISIBLE
             if (args.walletType == WalletType.Watch) {
                 walletTypeView.setText(Localization.watch_only)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             } else if (args.walletType == WalletType.Testnet) {
                 walletTypeView.setText(Localization.testnet)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             } else if (args.walletType == WalletType.Signer) {
                 walletTypeView.setText(Localization.signer)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             }
         }
 
@@ -81,10 +86,10 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
     }
 
     private fun copy() {
-        val color = if (args.walletType == WalletType.Default) {
-            requireContext().backgroundContentTintColor
-        } else {
-            requireContext().accentOrangeColor
+        val color = when (args.walletType) {
+            WalletType.Default -> requireContext().backgroundContentTintColor
+            WalletType.Signer -> requireContext().accentPurpleColor
+            else -> requireContext().accentOrangeColor
         }
         navigation?.toast(getString(Localization.copied), color)
         context?.copyToClipboard(args.address)

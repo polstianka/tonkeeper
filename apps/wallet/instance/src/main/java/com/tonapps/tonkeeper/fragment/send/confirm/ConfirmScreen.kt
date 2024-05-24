@@ -18,6 +18,7 @@ import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.flow.map
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.crypto.base64
+import org.ton.crypto.hex
 import uikit.extensions.collectFlow
 import uikit.extensions.drawable
 import uikit.extensions.pinToBottomInsets
@@ -50,7 +51,7 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
         if (it == null) {
             feature.setFailedResult()
         } else {
-            feature.sendSignature(base64(it))
+            feature.sendSignature(it)
         }
     }
 

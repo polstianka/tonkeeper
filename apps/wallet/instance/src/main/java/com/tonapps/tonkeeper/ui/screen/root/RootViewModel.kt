@@ -348,9 +348,19 @@ class RootViewModel(
         } else if (uri.path?.startsWith("/pick/") == true) {
             val walletId = uri.pathSegments.lastOrNull()?.toLongOrNull() ?: return
             viewModelScope.launch { walletRepository.setActiveWallet(walletId) }
+        } else if (uri.path?.startsWith("/swap") == true) {
+            val ft = uri.getQueryParameter("ft") ?: "TON"
+            val tt = uri.getQueryParameter("tt")
+            _eventFlow.tryEmit(RootEvent.Swap(api.config.swapUri, wallet.address, ft, tt))
+        } else if (uri.path?.startsWith("/buy-ton") == true || uri.path == "/exchange" || uri.path == "/exchange/") {
+            _eventFlow.tryEmit(RootEvent.BuyOrSell)
+        } else if (uri.path?.startsWith("/exchange") == true) {
+            val name = uri.pathSegments.lastOrNull() ?: return
+            _eventFlow.tryEmit(RootEvent.BuyOrSellDirect(name))
         } else {
             Log.d("DeepLinkLog", "uri: $uri")
             Log.d("DeepLinkLog", "path segments: ${uri.pathSegments}")
+            Log.d("DeepLinkLog", "path: ${uri.path}")
             toast(Localization.invalid_link)
         }
     }

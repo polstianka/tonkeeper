@@ -84,6 +84,14 @@ object Coin {
         return (value * 10.0.pow(decimals)).toLong()
     }
 
+    fun toNanoDouble(
+        value: Double,
+        decimals: Int = TON_DECIMALS
+    ): Long {
+        // old return (value * BASE).toLong()
+        return (value * 10.0.pow(decimals)).toLong()
+    }
+
     fun toCoins(
         value: Long,
         decimals: Int = TON_DECIMALS
