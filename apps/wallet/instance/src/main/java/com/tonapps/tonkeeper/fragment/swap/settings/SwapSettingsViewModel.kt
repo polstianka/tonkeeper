@@ -34,9 +34,9 @@ class SwapSettingsViewModel : ViewModel() {
     private var lastPercentage = 1
     fun onInputChanged(text: String) {
         lastPercentage = text.toIntOrNull() ?: return
-        if (lastPercentage > 100) {
-            lastPercentage = 100
-            emit(_events, SwapSettingsEvent.FillInput("100"))
+        if (lastPercentage > 99) {
+            lastPercentage = 99
+            emit(_events, SwapSettingsEvent.FillInput("99"))
         }
         updateState(SwapSettings.ExpertMode(lastPercentage))
     }
