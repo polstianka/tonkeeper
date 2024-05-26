@@ -63,4 +63,10 @@
         <item name="android:fontFamily">@font/montserrat_semi_bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
+
+    <style name="TextAppearance.H0" parent="@android:style/TextAppearance">
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textFontWeight" tools:targetApi="p">600</item>
+    </style>
 </resources>

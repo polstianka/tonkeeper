@@ -2,11 +2,9 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -21,6 +19,7 @@ import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ChartEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.api.entity.TradeRateEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.tonapi.models.Account
@@ -49,13 +48,15 @@ import java.util.concurrent.TimeUnit
 
 class API(
     private val context: Context,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
-
     val defaultHttpClient = baseOkHttpClientBuilder().build()
 
     private val tonAPIHttpClient: OkHttpClient by lazy {
         createTonAPIHttpClient(context, config.tonApiV2Key)
+    }
+    private val bootTonkeeper: OkHttpClient by lazy {
+        createBootTonkeeperHttpClient()
     }
 
     private val internalApi = InternalApi(context, defaultHttpClient)
@@ -84,13 +85,13 @@ class API(
         accountId: String,
         testnet: Boolean,
         beforeLt: Long? = null,
-        limit: Int = 20
+        limit: Int = 20,
     ): AccountEvents {
         return accounts(testnet).getAccountEvents(
             accountId = accountId,
             limit = limit,
             beforeLt = beforeLt,
-            subjectOnly = true
+            subjectOnly = true,
         )
     }
 
@@ -99,19 +100,19 @@ class API(
         accountId: String,
         testnet: Boolean,
         beforeLt: Long? = null,
-        limit: Int = 20
+        limit: Int = 20,
     ): AccountEvents {
         return accounts(testnet).getAccountJettonHistoryByID(
             jettonId = tokenAddress,
             accountId = accountId,
             limit = limit,
-            beforeLt = beforeLt
+            beforeLt = beforeLt,
         )
     }
 
     fun getTonBalance(
         accountId: String,
-        testnet: Boolean
+        testnet: Boolean,
     ): BalanceEntity {
         val account = accounts(testnet).getAccount(accountId)
         return BalanceEntity(TokenEntity.TON, Coin.toCoinsDouble(account.balance), accountId)
@@ -120,13 +121,14 @@ class API(
     fun getJettonsBalances(
         accountId: String,
         testnet: Boolean,
-        currency: String
+        currency: String,
     ): List<BalanceEntity> {
         try {
-            val jettonsBalances = accounts(testnet).getAccountJettonsBalances(
-                accountId = accountId,
-                currencies = currency
-            ).balances
+            val jettonsBalances =
+                accounts(testnet).getAccountJettonsBalances(
+                    accountId = accountId,
+                    currencies = currency,
+                ).balances
             return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
         } catch (e: Throwable) {
             return emptyList()
@@ -135,7 +137,7 @@ class API(
 
     fun resolveAddressOrName(
         query: String,
-        testnet: Boolean
+        testnet: Boolean,
     ): AccountDetailsEntity? {
         return try {
             val account = accounts(testnet).getAccount(query)
@@ -147,7 +149,7 @@ class API(
 
     fun resolvePublicKey(
         pk: PublicKeyEd25519,
-        testnet: Boolean
+        testnet: Boolean,
     ): List<AccountDetailsEntity> {
         return try {
             val query = pk.key.hex()
@@ -158,7 +160,10 @@ class API(
         }
     }
 
-    fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates> {
+    fun getRates(
+        currency: String,
+        tokens: List<String>,
+    ): Map<String, TokenRates> {
         return try {
             rates().getRates(tokens.joinToString(","), currency).rates
         } catch (e: Throwable) {
@@ -166,7 +171,10 @@ class API(
         }
     }
 
-    fun getNft(address: String, testnet: Boolean): NftItem? {
+    fun getNft(
+        address: String,
+        testnet: Boolean,
+    ): NftItem? {
         return try {
             nft(testnet).getNftItemByAddress(address)
         } catch (e: Throwable) {
@@ -174,7 +182,10 @@ class API(
         }
     }
 
-    fun getNftItems(address: String, testnet: Boolean): List<NftItem> {
+    fun getNftItems(
+        address: String,
+        testnet: Boolean,
+    ): List<NftItem> {
         return accounts(testnet).getAccountNftItems(
             accountId = address,
             limit = 1000,
@@ -184,26 +195,30 @@ class API(
 
     fun getPublicKey(
         accountId: String,
-        testnet: Boolean
+        testnet: Boolean,
     ): String {
         return accounts(testnet).getAccountPublicKey(accountId).publicKey
     }
 
-    fun accountEvents(accountId: String, testnet: Boolean): Flow<SSEvent> {
-        val endpoint = if (testnet) {
-            config.tonapiTestnetHost
-        } else {
-            config.tonapiMainnetHost
-        }
+    fun accountEvents(
+        accountId: String,
+        testnet: Boolean,
+    ): Flow<SSEvent> {
+        val endpoint =
+            if (testnet) {
+                config.tonapiTestnetHost
+            } else {
+                config.tonapiMainnetHost
+            }
         // val mempool = okHttpClient.sse("$endpoint/v2/sse/mempool?accounts=${accountId}")
-        val tx = tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
+        val tx = tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=$accountId")
         // return merge(mempool, tx)
         return tx
     }
 
     fun tonconnectEvents(
         publicKeys: List<String>,
-        lastEventId: String?
+        lastEventId: String?,
     ): Flow<SSEvent> {
         if (publicKeys.isEmpty()) {
             return emptyFlow()
@@ -222,7 +237,10 @@ class API(
         return json.getString("payload")
     }
 
-    fun tonconnectProof(address: String, proof: String): String {
+    fun tonconnectProof(
+        address: String,
+        proof: String,
+    ): String {
         val url = "${config.tonapiMainnetHost}/v2/wallet/auth/proof"
         val data = "{\"address\":\"$address\",\"proof\":$proof}"
         val response = tonAPIHttpClient.postJSON(url, data)
@@ -236,7 +254,7 @@ class API(
     fun tonconnectSend(
         publicKeyHex: String,
         clientId: String,
-        body: String
+        body: String,
     ) {
         val mimeType = "text/plain".toMediaType()
         val url = "${BRIDGE_URL}/message?client_id=$publicKeyHex&to=$clientId&ttl=300"
@@ -248,59 +266,69 @@ class API(
 
     suspend fun emulate(
         boc: String,
-        testnet: Boolean
-    ): MessageConsequences = withContext(Dispatchers.IO) {
-        val request = EmulateMessageToWalletRequest(boc)
-        emulation(testnet).emulateMessageToWallet(request)
-    }
+        testnet: Boolean,
+    ): MessageConsequences =
+        withContext(Dispatchers.IO) {
+            val request = EmulateMessageToWalletRequest(boc)
+            emulation(testnet).emulateMessageToWallet(request)
+        }
 
     suspend fun emulate(
         cell: Cell,
-        testnet: Boolean
+        testnet: Boolean,
     ): MessageConsequences {
         return emulate(cell.base64(), testnet)
     }
 
     suspend fun sendToBlockchain(
         boc: String,
-        testnet: Boolean
-    ): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val request = SendBlockchainMessageRequest(boc)
-            blockchain(testnet).sendBlockchainMessage(request)
-            true
-        } catch (e: Throwable) {
-            false
+        testnet: Boolean,
+    ): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                val request = SendBlockchainMessageRequest(boc)
+                blockchain(testnet).sendBlockchainMessage(request)
+                true
+            } catch (e: Throwable) {
+                false
+            }
         }
-    }
 
     suspend fun sendToBlockchain(
         cell: Cell,
-        testnet: Boolean
+        testnet: Boolean,
     ) = sendToBlockchain(cell.base64(), testnet)
 
     suspend fun getAccountSeqno(
         accountId: String,
         testnet: Boolean,
-    ): Int = withContext(Dispatchers.IO) {
-        wallet(testnet).getAccountSeqno(accountId).seqno
-    }
+    ): Int =
+        withContext(Dispatchers.IO) {
+            wallet(testnet).getAccountSeqno(accountId).seqno
+        }
 
     suspend fun resolveAccount(
         value: String,
         testnet: Boolean,
-    ): Account? = withContext(Dispatchers.IO) {
-        if (value.isValid()) {
-            return@withContext getAccount(value, testnet)
+    ): Account? =
+        withContext(Dispatchers.IO) {
+            if (value.isValid()) {
+                return@withContext getAccount(value, testnet)
+            }
+            return@withContext resolveDomain(value.lowercase().trim(), testnet)
         }
-        return@withContext resolveDomain(value.lowercase().trim(), testnet)
-    }
 
-    private fun resolveDomain(domain: String, testnet: Boolean): Account? {
+    private fun resolveDomain(
+        domain: String,
+        testnet: Boolean,
+    ): Account? {
         return getAccount(domain, testnet) ?: getAccount(domain.unicodeToPunycode(), testnet)
     }
 
-    private fun getAccount(accountId: String, testnet: Boolean): Account? {
+    private fun getAccount(
+        accountId: String,
+        testnet: Boolean,
+    ): Account? {
         return try {
             accounts(testnet).getAccount(accountId)
         } catch (e: Throwable) {
@@ -312,7 +340,7 @@ class API(
         locale: Locale,
         firebaseToken: String,
         deviceId: String,
-        accounts: List<String>
+        accounts: List<String>,
     ): Boolean {
         return try {
             val url = "${config.tonapiMainnetHost}/v1/internal/pushes/plain/subscribe"
@@ -342,7 +370,7 @@ class API(
         firebaseToken: String,
         sessionId: String?,
         commercial: Boolean = true,
-        silent: Boolean = true
+        silent: Boolean = true,
     ): Boolean {
         return try {
             val url = "${config.tonapiMainnetHost}/v1/internal/pushes/tonconnect"
@@ -356,9 +384,13 @@ class API(
             json.put("silent", silent)
             val data = json.toString().replace("\\/", "/")
 
-            tonAPIHttpClient.postJSON(url, data, ArrayMap<String, String>().apply {
-                set("X-TonConnect-Auth", token)
-            }).isSuccessful
+            tonAPIHttpClient.postJSON(
+                url,
+                data,
+                ArrayMap<String, String>().apply {
+                    set("X-TonConnect-Auth", token)
+                },
+            ).isSuccessful
         } catch (e: Throwable) {
             false
         }
@@ -369,9 +401,13 @@ class API(
         accountId: String,
     ): JSONArray {
         val url = "${config.tonapiMainnetHost}/v1/messages/history?account=$accountId"
-        val response = tonAPIHttpClient.get(url, ArrayMap<String, String>().apply {
-            set("X-TonConnect-Auth", token)
-        })
+        val response =
+            tonAPIHttpClient.get(
+                url,
+                ArrayMap<String, String>().apply {
+                    set("X-TonConnect-Auth", token)
+                },
+            )
 
         return try {
             val json = JSONObject(response)
@@ -385,7 +421,11 @@ class API(
         return internalApi.getBrowserApps(testnet)
     }
 
-    fun getTransactionEvents(accountId: String, testnet: Boolean, eventId: String): AccountEvent? {
+    fun getTransactionEvents(
+        accountId: String,
+        testnet: Boolean,
+        eventId: String,
+    ): AccountEvent? {
         return try {
             accounts(testnet).getAccountEvent(accountId, eventId)
         } catch (e: Throwable) {
@@ -398,7 +438,7 @@ class API(
         currency: String,
         startDate: Long,
         endDate: Long,
-        points: Int
+        points: Int,
     ): List<ChartEntity> {
         val url = "${config.tonapiMainnetHost}/v2/rates/chart?token=$token&currency=$currency&end_date=$endDate&start_date=$startDate&points_count=$points"
         val array = JSONObject(tonAPIHttpClient.get(url)).getJSONArray("points")
@@ -407,8 +447,19 @@ class API(
         }
     }
 
-    companion object {
+    fun loadTradeRates(currency: String): List<TradeRateEntity> {
+        val url = "${config.bootTonkeeperUrl}/widget/buy/rates?currency=$currency"
+        val items = bootTonkeeper.get(url)
+        if (items.isEmpty()) {
+            return emptyList()
+        }
+        val array = JSONObject(items).optJSONArray("items") ?: return emptyList()
+        return (0 until array.length()).map { index ->
+            TradeRateEntity(array.getJSONObject(index))
+        }
+    }
 
+    companion object {
         const val BRIDGE_URL = "https://bridge.tonapi.io/bridge"
 
         val JSON = Json { prettyPrint = true }
@@ -424,11 +475,16 @@ class API(
 
         private fun createTonAPIHttpClient(
             context: Context,
-            tonApiV2Key: String
+            tonApiV2Key: String,
         ): OkHttpClient {
             return baseOkHttpClientBuilder()
                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
                 .addInterceptor(AuthorizationInterceptor.bearer(tonApiV2Key))
+                .build()
+        }
+
+        private fun createBootTonkeeperHttpClient(): OkHttpClient {
+            return baseOkHttpClientBuilder()
                 .build()
         }
     }

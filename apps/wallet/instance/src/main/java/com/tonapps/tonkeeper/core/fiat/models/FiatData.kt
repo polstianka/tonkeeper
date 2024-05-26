@@ -7,11 +7,10 @@ data class FiatData(
     val defaultLayout: FiatLayout,
     val categories: List<FiatCategory>,
     val buy: List<FiatCategory>,
-    val sell: List<FiatCategory>
+    val sell: List<FiatCategory>,
 ) {
-
     constructor(string: String) : this(
-        JSONObject(string)
+        JSONObject(string),
     )
 
     constructor(json: JSONObject) : this(
@@ -19,7 +18,7 @@ data class FiatData(
         defaultLayout = FiatLayout(json.getJSONObject("defaultLayout")),
         categories = FiatCategory.parse(json.getJSONArray("categories")),
         buy = FiatCategory.parse(json.getJSONArray("buy")),
-        sell = FiatCategory.parse(json.getJSONArray("sell"))
+        sell = FiatCategory.parse(json.getJSONArray("sell")),
     )
 
     fun layoutByCountry(countryCode: String): FiatLayout {
@@ -31,6 +30,20 @@ data class FiatData(
         val items = mutableListOf<FiatItem>()
         buy.forEach { category ->
             if (category.type == "buy") {
+                category.items.forEach { item ->
+                    if (methods.contains(item.id)) {
+                        items.add(item)
+                    }
+                }
+            }
+        }
+        return items
+    }
+
+    fun getSellItemsByMethods(methods: List<String>): List<FiatItem> {
+        val items = mutableListOf<FiatItem>()
+        sell.forEach { category ->
+            if (category.type == "sell") {
                 category.items.forEach { item ->
                     if (methods.contains(item.id)) {
                         items.add(item)

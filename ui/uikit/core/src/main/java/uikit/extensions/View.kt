@@ -1,18 +1,10 @@
 package uikit.extensions
 
 import android.animation.ValueAnimator
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Outline
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.HapticFeedbackConstants
-import android.view.PixelCopy
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
@@ -22,26 +14,17 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateMargins
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.NestedScrollView.OnScrollChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -79,7 +62,7 @@ val View.statusBarHeight: Int
 
 fun ViewGroup.inflate(
     @LayoutRes
-    layoutRes: Int
+    layoutRes: Int,
 ): View {
     return context.inflate(layoutRes, this, false)
 }
@@ -118,11 +101,15 @@ fun View.roundTop(radius: Int) {
         outlineProvider = null
         clipToOutline = false
     } else {
-        outlineProvider = object : ViewOutlineProvider() {
-            override fun getOutline(view: View, outline: Outline) {
-                outline.setRoundRect(0, 0, view.width, view.height + radius * 2, radius.toFloat())
+        outlineProvider =
+            object : ViewOutlineProvider() {
+                override fun getOutline(
+                    view: View,
+                    outline: Outline,
+                ) {
+                    outline.setRoundRect(0, 0, view.width, view.height + radius * 2, radius.toFloat())
+                }
             }
-        }
         clipToOutline = true
     }
 }
@@ -132,35 +119,45 @@ fun View.round(radius: Int) {
         outlineProvider = null
         clipToOutline = false
     } else {
-        outlineProvider = object : ViewOutlineProvider() {
-            override fun getOutline(view: View, outline: Outline) {
-                outline.setRoundRect(0, 0, view.width, view.height, radius.toFloat())
+        outlineProvider =
+            object : ViewOutlineProvider() {
+                override fun getOutline(
+                    view: View,
+                    outline: Outline,
+                ) {
+                    outline.setRoundRect(0, 0, view.width, view.height, radius.toFloat())
+                }
             }
-        }
         clipToOutline = true
     }
 }
 
-fun View.getDrawable(@DrawableRes resId: Int): Drawable {
+fun View.getDrawable(
+    @DrawableRes resId: Int,
+): Drawable {
     return AppCompatResources.getDrawable(context, resId)!!
 }
 
-fun View.withAnimation(duration: Long = 120, block: () -> Unit) {
+fun View.withAnimation(
+    duration: Long = 120,
+    block: () -> Unit,
+) {
     if (this !is ViewGroup) {
         block()
         return
     }
 
-    val transitionAdapter = object : TransitionListenerAdapter() {
-        override fun onTransitionStart(transition: Transition) {
-            setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        }
+    val transitionAdapter =
+        object : TransitionListenerAdapter() {
+            override fun onTransitionStart(transition: Transition) {
+                setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            }
 
-        override fun onTransitionEnd(transition: Transition) {
-            transition.removeListener(this)
-            setLayerType(View.LAYER_TYPE_NONE, null)
+            override fun onTransitionEnd(transition: Transition) {
+                transition.removeListener(this)
+                setLayerType(View.LAYER_TYPE_NONE, null)
+            }
         }
-    }
 
     val transition = AutoTransition()
     transition.duration = duration
@@ -178,11 +175,15 @@ fun TextView.setStartDrawable(drawable: Drawable?) {
     setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }
 
-fun TextView.setEndDrawable(@DrawableRes resId: Int) {
+fun TextView.setEndDrawable(
+    @DrawableRes resId: Int,
+) {
     setCompoundDrawablesWithIntrinsicBounds(null, null, getDrawable(resId), null)
 }
 
-fun TextView.setStartDrawable(@DrawableRes resId: Int) {
+fun TextView.setStartDrawable(
+    @DrawableRes resId: Int,
+) {
     setCompoundDrawablesWithIntrinsicBounds(getDrawable(resId), null, null, null)
 }
 
@@ -216,7 +217,9 @@ fun View.hapticReject() {
     }
 }
 
-fun View.runAnimation(@AnimRes resId: Int): Animation {
+fun View.runAnimation(
+    @AnimRes resId: Int,
+): Animation {
     val animation = context.getAnimation(resId)
     startAnimation(animation)
     return animation
@@ -225,7 +228,7 @@ fun View.runAnimation(@AnimRes resId: Int): Animation {
 fun View.startSnakeAnimation(
     count: Int = 3,
     offset: Int = 16.dp,
-    duration: Long = 400
+    duration: Long = 400,
 ) {
     val animator = ValueAnimator.ofFloat(0f, 1f)
     animator.addUpdateListener { animation ->
@@ -244,16 +247,23 @@ fun View.reject() {
     hapticReject()
 }
 
-inline fun View.doKeyboardAnimation(crossinline block: (
-    offset: Int,
-    progress: Float,
-    isShowing: Boolean
-) -> Unit) {
-    val animationCallback = object : KeyboardAnimationCallback(this) {
-        override fun onKeyboardOffsetChanged(offset: Int, progress: Float, isShowing: Boolean) {
-            block(offset, progress, isShowing)
+inline fun View.doKeyboardAnimation(
+    crossinline block: (
+        offset: Int,
+        progress: Float,
+        isShowing: Boolean,
+    ) -> Unit,
+) {
+    val animationCallback =
+        object : KeyboardAnimationCallback(this) {
+            override fun onKeyboardOffsetChanged(
+                offset: Int,
+                progress: Float,
+                isShowing: Boolean,
+            ) {
+                block(offset, progress, isShowing)
+            }
         }
-    }
     ViewCompat.setWindowInsetsAnimationCallback(this, animationCallback)
 }
 
@@ -290,4 +300,63 @@ fun TextView.setRightDrawable(drawable: Drawable?) {
 
 fun TextView.clearDrawables() {
     setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+}
+
+private const val ANIM_DURATION = 750L
+
+enum class AnimationType {
+    ALPHA,
+    SCALE,
+}
+
+fun View.visible(
+    animate: Boolean = false,
+    animationType: AnimationType = AnimationType.ALPHA,
+    animationDuration: Long = ANIM_DURATION,
+    onEndAnimation: () -> Unit = {},
+) {
+    visibility(View.VISIBLE, animate, animationType, animationDuration, onEndAnimation)
+}
+
+fun View.invisible(
+    animate: Boolean = false,
+    animationType: AnimationType = AnimationType.ALPHA,
+    animationDuration: Long = ANIM_DURATION,
+    onEndAnimation: () -> Unit = {},
+) {
+    visibility(View.INVISIBLE, animate, animationType, animationDuration, onEndAnimation)
+}
+
+fun View.gone(
+    animate: Boolean = false,
+    animationType: AnimationType = AnimationType.ALPHA,
+    animationDuration: Long = ANIM_DURATION,
+    onEndAnimation: () -> Unit = {},
+) {
+    visibility(View.GONE, animate, animationType, animationDuration, onEndAnimation)
+}
+
+fun View.visibility(
+    hidingStrategy: Int,
+    animate: Boolean = false,
+    animationType: AnimationType = AnimationType.ALPHA,
+    animationDuration: Long = ANIM_DURATION,
+    onEndAnimation: () -> Unit = {},
+) {
+    animate().cancel()
+    if (animate) {
+        val startValue = if (hidingStrategy == View.VISIBLE) 1f else 0f
+        when (animationType) {
+            AnimationType.ALPHA -> animate().alpha(startValue)
+            AnimationType.SCALE -> animate().scaleX(startValue).scaleY(startValue)
+        }.setDuration(animationDuration)
+            .withStartAction {
+                if (hidingStrategy == View.VISIBLE) visibility = View.VISIBLE
+            }.withEndAction {
+                visibility = hidingStrategy
+                onEndAnimation()
+            }
+    } else {
+        visibility = hidingStrategy
+    }
 }

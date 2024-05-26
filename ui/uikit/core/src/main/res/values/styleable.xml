@@ -111,4 +111,11 @@
     <declare-styleable name="SimpleRecyclerView">
         <attr name="android:maxHeight" format="dimension|reference"/>
     </declare-styleable>
+<!--
+    <declare-styleable name="TradeHeaderView">
+        <attr name="android:icon" format="reference"/>
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:action" format="reference"/>
+        <attr name="ignoreSystemOffsets" format="boolean"/>
+    </declare-styleable>-->
 </resources>

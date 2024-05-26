@@ -100,6 +100,7 @@
     <string name="buy_or_sell">Buy or sell</string>
     <string name="fiat_open_description">You are opening an external app not operated by Tonkeeper.</string>
     <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
     <string name="search">Search</string>
     <string name="add_wallet">Add wallet</string>
     <string name="wallets">Wallets</string>
@@ -292,4 +293,12 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+    <string name="min_amount">Min. amount: %1$s TON</string>
+    <string name="operator">Operator</string>
+    <string name="credit_card">Credit card</string>
+    <string name="switch_method">Switch payment type</string>
+    <string name="rate_for_one_ton">%1$s for 1 TON</string>
+    <string name="no_operators">No operators available.\nPlease try another currency</string>
+    <string name="you_pay">You pay</string>
+    <string name="you_get">You get</string>
 </resources>

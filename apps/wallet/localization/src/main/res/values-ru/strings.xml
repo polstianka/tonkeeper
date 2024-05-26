@@ -110,6 +110,7 @@
     <string name="buy_or_sell">Торговля</string>
     <string name="fiat_open_description">Вы открываете внешнее приложение, которым не управляет Tonkeeper.</string>
     <string name="buy">Купить</string>
+    <string name="sell">Продать</string>
     <string name="search">Поиск</string>
     <string name="country_title">Выберите вашу страну</string>
     <string name="intro_description">Создайте новый кошелек или добавьте существующий</string>
@@ -290,4 +291,12 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+    <string name="min_amount">Мин. количество: %1$s TON</string>
+    <string name="operator">Оператор</string>
+    <string name="credit_card">Кредитная карта</string>
+    <string name="switch_method">Переключить способ оплаты</string>
+    <string name="rate_for_one_ton">%1$s за 1 TON</string>
+    <string name="no_operators">Нет доступных операторов.\nПожалуйста попробуйте другую валюту</string>
+    <string name="you_pay">Ты платишь</string>
+    <string name="you_get">Ты получаешь</string>
 </resources>

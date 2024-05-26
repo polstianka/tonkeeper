@@ -8,7 +8,6 @@ import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
@@ -17,9 +16,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 class CurrencyViewModel(
-    private val settings: SettingsRepository
-): ViewModel() {
-
+    private val settings: SettingsRepository,
+) : ViewModel() {
     private val _uiItemsFlow = MutableStateFlow<List<Item>>(emptyList())
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
 
@@ -37,12 +35,13 @@ class CurrencyViewModel(
         val currencies = WalletCurrency.ALL
         val items = mutableListOf<Item>()
         for ((index, currency) in currencies.withIndex()) {
-            val item = Item(
-                currency = currency,
-                nameResId = getNameResIdForCurrency(currency),
-                selected = currency == selectedCurrency.code,
-                position = ListCell.getPosition(currencies.size, index)
-            )
+            val item =
+                Item(
+                    currency = currency,
+                    nameResId = getNameResIdForCurrency(currency),
+                    selected = currency == selectedCurrency.code,
+                    position = ListCell.getPosition(currencies.size, index),
+                )
             items.add(item)
         }
         return items
@@ -50,7 +49,7 @@ class CurrencyViewModel(
 
     @StringRes
     private fun getNameResIdForCurrency(currency: String): Int {
-        return when(currency.lowercase()) {
+        return when (currency.lowercase()) {
             "usd" -> Localization.currency_usd_name
             "eur" -> Localization.currency_eur_name
             "rub" -> Localization.currency_rub_name
@@ -87,7 +86,5 @@ class CurrencyViewModel(
             "btc" -> Localization.bitcoin
             else -> throw IllegalArgumentException("Unsupported currency: $currency")
         }
-
     }
-
 }

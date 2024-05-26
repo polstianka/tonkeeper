@@ -108,4 +108,9 @@
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
     </style>
+
+    <style name="RadioButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/buttonTertiaryBackgroundLight</item>
+        <item name="colorControlActivated">@color/buttonPrimaryBackgroundDark</item>
+    </style>
 </resources>
