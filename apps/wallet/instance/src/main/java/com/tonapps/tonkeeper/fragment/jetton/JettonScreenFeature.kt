@@ -3,21 +3,20 @@ package com.tonapps.tonkeeper.fragment.jetton
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
-import com.tonapps.wallet.api.Tonapi
-import com.tonapps.tonkeeper.api.getAddress
 import com.tonapps.tonkeeper.api.jetton.JettonRepository
 import com.tonapps.tonkeeper.api.parsedBalance
 import com.tonapps.tonkeeper.api.withRetry
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
+import com.tonapps.wallet.api.Tonapi
+import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.RatesRepository
 import core.QueueScope
 import io.tonapi.models.AccountEvents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import com.tonapps.wallet.data.account.legacy.WalletLegacy
-import com.tonapps.wallet.data.rates.RatesRepository
 import uikit.mvi.AsyncState
 import uikit.mvi.UiFeature
 
@@ -67,7 +66,6 @@ class JettonScreenFeature(
                 val jetton = jettonRepository.getByAddress(accountId, address, wallet.testnet) ?: throw IllegalStateException("Jetton not found")
 
                 val balance = jetton.parsedBalance
-                val jettonAddress = jetton.getAddress(wallet.testnet)
 
                 val rates = ratesRepository.getRates(currency, address)
 

@@ -1,15 +1,12 @@
 package com.tonapps.tonkeeper.fragment.swap.domain.model
 
 import android.os.Parcelable
-import com.tonapps.icu.CurrencyFormatter
-import com.tonapps.tonkeeper.fragment.stake.root.StakeViewModel
 import com.tonapps.wallet.api.entity.TokenEntity
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize
 data class DexAsset(
-    val hasDefaultSymbol: Boolean,
     val type: DexAssetType,
     val dexUsdPrice: BigDecimal,
     val balance: BigDecimal,

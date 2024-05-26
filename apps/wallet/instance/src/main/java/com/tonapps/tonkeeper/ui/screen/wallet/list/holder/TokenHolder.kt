@@ -46,7 +46,7 @@ class TokenHolder(parent: ViewGroup): Holder<Item.Token>(parent, R.layout.view_c
             } else {
                 balanceFiatView.text = item.fiatFormat
             }
-            setRate(item.rate, item.rateDiff24h, item.verified)
+            setRate(item.rateFormat, item.rateDiff24h, item.verified)
         }
     }
 

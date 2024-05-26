@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.ui.screen.wallet
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -25,7 +24,6 @@ import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
@@ -95,9 +93,6 @@ class WalletViewModel(
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
 
     val uiLabelFlow = walletRepository.activeWalletFlow.map { it.label }
-    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.wtf("###", "error: ${throwable.message}")
-    }
 
     init {
         walletRepository.activeWalletFlow.map { screenCacheSource.getWalletScreen(it) }
@@ -261,8 +256,6 @@ class WalletViewModel(
             }
             fiatBalance += token.fiat
 
-            val balanceFormat = CurrencyFormatter.format(value = token.balance.value)
-            val fiatFormat = CurrencyFormatter.formatFiat(currency.code, token.fiat)
             val item = Item.Token(
                 position = ListCell.getPosition(tokens.size, index),
                 iconUri = token.imageUri,
@@ -270,14 +263,12 @@ class WalletViewModel(
                 symbol = token.symbol,
                 name = token.name,
                 balance = token.balance.value,
-                balanceFormat = balanceFormat,
-                fiat = token.fiat,
-                fiatFormat = fiatFormat,
-                rate = CurrencyFormatter.formatFiat(currency.code, token.rateNow),
                 rateDiff24h = token.rateDiff24h,
                 verified = token.verified,
                 testnet = testnet,
-                hiddenBalance = settings.hiddenBalances
+                hiddenBalance = settings.hiddenBalances,
+                currency = currency,
+                rateNow = token.rateNow
             )
             tokenItemsPre.add(item)
         }

@@ -142,7 +142,6 @@ class DexAssetsRepository(
     private fun AssetInfoSchema.toDomain(): DexAsset {
         val tokenEntity = toTokenEntity()
         return DexAsset(
-            hasDefaultSymbol = defaultSymbol,
             type = kind.toDomain(),
             dexUsdPrice = BigDecimal(dexPriceUsd),
             balance = balance?.let { Coin.toCoins(it, tokenEntity.decimals) } ?: BigDecimal.ZERO,
