@@ -6,6 +6,7 @@ import com.tonapps.wallet.api.R
 import io.tonapi.models.JettonPreview
 import io.tonapi.models.JettonVerificationType
 import kotlinx.parcelize.Parcelize
+import org.ton.block.MsgAddressInt
 
 @Parcelize
 data class TokenEntity(
@@ -41,7 +42,7 @@ data class TokenEntity(
     }
 
     val isTon: Boolean
-        get() = address == TON.address
+        get() = address == TON.address || symbol == TON.symbol
 
     constructor(jetton: JettonPreview) : this(
         address = jetton.address,
@@ -51,4 +52,23 @@ data class TokenEntity(
         decimals = jetton.decimals,
         verification = convertVerification(jetton.verification)
     )
+
+    fun hasTheSameAddress(another: TokenEntity): Boolean {
+        return when {
+            isTon && another.isTon -> true
+            isTon || another.isTon -> false
+            else -> address.isAddressEqual(another.address)
+        }
+    }
+}
+fun String.isAddressEqual(another: String): Boolean {
+    return MsgAddressInt.parse(this).isAddressEqual(another)
+}
+
+fun MsgAddressInt.isAddressEqual(another: String): Boolean {
+    return try {
+        this == MsgAddressInt.parse(another)
+    } catch (_: IllegalArgumentException) {
+        false
+    }
 }

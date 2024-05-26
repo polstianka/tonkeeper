@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val swapModule = module {
     single { JettonRepository() }
-    single { DexAssetsRepository(get(), get(), get()) }
+    single { DexAssetsRepository(get(), get(), get(), get()) }
     single { GetDefaultSwapSettingsCase() }
     single { CreateSwapCellCase() }
     single { CreateStonfiSwapMessageCase(get(), get(), get(), get(), get()) }

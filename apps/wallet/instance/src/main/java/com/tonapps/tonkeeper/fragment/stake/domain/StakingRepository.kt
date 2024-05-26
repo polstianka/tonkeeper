@@ -10,6 +10,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.api.entity.isAddressEqual
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RateEntity
@@ -66,7 +67,7 @@ class StakingRepository(
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
         val a = async { stakingServicesRepository.loadStakingPools(walletAddress, testnet) }
-        val b = async { dexAssetsRepository.loadAssets(walletAddress, currency) }
+        val b = async { dexAssetsRepository.loadAssets() }
         val c = async { nominatorPoolsRepository.loadNominatorPools(walletAddress, testnet) }
         val d = async { dexAssetsRepository.loadBalances(walletAddress, testnet) }
         listOf(a, b, c, d).forEach { it.await() }
@@ -161,12 +162,4 @@ class StakingRepository(
             collectStakedBalances(a, b, c, currency)
         }
     }
-}
-
-fun String.isAddressEqual(another: String): Boolean {
-    return MsgAddressInt.parse(this).isAddressEqual(another)
-}
-
-fun MsgAddressInt.isAddressEqual(another: String): Boolean {
-    return this == MsgAddressInt.parse(another)
 }

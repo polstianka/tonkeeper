@@ -2,28 +2,30 @@ package com.tonapps.tonkeeper.fragment.swap.domain
 
 import android.net.Uri
 import com.tonapps.blockchain.Coin
-import com.tonapps.tonkeeper.api.jetton.JettonRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetRate
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.wallet.api.StonfiAPI
+import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
-import com.tonapps.wallet.data.rates.entity.RateEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
+import com.tonapps.wallet.data.token.TokenRepository
 import io.stonfiapi.models.AssetInfoSchema
-import io.stonfiapi.models.AssetKindSchema
 import io.stonfiapi.models.DexReverseSimulateSwap200Response
-import io.tonapi.models.JettonBalance
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -33,33 +35,85 @@ import kotlin.concurrent.write
 class DexAssetsRepository(
     private val api: StonfiAPI,
     private val ratesRepository: RatesRepository,
-    private val jettonRepository: JettonRepository
+    private val tokenRepository: TokenRepository,
+    private val coroutineScope: CoroutineScope
 ) {
 
-    private val isLoadingFlows = mutableMapOf<String, MutableStateFlow<Boolean>>()
-
     private val jettonBalancesLock = ReentrantReadWriteLock()
-    private val jettonBalancesFlows = mutableMapOf<String, MutableStateFlow<List<JettonBalance>>>()
+    private val jettonBalancesFlows = mutableMapOf<String, MutableStateFlow<List<BalanceEntity>>>()
 
-    private val assetsFlowLock = ReentrantReadWriteLock()
-    private val assetsFlows = mutableMapOf<String, MutableStateFlow<List<DexAssetBalance>>>()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: Flow<Boolean>
+        get() = _isLoading
+    private val entitiesFlow = MutableStateFlow<List<DexAssetRate>>(emptyList())
 
-    fun getIsLoadingFlow(walletAddress: String): Flow<Boolean> {
-        return getIsLoadingMutableFlow(walletAddress)
+    private val totalBalancesFlows = mutableMapOf<String, Flow<List<DexAssetBalance>>>()
+    private val totalBalancesLock = ReentrantReadWriteLock()
+    private fun key(walletAddress: String, testnet: Boolean, currency: WalletCurrency): String {
+        return "$walletAddress;$testnet;$currency"
     }
 
-    fun getAssetsFlow(walletAddress: String): Flow<List<DexAssetBalance>> {
-        return getAssetsMutableFlow(walletAddress)
+    fun getTotalBalancesFlow(
+        walletAddress: String,
+        testnet: Boolean,
+        currency: WalletCurrency
+    ): Flow<List<DexAssetBalance>> = totalBalancesLock.write {
+        val key = key(walletAddress, testnet, currency)
+        if (!totalBalancesFlows.containsKey(key)) {
+            val result = buildTotalBalancesFlow(walletAddress, testnet, currency)
+                .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+            totalBalancesFlows[key] = result
+        }
+        totalBalancesFlows[key]!!
     }
 
-    fun getPositiveBalanceFlow(
+    private fun buildTotalBalancesFlow(
         walletAddress: String,
         testnet: Boolean,
         currency: WalletCurrency
     ): Flow<List<DexAssetBalance>> {
-        return getJettonBalancesMutableFlow(walletAddress, testnet)
-            .map { collectBalances(it, currency) }
-            .flowOn(Dispatchers.IO)
+        val positiveBalanceFlow = getPositiveBalanceFlow(walletAddress, testnet, currency)
+        return combine(positiveBalanceFlow, entitiesFlow) { positiveBalances, entities ->
+            ratesRepository.load(WalletCurrency.DEFAULT, "TON")
+            ratesRepository.load(currency, "TON")
+            val tonToUsd = ratesRepository.getRates(WalletCurrency.DEFAULT, "TON")
+                .getRate("TON")
+            val tonToCurrency = ratesRepository.getRates(currency, "TON")
+                .getRate("TON")
+
+            entities.asSequence()
+                .map { entity ->
+                    val positiveBalance = positiveBalances.firstOrNull {
+                        it.rate.tokenEntity.hasTheSameAddress(entity.tokenEntity)
+                    }
+                    val updatedRate = entity.rate / tonToUsd * tonToCurrency
+                    val rate = entity.copy(currency = currency, rate = updatedRate)
+                    DexAssetBalance(
+                        type = positiveBalance?.type ?: DexAssetType.JETTON, //todo
+                        balance = positiveBalance?.balance ?: BigDecimal.ZERO,
+                        rate = rate
+                    )
+                }
+                .sortedWith(dexAssetBalanceComparator)
+                .toList()
+        }
+    }
+
+    private val positiveBalanceFlows = mutableMapOf<String, Flow<List<DexAssetBalance>>>()
+    private val positiveBalanceLock = ReentrantReadWriteLock()
+    fun getPositiveBalanceFlow(
+        walletAddress: String,
+        testnet: Boolean,
+        currency: WalletCurrency
+    ): Flow<List<DexAssetBalance>> = positiveBalanceLock.write {
+        val key = key(walletAddress, testnet, currency)
+        if (!positiveBalanceFlows.containsKey(key)) {
+            positiveBalanceFlows[key] = getJettonBalancesMutableFlow(walletAddress, testnet)
+                .map { collectBalances(it, currency) }
+                .flowOn(Dispatchers.IO)
+                .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+        }
+        positiveBalanceFlows[key]!!
     }
 
     private fun key(walletAddress: String, testnet: Boolean) = "$walletAddress;$testnet"
@@ -75,29 +129,11 @@ class DexAssetsRepository(
         jettonBalancesFlows[key]!!
     }
 
-    private fun getIsLoadingMutableFlow(
-        walletAddress: String
-    ) = assetsFlowLock.write {
-        if (!isLoadingFlows.containsKey(walletAddress)) {
-            isLoadingFlows[walletAddress] = MutableStateFlow(false)
-        }
-        isLoadingFlows[walletAddress]!!
-    }
-
-    private fun getAssetsMutableFlow(
-        walletAddress: String
-    ) = assetsFlowLock.write {
-        if (!assetsFlows.containsKey(walletAddress)) {
-            assetsFlows[walletAddress] = MutableStateFlow(emptyList())
-        }
-        assetsFlows[walletAddress]!!
-    }
-
     private suspend fun collectBalances(
-        jettonBalances: List<JettonBalance>,
+        jettonBalances: List<BalanceEntity>,
         currency: WalletCurrency
     ): List<DexAssetBalance> {
-        val tokenAddresses = jettonBalances.map { it.jetton.address }
+        val tokenAddresses = jettonBalances.map { it.token.address }
             .toMutableList()
         val rates = ratesRepository.getRates(currency, tokenAddresses)
         return jettonBalances.map { it.toDomain(rates) }
@@ -108,15 +144,14 @@ class DexAssetsRepository(
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
         getJettonBalancesMutableFlow(walletAddress, testnet).apply {
-            value = jettonRepository.get(walletAddress, testnet)
-                ?.data ?: emptyList()
+            value = tokenRepository.load(WalletCurrency.DEFAULT, walletAddress, testnet)
         }
     }
 
-    private fun JettonBalance.toDomain(
+    private fun BalanceEntity.toDomain(
         rates: RatesEntity
     ): DexAssetBalance {
-        val entity = TokenEntity(jetton)
+        val entity = token
         val rate = DexAssetRate(
             tokenEntity = entity,
             currency = rates.currency,
@@ -124,47 +159,29 @@ class DexAssetsRepository(
         )
         return DexAssetBalance(
             type = type(),
-            balance = Coin.toCoins(balance, entity.decimals),
+            balance = value,
             rate = rate
         )
     }
 
-    private fun JettonBalance.type(): DexAssetType {
-        return when  {
-            jetton.symbol.contains("wton", ignoreCase = true) -> DexAssetType.WTON
-            jetton.symbol.contains("ton", ignoreCase = true) -> DexAssetType.TON
+    private fun BalanceEntity.type(): DexAssetType {
+        return when {
+            token.symbol == "WTON" -> DexAssetType.WTON
+            token.symbol == "TON" -> DexAssetType.TON
             else -> DexAssetType.JETTON
         }
     }
 
-    suspend fun loadAssets(
-        walletAddress: String,
-        currency: WalletCurrency
-    ) = withContext(Dispatchers.IO) {
-        val items = getAssetsMutableFlow(walletAddress)
-        val isLoading = getIsLoadingMutableFlow(walletAddress)
-
-        isLoading.value = items.value.isEmpty()
-        val response = api.wallets.getWalletAssets(walletAddress)
-
-        val tonToUsdRate = ratesRepository.getRates(WalletCurrency.DEFAULT, "TON")
-            .rate("TON")!!
-        val tonToCurrencyRate = ratesRepository.getRates(currency, "TON")
-            .rate("TON")!!
-
-        items.value = response.assetList
-            .asSequence()
+    suspend fun loadAssets() = withContext(Dispatchers.IO) {
+        _isLoading.value = entitiesFlow.value.isEmpty()
+        val response = api.dex.getAssetList()
+        entitiesFlow.value = response.assetList.asSequence()
             .filter { it.isValid() }
-            .map { it.toBalance(tonToUsdRate, tonToCurrencyRate) }
-            .sortedWith(dexAssetBalanceComparator)
+            .map { it.toUsdRate() }
+            .sortedWith(dexAssetRateComparator)
             .toList()
 
-        isLoading.value = false
-    }
-
-    fun getDefaultAsset(walletAddress: String): DexAssetBalance {
-        val items = getAssetsMutableFlow(walletAddress)
-        return items.value.first { it.type == DexAssetType.TON }
+        _isLoading.value = false
     }
 
     private val dexAssetBalanceComparator = Comparator<DexAssetBalance> { o1, o2 ->
@@ -225,21 +242,11 @@ class DexAssetsRepository(
                 displayName?.isNotBlank() == true
     }
 
-    private fun AssetInfoSchema.toBalance(
-        tonToUsdRate: RateEntity,
-        tonToCurrencyRate: RateEntity
-    ): DexAssetBalance {
-        val tokenEntity = toTokenEntity()
-        val dexPriceUsd = BigDecimal(dexPriceUsd)
-        val dexPriceCurrency = dexPriceUsd / tonToUsdRate.value * tonToCurrencyRate.value
-        return DexAssetBalance(
-            type = kind.toBalance(),
-            balance = balance?.let { Coin.toCoins(it, tokenEntity.decimals) } ?: BigDecimal.ZERO,
-            rate = DexAssetRate(
-                tokenEntity = tokenEntity,
-                currency = tonToCurrencyRate.currency,
-                rate = dexPriceCurrency
-            )
+    private fun AssetInfoSchema.toUsdRate(): DexAssetRate {
+        return DexAssetRate(
+            tokenEntity = toTokenEntity(),
+            currency = WalletCurrency.DEFAULT,
+            rate = BigDecimal(dexPriceUsd)
         )
     }
 
@@ -259,14 +266,6 @@ class DexAssetsRepository(
             TokenEntity.Verification.whitelist
         } else {
             TokenEntity.Verification.none
-        }
-    }
-
-    private fun AssetKindSchema.toBalance(): DexAssetType {
-        return when (this) {
-            AssetKindSchema.Jetton -> DexAssetType.JETTON
-            AssetKindSchema.Wton -> DexAssetType.WTON
-            AssetKindSchema.Ton -> DexAssetType.TON
         }
     }
 }

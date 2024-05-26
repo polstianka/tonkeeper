@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
+import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
@@ -13,8 +14,6 @@ import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
 import com.tonapps.wallet.data.account.WalletRepository
-import com.tonapps.wallet.data.core.WalletCurrency
-import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -25,8 +24,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -37,9 +34,8 @@ import com.tonapps.wallet.localization.R as LocalizationR
 class SwapViewModel(
     private val repository: DexAssetsRepository,
     getDefaultSwapSettingsCase: GetDefaultSwapSettingsCase,
-    settingsRepository: SettingsRepository,
-    private val ratesRepository: RatesRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val swapSettings = MutableStateFlow(getDefaultSwapSettingsCase.execute())
@@ -52,10 +48,9 @@ class SwapViewModel(
     }
     private val _events = MutableSharedFlow<SwapEvent>()
     private val sendAmount = MutableStateFlow(BigDecimal.ZERO)
-    private val currency = settingsRepository.currencyFlow
 
     val isLoading = walletRepository.activeWalletFlow
-        .flatMapLatest { repository.getIsLoadingFlow(it.address) }
+        .flatMapLatest { repository.isLoading }
     val events: Flow<SwapEvent>
         get() = _events
     val pickedSendAsset: Flow<DexAssetBalance?>
@@ -113,13 +108,21 @@ class SwapViewModel(
 
 
     init {
-        combine(walletRepository.activeWalletFlow, settingsRepository.currencyFlow) { a, b -> a to b }
-            .onEach { (wallet, currency) -> repository.loadAssets(wallet.address, currency) }
-            .launchIn(viewModelScope)
-        combine(isLoading, walletRepository.activeWalletFlow) { isLoading, wallet ->
-            if (isLoading) return@combine
-            _pickedSendAsset.emit(repository.getDefaultAsset(wallet.address))
-        }.launchIn(viewModelScope)
+        viewModelScope.launch { repository.loadAssets() }
+        val flow = combine(
+            isLoading,
+            walletRepository.activeWalletFlow,
+            settingsRepository.currencyFlow
+        ) { isLoading, wallet, currency ->
+            Triple(isLoading, wallet, currency)
+        }
+        observeFlow(flow) { (isLoading, wallet, currency) ->
+            if (isLoading) return@observeFlow
+            val defaultToken = repository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
+                .first()
+                .first { it.tokenEntity.isTon }
+            _pickedSendAsset.value = defaultToken
+        }
     }
 
     fun onSettingsClicked() {
@@ -197,16 +200,12 @@ class SwapViewModel(
         val amount = sendAmount.value
         val settings = swapSettings.value
         val simulation = simulation.first() as? SwapSimulation.Result ?: return@launch
-        val currency = currency.first()
         val event = SwapEvent.NavigateToConfirm(
             toSend,
             toReceive,
             settings,
             amount,
-            simulation,
-            currency = currency,
-            ratesCurrency = ratesRepository.cache(currency, listOf("TON")),
-            ratesUsd = ratesRepository.cache(WalletCurrency.DEFAULT, listOf("TON"))
+            simulation
         )
         _events.emit(event)
     }

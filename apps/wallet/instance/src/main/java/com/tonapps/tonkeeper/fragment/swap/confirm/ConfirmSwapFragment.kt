@@ -14,8 +14,6 @@ import com.tonapps.tonkeeper.fragment.swap.root.SwapFragment
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
 import com.tonapps.tonkeeperx.R
-import com.tonapps.wallet.data.core.WalletCurrency
-import com.tonapps.wallet.data.rates.entity.RatesEntity
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -34,10 +32,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
             receiveToken: DexAssetBalance,
             amount: BigDecimal,
             settings: SwapSettings,
-            simulation: SwapSimulation.Result,
-            currency: WalletCurrency,
-            ratesEntity: RatesEntity,
-            ratesUsd: RatesEntity
+            simulation: SwapSimulation.Result
         ) = ConfirmSwapFragment().apply {
             setArgs(
                 ConfirmSwapArgs(
@@ -121,7 +116,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
         receiveAmountFiatTextView?.text = sendAmountFiatText
         receiveTokenButton?.asset = args.receiveAsset
-        val receiveAmountCrypto = sendAmountCurrency / args.sendAsset.rate.rate
+        val receiveAmountCrypto = sendAmountCurrency / args.receiveAsset.rate.rate
         receiveAmountCryptoTextView?.text = CurrencyFormatter.format(receiveAmountCrypto, 2)
         swapDetailsView?.updateState(args.simulation)
     }

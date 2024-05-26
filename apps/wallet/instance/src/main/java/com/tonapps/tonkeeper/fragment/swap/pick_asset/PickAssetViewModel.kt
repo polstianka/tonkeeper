@@ -8,10 +8,12 @@ import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListHelper
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListItem
 import com.tonapps.wallet.data.account.WalletRepository
+import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -21,7 +23,8 @@ import kotlinx.coroutines.launch
 class PickAssetViewModel(
     private val dexAssetsRepository: DexAssetsRepository,
     private val listHelper: TokenListHelper,
-    walletRepository: WalletRepository
+    walletRepository: WalletRepository,
+    settings: SettingsRepository
 ) : ViewModel() {
 
     private val args = MutableSharedFlow<PickAssetArgs>(replay = 1)
@@ -32,8 +35,16 @@ class PickAssetViewModel(
     val items = listHelper.items
         .flowOn(Dispatchers.Default)
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
-    private val domainItems = walletRepository.activeWalletFlow
-        .flatMapLatest { dexAssetsRepository.getAssetsFlow(it.address) }
+
+    private val domainItems = combine(
+        walletRepository.activeWalletFlow,
+        settings.currencyFlow
+    ) { wallet, currency ->
+        wallet to currency
+    }
+        .flatMapLatest { (wallet, currency) ->
+            dexAssetsRepository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
+        }
 
     init {
         observeFlow(domainItems) { listHelper.submitItems(it) }

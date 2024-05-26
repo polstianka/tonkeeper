@@ -161,7 +161,7 @@ class TokenRepository(
         return localDataSource.getCache(cacheKey(accountId, testnet)) ?: emptyList()
     }
 
-    private suspend fun load(
+    suspend fun load(
         currency: WalletCurrency,
         accountId: String,
         testnet: Boolean
