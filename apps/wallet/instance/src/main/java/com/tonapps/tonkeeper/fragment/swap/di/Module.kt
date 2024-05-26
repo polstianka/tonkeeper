@@ -9,7 +9,7 @@ import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenListHelper
 import org.koin.dsl.module
 
 val swapModule = module {
-    single { DexAssetsRepository(get()) }
+    single { DexAssetsRepository(get(), get()) }
     single { GetDefaultSwapSettingsCase() }
     single { CreateSwapCellCase() }
     single { CreateStonfiSwapMessageCase(get(), get(), get(), get(), get()) }

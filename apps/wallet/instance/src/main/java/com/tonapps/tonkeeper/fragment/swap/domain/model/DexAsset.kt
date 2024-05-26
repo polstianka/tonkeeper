@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.swap.domain.model
 
 import android.os.Parcelable
 import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.data.core.WalletCurrency
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
@@ -17,13 +18,13 @@ data class DexAsset(
     val imageUri = tokenEntity.imageUri
     val symbol = tokenEntity.symbol
     val displayName = tokenEntity.name
-    val dexUsdPrice = rate.dexUsdPrice
 }
 
 @Parcelize
 data class DexAssetRate(
     val tokenEntity: TokenEntity,
-    val dexUsdPrice: BigDecimal
+    val currency: WalletCurrency,
+    val rate: BigDecimal
 ) : Parcelable
 
 enum class DexAssetType {

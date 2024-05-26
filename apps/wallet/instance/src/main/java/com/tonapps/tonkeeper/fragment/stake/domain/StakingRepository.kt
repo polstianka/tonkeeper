@@ -62,10 +62,11 @@ class StakingRepository(
 
     suspend fun loadStakedBalances(
         walletAddress: String,
+        currency: WalletCurrency,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
         val a = async { stakingServicesRepository.loadStakingPools(walletAddress, testnet) }
-        val b = async { dexAssetsRepository.loadAssets(walletAddress) }
+        val b = async { dexAssetsRepository.loadAssets(walletAddress, currency) }
         val c = async { nominatorPoolsRepository.loadNominatorPools(walletAddress, testnet) }
         listOf(a, b, c).forEach { it.await() }
     }

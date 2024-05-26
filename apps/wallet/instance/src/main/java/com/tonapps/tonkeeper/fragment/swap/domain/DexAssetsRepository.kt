@@ -9,6 +9,9 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
 import com.tonapps.wallet.api.StonfiAPI
 import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.rates.entity.RateEntity
 import io.stonfiapi.models.AssetInfoSchema
 import io.stonfiapi.models.AssetKindSchema
 import io.stonfiapi.models.DexReverseSimulateSwap200Response
@@ -24,7 +27,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.write
 
 class DexAssetsRepository(
-    private val api: StonfiAPI
+    private val api: StonfiAPI,
+    private val ratesRepository: RatesRepository
 ) {
 
     private val isLoadingFlows = mutableMapOf<String, MutableStateFlow<Boolean>>()
@@ -63,17 +67,24 @@ class DexAssetsRepository(
     }
 
     suspend fun loadAssets(
-        walletAddress: String
+        walletAddress: String,
+        currency: WalletCurrency
     ) = withContext(Dispatchers.IO) {
         val items = getAssetsMutableFlow(walletAddress)
         val isLoading = getIsLoadingMutableFlow(walletAddress)
 
         isLoading.value = items.value.isEmpty()
         val response = api.wallets.getWalletAssets(walletAddress)
+
+        val tonToUsdRate = ratesRepository.getRates(WalletCurrency.DEFAULT, "TON")
+            .rate("TON")!!
+        val tonToCurrencyRate = ratesRepository.getRates(currency, "TON")
+            .rate("TON")!!
+
         items.value = response.assetList
             .asSequence()
             .filter { it.isValid() }
-            .map { it.toDomain() }
+            .map { it.toDomain(tonToUsdRate, tonToCurrencyRate) }
             .sortedWith(dexAssetComparator)
             .toList()
 
@@ -86,8 +97,8 @@ class DexAssetsRepository(
     }
 
     private val dexAssetComparator = Comparator<DexAsset> { o1, o2 ->
-        val f1 = o1.balance * o1.dexUsdPrice
-        val f2 = o2.balance * o2.dexUsdPrice
+        val f1 = o1.balance * o1.rate.rate
+        val f2 = o2.balance * o2.rate.rate
         f2.compareTo(f1)
             .takeUnless { it == 0 }
             ?: o1.displayName.compareTo(o2.displayName)
@@ -140,14 +151,20 @@ class DexAssetsRepository(
                 displayName?.isNotBlank() == true
     }
 
-    private fun AssetInfoSchema.toDomain(): DexAsset {
+    private fun AssetInfoSchema.toDomain(
+        tonToUsdRate: RateEntity,
+        tonToCurrencyRate: RateEntity
+    ): DexAsset {
         val tokenEntity = toTokenEntity()
+        val dexPriceUsd = BigDecimal(dexPriceUsd)
+        val dexPriceCurrency = dexPriceUsd / tonToUsdRate.value * tonToCurrencyRate.value
         return DexAsset(
             type = kind.toDomain(),
             balance = balance?.let { Coin.toCoins(it, tokenEntity.decimals) } ?: BigDecimal.ZERO,
             rate = DexAssetRate(
-                tokenEntity,
-                BigDecimal(dexPriceUsd)
+                tokenEntity = tokenEntity,
+                currency = tonToCurrencyRate.currency,
+                rate = dexPriceCurrency
             )
         )
     }

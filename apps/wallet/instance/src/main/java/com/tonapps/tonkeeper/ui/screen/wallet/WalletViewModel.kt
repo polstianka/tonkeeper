@@ -129,8 +129,10 @@ class WalletViewModel(
             }
         }
 
-        walletRepository.activeWalletFlow
-            .onEach { stakingRepository.loadStakedBalances(it.address, it.testnet) }
+        combine(walletRepository.activeWalletFlow, settings.currencyFlow) { a, b -> a to b }
+            .onEach { (wallet, currency) ->
+                stakingRepository.loadStakedBalances(wallet.address, currency, wallet.testnet)
+            }
             .retry { delay(500L); true }
             .launchIn(viewModelScope)
 

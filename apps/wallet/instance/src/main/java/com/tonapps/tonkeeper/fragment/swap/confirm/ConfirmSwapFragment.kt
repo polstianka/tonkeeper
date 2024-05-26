@@ -45,10 +45,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
                     receiveToken,
                     settings,
                     amount,
-                    simulation,
-                    currency,
-                    ratesEntity = ratesEntity,
-                    ratesUsd = ratesUsd
+                    simulation
                 )
             )
         }
@@ -111,12 +108,11 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
     }
 
     private fun updateState(args: ConfirmSwapArgs) {
-        val sendAmountUsd = args.sendAsset.dexUsdPrice * args.amount
-
-        val tonToCurrency = args.ratesEntity.getRate("TON")
-        val tonToUsd = args.ratesUsd.getRate("TON")
-        val sendAmountCurrency = sendAmountUsd / tonToUsd * tonToCurrency
-        val sendAmountFiatText = CurrencyFormatter.format(args.currency.code, sendAmountCurrency)
+        val sendAmountCurrency = args.amount * args.sendAsset.rate.rate
+        val sendAmountFiatText = CurrencyFormatter.format(
+            args.sendAsset.rate.currency.code,
+            sendAmountCurrency
+        )
 
         sendAmountFiatTextView?.text = sendAmountFiatText
         sendTokenButton?.asset = args.sendAsset
@@ -125,7 +121,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
         receiveAmountFiatTextView?.text = sendAmountFiatText
         receiveTokenButton?.asset = args.receiveAsset
-        val receiveAmountCrypto = args.amount * args.sendAsset.dexUsdPrice / args.receiveAsset.dexUsdPrice
+        val receiveAmountCrypto = sendAmountCurrency / args.sendAsset.rate.rate
         receiveAmountCryptoTextView?.text = CurrencyFormatter.format(receiveAmountCrypto, 2)
         swapDetailsView?.updateState(args.simulation)
     }

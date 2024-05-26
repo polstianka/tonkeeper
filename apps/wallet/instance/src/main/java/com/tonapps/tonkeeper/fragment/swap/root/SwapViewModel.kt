@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
-import com.tonapps.tonkeeper.core.observeFlow
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
@@ -27,6 +26,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -67,7 +67,7 @@ class SwapViewModel(
         swapPair
     ) { sendAmount, swapPair ->
         val (toSend, toReceive) = swapPair ?: return@combine null
-        val amount = sendAmount * toSend.dexUsdPrice / toReceive.dexUsdPrice
+        val amount = sendAmount * toSend.rate.rate / toReceive.rate.rate
         toReceive to amount
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
     val simulation = combine(
@@ -113,9 +113,9 @@ class SwapViewModel(
 
 
     init {
-        observeFlow(walletRepository.activeWalletFlow) { wallet ->
-            repository.loadAssets(wallet.address)
-        }
+        combine(walletRepository.activeWalletFlow, settingsRepository.currencyFlow) { a, b -> a to b }
+            .onEach { (wallet, currency) -> repository.loadAssets(wallet.address, currency) }
+            .launchIn(viewModelScope)
         combine(isLoading, walletRepository.activeWalletFlow) { isLoading, wallet ->
             if (isLoading) return@combine
             _pickedSendAsset.emit(repository.getDefaultAsset(wallet.address))
