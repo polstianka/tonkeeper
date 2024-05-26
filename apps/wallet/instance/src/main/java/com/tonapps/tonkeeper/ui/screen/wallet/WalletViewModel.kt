@@ -8,7 +8,6 @@ import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getTotalFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasAddress
-import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
@@ -44,10 +43,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.retry
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
 import java.math.BigDecimal
+import java.util.concurrent.atomic.AtomicReference
 
 class WalletViewModel(
     private val walletRepository: WalletRepository,
@@ -58,8 +59,7 @@ class WalletViewModel(
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
     private val screenCacheSource: ScreenCacheSource,
-    private val stakingRepository: StakingRepository,
-    private val dexRepository: DexAssetsRepository
+    private val stakingRepository: StakingRepository
 ) : ViewModel() {
 
     private data class Tokens(
@@ -92,7 +92,24 @@ class WalletViewModel(
     private val statusFlow = _statusFlow.asSharedFlow()
 
     private val _uiItemsFlow = MutableStateFlow<List<Item>>(emptyList())
-    val uiItemsFlow = _uiItemsFlow.asStateFlow().filter { it.isNotEmpty() }
+
+    private val skeleton = listOf(Item.Skeleton(true))
+    private var lastValue = AtomicReference<List<Item>>()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiItemsFlow = _uiItemsFlow.asStateFlow()
+        .filter { it.isNotEmpty() }
+        .transformLatest { newValue ->
+            when {
+                newValue == skeleton -> {
+                    lastValue.set(newValue)
+                }
+                !lastValue.compareAndSet(null, newValue) -> {
+                    delay(300L)
+                    lastValue.set(newValue)
+                }
+            }
+            emit(newValue)
+        }
 
     val uiLabelFlow = walletRepository.activeWalletFlow.map { it.label }
 
@@ -101,7 +118,7 @@ class WalletViewModel(
             .flowOn(Dispatchers.IO)
             .onEach { items ->
                 if (items.isNullOrEmpty()) {
-                    _uiItemsFlow.value = listOf(Item.Skeleton(true))
+                    _uiItemsFlow.value = skeleton
                 } else {
                     _uiItemsFlow.value = items
                 }

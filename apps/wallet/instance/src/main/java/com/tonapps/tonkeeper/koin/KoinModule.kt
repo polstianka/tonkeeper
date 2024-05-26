@@ -90,7 +90,6 @@ val koinModel = module {
         get(),
         get(),
         get(),
-        get(),
         get()
     ) }
     viewModel { ConfirmScreenFeature(get(), get(), get(), get(), get()) }
