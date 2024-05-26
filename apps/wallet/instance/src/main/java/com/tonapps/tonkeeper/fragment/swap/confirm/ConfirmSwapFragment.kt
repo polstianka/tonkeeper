@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.root.SwapFragment
@@ -30,8 +30,8 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
 
     companion object {
         fun newInstance(
-            sendToken: DexAsset,
-            receiveToken: DexAsset,
+            sendToken: DexAssetBalance,
+            receiveToken: DexAssetBalance,
             amount: BigDecimal,
             settings: SwapSettings,
             simulation: SwapSimulation.Result,

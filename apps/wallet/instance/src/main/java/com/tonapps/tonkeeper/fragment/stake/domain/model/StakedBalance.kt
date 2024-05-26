@@ -2,7 +2,7 @@ package com.tonapps.tonkeeper.fragment.stake.domain.model
 
 import android.os.Parcelable
 import com.tonapps.tonkeeper.fragment.stake.domain.isAddressEqual
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.entity.RateEntity
 import kotlinx.parcelize.Parcelize
@@ -20,7 +20,7 @@ data class StakedBalance(
 
 @Parcelize
 data class StakedLiquidBalance(
-    val asset: DexAsset,
+    val asset: DexAssetBalance,
     val assetRate: RateEntity,
 ) : Parcelable
 

@@ -8,6 +8,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.StakingRepository
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getTotalFiatBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasAddress
+import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
@@ -57,7 +58,8 @@ class WalletViewModel(
     private val pushManager: PushManager,
     private val tonConnectRepository: TonConnectRepository,
     private val screenCacheSource: ScreenCacheSource,
-    private val stakingRepository: StakingRepository
+    private val stakingRepository: StakingRepository,
+    private val dexRepository: DexAssetsRepository
 ) : ViewModel() {
 
     private data class Tokens(

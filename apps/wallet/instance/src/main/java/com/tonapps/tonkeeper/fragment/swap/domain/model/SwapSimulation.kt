@@ -11,8 +11,8 @@ sealed class SwapSimulation {
         val exchangeRate: BigDecimal,
         val priceImpact: BigDecimal,
         val minimumReceivedAmount: BigDecimal,
-        val receivedAsset: DexAsset,
-        val sentAsset: DexAsset,
+        val receivedAsset: DexAssetBalance,
+        val sentAsset: DexAssetBalance,
         val liquidityProviderFee: BigDecimal,
         val blockchainFee: BigDecimal
     ) : SwapSimulation(), Parcelable

@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize
-data class DexAsset(
+data class DexAssetBalance(
     val type: DexAssetType,
     val balance: BigDecimal,
     val rate: DexAssetRate
@@ -51,6 +51,6 @@ fun DexAssetType.recommendedForwardTon(receiveType: DexAssetType): BigDecimal {
     }
 }
 
-fun DexAsset.getRecommendedGasValues(receiveAsset: DexAsset): BigDecimal {
+fun DexAssetBalance.getRecommendedGasValues(receiveAsset: DexAssetBalance): BigDecimal {
     return type.recommendedForwardTon(receiveAsset.type) + BigDecimal("0.06")
 }

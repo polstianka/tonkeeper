@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import coil.transform.RoundedCornersTransformation
 import com.tonapps.tonkeeper.core.loadUri
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeperx.R
 import uikit.extensions.dp
 import uikit.widget.RowLayout
@@ -25,7 +25,7 @@ class SwapTokenButton
         get() = findViewById(R.id.view_swap_token_icon)
     private val textView: TextView?
         get() = findViewById(R.id.view_swap_token_text)
-    var asset: DexAsset? = null
+    var asset: DexAssetBalance? = null
         get() = field
         set(value) {
             field = value
@@ -40,7 +40,7 @@ class SwapTokenButton
         setPadding(padding, padding, padding, padding)
     }
 
-    private fun updateState(asset: DexAsset?) {
+    private fun updateState(asset: DexAssetBalance?) {
         iconView?.isVisible = asset != null
         asset?.imageUri?.let { iconView?.loadUri(it, RoundedCornersTransformation(14f.dp)) }
         val text = asset?.symbol ?: context.getString(LocalizationR.string.choose)

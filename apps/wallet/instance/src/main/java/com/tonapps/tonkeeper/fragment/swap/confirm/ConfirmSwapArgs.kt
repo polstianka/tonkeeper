@@ -1,7 +1,7 @@
 package com.tonapps.tonkeeper.fragment.swap.confirm
 
 import android.os.Bundle
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSettings
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.toBundle
@@ -10,8 +10,8 @@ import uikit.base.BaseArgs
 import java.math.BigDecimal
 
 data class ConfirmSwapArgs(
-    val sendAsset: DexAsset,
-    val receiveAsset: DexAsset,
+    val sendAsset: DexAssetBalance,
+    val receiveAsset: DexAssetBalance,
     val settings: SwapSettings,
     val amount: BigDecimal,
     val simulation: SwapSimulation.Result

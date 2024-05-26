@@ -11,7 +11,7 @@ import com.tonapps.tonkeeper.core.toString
 import com.tonapps.tonkeeper.extensions.doOnAmountChange
 import com.tonapps.tonkeeper.fragment.send.view.AmountInput
 import com.tonapps.tonkeeper.fragment.swap.confirm.ConfirmSwapFragment
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetFragment
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
@@ -129,7 +129,7 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         confirmButton?.text = toString(pair.first)
     }
 
-    private fun updatePickedSendAsset(asset: DexAsset?) {
+    private fun updatePickedSendAsset(asset: DexAssetBalance?) {
         sendTokenButton?.asset = asset
         balanceTextView?.isVisible = asset != null
         asset ?: return

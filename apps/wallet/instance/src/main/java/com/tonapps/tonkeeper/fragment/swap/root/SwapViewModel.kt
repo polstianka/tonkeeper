@@ -7,7 +7,7 @@ import com.tonapps.tonkeeper.core.TextWrapper
 import com.tonapps.tonkeeper.core.emit
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
 import com.tonapps.tonkeeper.fragment.swap.domain.GetDefaultSwapSettingsCase
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
@@ -43,8 +43,8 @@ class SwapViewModel(
 ) : ViewModel() {
 
     private val swapSettings = MutableStateFlow(getDefaultSwapSettingsCase.execute())
-    private val _pickedSendAsset = MutableStateFlow<DexAsset?>(null)
-    private val _pickedReceiveAsset = MutableStateFlow<DexAsset?>(null)
+    private val _pickedSendAsset = MutableStateFlow<DexAssetBalance?>(null)
+    private val _pickedReceiveAsset = MutableStateFlow<DexAssetBalance?>(null)
     private val swapPair = combine(_pickedSendAsset, _pickedReceiveAsset) { toSend, toReceive ->
         toSend ?: return@combine null
         toReceive ?: return@combine null
@@ -58,9 +58,9 @@ class SwapViewModel(
         .flatMapLatest { repository.getIsLoadingFlow(it.address) }
     val events: Flow<SwapEvent>
         get() = _events
-    val pickedSendAsset: Flow<DexAsset?>
+    val pickedSendAsset: Flow<DexAssetBalance?>
         get() = _pickedSendAsset
-    val pickedReceiveAsset: Flow<DexAsset?>
+    val pickedReceiveAsset: Flow<DexAssetBalance?>
         get() = _pickedReceiveAsset
     val receiveAmount = combine(
         sendAmount,

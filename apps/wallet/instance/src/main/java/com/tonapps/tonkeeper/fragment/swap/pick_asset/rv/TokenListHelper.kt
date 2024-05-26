@@ -1,6 +1,6 @@
 package com.tonapps.tonkeeper.fragment.swap.pick_asset.rv
 
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.uikit.list.ListCell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +41,7 @@ class TokenListHelper {
         }.flowOn(Dispatchers.Default)
 
     suspend fun submitItems(
-        domainItems: List<DexAsset>
+        domainItems: List<DexAssetBalance>
     ) = withContext(Dispatchers.Default) {
         _items.value = domainItems.mapIndexed { index, item ->
             TokenListItem(

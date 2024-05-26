@@ -8,7 +8,7 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPoolLiquidJetton
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingService
 import com.tonapps.tonkeeper.fragment.swap.domain.DexAssetsRepository
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
@@ -68,12 +68,13 @@ class StakingRepository(
         val a = async { stakingServicesRepository.loadStakingPools(walletAddress, testnet) }
         val b = async { dexAssetsRepository.loadAssets(walletAddress, currency) }
         val c = async { nominatorPoolsRepository.loadNominatorPools(walletAddress, testnet) }
-        listOf(a, b, c).forEach { it.await() }
+        val d = async { dexAssetsRepository.loadBalances(walletAddress, testnet) }
+        listOf(a, b, c, d).forEach { it.await() }
     }
 
     private suspend fun collectStakedBalances(
         stakingServices: List<StakingService>,
-        jettonBalances: List<DexAsset>,
+        jettonBalances: List<DexAssetBalance>,
         nominatorPools: List<NominatorPool>,
         currency: WalletCurrency
     ): List<StakedBalance> {
@@ -106,7 +107,7 @@ class StakingRepository(
     }
 
     private suspend fun ratesEntity(
-        jettonBalances: List<DexAsset>,
+        jettonBalances: List<DexAssetBalance>,
         poolsWithJettons: List<StakingPool>,
         currency: WalletCurrency
     ): RatesEntity {
@@ -121,7 +122,7 @@ class StakingRepository(
 
     private fun liquidBalance(
         pool: StakingPool,
-        jettonBalances: List<DexAsset>,
+        jettonBalances: List<DexAssetBalance>,
         rates: RatesEntity
     ): StakedLiquidBalance? {
         val address = pool.liquidJettonMaster ?: return null
@@ -132,7 +133,7 @@ class StakingRepository(
         return jetton.stakedLiquidBalance(rates)
     }
 
-    private fun DexAsset.stakedLiquidBalance(
+    private fun DexAssetBalance.stakedLiquidBalance(
         rates: RatesEntity
     ): StakedLiquidBalance {
         return StakedLiquidBalance(
@@ -150,7 +151,11 @@ class StakingRepository(
             testnet,
             walletAddress
         )
-        val jettonBalances = dexAssetsRepository.getPositiveBalanceFlow(walletAddress)
+        val jettonBalances = dexAssetsRepository.getPositiveBalanceFlow(
+            walletAddress,
+            testnet,
+            currency
+        )
         val nominatorPools = nominatorPoolsRepository.getNominatorPoolsFlow(walletAddress, testnet)
         return combine(stakingServices, jettonBalances, nominatorPools) { a, b, c ->
             collectStakedBalances(a, b, c, currency)

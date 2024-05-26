@@ -5,7 +5,7 @@ import com.tonapps.tonkeeper.core.toCoins
 import com.tonapps.tonkeeper.extensions.sendToBlockchain
 import com.tonapps.tonkeeper.fragment.send.TransactionData
 import com.tonapps.tonkeeper.fragment.stake.domain.CreateWalletTransferCase
-import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
@@ -37,8 +37,8 @@ class CreateStonfiSwapMessageCase(
     }
 
     suspend fun execute(
-        sendAsset: DexAsset,
-        receiveAsset: DexAsset,
+        sendAsset: DexAssetBalance,
+        receiveAsset: DexAssetBalance,
         offerAmount: BigDecimal,
         walletLegacy: WalletLegacy,
         simulation: SwapSimulation.Result
@@ -85,8 +85,8 @@ class CreateStonfiSwapMessageCase(
     }
 
     private suspend fun getJettonFromWalletAddress(
-        sendAsset: DexAsset,
-        receiveAsset: DexAsset,
+        sendAsset: DexAssetBalance,
+        receiveAsset: DexAssetBalance,
         walletLegacy: WalletLegacy
     ): String {
         val (a, b) = when {
@@ -105,8 +105,8 @@ class CreateStonfiSwapMessageCase(
     }
 
     private fun getAttachedAmount(
-        sendAsset: DexAsset,
-        receiveAsset: DexAsset,
+        sendAsset: DexAssetBalance,
+        receiveAsset: DexAssetBalance,
         offerAmount: BigDecimal
     ): BigDecimal {
         return if (sendAsset.type == DexAssetType.TON && receiveAsset.type == DexAssetType.JETTON) {
@@ -117,8 +117,8 @@ class CreateStonfiSwapMessageCase(
     }
 
     private suspend fun getJettonToWalletAddress(
-        sendAsset: DexAsset,
-        receiveAsset: DexAsset,
+        sendAsset: DexAssetBalance,
+        receiveAsset: DexAssetBalance,
         testnet: Boolean
     ): String {
         val (a, b) = when {
