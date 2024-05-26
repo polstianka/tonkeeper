@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.swap.domain
 import android.net.Uri
 import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAsset
+import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetRate
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.domain.model.getRecommendedGasValues
@@ -143,9 +144,11 @@ class DexAssetsRepository(
         val tokenEntity = toTokenEntity()
         return DexAsset(
             type = kind.toDomain(),
-            dexUsdPrice = BigDecimal(dexPriceUsd),
             balance = balance?.let { Coin.toCoins(it, tokenEntity.decimals) } ?: BigDecimal.ZERO,
-            tokenEntity = tokenEntity
+            rate = DexAssetRate(
+                tokenEntity,
+                BigDecimal(dexPriceUsd)
+            )
         )
     }
 

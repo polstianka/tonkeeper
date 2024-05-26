@@ -8,16 +8,23 @@ import java.math.BigDecimal
 @Parcelize
 data class DexAsset(
     val type: DexAssetType,
-    val dexUsdPrice: BigDecimal,
     val balance: BigDecimal,
-    val tokenEntity: TokenEntity
+    val rate: DexAssetRate
 ): Parcelable {
+    val tokenEntity = rate.tokenEntity
     val decimals = tokenEntity.decimals
     val contractAddress = tokenEntity.address
     val imageUri = tokenEntity.imageUri
     val symbol = tokenEntity.symbol
     val displayName = tokenEntity.name
+    val dexUsdPrice = rate.dexUsdPrice
 }
+
+@Parcelize
+data class DexAssetRate(
+    val tokenEntity: TokenEntity,
+    val dexUsdPrice: BigDecimal
+) : Parcelable
 
 enum class DexAssetType {
     JETTON,
