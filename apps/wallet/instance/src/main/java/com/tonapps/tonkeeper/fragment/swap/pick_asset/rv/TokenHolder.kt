@@ -36,6 +36,13 @@ class TokenHolder(
 
         amountCrypto.text = CurrencyFormatter.format("", item.model.balance)
         amountCrypto.setTextColor(getCryptoBalanceTextColor(item))
+        val fiatText = if (item.model.balance.compareTo(BigDecimal.ZERO) == 0) {
+            ""
+        } else {
+            val fiatAmount = item.model.balance * item.model.rate.rate
+            CurrencyFormatter.format(item.model.rate.currency.code, fiatAmount)
+        }
+        amountFiat.text = fiatText
     }
 
     @ColorInt
