@@ -118,6 +118,15 @@
             android:textAppearance="@style/TextAppearance.Label1"
             android:textColor="?attr/textPrimaryColor" />
 
+        <uikit.widget.LoaderView
+            android:id="@+id/loading_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginBottom="28dp"
+            android:visibility="gone" />
+
     </FrameLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

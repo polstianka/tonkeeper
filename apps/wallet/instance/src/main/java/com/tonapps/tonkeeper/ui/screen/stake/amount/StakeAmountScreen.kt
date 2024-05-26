@@ -23,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.extensions.collectFlow
 import uikit.widget.ActionCellView
+import uikit.widget.LoaderView
 
 class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
     private val stakeViewModel: StakeViewModel by viewModel()
@@ -35,6 +36,7 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
     private lateinit var maxButton: Button
     private lateinit var continueButton: Button
     private lateinit var valueView: AmountInput
+    private lateinit var loaderView: LoaderView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,7 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         selectedPool = view.findViewById(R.id.selected_pool)
         valueCurrencyView = view.findViewById(R.id.value_currency)
+        loaderView = view.findViewById(R.id.loading_view)
 
         valueView = view.findViewById(R.id.value)
         valueView.doOnTextChanged { _, _, _, _ ->
@@ -65,12 +68,26 @@ class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
         continueButton = view.findViewById(R.id.continue_action)
         continueButton.setOnClickListener { stakeViewModel.onContinue() }
 
+        val savedButtonText = continueButton.text
+
         collectFlow(stakeViewModel.uiState) { state ->
             rateView.text = state.rate
             valueView.setMaxLength(stakeViewModel.decimals)
             valueCurrencyView.text = state.selectedTokenCode
 
-            if (state.insufficientBalance) {
+            if (state.loading) {
+                continueButton.text = ""
+                loaderView.isVisible = true
+            } else {
+                continueButton.text = savedButtonText
+                loaderView.isVisible = false
+            }
+
+            if (state.minWarning.isNotEmpty()) {
+                availableView.text =
+                    getString(Localization.minimum_amout_placeholder, state.minWarning)
+                availableView.setTextColor(requireContext().constantRedColor)
+            } else if (state.insufficientBalance) {
                 availableView.setText(Localization.insufficient_balance)
                 availableView.setTextColor(requireContext().constantRedColor)
             } else if (state.remaining != "") {

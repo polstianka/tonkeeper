@@ -88,6 +88,7 @@ class StakeOptionsScreen : BaseFragment(R.layout.fragment_stake_options) {
                     minDeposit = info.minStake,
                     links = info.links
                 )
+                optionsMainViewModel.clearPools()
                 optionsMainViewModel.setDetailsArgs(args)
                 optionsMainViewModel.setCurrentPage(POSITION_DETAILS)
             }

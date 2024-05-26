@@ -76,6 +76,10 @@ class StakeOptionsMainViewModel(
         _poolsArgs.value = args
     }
 
+    fun clearPools() {
+        _poolsArgs.value = null
+    }
+
     fun destroy() {
         _uiState.value = OptionsScreenState()
         _detailsArgs.value = null

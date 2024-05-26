@@ -60,6 +60,10 @@ class StakedJettonViewModel(
     private val _uiState = MutableStateFlow(StakedJettonState())
     val uiState: StateFlow<StakedJettonState> = _uiState
 
+    override fun onCleared() {
+        stakeRepository.clear()
+    }
+
     fun load(address: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = walletManager.getWalletInfo() ?: error("Wallet not found")
@@ -118,10 +122,10 @@ class StakedJettonViewModel(
                 rateDiff24h = token.rateDiff24h
             )
             _uiState.update {
-                it.copy(
-                    token = token1,
-                    items = it.getItems(resourceManager),
-                    chartItems = it.getChartItems()
+                val newState = it.copy(token = token1)
+                newState.copy(
+                    items = newState.getItems(resourceManager),
+                    chartItems = newState.getChartItems()
                 )
             }
         }

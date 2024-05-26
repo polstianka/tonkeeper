@@ -35,7 +35,7 @@ class StakeOptionsViewModel(
     }
 
     fun select(address: String) {
-
+        repository.select(address)
     }
 
     private suspend fun init(selectedAddress: String = "") {

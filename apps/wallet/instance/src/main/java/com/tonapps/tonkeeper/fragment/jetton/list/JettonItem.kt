@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.jetton.list
 
 import android.net.Uri
-import com.tonapps.tonkeeper.fragment.chart.list.ChartItem
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.wallet.data.account.WalletType
 import io.tonapi.models.JettonBalance
@@ -14,22 +13,19 @@ sealed class JettonItem(
         const val TYPE_HEADER = 0
         const val TYPE_ACTIONS = 1
         const val TYPE_DIVIDER = 2
-        const val TYPE_ACTIONS_STAKED = 3
         const val TYPE_DESCRIPTION = 4
         const val TYPE_DETAILS = 5
         const val TYPE_LINKS = 6
         const val TYPE_TOKEN = 7
         const val TYPE_TABS = 8
-        const val TYPE_CHART = 9
     }
 
     data class Header(
         val balance: CharSequence,
         val currencyBalance: CharSequence,
         val iconUrl: String,
-        val rate: CharSequence?,
-        val diff24h: String?,
-        val staked: Boolean = false
+        val rate: CharSequence,
+        val diff24h: String,
     ) : JettonItem(TYPE_HEADER)
 
     data class Actions(
@@ -37,13 +33,6 @@ sealed class JettonItem(
         val jetton: JettonBalance,
         val walletType: WalletType
     ) : JettonItem(TYPE_ACTIONS)
-
-    data class ActionsStaked(
-        val wallet: String,
-        val jetton: JettonBalance,
-        val walletType: WalletType,
-        val poolAddress: String,
-    ) : JettonItem(TYPE_ACTIONS_STAKED)
 
     data class Description(
         val text: String
@@ -72,8 +61,6 @@ sealed class JettonItem(
     data class Tabs(
         val historySelected: Boolean,
     ) : JettonItem(TYPE_TABS)
-
-    data class Chart(val items: List<ChartItem>) : JettonItem(TYPE_CHART)
 
     data object Divider : JettonItem(TYPE_DIVIDER)
 }

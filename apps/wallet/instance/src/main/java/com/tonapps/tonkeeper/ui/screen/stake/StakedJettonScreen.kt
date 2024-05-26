@@ -51,17 +51,12 @@ class StakedJettonScreen : BaseFragment(R.layout.fragment_staked_jetton), BaseFr
         listView.adapter = adapter
         listView.addItemDecoration(JettonItemDecoration(view.context))
         listView.addItemDecoration(JettonItemVerticalOffset(view.context))
-        listView.itemAnimator = SlideInLeftOutRightAnimator {
-            //somehow there is a bug because of itemAnimator+diffUtil
-            //that doesn't update background of tabs properly
-            //so I have to recreate tabs viewholder every time
-            jettonAdapter.notifyItemChanged(2)
-        }
+        listView.addItemDecoration(ChartWithOutHistoryItemDecoration(view.context))
+        listView.itemAnimator = ExitEnterAnimator()
         listView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
         collectFlow(listView.topScrolled, headerView::setDivider)
         collectFlow(stakedJettonViewModel.uiState) { state ->
             if (state.asyncState == AsyncState.Default) {
-                listView.post { listView.scrollToPosition(0) }
                 chartAdapter.submitList(state.chartItems)
                 jettonAdapter.submitList(state.items)
                 historyAdapter.submitList(if (state.selectedTab == HISTORY_TAB_ID) state.historyItems else emptyList()) {

@@ -25,6 +25,10 @@ class StakeRepository(
         _selectedPoolAddress.value = address
     }
 
+    fun clear() {
+        _selectedPoolAddress.value = ""
+    }
+
     suspend fun get(): StakePoolsEntity {
         val wallet = walletManager.getWalletInfo() ?: return StakePoolsEntity.Empty
         val pools = localDataSource.getCache(wallet.accountId) ?: StakePoolsEntity.Empty

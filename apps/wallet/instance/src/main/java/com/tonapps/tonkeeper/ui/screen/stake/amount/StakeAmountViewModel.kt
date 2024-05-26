@@ -51,7 +51,13 @@ class StakeViewModel(
         get() = uiState.value.selectedToken
 
     val currentBalance: Float
-        get() = currentToken?.balance?.value ?: 0f
+        get() {
+            val poolType = _uiState.value.selectedPool?.pool?.implementation
+            if (poolType == PoolImplementationType.liquidTF) {
+                return ((currentToken?.balance?.value ?: 0f) - LIQUID_TF_FEE).coerceAtLeast(0f)
+            }
+            return currentToken?.balance?.value ?: 0f
+        }
 
     val decimals: Int
         get() = currentToken?.decimals ?: 9
@@ -104,6 +110,7 @@ class StakeViewModel(
             it.copy(
                 selectedTokenAddress = tokenAddress,
                 canContinue = false,
+                confirmScreenArgs = null
             )
         }
     }
@@ -128,6 +135,7 @@ class StakeViewModel(
 
     fun onContinue() {
         viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
             val queryId = TransactionHelper.getWalletQueryId()
             val poolAddress = repository.selectedPoolAddress.value
             val poolInfo = repository.get().pools.first { it.address == poolAddress }
@@ -142,11 +150,9 @@ class StakeViewModel(
             val total = when (poolInfo.implementation) {
                 PoolImplementationType.whales -> amount
                 PoolImplementationType.tf -> amount
-                PoolImplementationType.liquidTF -> {
-                    val isAll = amount == currentBalance
-                    if (isAll) amount - 1.2f else amount + 1f
-                }
+                PoolImplementationType.liquidTF -> amount + 1f
             }
+
             val wallet = walletManager.getWalletInfo() ?: error("No wallet info")
             val gift = TransactionHelper.buildWalletTransfer(
                 destination = MsgAddressInt.parse(poolAddress),
@@ -192,17 +198,18 @@ class StakeViewModel(
                         caption = "\$$feeInCurrency"
                     ),
                 )
-                val amountInCurrency = rates.convert(currentTokenAddress, total)
+                val amountInCurrency = rates.convert(currentTokenAddress, amount)
                 it.copy(
                     confirmScreenArgs = ConfirmationArgs(
-                        amount = CurrencyFormatter.format(currentTokenCode, total).toString(),
+                        amount = CurrencyFormatter.format(currentTokenCode, amount).toString(),
                         amountInCurrency = CurrencyFormatter.format(currency.code, amountInCurrency)
                             .toString(),
                         imageRes = poolInfo.implementation.icon,
                         details = args,
                         walletTransfer = gift,
-                        unstake = false
-                    )
+                        unstake = false,
+                    ),
+                    loading = false
                 )
             }
         }
@@ -213,7 +220,10 @@ class StakeViewModel(
         val currency = _uiState.value.currency
         val rates = ratesRepository.getRates(currency, currentTokenAddress)
         val balanceInCurrency = rates.convert(currentTokenAddress, newValue)
+        val min = Coin.toCoins(_uiState.value.selectedPool?.pool?.minStake ?: 0)
+        val minFormatted = CurrencyFormatter.format(currentTokenCode, min).toString()
 
+        val minWarning = if (newValue < min && newValue > 0f) minFormatted else ""
         val insufficientBalance = newValue > currentBalance
         val remaining = if (newValue > 0) {
             val value = currentBalance - newValue
@@ -230,9 +240,14 @@ class StakeViewModel(
                 canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
                 maxActive = currentBalance == newValue,
                 available = CurrencyFormatter.format(currentTokenCode, currentBalance),
-                amount = newValue
+                amount = newValue,
+                minWarning = minWarning
             )
         }
+    }
+
+    companion object {
+        private const val LIQUID_TF_FEE = 1.2f
     }
 }
 
@@ -251,6 +266,8 @@ data class StakeAmountUiState(
     val tokens: List<AccountTokenEntity> = emptyList(),
     val selectedTokenAddress: String = WalletCurrency.TON.code,
     val confirmScreenArgs: ConfirmationArgs? = null,
+    val loading: Boolean = false,
+    val minWarning: String = ""
 ) {
     data class PoolInfo(
         val pool: StakePoolsEntity.PoolInfo,

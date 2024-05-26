@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.fragment.jetton.list
 
 import android.view.ViewGroup
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonActionsHolder
-import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonActionsStakedHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonDescriptionHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonDetailsHolder
 import com.tonapps.tonkeeper.fragment.jetton.list.holder.JettonDividerHolder
@@ -22,7 +21,6 @@ class JettonAdapter(
             JettonItem.TYPE_HEADER -> JettonHeaderHolder(parent)
             JettonItem.TYPE_ACTIONS -> JettonActionsHolder(parent)
             JettonItem.TYPE_DIVIDER -> JettonDividerHolder(parent)
-            JettonItem.TYPE_ACTIONS_STAKED -> JettonActionsStakedHolder(parent)
             JettonItem.TYPE_DESCRIPTION -> JettonDescriptionHolder(parent)
             JettonItem.TYPE_DETAILS -> JettonDetailsHolder(parent)
             JettonItem.TYPE_LINKS -> JettonLinksHolder(parent)

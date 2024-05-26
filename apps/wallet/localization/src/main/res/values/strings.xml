@@ -296,6 +296,7 @@
     <string name="choose">Choose</string>
     <string name="choose_wallet_title">Choose wallet</string>
     <string name="choose_wallet_subtitle">Choose wallets you want to add.</string>
+    <string name="minimum_amout_placeholder">Minimum %1$s</string>
 
     <string name="customize">Customize</string>
     <string name="customize_wallet_title">Customize your Wallet</string>

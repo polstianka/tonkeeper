@@ -7,7 +7,9 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.icon.UIKitIcon
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
+import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.collectFlow
+import uikit.extensions.getDimensionPixelSize
 import uikit.widget.HeaderView
 
 class StakeOptionsMainScreen : BaseFragment(R.layout.fragment_stake_pager),
@@ -35,6 +37,7 @@ class StakeOptionsMainScreen : BaseFragment(R.layout.fragment_stake_pager),
         pagerView.isUserInputEnabled = false
         pagerView.adapter = pagerAdapter
         pagerView.registerOnPageChangeCallback(pageChangeCallback)
+        pagerView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
 
         headerView = view.findViewById(R.id.header)
         headerView.contentMatchParent()

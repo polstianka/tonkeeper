@@ -12,6 +12,7 @@ import com.tonapps.tonkeeper.ui.screen.stake.confirm.ConfirmationArgs
 import com.tonapps.tonkeeper.ui.screen.stake.model.icon
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.api.entity.StakePoolsEntity.PoolImplementationType
 import com.tonapps.wallet.data.account.SeqnoHelper
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.core.WalletCurrency
@@ -172,11 +173,17 @@ class UnstakeViewModel(
             val poolInfo = repository.get().pools.first { it.address == poolAddress }
             val wallet = walletManager.getWalletInfo() ?: error("No wallet info")
             val fee = 0.02f
-            val body = Stake.unstakeLiquidTf(
-                queryId,
-                Coins.ofNano(Coin.toNano(amount - fee)),
-                wallet.contract.address
-            )
+
+            val body = when (poolInfo.implementation) {
+                PoolImplementationType.whales -> Stake.unstakeWhales(queryId)
+                PoolImplementationType.tf -> Stake.unstakeTf()
+                PoolImplementationType.liquidTF -> Stake.unstakeLiquidTf(
+                    queryId,
+                    Coins.ofNano(Coin.toNano(amount - fee)),
+                    wallet.contract.address
+                )
+            }
+
             val dest = uiState.value.selectedToken?.balance?.walletAddress.orEmpty()
 
             val stateInit = SeqnoHelper.getStateInitIfNeed(wallet, api)
