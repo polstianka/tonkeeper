@@ -46,7 +46,6 @@ class PickStakingOptionViewModel : ViewModel() {
     }
 
     fun onItemClicked(item: StakingOptionListItem) = viewModelScope.launch {
-        // todo add branching when there's only one option
         val args = args.first()
         val domainItem = args.options.first { it.type == item.stakingServiceType }
         val pickedItem = args.picked
