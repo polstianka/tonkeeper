@@ -12,6 +12,8 @@ import com.tonapps.tonkeeper.ui.screen.swap.SwapUiModel.Details.Header
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.data.swap.AssetModel
+import com.tonapps.wallet.data.swap.SwapRepository
+import com.tonapps.wallet.data.swap.WalletAssetsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +24,8 @@ import java.text.DecimalFormat
 import com.tonapps.wallet.localization.R as LocalizationR
 
 class SwapViewModel(
-    private val swapRepository: com.tonapps.wallet.data.swap.SwapRepository,
-    private val assetsRepository: com.tonapps.wallet.data.swap.WalletAssetsRepository,
+    private val swapRepository: SwapRepository,
+    private val assetsRepository: WalletAssetsRepository,
 ) : ViewModel() {
 
     private val df = DecimalFormat("#.##")
@@ -48,11 +50,14 @@ class SwapViewModel(
                 val sendToken = AssetModel(
                     token = asset.token,
                     balance = asset.value,
-                    walletAddress = asset.token.address,
+                    walletAddress = asset.walletAddress,
                     position = ListCell.Position.SINGLE,
                     fiatBalance = 0f,
-                    isTon = asset.kind == "TON"
+                    isTon = asset.kind.equals("ton", true)
                 )
+                if (sendToken.isTon) {
+                    swapRepository.setTonInfo(sendToken)
+                }
                 swapRepository.setSendToken(sendToken)
             }
         }

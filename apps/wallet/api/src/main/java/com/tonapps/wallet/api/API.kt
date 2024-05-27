@@ -133,7 +133,7 @@ class API(
                         address = asset.contractAddress,
                         name = asset.displayName,
                         symbol = asset.symbol,
-                        imageUri = Uri.parse(asset.imageUrl),
+                        imageUri = Uri.parse(asset.imageUrl.orEmpty()),
                         decimals = asset.decimals,
                         verification = TokenEntity.Verification.whitelist
                     ),

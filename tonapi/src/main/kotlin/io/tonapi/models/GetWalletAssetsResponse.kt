@@ -18,7 +18,7 @@ data class GetWalletAssetsResponse(
         @Json(name = "display_name")
         val displayName: String,
         @Json(name = "image_url")
-        val imageUrl: String,
+        val imageUrl: String?,
         @Json(name = "decimals")
         val decimals: Int,
         @Json(name = "kind")
