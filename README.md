@@ -15,6 +15,11 @@ Supports all 3 implementations of staking pools:
 - TON Whales
 - TON Nominators
 
+Supports both staking and unstaking.
+
+One can inspect the way blockchain messages are built, checking `CellProducer` interface 
+implementations. Those are completely natively produced cells.
+
 ### Stake screen
 
 To navigate to this screen, just click on `Stake` on the main screen.
@@ -167,13 +172,92 @@ opposite.
 
 ## Swap
 
+Supports swap via `ston.fi` dex. 
+Only supports jettons that:
+1. Have usd price field non-null
+2. Not blacklisted
+3. Not deprecated
+4. Not community
+5. Have imageurl field set 
+6. Have display-name field set.
+
+Any of those prerequisites can be altered in `DexAssetRepository#isValid()` method. 
+
+Supports the slippage settings. Both custom and default values. 
+
+Supports any direction of swap:
+1. TON->Jetton
+2. Jetton->Ton
+3. Jetton->Jetton
+
+Despite managing list of 10,500 items, works smoothly enough.
+
+Blockchain messages are built natively, without any third-party SDK-s. One can check the code for it
+in class `CreateStonfiSwapMessageCase`.
+
 ### Swap screen
+
+There are two buttons in navigation bar:
+1. Swap settings on the top left. Leads user to the `Swap settings screen`
+2. Cross on the top right. Closes the flow and leads user back to main screen
+
+On this screen, user can pick jetton to send. By default, it is `TON`. When clicking on the jetton
+button, user navigates to `Swap settings screen`
+
+The same way, user can pick jetton to receive. By default, this does not have any value. When clicked
+the corresponding button, user navigates to `Swap settings screen`, same as with send token.
+
+There also is an input, where user can enter the amount they wish to send. When entered, the amount 
+to receive is automatically calculated. 
+
+There is a `MAX` button above the input. When clicked, it sets the current user balance to the input
+field. This allows user exchanging all the tokens they have.
+
+There also is a `Swap` button. When clicked, it swaps token to send and token to receive. Also it 
+keeps corresponding values the same. (e.g. if you had TON<->USDT pair and 1 TON was entered, when 
+you click the `Swap` button, there will be 6.38 USDT to send and 1 TON to receive when tokens are 
+swapped). 
+
+When both tokens are picked and some amount is entered, transaction is being emulated. This moment,
+fees and approximate amount of token to receive is being printed out. Also, at the same moment, the 
+`Continue` button becomes active. 
+
+When `Continue` button is clicked, user navigates to `Confirm swap screen`.
 
 ### Choose token screen
 
+Displays the list of supported tokens that user can exchange one for another. Also displays the 
+balance of those tokens, both in crypto and fiat. 
+
+Tokens that have balance are sorted in order of fiat balance. Highest first, lowest last.
+
+Tokens without balance are sorted in alphabetical order.
+
+Also this screen supports search. Filtered tokens are sorted in the same way.
+
+When token is clicked, screen closes and result is being sent to `Swap screen`.
+
 ### Swap settings screen
 
+Has two modes:
+1. Expert mode. In this mode user has to enter the percentage from keyboard. This mode allows any 
+slippage percentage from 0 to 99.
+2. Novice mode. In this mode user can pick from 1%, 3%, 5%.
+
+When user set their preferred slippage, they are free to click `Save` button. This leads to screen 
+closure and navigating back to `Swap screen`.
+
 ### Confirm swap screen
+
+Shows the same info as `Swap screen` after emulating the transaction. 
+
+Has two buttons: `Cancel` and `Confirm`.
+
+When `Confirm` is clicked, buttons are hidden and loader animation is being shown on their place. 
+When transaction is performed successfully, shows green checkmark with `Done` text. Within a second 
+navigates to the main screen and opens the history page.
+
+When transaction fails, shows red cross with `Error` text. Within a second shows buttons back.
 
 ## Buy/sell
 
