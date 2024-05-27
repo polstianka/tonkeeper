@@ -261,14 +261,54 @@ When transaction fails, shows red cross with `Error` text. Within a second shows
 
 ## Buy/sell
 
+The sequence of screens collects all the data necessary for launching the buy (or sell) flow in 
+webview. This includes:
+1. Country
+2. Payment method (e.g. Credit card, cryptocurrency, google pay etc.)
+3. Amount 
+4. Currency
+5. Payment operator
+6. Exchange type (buy or sell)
+
+When all of those are picked, user can be navigated to the webview where user will be able to exchange
+their crypto for fiat money.
+
+Also supports min amount validation.
+
 ### Buy screen 
+
+User can enter the amount of `TON` they want to buy. Should be more than min amount (which is 
+hardcoded as 5 TON). Also user should pick the payment method they wish to pay with. Those methods
+are also hard-coded, since there were no API for that.
+
+Also user can navigate to `Pick country screen`
+
+When everything is picked, user can click `Continue` button in order to navigate to `Pick operator 
+screen`
 
 ### Sell screen
 
-### Pick country screen
-
-### Pick currency screen
+Pretty much the same as `Buy screen` but it has an additional validation. It validates whether or not 
+user has the stated amount of `TON` on their balance to be able to sell it. So user cannot try selling
+50 `TON` when they only have 10. 
 
 ### Pick operator screen
 
+Displays dropdown button with picked currency. When this button is clicked, navigates to `Pick 
+currency screen`. 
+
+Also displays a list of payment operators, that are available for given country, payment method,
+amount, currency, exchange type. 
+
+When payment operator is clicked, it becomes checked and un-check the previous one. 
+
+This screen also contains `Continue` button. When clicked, navigates user to `Billing web-view`.
+
+### Pick currency screen
+
+Screen where a list of supported currencies for given exchange type, country, payment method, amount
+is displayed. When item is clicked, screen closes and sends result to `Pick operator screen`
+
 ### Billing web-view
+
+Pretty much the same as it was on `FiatDialog`. 
