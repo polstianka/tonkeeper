@@ -3,6 +3,7 @@
     <dimen name="actionSize">32dp</dimen>
     <dimen name="itemHeight">56dp</dimen>
     <dimen name="barHeight">64dp</dimen>
+    <dimen name="bigItemHeight">96dp</dimen>
     <dimen name="shadowSize">3dp</dimen>
     <dimen name="tertiaryHeight">36dp</dimen>
     <dimen name="iconSize">28dp</dimen>
@@ -19,4 +20,7 @@
     <dimen name="offsetExtraSmall">4dp</dimen>
     <dimen name="offsetMedium">16dp</dimen>
     <dimen name="offsetLarge">32dp</dimen>
+
+    <dimen name="tokenChipPadding">4dp</dimen>
+    <dimen name="tokenChipRightPadding">14dp</dimen>
 </resources>

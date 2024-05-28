@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/settings"
+            app:ignoreSystemOffset="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/slippage_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/slippage"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textPrimaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/slippage_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/slippage_description"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/slippage_percent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                android:id="@+id/field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/field_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="%"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?attr/textSecondaryColor" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/first"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/buttonSecondaryForegroundColor" />
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="0dp" />
+
+            <Button
+                android:id="@+id/second"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/buttonSecondaryForegroundColor" />
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="0dp" />
+
+            <Button
+                android:id="@+id/third"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/buttonSecondaryForegroundColor" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <uikit.widget.item.ItemSwitchView
+            android:id="@+id/expert_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/expert_mode"
+            app:description="@string/expert_mode_description" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/save"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/save"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/buttonPrimaryForegroundColor" />
+
+</FrameLayout>

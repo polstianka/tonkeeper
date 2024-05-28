@@ -11,6 +11,10 @@ import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.fragment.send.amount.AmountScreenFeature
 import com.tonapps.tonkeeper.fragment.send.confirm.ConfirmScreenFeature
 import com.tonapps.tonkeeper.fragment.send.recipient.RecipientScreenFeature
+import com.tonapps.tonkeeper.fragment.swap.SwapScreenFeature
+import com.tonapps.tonkeeper.fragment.swap.currency.CurrencyScreenFeature
+import com.tonapps.tonkeeper.fragment.swap.settings.SettingsScreenFeature
+import com.tonapps.tonkeeper.fragment.swap.token.TokenPickerScreenFeature
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthViewModel
 import com.tonapps.tonkeeper.password.PasscodeDataStore
 import com.tonapps.tonkeeper.password.PasscodeRepository
@@ -85,4 +89,10 @@ val koinModel = module {
     viewModel { ChartScreenFeature(get(), get(), get()) }
     viewModel { JettonScreenFeature(get(), get()) }
     viewModel { AmountScreenFeature(get(), get()) }
+
+    viewModel { CurrencyScreenFeature(get(), get()) }
+    viewModel { TokenPickerScreenFeature(get(), get()) }
+    viewModel { com.tonapps.tonkeeper.fragment.swap.confirm.ConfirmScreenFeature(get(), get()) }
+    viewModel { SwapScreenFeature(get(), get()) }
+    viewModel { SettingsScreenFeature(get()) }
 }

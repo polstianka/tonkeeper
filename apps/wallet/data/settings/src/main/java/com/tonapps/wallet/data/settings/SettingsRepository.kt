@@ -33,6 +33,8 @@ class SettingsRepository(
         private const val FIREBASE_TOKEN_KEY = "firebase_token"
         private const val INSTALL_ID_KEY = "install_id"
         private const val SEARCH_ENGINE_KEY = "search_engine"
+        private const val SLIPPAGE_KEY = "slippage"
+        private const val EXPERT_MODE_KEY = "expert_mode"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -143,6 +145,22 @@ class SettingsRepository(
                 prefs.edit().putBoolean(HIDDEN_BALANCES_KEY, value).apply()
                 field = value
                 _hiddenBalancesFlow.tryEmit(value)
+            }
+        }
+
+    var slippage: Float = prefs.getFloat(SLIPPAGE_KEY, 1F)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putFloat(SLIPPAGE_KEY, value).apply()
+                field = value
+            }
+        }
+
+    var expertMode: Boolean = prefs.getBoolean(EXPERT_MODE_KEY, false)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putBoolean(EXPERT_MODE_KEY, value).apply()
+                field = value
             }
         }
 

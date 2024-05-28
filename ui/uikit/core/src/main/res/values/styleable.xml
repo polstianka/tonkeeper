@@ -58,6 +58,7 @@
     <declare-styleable name="ItemSwitchView">
         <attr name="android:text" format="string|reference"/>
         <attr name="android:checked" format="boolean"/>
+        <attr name="description" format="string|reference"/>
         <attr name="position"/>
     </declare-styleable>
 
@@ -110,5 +111,18 @@
 
     <declare-styleable name="SimpleRecyclerView">
         <attr name="android:maxHeight" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="TokenChipView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:singleLine" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwapSendView">
+        <attr name="android:icon" format="reference"/>
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:singleLine" format="boolean"/>
+        <attr name="maxAvailable" format="boolean"/>
+        <attr name="selectedToken" format="string"/>
     </declare-styleable>
 </resources>

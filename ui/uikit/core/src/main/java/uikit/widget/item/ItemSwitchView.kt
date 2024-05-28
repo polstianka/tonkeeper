@@ -2,6 +2,7 @@ package uikit.widget.item
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import uikit.R
 import uikit.extensions.useAttributes
@@ -14,6 +15,7 @@ class ItemSwitchView @JvmOverloads constructor(
 ) : BaseItemView(context, attrs, defStyle) {
 
     private val textView: AppCompatTextView
+    private val descriptionView: AppCompatTextView
     private val switchView: SwitchView
 
     var doOnCheckedChanged: ((Boolean) -> Unit)?
@@ -28,6 +30,18 @@ class ItemSwitchView @JvmOverloads constructor(
             textView.text = value
         }
 
+    var description: String?
+        get() = descriptionView.text.toString()
+        set(value) {
+            descriptionView.text = value
+            if (!value.isNullOrEmpty()) {
+                descriptionView.visibility = View.VISIBLE
+                multiLine = true
+            } else {
+                multiLine = false
+            }
+        }
+
     var checked: Boolean
         get() = switchView.checked
         set(value) {
@@ -38,6 +52,7 @@ class ItemSwitchView @JvmOverloads constructor(
         inflate(context, R.layout.view_item_switch, this)
 
         textView = findViewById(R.id.text)
+        descriptionView = findViewById(R.id.description)
         switchView = findViewById(R.id.check)
 
         setOnClickListener {
@@ -46,6 +61,7 @@ class ItemSwitchView @JvmOverloads constructor(
 
         context.useAttributes(attrs, R.styleable.ItemSwitchView) {
             text = it.getString(R.styleable.ItemSwitchView_android_text)
+            description = it.getString(R.styleable.ItemSwitchView_description)
             checked = it.getBoolean(R.styleable.ItemSwitchView_android_checked, false)
             position = com.tonapps.uikit.list.ListCell.from(it.getString(R.styleable.ItemSwitchView_position))
         }

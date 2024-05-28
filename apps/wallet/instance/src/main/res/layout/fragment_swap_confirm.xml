@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tonapps.tonkeeper.fragment.swap.view.SendReceiveView
+        android:id="@+id/send_receive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <uikit.widget.ProcessTaskView
+        android:id="@+id/process"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/itemHeight"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:visibility="gone"
+        app:errorLabel="@string/error"
+        app:successLabel="@string/done" />
+
+    <uikit.widget.RowLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/itemHeight"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="@dimen/offsetMedium">
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/buttonSecondaryForegroundColor" />
+
+        <View
+            android:layout_width="@dimen/offsetMedium"
+            android:layout_height="0dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/confirm"
+                style="@style/Widget.App.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/buttonPrimaryForegroundColor" />
+
+            <uikit.widget.LoaderView
+                android:id="@+id/loading"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:color="@color/constantWhite"
+                android:trackTint="#52ffffff"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </uikit.widget.RowLayout>
+
+</FrameLayout>

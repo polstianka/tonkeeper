@@ -3,6 +3,7 @@
     <string name="ton" translatable="false">TON</string>
     <string name="toncoin" translatable="false">Toncoin</string>
     <string name="bitcoin" translatable="false">Bitcoin</string>
+    <string name="stonfi" translatable="false">STON.fi</string>
 
     <string name="failed">Failed</string>
     <string name="remove_dapp_confirm">Remove %1$s?</string>
@@ -239,6 +240,31 @@
     <string name="to_address">To: %1$s</string>
     <string name="remaining_balance">Remaining: %1$s</string>
     <string name="wallet_balance">Wallet balance</string>
+    <string name="current_balance">Balance:&#160;</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="confirm_swap">Confirm Swap</string>
+    <string name="choose_token">Choose Token</string>
+    <string name="choose">CHOOSE</string>
+    <string name="suggested">Suggested</string>
+    <string name="other">Other</string>
+    <string name="price_impact">Price impact</string>
+    <string name="price_impact_hint">The difference between the market price and estimated price due to trade size.</string>
+    <string name="minimum_received">Minimum received</string>
+    <string name="minimum_received_hint">Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.</string>
+    <string name="liquidity_provider_fee">Liquidity provider fee</string>
+    <string name="liquidity_provider_fee_hint">A portion of each trade goes to liquidity providers as a protocol incentive.</string>
+    <string name="blockchain_fee">Blockchain fee</string>
+    <string name="route">Route</string>
+    <string name="provider">Provider</string>
+    <string name="close">Close</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="slippage_hint">Custom %</string>
+    <string name="expert_mode">Expert Mode</string>
+    <string name="expert_mode_description">Allows high price impact trades. Use at your own risk.</string>
+    <string name="value_percent" translatable="false">%1$s %%</string>
+    <string name="token_rate" translatable="false">%1$s ≈ %2$s</string>
+    <string name="max_amount" translatable="false">MAX</string>
     <string name="rate">Rate</string>
     <string name="widget_updated">Updated at %1$s</string>
     <string name="set_up_wallet">Set up wallet</string>
