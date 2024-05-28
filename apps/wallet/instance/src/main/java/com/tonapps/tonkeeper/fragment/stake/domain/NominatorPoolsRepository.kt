@@ -6,31 +6,39 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.StakingPool
 import com.tonapps.wallet.api.API
 import io.tonapi.infrastructure.ClientException
 import io.tonapi.models.AccountStakingInfo
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.shareIn
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.write
 
 class NominatorPoolsRepository(
     private val api: API,
-    private val repository: StakingServicesRepository
+    private val repository: StakingServicesRepository,
+    private val coroutineScope: CoroutineScope
 ) {
     private val stakingInfosFlows =
         mutableMapOf<String, MutableStateFlow<List<AccountStakingInfo>>>()
     private val lock = ReentrantReadWriteLock()
 
+    private val nominatorPoolFlows = mutableMapOf<String, Flow<List<NominatorPool>>>()
     fun getNominatorPoolsFlow(
         walletAddress: String,
         testnet: Boolean
     ): Flow<List<NominatorPool>> {
         val key = key(walletAddress, testnet)
         val stakingInfosFlow = getStakingInfosFlow(key)
-        val servicesFlow = repository.getStakingServicesFlow(testnet, walletAddress)
-        return combine(stakingInfosFlow, servicesFlow) { stakingInfos, services ->
-            val pools = services.flatMap { it.pools }
-            stakingInfos.mapNotNull { it.toDomain(pools) }
+        if (!nominatorPoolFlows.containsKey(key)) {
+            val servicesFlow = repository.getStakingServicesFlow(testnet, walletAddress)
+            nominatorPoolFlows[key] = combine(stakingInfosFlow, servicesFlow) { stakingInfos, services ->
+                val pools = services.flatMap { it.pools }
+                stakingInfos.mapNotNull { it.toDomain(pools) }
+            }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
         }
+        return nominatorPoolFlows[key]!!
     }
 
     private fun getStakingInfosFlow(

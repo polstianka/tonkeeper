@@ -27,5 +27,5 @@ val stakingModule = module {
     single { GetStakingPoolLiquidJettonCase(get(), get()) }
     single { GetStakeWalletTransferCase(get(), get()) }
     single { StakingServicesRepository(get(), get()) }
-    single { NominatorPoolsRepository(get(), get()) }
+    single { NominatorPoolsRepository(get(), get(), get()) }
 }

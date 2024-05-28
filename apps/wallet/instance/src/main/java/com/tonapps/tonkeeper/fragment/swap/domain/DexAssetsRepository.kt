@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -61,6 +62,7 @@ class DexAssetsRepository(
         val key = key(walletAddress, testnet, currency)
         if (!totalBalancesFlows.containsKey(key)) {
             val result = buildTotalBalancesFlow(walletAddress, testnet, currency)
+                .filter { it.isNotEmpty() }
                 .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
             totalBalancesFlows[key] = result
         }
