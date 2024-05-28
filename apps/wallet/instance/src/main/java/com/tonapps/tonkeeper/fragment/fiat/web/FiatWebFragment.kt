@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import androidx.lifecycle.lifecycleScope
-import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.fiat.models.FiatSuccessUrlPattern
+import com.tonapps.tonkeeperx.R
 import kotlinx.coroutines.launch
 import uikit.base.BaseFragment
 import uikit.widget.HeaderView
@@ -28,6 +28,18 @@ class FiatWebFragment: BaseFragment(R.layout.fragment_web_fiat) {
             fragment.arguments = Bundle().apply {
                 putString(URL, url)
                 putString(SUCCESS_URL_PATTERN, pattern?.toJSON().toString())
+            }
+            return fragment
+        }
+
+        fun newInstance(
+            url: String,
+            pattern: String?
+        ): FiatWebFragment {
+            val fragment = FiatWebFragment()
+            fragment.arguments = Bundle().apply {
+                putString(URL, url)
+                putString(SUCCESS_URL_PATTERN, pattern)
             }
             return fragment
         }

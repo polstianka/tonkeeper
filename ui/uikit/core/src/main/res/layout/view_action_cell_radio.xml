@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/action_cell_icon"
         android:layout_width="@dimen/iconSize"
         android:layout_height="@dimen/iconSize"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/offsetMedium" />
+        android:layout_marginEnd="@dimen/offsetMedium"
+        app:roundedCornerRadius="12dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

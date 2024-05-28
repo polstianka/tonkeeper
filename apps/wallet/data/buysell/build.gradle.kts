@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = Build.namespacePrefix("wallet.data.swap")
+    namespace = Build.namespacePrefix("wallet.data.buysell")
     compileSdk = Build.compileSdkVersion
 
     defaultConfig {

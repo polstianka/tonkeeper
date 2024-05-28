@@ -26,7 +26,7 @@ import uikit.widget.ActionCellView
 import uikit.widget.LoaderView
 
 class StakeAmountScreen : Fragment(R.layout.fragment_stake) {
-    private val stakeViewModel: StakeViewModel by viewModel()
+    private val stakeViewModel: StakeAmountViewModel by viewModel()
     private val stakeMainViewModel: StakeMainViewModel by activityViewModel()
 
     private lateinit var selectedPool: ActionCellView

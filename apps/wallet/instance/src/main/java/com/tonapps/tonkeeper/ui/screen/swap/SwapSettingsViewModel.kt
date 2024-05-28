@@ -1,35 +1,59 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
 import androidx.lifecycle.ViewModel
+import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.swap.SwapRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlin.math.roundToInt
 
 class SwapSettingsViewModel(
-    private val swapRepository: com.tonapps.wallet.data.swap.SwapRepository
+    private val swapRepository: SwapRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val _suggestedTolerance = MutableStateFlow(emptyList<Int>())
-    val suggestedTolerance: StateFlow<List<Int>> = _suggestedTolerance
-
-    private val _selectedSuggestion = MutableStateFlow<Int?>(null)
-    val selectedSuggestion: StateFlow<Int?> = _selectedSuggestion
+    private val _uiState = MutableStateFlow(SwapSettingsUiState())
+    val uiState: StateFlow<SwapSettingsUiState> = _uiState
 
     init {
-        _suggestedTolerance.value = suggestedToleranceList
+        val slippageTolerance = settingsRepository.slippage
+        val expert = settingsRepository.expertMode
+        _uiState.update {
+            it.copy(
+                tolerancePercent = slippageTolerance.roundToInt(),
+                expert = expert
+            )
+        }
     }
 
     fun onSuggestClicked(percent: Int) {
-        _selectedSuggestion.value = percent
+        _uiState.update {
+            it.copy(tolerancePercent = percent)
+        }
     }
 
     fun percentChanged(s: String) {
         if (s.isNotEmpty()) {
-            val value = s.toInt() / 100f
-            swapRepository.setSlippageTolerance(value)
+            val value = s.toInt()
+            _uiState.update { it.copy(tolerancePercent = value) }
         }
     }
 
-    companion object {
-        private val suggestedToleranceList = listOf(1, 3, 5)
+    fun onSwitchChanged(on: Boolean) {
+        _uiState.update { it.copy(expert = on) }
+    }
+
+    fun onSaveClick() {
+        val state = uiState.value
+        swapRepository.setSlippageTolerance(state.tolerancePercent / 100f)
+        settingsRepository.slippage = state.tolerancePercent.toFloat()
+        settingsRepository.expertMode = state.expert
     }
 }
+
+data class SwapSettingsUiState(
+    val tolerancePercent: Int = 1,
+    val expert: Boolean = false,
+    val suggestedToleranceList: List<Int> = listOf(1, 3, 5)
+)

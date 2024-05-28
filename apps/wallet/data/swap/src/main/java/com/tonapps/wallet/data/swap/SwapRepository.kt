@@ -34,6 +34,7 @@ import ton.transfer.Transfer
 import java.math.BigDecimal
 import kotlin.time.Duration.Companion.seconds
 
+
 class SwapRepository(
     private val walletManager: WalletManager,
     private val api: API
@@ -132,12 +133,14 @@ class SwapRepository(
                 userAddressInt = MsgAddressInt.parse(userWallet.address),
                 coins = Coins.ofNano(
                     BigDecimal(_swapState.value.details?.minReceived)
-                        .movePointRight(_swapState.value.receive?.token?.decimals ?: 9)
+                        .movePointRight(_swapState.value.receive?.token?.decimals ?: TON_DECIMALS)
                         .toLong()
                 )
             )
             val outputValue =
-                BigDecimal(sendInput).movePointRight(_swapState.value.send?.token?.decimals ?: 9)
+                BigDecimal(sendInput).movePointRight(
+                    _swapState.value.send?.token?.decimals ?: TON_DECIMALS
+                )
                     .toLong()
             val transferPayload = Transfer.jetton(
                 coins = Coins.ofNano(outputValue),
@@ -193,12 +196,12 @@ class SwapRepository(
                 userAddressInt = MsgAddressInt.parse(userWallet.address),
                 coins = Coins.ofNano(
                     BigDecimal(_swapState.value.details?.minReceived)
-                        .movePointRight(_swapState.value.receive?.token?.decimals ?: 9)
+                        .movePointRight(_swapState.value.receive?.token?.decimals ?: TON_DECIMALS)
                         .toLong()
                 )
             )
             val outputValue = BigDecimal(sendInput)
-                .movePointRight(_swapState.value.send?.token?.decimals ?: 9)
+                .movePointRight(_swapState.value.send?.token?.decimals ?: TON_DECIMALS)
                 .toLong()
             val transferPayload = Transfer.jetton(
                 coins = Coins.ofNano(outputValue),
@@ -251,11 +254,11 @@ class SwapRepository(
                 userAddressInt = MsgAddressInt.parse(userWallet.address),
                 coins = Coins.ofNano(
                     BigDecimal(_swapState.value.details?.minReceived)
-                        .movePointRight(_swapState.value.receive?.token?.decimals ?: 9)
+                        .movePointRight(_swapState.value.receive?.token?.decimals ?: TON_DECIMALS)
                         .toLong()
                 )
             )
-            val outputValue = BigDecimal(sendInput).movePointRight(9).toLong()
+            val outputValue = BigDecimal(sendInput).movePointRight(TON_DECIMALS).toLong()
             val transferPayload = Transfer.jetton(
                 coins = Coins.ofNano(outputValue),
                 toAddress = MsgAddressInt.parse(routerAddress),
@@ -371,6 +374,10 @@ class SwapRepository(
             delay(millis)
             block(this)
         }
+    }
+
+    companion object {
+        private const val TON_DECIMALS = 9
     }
 }
 

@@ -3,13 +3,8 @@ package uikit.navigation
 import android.app.Dialog
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
-import com.tonapps.uikit.color.UIKitColor
-import com.tonapps.uikit.color.backgroundContentTintColor
 import uikit.base.BaseFragment
 
 interface Navigation {
@@ -53,4 +48,6 @@ interface Navigation {
     fun openURL(url: String, external: Boolean = false)
 
     fun toast(message: String, loading: Boolean, color: Int)
+
+    fun finishAll()
 }

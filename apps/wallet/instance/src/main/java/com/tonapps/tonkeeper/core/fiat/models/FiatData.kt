@@ -40,4 +40,19 @@ data class FiatData(
         }
         return items
     }
+
+    fun getSellItemsByMethods(methods: List<String>): List<FiatItem> {
+        val mappedMethods = methods.map { """${it}_sell""" }
+        val items = mutableListOf<FiatItem>()
+        sell.forEach { category ->
+            if (category.type == "sell") {
+                category.items.forEach { item ->
+                    if (mappedMethods.contains(item.id)) {
+                        items.add(item)
+                    }
+                }
+            }
+        }
+        return items
+    }
 }
