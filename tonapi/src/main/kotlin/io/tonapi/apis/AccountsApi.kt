@@ -15,6 +15,7 @@
 
 package io.tonapi.apis
 
+import android.util.Log
 import java.io.IOException
 import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
@@ -218,6 +219,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
     fun getAccount(accountId: kotlin.String) : Account {
         val localVarResponse = getAccountWithHttpInfo(accountId = accountId)
 
+
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as Account
             ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
@@ -245,6 +247,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
     @Throws(IllegalStateException::class, IOException::class)
     fun getAccountWithHttpInfo(accountId: kotlin.String) : ApiResponse<Account?> {
         val localVariableConfig = getAccountRequestConfig(accountId = accountId)
+
 
         return request<Unit, Account>(
             localVariableConfig

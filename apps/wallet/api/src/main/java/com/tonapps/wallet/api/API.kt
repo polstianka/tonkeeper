@@ -6,7 +6,6 @@ import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -26,10 +25,13 @@ import com.tonapps.wallet.api.internal.InternalApi
 import io.tonapi.models.Account
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.AccountEvents
+import io.tonapi.models.Asset
 import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.MessageConsequences
+import io.tonapi.models.MethodExecutionResult
 import io.tonapi.models.NftItem
 import io.tonapi.models.SendBlockchainMessageRequest
+import io.tonapi.models.SwapSimulateDetail
 import io.tonapi.models.TokenRates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +42,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
@@ -65,8 +68,15 @@ class API(
         get() = configRepository.configEntity
 
     private val provider: Provider by lazy {
-        Provider(config.tonapiMainnetHost, config.tonapiTestnetHost, tonAPIHttpClient)
+        Provider(
+            config.stonfiHost,
+            config.tonapiMainnetHost,
+            config.tonapiTestnetHost,
+            tonAPIHttpClient
+        )
     }
+
+    fun swap(testnet: Boolean) = provider.swap.get(testnet)
 
     fun accounts(testnet: Boolean) = provider.accounts.get(testnet)
 
@@ -135,6 +145,90 @@ class API(
         }
     }
 
+    fun getAssets(
+        testnet: Boolean
+    ): List<Asset> {
+        try {
+            val assetList = swap(testnet).getAssets().assetList.filter {
+                !it.blacklisted && !it.community && !it.deprecated
+            }
+            return assetList
+        } catch (e: Throwable) {
+            return emptyList()
+        }
+    }
+
+    fun getMarketPairs(
+        testnet: Boolean
+    ): List<List<String>> {
+        try {
+            val pairList = swap(testnet).getMarkets().pairList
+            return pairList
+        } catch (e: Throwable) {
+            return emptyList()
+        }
+    }
+
+    fun getSwapSimulate(
+        offerAddress: String,
+        askAddress: String,
+        units: String,
+        slippageTolerance: String,
+        testnet: Boolean
+    ): SwapSimulateDetail? {
+        try {
+            val queryParams = mutableMapOf(
+                "offer_address" to listOf(offerAddress),
+                "ask_address" to listOf(askAddress),
+                "units" to listOf(units),
+                "slippage_tolerance" to listOf(slippageTolerance),
+            )
+
+            val swapSimulateDetail = swap(testnet).getSwapSimulate(queryParams)
+            return swapSimulateDetail
+        } catch (e: Throwable) {
+            return null
+        }
+    }
+
+    fun getReverseSwapSimulate(
+        offerAddress: String,
+        askAddress: String,
+        askUnits: String,
+        slippageTolerance: String,
+        testnet: Boolean
+    ): SwapSimulateDetail? {
+        try {
+            val queryParams = mutableMapOf(
+                "offer_address" to listOf(offerAddress),
+                "ask_address" to listOf(askAddress),
+                "units" to listOf(askUnits),
+                "slippage_tolerance" to listOf(slippageTolerance),
+            )
+
+            val swapSimulateDetail = swap(testnet).getReverseSwapSimulate(queryParams)
+            return swapSimulateDetail
+        } catch (e: Throwable) {
+            return null
+        }
+    }
+
+    fun getWalletAddress(
+        jettonMaster: String, owner: String, testnet: Boolean
+    ): MethodExecutionResult? {
+        try {
+
+            val response = blockchain(testnet).execGetMethodForBlockchainAccount(
+                accountId = jettonMaster,
+                methodName = "get_wallet_address",
+                args = listOf(owner)
+            )
+            return response
+        } catch (e: Throwable) {
+            return null
+        }
+    }
+
     fun resolveAddressOrName(
         query: String,
         testnet: Boolean
@@ -198,7 +292,8 @@ class API(
             config.tonapiMainnetHost
         }
         // val mempool = okHttpClient.sse("$endpoint/v2/sse/mempool?accounts=${accountId}")
-        val tx = tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
+        val tx =
+            tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
         // return merge(mempool, tx)
         return tx
     }
@@ -402,7 +497,8 @@ class API(
         endDate: Long,
         points: Int
     ): List<ChartEntity> {
-        val url = "${config.tonapiMainnetHost}/v2/rates/chart?token=$token&currency=$currency&end_date=$endDate&start_date=$startDate&points_count=$points"
+        val url =
+            "${config.tonapiMainnetHost}/v2/rates/chart?token=$token&currency=$currency&end_date=$endDate&start_date=$startDate&points_count=$points"
         val array = JSONObject(tonAPIHttpClient.get(url)).getJSONArray("points")
         return (0 until array.length()).map { index ->
             ChartEntity(array.getJSONArray(index))

@@ -32,6 +32,8 @@ object Dependence {
     }
 
     object AndroidX {
+        const val multidex = "androidx.multidex:multidex:2.0.1"
+
         const val core = "androidx.core:core-ktx:1.13.1"
         const val shortcuts = "androidx.core:core-google-shortcuts:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"

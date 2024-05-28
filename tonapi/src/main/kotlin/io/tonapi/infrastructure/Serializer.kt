@@ -1,5 +1,6 @@
 package io.tonapi.infrastructure
 
+import MarketPairAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
@@ -15,6 +16,7 @@ object Serializer {
         .add(KotlinJsonAdapterFactory())
         .add(BigDecimalAdapter())
         .add(BigIntegerAdapter())
+        .add(MarketPairAdapter())
 
     @JvmStatic
     val moshi: Moshi by lazy {

@@ -12,6 +12,7 @@ import io.tonapi.apis.NFTApi
 import io.tonapi.apis.RatesApi
 import io.tonapi.apis.StakingApi
 import io.tonapi.apis.StorageApi
+import io.tonapi.apis.SwapApi
 import io.tonapi.apis.TracesApi
 import io.tonapi.apis.WalletApi
 import okhttp3.OkHttpClient
@@ -20,6 +21,8 @@ class BaseAPI(
     basePath: String,
     okHttpClient: OkHttpClient
 ) {
+
+    val swap: SwapApi by lazy { SwapApi(basePath, okHttpClient) }
 
     val accounts: AccountsApi by lazy { AccountsApi(basePath, okHttpClient) }
 

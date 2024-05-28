@@ -39,7 +39,7 @@ object Transfer {
         toAddress: MsgAddressInt,
         responseAddress: MsgAddressInt,
         queryId: BigInteger = BigInteger.ZERO,
-        forwardAmount: Long = 1L,
+        forwardAmount: BigInteger = BigInteger.valueOf(1L),
         body: Any? = null,
     ): Cell {
         val payload = body(body)
@@ -57,6 +57,27 @@ object Transfer {
             } else {
                 storeBit(true)
                 storeRef(AnyTlbConstructor, CellRef(payload))
+            }
+        }
+    }
+
+    fun swap(
+        assetToSwap: MsgAddressInt,
+        minAskAmount: BigInteger,
+        userWalletAddress: MsgAddressInt,
+        referralAddress: String? = null
+    ): Cell {
+        return buildCell {
+            storeUInt(0x25938561, 32)
+            storeTlb(MsgAddressInt, assetToSwap)
+            storeTlb(Coins, Coins.ofNano(minAskAmount))
+            storeTlb(MsgAddressInt, userWalletAddress)
+
+            if (referralAddress != null) {
+                storeBits(true)
+                storeTlb(MsgAddressInt, MsgAddressInt.parse(referralAddress))
+            } else {
+                storeBits(false)
             }
         }
     }

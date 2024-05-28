@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.tonapps.tonkeeper.fragment.send.SendScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
-import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
+import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeScreen
 import com.tonapps.tonkeeper.ui.screen.token.list.Item
 import com.tonapps.tonkeeperx.R
 import uikit.navigation.Navigation
@@ -28,7 +28,8 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
         }
         swapView.isEnabled = item.swap
         swapView.setOnClickListener {
-            navigation?.add(SwapScreen.newInstance(item.swapUri, item.walletAddress, item.tokenAddress))
+            // navigation?.add(SwapScreen.newInstance(item.swapUri, item.walletAddress, item.tokenAddress))
+            navigation?.add(SwapNativeScreen.newInstance(item.walletAddress, item.tokenAddress))
         }
     }
 }

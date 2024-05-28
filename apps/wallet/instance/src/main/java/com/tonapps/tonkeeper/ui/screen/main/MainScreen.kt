@@ -15,7 +15,7 @@ import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesScreen
 import com.tonapps.tonkeeper.ui.screen.events.EventsScreen
 import com.tonapps.tonkeeper.ui.screen.picker.PickerScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootEvent
-import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
+import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletScreen
 import com.tonapps.uikit.color.constantBlackColor
 import com.tonapps.uikit.color.drawable
@@ -34,9 +34,9 @@ import uikit.navigation.Navigation.Companion.navigation
 import uikit.utils.RecyclerVerticalScrollListener
 import uikit.widget.BottomTabsView
 
-class MainScreen: BaseFragment(R.layout.fragment_main) {
+class MainScreen : BaseFragment(R.layout.fragment_main) {
 
-    abstract class Child(@LayoutRes layoutId: Int): BaseFragment(layoutId) {
+    abstract class Child(@LayoutRes layoutId: Int) : BaseFragment(layoutId) {
 
         val mainViewModel: MainViewModel by lazy {
             requireParentFragment().getViewModel()
@@ -112,9 +112,13 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
             }
         }
         collectFlow(mainViewModel.childBottomScrolled, bottomTabsView::setDivider)
-        collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.OpenTab>().map { mainDeepLinks[it.link] }.filterNotNull(), this::forceSelectTab)
+        collectFlow(
+            rootViewModel.eventFlow.filterIsInstance<RootEvent.OpenTab>()
+                .map { mainDeepLinks[it.link] }.filterNotNull(), this::forceSelectTab
+        )
         collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.Swap>()) {
-            navigation?.add(SwapScreen.newInstance(it.uri, it.address, it.from, it.to))
+            navigation?.add(SwapNativeScreen.newInstance(it.address, it.from, it.to))
+            // navigation?.add(SwapScreen.newInstance(it.uri, it.address, it.from, it.to))
         }
         collectFlow(mainViewModel.browserTabEnabled) { enabled ->
             if (enabled) {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
@@ -16,7 +17,6 @@ import com.tonapps.signer.SimpleState
 import com.tonapps.signer.extensions.toast
 import com.tonapps.signer.password.Password
 import com.tonapps.signer.password.ui.PasswordView
-import com.tonapps.signer.screen.crash.CrashActivity
 import com.tonapps.signer.screen.intro.IntroFragment
 import com.tonapps.signer.screen.main.MainFragment
 import com.tonapps.signer.screen.root.action.RootAction
@@ -32,7 +32,7 @@ import uikit.extensions.primaryFragment
 import uikit.extensions.setPaddingTop
 import uikit.navigation.NavigationActivity
 
-class RootActivity: NavigationActivity() {
+class RootActivity : NavigationActivity() {
 
     private val rootViewModel: RootViewModel by viewModel()
 
@@ -58,7 +58,7 @@ class RootActivity: NavigationActivity() {
         sheetContainer = findViewById(uikit.R.id.sheet_container)
 
         lockView = findViewById(R.id.lock)
-        lockView.setOnClickListener {  }
+        lockView.setOnClickListener { }
 
         lockSignOutButton = findViewById(R.id.lock_sign_out)
         lockSignOutButton.setOnClickListener { signOut() }
@@ -142,7 +142,10 @@ class RootActivity: NavigationActivity() {
     private fun onAction(action: RootAction) {
         when (action) {
             is RootAction.RequestBodySign -> requestSign(action)
-            is RootAction.ResponseSignature -> responseSignature(action.signature)
+            is RootAction.ResponseSignature -> {
+                responseSignature(action.signature)
+            }
+
             is RootAction.ResponseKey -> responseKey(action.publicKey, action.name)
             is RootAction.UpdateApp -> updateDialog()
         }

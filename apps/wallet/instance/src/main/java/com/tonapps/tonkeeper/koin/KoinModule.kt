@@ -35,6 +35,9 @@ import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.passcode.ChangePasscodeViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
+import com.tonapps.tonkeeper.ui.screen.swapnative.confirm.SwapConfirmViewModel
+import com.tonapps.tonkeeper.ui.screen.swapnative.choose.ChooseTokenViewModel
+import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeViewModel
 import com.tonapps.tonkeeper.ui.screen.token.TokenViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.list.WalletAdapter
@@ -67,6 +70,9 @@ val koinModel = module {
     viewModel { RecipientScreenFeature(get()) }
     viewModel { PickerViewModel(get()) }
     viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChooseTokenViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SwapNativeViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { SwapConfirmViewModel(get(), get(), get()) }
     viewModel { CurrencyViewModel(get()) }
     viewModel { SettingsViewModel(get(), get(), get()) }
     viewModel { EditNameViewModel(get()) }

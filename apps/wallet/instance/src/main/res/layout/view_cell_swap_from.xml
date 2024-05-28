@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_cell_swap_send"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/offsetMedium"
+    android:paddingTop="@dimen/offsetMedium"
+    android:paddingBottom="@dimen/offsetLarge">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cell_title_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:singleLine="true"
+            android:text="@string/send"
+            android:layout_marginEnd="@dimen/offsetMedium"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/send_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="@string/max"
+            android:layout_marginStart="@dimen/offsetSmall"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textAccentColor"
+            app:textAllCaps="true" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/assetIconSize"
+        android:layout_marginTop="@dimen/offsetSmall"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/from_asset_item_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_content_tint_24"
+            android:orientation="horizontal"
+            android:padding="@dimen/offsetExtraSmall"
+            android:layout_marginEnd="@dimen/offsetSmall"
+            android:animateLayoutChanges="true">
+
+            <uikit.widget.FrescoView
+                android:id="@+id/send_token_icon"
+                android:layout_width="@dimen/assetSmallIconSize"
+                android:layout_height="@dimen/assetSmallIconSize"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_oval"
+                android:backgroundTint="?attr/backgroundContentTintColor"
+                android:visibility="gone"
+                fresco:roundAsCircle="true"
+                tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/send_token_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/offsetSmall"
+                android:layout_marginVertical="@dimen/offsetExtraSmall"
+                android:singleLine="true"
+                android:text="@string/choose"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/send_amount_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="end|center_vertical"
+            android:hint="0"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.NUM2"
+            android:textColor="?attr/textPrimaryColor"
+            android:textColorHint="?attr/textSecondaryColor" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

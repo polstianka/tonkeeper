@@ -24,6 +24,18 @@ object Coin {
         return result.toDouble()
     }
 
+    fun parseBigInt(
+        v: String,
+        decimals: Int,
+        showShortDecimal : Boolean = true
+    ): BigDecimal {
+        val bigDecimal = safeBigDecimal(v)
+        val divisor = BigDecimal.TEN.pow(decimals)
+        val scale = if(showShortDecimal) 4 else decimals
+        val result = bigDecimal.divide(divisor, scale, RoundingMode.DOWN)
+        return result.stripTrailingZeros()
+    }
+
     /*fun parseFloat(
         value: String,
         decimals: Int = TON_DECIMALS

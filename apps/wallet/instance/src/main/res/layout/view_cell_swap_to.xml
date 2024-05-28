@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_cell_swap_receive"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/offsetLarge">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingBottom="@dimen/offsetMedium">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cell_title_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="@string/receive"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/receive_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/assetIconSize"
+            android:layout_marginTop="@dimen/offsetSmall"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/to_asset_item_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/bg_content_tint_24"
+                android:orientation="horizontal"
+                android:layout_marginEnd="@dimen/offsetSmall"
+                android:padding="@dimen/offsetExtraSmall">
+
+                <uikit.widget.FrescoView
+                    android:id="@+id/receive_token_icon"
+                    android:layout_width="@dimen/assetSmallIconSize"
+                    android:layout_height="@dimen/assetSmallIconSize"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_oval"
+                    android:backgroundTint="?attr/backgroundContentTintColor"
+                    android:visibility="gone"
+                    fresco:roundAsCircle="true"
+                    tools:visibility="visible" />
+
+                <!-- TODO priority change to CHOOSE action -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/receive_token_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/offsetSmall"
+                    android:layout_marginVertical="@dimen/offsetExtraSmall"
+                    android:singleLine="true"
+                    android:text="@string/choose"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.Label1"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+            <!--  todo : max length is needed??? -->
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/receive_amount_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="end|center_vertical"
+                android:hint="0"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.NUM2"
+                android:textColor="?attr/textPrimaryColor"
+                android:textColorHint="?attr/textSecondaryColor" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/swap_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/swap_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorCommonDark" />
+
+        <LinearLayout
+            android:id="@+id/swap_title_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/swap_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:layout_weight="1"
+                android:paddingVertical="@dimen/offsetMedium"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textPrimaryColor" />
+
+            <FrameLayout
+                android:id="@+id/toggle_swap_details"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:paddingVertical="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/smallIconSize"
+                    android:layout_height="@dimen/smallIconSize"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/bg_oval_button_secondary"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_chevron_down_16"
+                    android:tint="?attr/buttonSecondaryForegroundColor" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/swap_detail_sub_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/offsetMedium">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/separatorCommonDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/price_impact"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/price_impact_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_info_circle_14" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/price_impact"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/minimum_received"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/min_received_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_info_circle_14" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/min_received"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/liquidity_provider_fee"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/provider_fee_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_info_circle_14" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/provider_fee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/blockchain_fee"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/blockchain_fee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/route"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/route"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/offsetMedium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:text="@string/provider"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textSecondaryColor" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/ston_fi"
+                    android:textAppearance="@style/TextAppearance.Body2"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -19,6 +19,7 @@ android {
         targetSdk = 34
         versionCode = 43
         versionName = "0.0.43"
+        multiDexEnabled = true
     }
 
     buildFeatures {
@@ -71,6 +72,8 @@ dependencies {
     implementation(project(Dependence.Wallet.Data.browser))
 
     implementation(project(Dependence.UIKit.core))
+
+    implementation(Dependence.AndroidX.multidex)
 
     implementation(Dependence.AndroidX.core)
     implementation(Dependence.AndroidX.shortcuts)

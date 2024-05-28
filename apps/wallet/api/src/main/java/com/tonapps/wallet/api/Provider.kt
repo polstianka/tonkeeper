@@ -5,6 +5,7 @@ import com.tonapps.wallet.api.core.SourceAPI
 import okhttp3.OkHttpClient
 
 internal class Provider(
+    stonfiHost: String,
     mainnetHost: String,
     testnetHost: String,
     okHttpClient: OkHttpClient,
@@ -12,6 +13,9 @@ internal class Provider(
 
     private val main = BaseAPI(mainnetHost, okHttpClient)
     private val test = BaseAPI(testnetHost, okHttpClient)
+    private val stonfi = BaseAPI(stonfiHost, okHttpClient)
+
+    val swap = SourceAPI(stonfi.swap, stonfi.swap)
 
     val accounts = SourceAPI(main.accounts, test.accounts)
 

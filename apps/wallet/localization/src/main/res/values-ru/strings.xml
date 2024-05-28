@@ -290,4 +290,12 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+
+    <string name="choose_token">Выберите токен</string>
+    <string name="swap_settings">Настройки</string>
+    <string name="slippage">проскальзывание</string>
+    <string name="slippage_detail">Сумма, на которую цена может измениться в неблагоприятную сторону, прежде чем сделка вернется в исходное состояние</string>
+    <string name="close">закрывать</string>
+    <string name="select">Выбирать</string>
+    <string name="balance_format">Баланс: %f</string>
 </resources>
