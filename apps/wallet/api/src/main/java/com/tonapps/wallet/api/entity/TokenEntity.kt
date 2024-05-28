@@ -6,13 +6,21 @@ import com.tonapps.wallet.api.R
 import io.tonapi.models.JettonPreview
 import io.tonapi.models.JettonVerificationType
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import org.ton.block.MsgAddressInt
 
 @Parcelize
+@Serializable
 data class TokenEntity(
     val address: String,
     val name: String,
     val symbol: String,
+    @Serializable(MyUriSerializer::class)
     val imageUri: Uri,
     val decimals: Int,
     val verification: Verification
@@ -61,6 +69,23 @@ data class TokenEntity(
         }
     }
 }
+
+
+private class MyUriSerializer : KSerializer<Uri> {
+    override val descriptor: SerialDescriptor
+        get() = serialDescriptor<Uri>()
+
+    override fun deserialize(decoder: Decoder): Uri {
+        val string = decoder.decodeString()
+        return Uri.parse(string)
+    }
+
+    override fun serialize(encoder: Encoder, value: Uri) {
+        encoder.encodeString(value.toString())
+    }
+
+}
+
 fun String.isAddressEqual(another: String): Boolean {
     return MsgAddressInt.parse(this).isAddressEqual(another)
 }

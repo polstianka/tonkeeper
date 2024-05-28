@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.fragment.swap.domain
 
 import android.net.Uri
 import com.tonapps.blockchain.Coin
+import com.tonapps.tonkeeper.fragment.swap.data.DexAssetRatesLocalStorage
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetBalance
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetRate
 import com.tonapps.tonkeeper.fragment.swap.domain.model.DexAssetType
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -37,7 +39,8 @@ class DexAssetsRepository(
     private val api: StonfiAPI,
     private val ratesRepository: RatesRepository,
     private val tokenRepository: TokenRepository,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val localStorage: DexAssetRatesLocalStorage
 ) {
 
     private val jettonBalancesLock = ReentrantReadWriteLock()
@@ -52,6 +55,16 @@ class DexAssetsRepository(
     private val totalBalancesLock = ReentrantReadWriteLock()
     private fun key(walletAddress: String, testnet: Boolean, currency: WalletCurrency): String {
         return "$walletAddress;$testnet;$currency"
+    }
+
+    init {
+        coroutineScope.launch {
+            entitiesFlow.value = getEntitiesFromLocalStorage()
+        }
+    }
+
+    private suspend fun getEntitiesFromLocalStorage(): List<DexAssetRate> {
+        return localStorage.getRates()
     }
 
     fun getTotalBalancesFlow(
@@ -146,10 +159,10 @@ class DexAssetsRepository(
         currency: WalletCurrency,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
+        getTotalBalancesFlow(walletAddress, testnet, currency)
         getJettonBalancesMutableFlow(walletAddress, testnet).apply {
             value = tokenRepository.load(WalletCurrency.DEFAULT, walletAddress, testnet)
         }
-        getTotalBalancesFlow(walletAddress, testnet, currency)
     }
 
     private fun BalanceEntity.toDomain(
@@ -179,11 +192,13 @@ class DexAssetsRepository(
     suspend fun loadAssets() = withContext(Dispatchers.IO) {
         _isLoading.value = entitiesFlow.value.isEmpty()
         val response = api.dex.getAssetList()
-        entitiesFlow.value = response.assetList.asSequence()
+        val entities = response.assetList.asSequence()
             .filter { it.isValid() }
             .map { it.toUsdRate() }
             .sortedWith(dexAssetRateComparator)
             .toList()
+        entitiesFlow.value = entities
+        localStorage.setRates(entities)
 
         _isLoading.value = false
     }

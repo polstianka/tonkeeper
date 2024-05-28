@@ -2,8 +2,10 @@ package com.tonapps.wallet.data.core
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class WalletCurrency(
     val code: String,
     val fiat: Boolean

@@ -4,6 +4,12 @@ import android.os.Parcelable
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import java.math.BigDecimal
 
 @Parcelize
@@ -21,9 +27,11 @@ data class DexAssetBalance(
 }
 
 @Parcelize
+@Serializable
 data class DexAssetRate(
     val tokenEntity: TokenEntity,
     val currency: WalletCurrency,
+    @Serializable(MyBigDecimalSerializer::class)
     val rate: BigDecimal
 ) : Parcelable
 
@@ -53,4 +61,18 @@ fun DexAssetType.recommendedForwardTon(receiveType: DexAssetType): BigDecimal {
 
 fun DexAssetBalance.getRecommendedGasValues(receiveAsset: DexAssetBalance): BigDecimal {
     return type.recommendedForwardTon(receiveAsset.type) + BigDecimal("0.06")
+}
+
+private class MyBigDecimalSerializer : KSerializer<BigDecimal> {
+    override val descriptor: SerialDescriptor
+        get() = serialDescriptor<BigDecimal>()
+
+    override fun deserialize(decoder: Decoder): BigDecimal {
+        val string = decoder.decodeString()
+        return BigDecimal(string)
+    }
+
+    override fun serialize(encoder: Encoder, value: BigDecimal) {
+        encoder.encodeString(value.toPlainString())
+    }
 }
