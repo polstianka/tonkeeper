@@ -96,9 +96,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginStart="@dimen/offsetExtraSmall"
-                                android:layout_marginEnd="@dimen/cornerSmall"
-                                android:layout_marginVertical="@dimen/offsetExtraSmall"
                                 android:singleLine="true"
                                 android:text="@string/ton"
                                 android:textAppearance="@style/TextAppearance.Label1"
@@ -164,7 +161,7 @@
                                 android:layout_marginVertical="@dimen/cornerExtraExtraSmall"
                                 android:layout_marginStart="@dimen/offsetExtraSmall"
                                 android:scaleType="centerInside"
-                                android:visibility="gone"
+                                android:visibility="visible"
                                 android:src="@drawable/ic_usd_28" />
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -172,8 +169,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginHorizontal="@dimen/cornerSmall"
-                                android:layout_marginVertical="@dimen/offsetExtraSmall"
                                 android:singleLine="true"
                                 android:text="CHOOSE"
                                 android:textAppearance="@style/TextAppearance.Label1"
@@ -196,6 +191,7 @@
                 </uikit.widget.ColumnLayout>
             </uikit.widget.ColumnLayout>
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/swap_token_button"
                 android:layout_width="@dimen/itemSwapSize"
                 android:layout_height="@dimen/itemSwapSize"
                 android:layout_marginEnd="@dimen/itemHeight"

@@ -75,6 +75,9 @@ class SlippageScreen(val requestKey: String): BaseFragment(R.layout.fragment_sli
 
         switchView.doCheckedChanged = {
             inputView.setDecimalFilter(if(it) 100 else 50)
+            if(!it && inputView.text.toFloat() > 50){
+                inputView.text = "50.0"
+            }
         }
 
         saveButton.setOnClickListener{

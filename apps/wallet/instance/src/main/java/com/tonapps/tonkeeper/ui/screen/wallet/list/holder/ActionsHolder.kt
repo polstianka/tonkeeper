@@ -9,7 +9,6 @@ import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
-import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
 
@@ -33,7 +32,7 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
             navigation?.add(QRScreen.newInstance(item.address, item.token, item.walletType))
         }
         swapView.setOnClickListener {
-            navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, TokenEntity.TON.address))
+            navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, "TON"))
         }
 
         swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap

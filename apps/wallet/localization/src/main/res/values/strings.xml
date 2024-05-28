@@ -277,4 +277,6 @@
     <string name="three_percent" translatable="false">3%</string>
     <string name="five_percent" translatable="false">5%</string>
     <string name="slippage_save">Save</string>
+
+    <string name="choose">CHOOSE</string>
 </resources>

@@ -270,4 +270,6 @@
     <string name="expert_mode" translatable="false">Режим эксперта</string>
     <string name="expert_mode_description" translatable="false">Позволяет совершать сделки с высоким ценовым воздействием.\nИспользуйте на свой страх и риск.</string>
     <string name="slippage_save">Сохранить</string>
+
+    <string name="choose">Выбрать</string>
 </resources>

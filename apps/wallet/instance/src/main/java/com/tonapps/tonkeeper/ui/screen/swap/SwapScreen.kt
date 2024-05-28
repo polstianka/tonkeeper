@@ -1,17 +1,18 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.lifecycle.lifecycleScope
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.slippage.SlippageScreen
-import com.tonapps.tonkeeperx.BuildConfig
 import com.tonapps.tonkeeperx.R
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
@@ -25,21 +26,25 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
     private val args: SwapArgs by lazy { SwapArgs(requireArguments()) }
 
     private val rootViewModel: RootViewModel by activityViewModel()
-
+    private lateinit var viewModel: SwapViewModel
     private lateinit var headerView: HeaderView
-    private lateinit var sendView: View
-    private lateinit var sendLayout: LinearLayoutCompat
     private lateinit var sendTitle: AppCompatTextView
     private lateinit var sendImage: AppCompatImageView
+    private lateinit var receiveTitle: AppCompatTextView
+    private lateinit var receiveImage: AppCompatImageView
+    private lateinit var swapTokenButton: AppCompatImageView
     private var navigation: Navigation? = null
 
     private var slippage = 0.1f
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sendLayout = view.findViewById(R.id.button_layout)
-        sendTitle = sendLayout.findViewById(R.id.title)
-        sendImage = sendLayout.findViewById(R.id.icon)
+        viewModel = SwapViewModel(SwapViewState(args.fromToken, args.toToken,null, null, "0", "0", "Choose Token"))
+        sendTitle = view.findViewById(R.id.title)
+        sendImage = view.findViewById(R.id.icon)
+        receiveTitle = view.findViewById(R.id.choose_title)
+        receiveImage = view.findViewById(R.id.choose_icon)
+        swapTokenButton = view.findViewById(R.id.swap_token_button)
 
         headerView = view.findViewById(R.id.header)
         navigation = Navigation.from(view.context)
@@ -48,7 +53,6 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
             navigation?.setFragmentResultListener(requestKey) { bundle ->
                if(bundle.containsKey("reply")){
                    slippage = bundle.getFloat("reply")
-                   Log.d("slippage", slippage.toString())
                }
             }
             navigation?.add(SlippageScreen.newInstance(requestKey))
@@ -56,17 +60,28 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         headerView.doOnActionClick = { this.finish() }
         headerView.clipToPadding = false
         headerView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetExtraExtraSmall))
+        lifecycleScope.launch {
+            viewModel.stateFlow.collect{
+                updateTokenView(
+                    it.fromTokenTitle,
+                    it.toTokenTitle,
+                    )
+            }
+        }
+        swapTokenButton.setOnClickListener {
+            viewModel.swapTokens()
+        }
     }
 
-    private fun getUri(): Uri {
-        val builder = args.uri.buildUpon()
-        builder.appendQueryParameter("clientVersion", BuildConfig.VERSION_NAME)
-        builder.appendQueryParameter("ft", args.fromToken)
-        args.toToken?.let {
-            builder.appendQueryParameter("tt", it)
-        }
-        return builder.build()
-    }
+//    private fun getUri(): Uri {
+//        val builder = args.uri.buildUpon()
+//        builder.appendQueryParameter("clientVersion", BuildConfig.VERSION_NAME)
+//        builder.appendQueryParameter("ft", args.fromToken)
+//        args.toToken?.let {
+//            builder.appendQueryParameter("tt", it)
+//        }
+//        return builder.build()
+//    }
 
     private suspend fun sing(
         request: SignRequestEntity
@@ -74,8 +89,49 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         return rootViewModel.requestSign(requireContext(), request)
     }
 
-    companion object {
+    private fun updateTokenView(fromToken: String?, toToken: String?){
+        sendTitle.text = fromToken ?: getString(com.tonapps.wallet.localization.R.string.choose)
+        if(fromToken == null){
+            sendImage.setImageDrawable(null)
+            sendImage.visibility = View.GONE
+            setMargins(sendTitle, 12, 4, 12, 4)
+        }
+        else{
+            sendImage.visibility = View.VISIBLE
+            sendImage.setImageDrawable(getDrawable(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg))
+            setMargins(sendTitle, 4, 4, 12, 4)
+        }
+        receiveTitle.text = toToken ?: getString(com.tonapps.wallet.localization.R.string.choose)
+        if(toToken == null){
+            receiveImage.setImageDrawable(null)
+            receiveImage.visibility = View.GONE
+            setMargins(receiveTitle, 12, 4, 12, 4)
+        }
+        else{
+            receiveImage.visibility = View.VISIBLE
+            receiveImage.setImageDrawable(getDrawable(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg))
+            setMargins(receiveTitle, 4, 4, 12, 4)
+        }
+    }
 
+    private fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+    private fun setMargins(textView: AppCompatTextView, left: Int, top: Int, right: Int, bottom: Int) {
+        val leftPx = left.dpToPx()
+        val topPx = top.dpToPx()
+        val rightPx = right.dpToPx()
+        val bottomPx = bottom.dpToPx()
+
+        val layoutParams = textView.layoutParams
+        if (layoutParams is ViewGroup.MarginLayoutParams) {
+            layoutParams.setMargins(leftPx, topPx, rightPx, bottomPx)
+            textView.layoutParams = layoutParams
+        } else {
+            throw IllegalArgumentException("Layout parameters are not MarginLayoutParams")
+        }
+    }
+
+    companion object {
         fun newInstance(
             uri: Uri,
             address: String,
