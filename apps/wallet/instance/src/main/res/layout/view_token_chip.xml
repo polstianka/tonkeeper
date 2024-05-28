@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@drawable/bg_button_tertiary"
+    tools:parentTag="uikit.widget.RowLayout">
+
+    <uikit.widget.FrescoView
+        android:id="@+id/action_cell_icon"
+        android:layout_width="@dimen/iconSize"
+        android:layout_height="@dimen/iconSize"
+        android:layout_gravity="center"
+        app:roundAsCircle="true"
+        tools:src="@drawable/ic_ton_with_bg" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/action_cell_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="6dp"
+        android:ellipsize="end"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        tools:text="TON" />
+
+</merge>

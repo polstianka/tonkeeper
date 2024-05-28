@@ -1,7 +1,7 @@
 package com.tonapps.blockchain.ton.tlb
 
 import org.ton.block.Coins
-import org.ton.block.MsgAddressInt
+import org.ton.block.MsgAddress
 import org.ton.cell.Cell
 import org.ton.cell.CellBuilder
 import org.ton.cell.CellSlice
@@ -16,21 +16,24 @@ import org.ton.tlb.storeTlb
 
 data class JettonTransfer(
     val queryId: Long,
-    val coins: Coins,
-    val toAddress: MsgAddressInt,
-    val responseAddress: MsgAddressInt,
-    val forwardAmount: Coins,
-    val comment: String?
+    val amount: Coins,
+    val destination: MsgAddress,
+    val responseDestination: MsgAddress?,
+    val customPayload: Cell?,
+    val forwardTonAmount: Coins,
+    val forwardPayload: Cell?,
 ) : TlbObject {
 
-    override fun print(printer: TlbPrettyPrinter): TlbPrettyPrinter = printer.type("JettonTransfer") {
-        field("queryId", queryId)
-        field("coins", coins)
-        field("toAddress", toAddress)
-        field("responseAddress", responseAddress)
-        field("forwardAmount", forwardAmount)
-        field("comment", comment)
-    }
+    override fun print(printer: TlbPrettyPrinter): TlbPrettyPrinter =
+        printer.type("JettonTransfer") {
+            field("queryId", queryId)
+            field("amount", amount)
+            field("destination", destination)
+            field("responseDestination", responseDestination)
+            field("customPayload", customPayload)
+            field("forwardTonAmount", forwardTonAmount)
+            field("forwardPayload", forwardPayload)
+        }
 
     companion object : TlbConstructorProvider<JettonTransfer> by JettonTransferTlbConstructor {
 
@@ -44,20 +47,20 @@ private object JettonTransferTlbConstructor : TlbConstructor<JettonTransfer>(
 ) {
 
     override fun storeTlb(
-        cellBuilder: CellBuilder, value: JettonTransfer
+        cellBuilder: CellBuilder, value: JettonTransfer,
     ) = cellBuilder {
         storeUInt(0xf8a7ea5, 32)
         storeUInt(value.queryId, 64)
-        storeTlb(Coins, value.coins)
-        storeTlb(MsgAddressInt, value.toAddress)
-        storeTlb(MsgAddressInt, value.responseAddress)
+        storeTlb(Coins, value.amount)
+        storeTlb(MsgAddress, value.destination)
+        value.responseDestination?.let { storeTlb(MsgAddress, value.responseDestination) }
         storeBit(false)
-        storeTlb(Coins, value.forwardAmount)
-        if (value.comment.isNullOrEmpty()) {
-            storeBit(false)
-        } else {
+        storeTlb(Coins, value.forwardTonAmount)
+        if (value.forwardPayload != null) {
             storeBit(true)
-            storeTlb(StringTlbConstructor, value.comment)
+            storeRef(value.forwardPayload)
+        } else {
+            storeBit(false)
         }
     }
 
@@ -66,12 +69,20 @@ private object JettonTransferTlbConstructor : TlbConstructor<JettonTransfer>(
     ): JettonTransfer = cellSlice {
         loadUInt32()
         val queryId = loadUInt64().toLong()
-        val coins = loadTlb(Coins)
-        val toAddress = loadTlb(MsgAddressInt)
-        val responseAddress = loadTlb(MsgAddressInt)
+        val amount = loadTlb(Coins)
+        val destination = loadTlb(MsgAddress)
+        val responseDestination = loadTlb(MsgAddress)
         loadBit()
-        val forwardAmount = loadTlb(Coins)
-        val comment = if (loadBit()) loadTlb(StringTlbConstructor) else null
-        JettonTransfer(queryId, coins, toAddress, responseAddress, forwardAmount, comment)
+        val forwardTonAmount = loadTlb(Coins)
+        val forwardPayload = loadRef()
+        JettonTransfer(
+            queryId,
+            amount,
+            destination,
+            responseDestination,
+            null,
+            forwardTonAmount,
+            forwardPayload
+        )
     }
 }

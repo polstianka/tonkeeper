@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@drawable/bg_content"
+    tools:layout_height="wrap_content"
+    tools:padding="16dp"
+    tools:parentTag="uikit.widget.ColumnLayout">
+
+    <uikit.widget.RowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/action_cell_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Send" />
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/pre_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:text="@string/current_balance"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor"
+                app:layout_constraintEnd_toStartOf="@+id/action_cell_balance_action"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/action_cell_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor"
+                app:layout_constraintEnd_toStartOf="@+id/action_cell_balance_action"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="99,000.01 TON" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/action_cell_balance_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:text="@string/max_amount"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.Label2"
+                android:textColor="?attr/textAccentColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </uikit.widget.RowLayout>
+
+    </uikit.widget.RowLayout>
+
+    <uikit.widget.RowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp">
+
+        <com.tonapps.tonkeeper.fragment.swap.view.TokenChipView
+            android:id="@+id/token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:icon="@drawable/ic_ton_with_bg"
+            tools:title="TON" />
+
+        <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@null"
+            android:digits="0123456789.,"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:gravity="end"
+            android:hint="0"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.NUM2"
+            android:textColor="?attr/textPrimaryColor"
+            android:textCursorDrawable="@drawable/cursor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </uikit.widget.RowLayout>
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        tools:listitem="@layout/view_cell_swap_details" />
+
+</merge>

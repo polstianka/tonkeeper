@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:nestedScrollingEnabled="true"
+    android:orientation="vertical">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="@string/choose_token"
+        app:ignoreSystemOffset="true" />
+
+    <uikit.widget.SearchInput
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:hint="@string/search" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/suggestions_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:singleLine="true"
+        android:text="@string/suggested"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:clipToPadding="false" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/other_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="12dp"
+        android:singleLine="true"
+        android:text="@string/other"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:paddingTop="12dp"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        tools:listitem="@layout/view_cell_token" />
+
+    <Button
+        android:id="@+id/close"
+        style="@style/Widget.App.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:text="@string/close"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/buttonSecondaryForegroundColor" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,11 +2,9 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -29,6 +27,8 @@ import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.MessageConsequences
 import io.tonapi.models.NftItem
 import io.tonapi.models.SendBlockchainMessageRequest
+import io.tonapi.models.StonfiJettonInfo
+import io.tonapi.models.StonfiSwapResultResponse
 import io.tonapi.models.TokenRates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +42,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
+import org.ton.block.AddrStd
+import org.ton.block.MsgAddress
 import org.ton.cell.Cell
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -76,6 +78,10 @@ class API(
     fun blockchain(testnet: Boolean) = provider.blockchain.get(testnet)
 
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
+
+    fun jettons(testnet: Boolean) = provider.jettons.get(testnet)
+
+    fun stonfi(testnet: Boolean) = provider.stonfi.get(testnet)
 
     fun rates() = provider.rates.get(false)
 
@@ -374,6 +380,61 @@ class API(
     fun getTransactionEvents(accountId: String, testnet: Boolean, eventId: String): AccountEvent? {
         return try {
             accounts(testnet).getAccountEvent(accountId, eventId)
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
+    fun getJettons(loadCommunity: Boolean = false, testnet: Boolean): List<StonfiJettonInfo> {
+        return try {
+            stonfi(testnet = testnet).getJettons(loadCommunity = loadCommunity).result.assets
+        } catch (e: Throwable) {
+            emptyList()
+        }
+    }
+
+    fun simulateSwap(askAddress: kotlin.String, offerAddress: kotlin.String, offerUnits: kotlin.String, referralAddress: kotlin.String, slippageTolerance: kotlin.String, testnet: Boolean): StonfiSwapResultResponse? {
+        return try {
+            stonfi(testnet = testnet).simulateSwap(
+                askAddress = askAddress,
+                offerAddress = offerAddress,
+                offerUnits = offerUnits,
+                referralAddress = referralAddress,
+                slippageTolerance = slippageTolerance
+            ).result
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
+    fun simulateReversedSwap(askAddress: kotlin.String, offerAddress: kotlin.String, askUnits: kotlin.String, referralAddress: kotlin.String, slippageTolerance: kotlin.String, testnet: Boolean): StonfiSwapResultResponse? {
+        return try {
+            stonfi(testnet = testnet).simulateReversedSwap(
+                askAddress = askAddress,
+                offerAddress = offerAddress,
+                askUnits = askUnits,
+                referralAddress = referralAddress,
+                slippageTolerance = slippageTolerance
+            ).result
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
+    fun getWalletAddress(jettonMaster: String, owner: String, testnet: Boolean): MsgAddress? {
+        return try {
+            val response = blockchain(testnet = testnet).execGetMethodForBlockchainAccount(
+                accountId = jettonMaster,
+                methodName = "get_wallet_address",
+                args = listOf(owner)
+            )
+            if (response.success) {
+                val map = response.decoded as Map<*, *>
+                val addressString = map["jetton_wallet_address"] as String
+                AddrStd(addressString)
+            } else {
+                null
+            }
         } catch (e: Throwable) {
             null
         }

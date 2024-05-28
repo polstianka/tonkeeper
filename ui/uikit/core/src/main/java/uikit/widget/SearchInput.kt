@@ -2,6 +2,7 @@ package uikit.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
@@ -47,7 +48,12 @@ class SearchInput @JvmOverloads constructor(
 
         context.useAttributes(attrs, R.styleable.SearchInput) {
             fieldView.hint = it.getString(R.styleable.SearchInput_android_hint)
-            actionView.text = it.getString(R.styleable.SearchInput_android_button)
+            val buttonText = it.getString(R.styleable.SearchInput_android_button)
+            if (buttonText.isNullOrEmpty()) {
+                actionView.visibility = View.GONE
+            } else {
+                actionView.text = buttonText
+            }
         }
     }
 

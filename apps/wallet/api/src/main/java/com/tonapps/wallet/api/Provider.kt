@@ -40,4 +40,6 @@ internal class Provider(
     val traces = SourceAPI(main.traces, test.traces)
 
     val wallet = SourceAPI(main.wallet, test.wallet)
+
+    val stonfi = SourceAPI(main.stonfi, test.stonfi)
 }
