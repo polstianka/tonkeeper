@@ -4,6 +4,7 @@ import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.api.account.AccountRepository
 import com.tonapps.tonkeeper.api.jetton.JettonRepository
+import com.tonapps.tonkeeper.core.fiat.Fiat
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.fragment.chart.ChartScreenFeature
 import com.tonapps.tonkeeper.fragment.jetton.JettonScreenFeature
@@ -20,6 +21,9 @@ import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.explore.BrowserExploreViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.main.BrowserMainViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.search.BrowserSearchViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatAmountViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatConfirmViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatOperatorViewModel
 import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesViewModel
 import com.tonapps.tonkeeper.ui.screen.events.EventsViewModel
 import com.tonapps.tonkeeper.ui.screen.init.InitViewModel
@@ -36,7 +40,7 @@ import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakedJettonViewModel
-import com.tonapps.tonkeeper.ui.screen.stake.amount.StakeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.amount.StakeAmountViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.confirm.StakeConfirmationViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.details.PoolDetailsViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsMainViewModel
@@ -70,6 +74,7 @@ val koinModel = module {
     single { HistoryHelper(get(), get()) }
     single { ResourceManager(get()) }
     single { JettonRepository() }
+    single { Fiat(get()) }
 
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
@@ -123,8 +128,8 @@ val koinModel = module {
     viewModel { BrowserMainViewModel(get()) }
     viewModel { SwapViewModel(get(), get()) }
     viewModel { WalletAssetsPickerViewModel(get(), get()) }
-    viewModel { SwapSettingsViewModel(get()) }
-    viewModel { StakeViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { SwapSettingsViewModel(get(), get()) }
+    viewModel { StakeAmountViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StakeOptionsViewModel(get()) }
     viewModel { StakePoolsViewModel(get()) }
     viewModel { PoolDetailsViewModel(get()) }
@@ -145,4 +150,7 @@ val koinModel = module {
         )
     }
     viewModel { UnstakeViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { FiatAmountViewModel(get(), get()) }
+    viewModel { FiatOperatorViewModel(get(), get()) }
+    viewModel { FiatConfirmViewModel(get(), get()) }
 }

@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.transition.TransitionManager
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatAmountScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeperx.R
+import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -45,7 +46,7 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
         swapView.doOnClick = {
             when (it) {
                 SwapUiModel.BottomButtonState.Continue -> swapViewModel.onContinueClick()
-                SwapUiModel.BottomButtonState.Insufficient -> FiatDialog.open(requireContext())
+                SwapUiModel.BottomButtonState.Insufficient -> navigation?.add(FiatAmountScreen.newInstance())
                 SwapUiModel.BottomButtonState.Confirm -> swapViewModel.onConfirmClick()
                 else -> {}
             }
@@ -74,7 +75,14 @@ class SwapScreen2 : BaseFragment(R.layout.fragment_swap_2), BaseFragment.BottomS
 
         collectFlow(swapViewModel.signRequestEntity) {
             it?.let {
-                rootViewModel.requestSign(requireContext(), it)
+                try {
+                    rootViewModel.requestSign(requireContext(), it)
+                    delay(300)
+                    finish()
+                    navigation?.openURL("tonkeeper://activity")
+                } catch (e: Exception) {
+
+                }
             }
         }
     }

@@ -3,11 +3,11 @@ package uikit.widget
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.uikit.color.resolveColor
 import com.tonapps.uikit.list.ListCell
 import uikit.R
@@ -24,7 +24,7 @@ class ActionCellRadioView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : RowLayout(context, attrs, defStyle) {
 
-    private val iconView: AppCompatImageView
+    private val iconView: SimpleDraweeView
     private val titleView: AppCompatTextView
     private val subtitleView: AppCompatTextView
     private val titleBadge: AppCompatTextView
@@ -59,6 +59,12 @@ class ActionCellRadioView @JvmOverloads constructor(
                 iconView.setImageResource(value)
             }
         }
+
+    var iconVisible: Boolean
+        set(value) {
+            iconView.isVisible = value
+        }
+        get() = iconView.isVisible
 
     var iconTint: Int = 0
         set(value) {

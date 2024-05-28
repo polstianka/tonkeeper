@@ -68,6 +68,7 @@ class StakeMainScreen : BaseFragment(R.layout.fragment_stake_pager), BaseFragmen
                 )
 
                 Action.Options -> navigation?.add(StakeOptionsMainScreen.newInstance())
+                Action.Finish -> finish()
             }
         }
     }

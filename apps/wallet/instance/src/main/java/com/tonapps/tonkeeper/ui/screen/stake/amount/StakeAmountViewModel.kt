@@ -37,7 +37,7 @@ import ton.Stake
 import ton.TransactionHelper
 import java.math.BigDecimal
 
-class StakeViewModel(
+class StakeAmountViewModel(
     private val repository: StakeRepository,
     private val settingsRepository: SettingsRepository,
     private val walletManager: WalletManager,
@@ -237,7 +237,7 @@ class StakeViewModel(
                 rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency),
                 insufficientBalance = insufficientBalance,
                 remaining = remaining,
-                canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
+                canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0 && minWarning.isEmpty(),
                 maxActive = currentBalance == newValue,
                 available = CurrencyFormatter.format(currentTokenCode, currentBalance),
                 amount = newValue,

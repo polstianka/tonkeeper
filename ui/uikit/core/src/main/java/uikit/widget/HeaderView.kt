@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import uikit.R
 import uikit.drawable.BarDrawable
 import uikit.drawable.HeaderDrawable
@@ -153,12 +154,14 @@ open class HeaderView @JvmOverloads constructor(
     fun setUpdating(@StringRes textResId: Int) {
         setSubtitle(textResId)
         loaderView.startAnimation()
+        loaderView.isVisible = true
     }
 
     fun setDefault() {
         withAnimation(duration = ANIMATION_DURATION) {
             subtitleContainerView.visibility = View.GONE
             loaderView.stopAnimation()
+            loaderView.isVisible = false
         }
     }
 

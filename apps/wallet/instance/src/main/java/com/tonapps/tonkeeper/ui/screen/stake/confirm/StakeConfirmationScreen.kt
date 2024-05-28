@@ -13,12 +13,14 @@ import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.stake.StakeMainViewModel
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.localization.Localization
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.contract.wallet.WalletTransfer
 import uikit.extensions.circle
 import uikit.extensions.collectFlow
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.SimpleRecyclerView
 import uikit.widget.SlideActionView
 
@@ -63,7 +65,14 @@ class StakeConfirmationScreen : Fragment(R.layout.fragment_stake_confirmation) {
                 slideActionView.doOnDone = {
                     lifecycleScope.launch {
                         val sign = confirmationViewModel.getSignRequestEntity(args.walletTransfer)
-                        rootViewModel.requestSign(requireContext(), sign)
+                        try {
+                            rootViewModel.requestSign(requireContext(), sign)
+                            delay(1000)
+                            stakeMainViewModel.finish()
+                            navigation?.openURL("tonkeeper://activity")
+                        } catch (e: Exception) {
+
+                        }
                     }
                 }
             }

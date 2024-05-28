@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.core.history.list.HistoryAdapter
 import com.tonapps.tonkeeper.core.history.list.HistoryItemDecoration
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatAmountScreen
 import com.tonapps.tonkeeper.ui.screen.main.MainScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeperx.R
@@ -55,7 +55,7 @@ class EventsScreen: MainScreen.Child(R.layout.fragment_main_events_list) {
         emptyView = view.findViewById(R.id.empty)
         emptyView.doOnButtonClick = { first ->
             if (first) {
-                FiatDialog.open(requireContext())
+                navigation?.add(FiatAmountScreen.newInstance())
             } else {
                 openQRCode()
             }

@@ -4,20 +4,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateMargins
 import androidx.recyclerview.widget.RecyclerView
-import com.tonapps.tonkeeperx.R
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.fragment.chart.list.ChartItem
+import com.tonapps.tonkeeper.ui.screen.buysell.FiatAmountScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
+import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
 
 class ChartActionsHolder(
     parent: ViewGroup
-): ChartHolder<ChartItem.Actions>(parent, R.layout.view_wallet_actions) {
+) : ChartHolder<ChartItem.Actions>(parent, R.layout.view_wallet_actions) {
 
     private val navigation = Navigation.from(context)
     private val sendView = findViewById<View>(R.id.send)
@@ -28,9 +28,12 @@ class ChartActionsHolder(
 
     init {
         val offsetVertical = context.resources.getDimensionPixelSize(uikit.R.dimen.offsetMedium)
-        (itemView.layoutParams as RecyclerView.LayoutParams).updateMargins(top = offsetVertical, bottom = offsetVertical)
+        (itemView.layoutParams as RecyclerView.LayoutParams).updateMargins(
+            top = offsetVertical,
+            bottom = offsetVertical
+        )
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
+        buyOrSellView.setOnClickListener { navigation?.add(FiatAmountScreen.newInstance()) }
         scanView.setOnClickListener { navigation?.openCamera() }
     }
 

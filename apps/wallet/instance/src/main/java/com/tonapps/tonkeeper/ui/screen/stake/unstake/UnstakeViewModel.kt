@@ -36,6 +36,8 @@ import org.ton.block.MsgAddressInt
 import ton.Stake
 import ton.TransactionHelper
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.Instant
 import java.util.Date
 import java.util.Locale
 
@@ -50,7 +52,7 @@ class UnstakeViewModel(
     private val resourceManager: ResourceManager,
 ) : ViewModel() {
 
-    private val sdf = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+    private val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
     private val currentToken: AccountTokenEntity?
         get() = uiState.value.selectedToken
@@ -102,8 +104,8 @@ class UnstakeViewModel(
     private fun runTimer(end: Long) {
         flow<Unit> {
             while (true) {
-                val current = System.currentTimeMillis()
-                val date = Date(end - current)
+                val d: Duration = Duration.between(Instant.now(), Date(end).toInstant())
+                val date = Date(d.toMillis().coerceAtMost(0L))
                 _uiState.update { it.copy(timerValue = sdf.format(date)) }
                 delay(1000)
             }
@@ -137,31 +139,8 @@ class UnstakeViewModel(
         }
     }
 
-    private fun updateValue(newValue: Float) {
-        val currentTokenAddress = _uiState.value.selectedTokenAddress
-        val currency = _uiState.value.currency
-        val rates = ratesRepository.getRates(currency, currentTokenAddress)
-        val balanceInCurrency = rates.convert(currentTokenAddress, newValue)
-
-        val insufficientBalance = newValue > currentBalance
-        val remaining = if (newValue > 0) {
-            val value = currentBalance - newValue
-            CurrencyFormatter.format(currentTokenCode, value)
-        } else {
-            ""
-        }
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency),
-                insufficientBalance = insufficientBalance,
-                remaining = remaining,
-                canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
-                maxActive = currentBalance == newValue,
-                available = CurrencyFormatter.format(currentTokenCode, currentBalance),
-                amount = newValue
-            )
-        }
+    fun resetArgs() {
+        _uiState.update { it.copy(confirmScreenArgs = null) }
     }
 
     fun onContinue() {
@@ -234,6 +213,33 @@ class UnstakeViewModel(
                     )
                 )
             }
+        }
+    }
+
+    private fun updateValue(newValue: Float) {
+        val currentTokenAddress = _uiState.value.selectedTokenAddress
+        val currency = _uiState.value.currency
+        val rates = ratesRepository.getRates(currency, currentTokenAddress)
+        val balanceInCurrency = rates.convert(currentTokenAddress, newValue)
+
+        val insufficientBalance = newValue > currentBalance
+        val remaining = if (newValue > 0) {
+            val value = currentBalance - newValue
+            CurrencyFormatter.format(currentTokenCode, value)
+        } else {
+            ""
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency),
+                insufficientBalance = insufficientBalance,
+                remaining = remaining,
+                canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
+                maxActive = currentBalance == newValue,
+                available = CurrencyFormatter.format(currentTokenCode, currentBalance),
+                amount = newValue
+            )
         }
     }
 }

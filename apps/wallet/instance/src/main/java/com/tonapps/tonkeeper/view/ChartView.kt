@@ -13,6 +13,7 @@ import android.view.View
 import androidx.core.view.doOnLayout
 import com.tonapps.tonkeeper.api.chart.ChartEntity
 import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.accentGreenColor
 import uikit.extensions.dp
 import uikit.extensions.withAlpha
 
@@ -28,6 +29,7 @@ class ChartView @JvmOverloads constructor(
     private var labels = listOf<String>()
     private var minMaxPrice = listOf<String>()
     private var isStaking = false
+    private var accentColor = context.accentBlueColor
 
     private val labelCoordinates = mutableListOf<Pair<Float, Float>>()
     private val priceCoordinates = mutableListOf<Pair<Float, Float>>()
@@ -47,30 +49,26 @@ class ChartView @JvmOverloads constructor(
         this.labels = labels
         this.isStaking = isStaking
         this.minMaxPrice = minMaxPrice
+        accentColor = if (isStaking) context.accentGreenColor else context.accentBlueColor
         doOnLayout {
             buildPath()
             invalidate()
         }
     }
 
-    private val accentColor = context.accentBlueColor
-
     private val path = Path()
     private var verticalPaths = emptyList<Path>()
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         strokeWidth = 2f.dp
         style = Paint.Style.STROKE
     }
 
     private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         style = Paint.Style.FILL
     }
 
     private val verticalLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         strokeWidth = 1f.dp
         style = Paint.Style.STROKE
         alpha = 137
@@ -88,6 +86,11 @@ class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        linePaint.color = accentColor
+        gradientPaint.color = accentColor
+        verticalLinePaint.color = accentColor
+
         val lineWidthPart = linePaint.strokeWidth / 2f
         canvas.translate(-lineWidthPart, lineWidthPart)
         canvas.drawPath(path, linePaint)

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fiat_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_content_20"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="6dp"
+        android:tint="?attr/buttonSecondaryForegroundColor"
+        tools:text="FR" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@null"
+        app:tabBackground="@null"
+        app:tabGravity="center"
+        app:tabIndicatorColor="?attr/accentBlueColor"
+        app:tabMode="scrollable"
+        app:tabTextAppearance="@style/TextAppearance.Label1"
+        app:tabTextColor="?attr/textPrimaryColor">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/header_title_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buy" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/header_title_sell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sell" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/header_close"
+        android:layout_width="@dimen/actionSize"
+        android:layout_height="@dimen/actionSize"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_oval_button_secondary"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_close_16"
+        android:tint="?attr/buttonSecondaryForegroundColor" />
+
+</merge>

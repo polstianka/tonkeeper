@@ -90,6 +90,7 @@ class UnstakeAmountScreen : Fragment(R.layout.fragment_unstake) {
             maxButton.isActivated = state.maxActive
             if (state.confirmScreenArgs != null) {
                 stakeMainViewModel.onConfirmationArgsReceived(state.confirmScreenArgs)
+                stakeViewModel.resetArgs()
             }
         }
     }

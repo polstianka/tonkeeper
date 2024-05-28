@@ -22,8 +22,9 @@ class StakeMainViewModel(
     private val _singleEvent = MutableSharedFlow<Action>(replay = 0, extraBufferCapacity = 1)
     val singleEvent: Flow<Action> = _singleEvent.asSharedFlow()
 
-    private val _confirmationArgs = MutableStateFlow<ConfirmationArgs?>(null)
-    val confirmationArgs: StateFlow<ConfirmationArgs?> = _confirmationArgs
+    private val _confirmationArgs =
+        MutableSharedFlow<ConfirmationArgs?>(replay = 1, extraBufferCapacity = 1)
+    val confirmationArgs: Flow<ConfirmationArgs?> = _confirmationArgs
 
     var preselectedAddress: String? = null
 
@@ -43,13 +44,21 @@ class StakeMainViewModel(
     }
 
     fun onConfirmationArgsReceived(confirmScreenArgs: ConfirmationArgs) {
-        _confirmationArgs.value = confirmScreenArgs
-        onNextPage()
+        viewModelScope.launch {
+            _confirmationArgs.emit(confirmScreenArgs)
+            onNextPage()
+        }
     }
 
     fun destroy() {
-        _uiState.value = StakeScreenState()
-        _confirmationArgs.value = null
+        viewModelScope.launch {
+            _uiState.value = StakeScreenState()
+            _confirmationArgs.emit(null)
+        }
+    }
+
+    fun finish() {
+        emit(Action.Finish)
     }
 
     fun openOptions() {
@@ -73,4 +82,5 @@ data class StakeScreenState(
 sealed interface Action {
     data object Info : Action
     data object Options : Action
+    data object Finish : Action
 }

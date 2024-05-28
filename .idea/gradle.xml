@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/apps/wallet/data" />
             <option value="$PROJECT_DIR$/apps/wallet/data/account" />
             <option value="$PROJECT_DIR$/apps/wallet/data/browser" />
+            <option value="$PROJECT_DIR$/apps/wallet/data/buysell" />
             <option value="$PROJECT_DIR$/apps/wallet/data/collectibles" />
             <option value="$PROJECT_DIR$/apps/wallet/data/core" />
             <option value="$PROJECT_DIR$/apps/wallet/data/events" />

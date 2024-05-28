@@ -1,27 +1,28 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.textPrimaryColor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.drawable.InputDrawable
 import uikit.extensions.collectFlow
 import uikit.extensions.dp
 import uikit.extensions.getDimensionPixelSize
 import uikit.widget.InputView
 import uikit.widget.ModalHeader
 import uikit.widget.item.ItemSwitchViewExtended
+
 
 class SwapSettingsScreen : BaseFragment(R.layout.fragment_swap_settings), BaseFragment.BottomSheet {
 
@@ -31,6 +32,7 @@ class SwapSettingsScreen : BaseFragment(R.layout.fragment_swap_settings), BaseFr
     private lateinit var expertSwitch: ItemSwitchViewExtended
     private lateinit var suggestions: LinearLayoutCompat
     private lateinit var header: ModalHeader
+    private lateinit var saveButton: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         input = view.findViewById(R.id.tolerance_input)
@@ -38,40 +40,47 @@ class SwapSettingsScreen : BaseFragment(R.layout.fragment_swap_settings), BaseFr
         header.onCloseClick = { finish() }
 
         suggestions = view.findViewById(R.id.suggested_tolerance)
+        saveButton = view.findViewById(R.id.save)
+        saveButton.setOnClickListener {
+            settingsViewModel.onSaveClick()
+            finish()
+        }
+
+        expertSwitch = view.findViewById(R.id.custom_tolerance)
+        expertSwitch.doOnCheckedChanged = {
+            settingsViewModel.onSwitchChanged(it)
+        }
 
         input.isHintVisible = false
         input.editText.addTextChangedListener(PercentTextWatcher(input.editText, settingsViewModel))
         input.inputType = EditorInfo.TYPE_CLASS_NUMBER
 
-        val defaultBg = ContextCompat.getDrawable(requireContext(), uikit.R.drawable.bg_text_border)
-        val activeBg =
-            ContextCompat.getDrawable(requireContext(), uikit.R.drawable.bg_text_border_active)
-
-        collectFlow(settingsViewModel.suggestedTolerance) { sug ->
-            val lp = LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                1.0f
+        val suggestionsList = settingsViewModel.uiState.value.suggestedToleranceList
+        suggestionsList.forEachIndexed { index, percent ->
+            suggestions.addView(
+                createTextView(
+                    index = index,
+                    lastIndex = suggestionsList.lastIndex,
+                    lp = LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                        1.0f
+                    ),
+                    percent = percent,
+                )
             )
-            sug.forEachIndexed { index, percent ->
-                suggestions.addView(createTextView(index, sug, lp, percent, defaultBg))
-            }
         }
 
-        collectFlow(settingsViewModel.selectedSuggestion) { percent ->
-            setBackgroundForItems(defaultBg, percent, activeBg)
+        collectFlow(settingsViewModel.uiState) { state ->
+            setBackgroundForItems(state.tolerancePercent)
         }
     }
 
-    private fun setBackgroundForItems(
-        defaultBg: Drawable?,
-        percent: Int?,
-        activeBg: Drawable?
-    ) {
+    private fun setBackgroundForItems(percent: Int?) {
         for (index in 0..<suggestions.childCount) {
             val child = suggestions.getChildAt(index)
-            child.background = defaultBg
-            if (child.tag == percent) child.background = activeBg
+            val bg = child.background as InputDrawable
+            bg.active = child.tag == percent
         }
         if (percent != null) {
             input.text = percent.toString()
@@ -82,18 +91,19 @@ class SwapSettingsScreen : BaseFragment(R.layout.fragment_swap_settings), BaseFr
 
     private fun createTextView(
         index: Int,
-        sug: List<Int>,
+        lastIndex: Int,
         lp: LinearLayoutCompat.LayoutParams,
         percent: Int,
-        defaultBg: Drawable?
-    ): AppCompatTextView {
-        return AppCompatTextView(requireContext()).apply {
-            if (index != sug.lastIndex) {
+    ): Button {
+        val buttonStyle = uikit.R.style.Widget_App_Button_Secondary
+        val backgroundDrawable = InputDrawable(requireContext())
+        return Button(ContextThemeWrapper(context, buttonStyle), null, buttonStyle).apply {
+            if (index != lastIndex) {
                 lp.setMargins(0, 0, 12.dp, 0)
             }
             tag = percent
+            background = backgroundDrawable
             layoutParams = lp
-            background = defaultBg
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             text = "$percent %"
             setPadding(context.getDimensionPixelSize(uikit.R.dimen.offsetMedium))

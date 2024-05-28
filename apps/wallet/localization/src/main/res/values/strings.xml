@@ -197,6 +197,8 @@
 
     <string name="sender">Sender</string>
     <string name="sender_address">Sender address</string>
+    <string name="operator">Operator</string>
+    <string name="credit_card">Credit Card</string>
 
     <string name="transaction">Transaction</string>
 

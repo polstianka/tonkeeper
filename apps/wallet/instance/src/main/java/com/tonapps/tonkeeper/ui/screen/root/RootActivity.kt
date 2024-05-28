@@ -8,11 +8,9 @@ import android.view.View
 import androidx.biometric.BiometricPrompt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.tonkeeper.dialog.TransactionDialog
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeper.fragment.send.SendScreen
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthFragment
@@ -38,10 +36,6 @@ import uikit.navigation.NavigationActivity
 class RootActivity: NavigationActivity() {
 
     private val rootViewModel: RootViewModel by viewModel()
-
-    val fiatDialog: FiatDialog by lazy {
-        FiatDialog(this, lifecycleScope)
-    }
 
     val transactionDialog: TransactionDialog by lazy {
         TransactionDialog(this, lifecycleScope)
