@@ -25,19 +25,19 @@ fun StakingServiceType.getAmount(
     return when (this) {
         StakingServiceType.WHALES -> when (direction) {
             StakingTransactionType.DEPOSIT -> amount
-            StakingTransactionType.UNSTAKE -> withdrawalFee
+            else -> withdrawalFee
         }
 
         StakingServiceType.TF -> when (direction) {
             StakingTransactionType.DEPOSIT -> amount
-            StakingTransactionType.UNSTAKE -> withdrawalFee
+            else -> withdrawalFee
         }
         StakingServiceType.LIQUID_TF -> when (direction) {
             StakingTransactionType.DEPOSIT -> when (isSendAll) {
                 true -> amount
                 false -> amount + withdrawalFee
             }
-            StakingTransactionType.UNSTAKE -> withdrawalFee
+            else -> withdrawalFee
         }
     }
 }
@@ -60,7 +60,7 @@ fun StakingServiceType.getCellProducer(
 ): CellProducer {
     return when (direction) {
         StakingTransactionType.DEPOSIT -> addStakeCellProducer
-        StakingTransactionType.UNSTAKE -> getWithdrawCellProducer(
+        else -> getWithdrawCellProducer(
             Coins.Companion.ofNano(Coin.toNano(amount)),
             walletAddress,
             isSendAll

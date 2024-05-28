@@ -36,6 +36,7 @@
     <string name="unstake_request">Unstake Request</string>
     <string name="domain_renew">Domain Renew</string>
     <string name="unstake">Unstake</string>
+    <string name="unstake_confirm">Get withdrawal</string>
     <string name="unknown">Unknown</string>
     <string name="nft_purchase">NFT Purchase</string>
     <string name="burned">Burned</string>
@@ -314,4 +315,7 @@
     <string name="has_pending_stake">Has pending stake</string>
     <string name="has_pending_unstake">Has pending unstake</string>
     <string name="stonfi" translatable="false">STON.fi</string>
+    <string name="tap_to_collect">Tap to collect</string>
+    <string name="unstake_ready">Unstake ready</string>
+    <string name="has_unstake_ready">%1s ready.\nTap to collect</string>
 </resources>

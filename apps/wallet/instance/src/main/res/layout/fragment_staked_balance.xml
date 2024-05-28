@@ -234,6 +234,58 @@
                 </uikit.widget.RowLayout>
             </uikit.widget.ColumnLayout>
 
+            <uikit.widget.ColumnLayout
+                android:id="@+id/fragment_staked_balance_unstake_ready_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_content"
+                android:padding="16dp">
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/unstake_ready"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?textPrimaryColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="0.1029 TON"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?textPrimaryColor"
+                        android:id="@+id/fragment_staked_balance_unstake_ready_amount_crypto"/>
+                </uikit.widget.RowLayout>
+
+                <uikit.widget.RowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor"
+                        android:text="@string/tap_to_collect"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?textSecondaryColor"
+                        tools:text="$0.63"
+                        android:id="@+id/fragment_staked_balance_unstake_ready_amount_fiat"/>
+                </uikit.widget.RowLayout>
+            </uikit.widget.ColumnLayout>
+
+
             <com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
                 android:id="@+id/fragment_staked_balance_liquid_staking_details"
                 android:layout_width="match_parent"

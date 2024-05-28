@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.jetton.JettonScreen
+import com.tonapps.tonkeeper.fragment.stake.confirm.ConfirmStakeFragment
 import com.tonapps.tonkeeper.fragment.stake.domain.StakingTransactionType
 import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getAvailableCryptoBalance
@@ -15,8 +16,11 @@ import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingStakeBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingStakeBalanceFiat
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalance
 import com.tonapps.tonkeeper.fragment.stake.domain.model.getPendingUnstakeBalanceFiat
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getUnstakeReadyBalance
+import com.tonapps.tonkeeper.fragment.stake.domain.model.getUnstakeReadyBalanceFiat
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingStake
 import com.tonapps.tonkeeper.fragment.stake.domain.model.hasPendingUnstake
+import com.tonapps.tonkeeper.fragment.stake.domain.model.hasUnstakeReady
 import com.tonapps.tonkeeper.fragment.stake.presentation.getIconUri
 import com.tonapps.tonkeeper.fragment.stake.root.StakeFragment
 import com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
@@ -27,6 +31,7 @@ import com.tonapps.tonkeeperx.R
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.applySelectableBgContent
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -78,6 +83,12 @@ class StakedBalanceFragment : BaseFragment(
         get() = view?.findViewById(R.id.fragment_staked_balance_pending_unstake_amount_fiat)
     private val pendingStakeFiat: TextView?
         get() = view?.findViewById(R.id.fragment_staked_balance_pending_stake_amount_fiat)
+    private val unstakeReadyGroup: View?
+        get() = view?.findViewById(R.id.fragment_staked_balance_unstake_ready_group)
+    private val unstakeReadyCrypto: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_unstake_ready_amount_crypto)
+    private val unstakeReadyFiat: TextView?
+        get() = view?.findViewById(R.id.fragment_staked_balance_unstake_ready_amount_fiat)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,12 +132,29 @@ class StakedBalanceFragment : BaseFragment(
         iconBig?.setImageResource(com.tonapps.wallet.api.R.drawable.ic_ton_with_bg)
         iconSmall?.setImageURI(args.stakedBalance.pool.serviceType.getIconUri())
         poolDetailsView?.setPool(args.stakedBalance.pool)
+        unstakeReadyGroup?.applySelectableBgContent()
+        unstakeReadyGroup?.setThrottleClickListener { viewModel.onUnstakeReadyClicked() }
 
         updatePendingDepositView(args.stakedBalance)
         updatePendingWithdrawView(args.stakedBalance)
+        updateUnstakeReadyView(args.stakedBalance)
         args.stakedBalance.liquidBalance?.let {
             liquidStakingDetailsView?.setAmount(it.asset.balance, it.assetRate)
         }
+    }
+
+    private fun updateUnstakeReadyView(stakedBalance: StakedBalance) {
+        val isVisible = stakedBalance.hasUnstakeReady()
+        unstakeReadyGroup?.isVisible = isVisible
+        if (!isVisible) return
+        unstakeReadyCrypto?.text = CurrencyFormatter.format(
+            "TON",
+            stakedBalance.getUnstakeReadyBalance()
+        )
+        unstakeReadyFiat?.text = CurrencyFormatter.format(
+            stakedBalance.fiatCurrency.code,
+            stakedBalance.getUnstakeReadyBalanceFiat()
+        )
     }
 
     private fun updatePendingWithdrawView(stakedBalance: StakedBalance) {
@@ -182,6 +210,12 @@ class StakedBalanceFragment : BaseFragment(
                 balance.service
             )
             StakingTransactionType.UNSTAKE -> UnstakeFragment.newInstance(balance)
+            StakingTransactionType.UNSTAKE_CONFIRM -> ConfirmStakeFragment.newInstance(
+                balance.pool,
+                balance.getUnstakeReadyBalance(),
+                StakingTransactionType.UNSTAKE_CONFIRM,
+                false
+            )
         }
         navigation?.add(fragment)
     }

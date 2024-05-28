@@ -80,4 +80,13 @@ class StakedBalanceViewModel(
         val event = StakedBalanceEvent.NavigateToToken(token)
         _events.emit(event)
     }
+
+    fun onUnstakeReadyClicked() = viewModelScope.launch {
+        val args = args.first()
+        val event = StakedBalanceEvent.NavigateToStake(
+            args.stakedBalance,
+            StakingTransactionType.UNSTAKE_CONFIRM
+        )
+        emit(_events, event)
+    }
 }

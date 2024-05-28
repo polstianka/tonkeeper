@@ -25,6 +25,7 @@
     <string name="unstake_request">Запрос на вывод</string>
     <string name="domain_renew">Домен продлён</string>
     <string name="unstake">Вывести</string>
+    <string name="unstake_confirm">Get withdrawal</string>
     <string name="unknown">Неизвестно</string>
     <string name="nft_purchase">Покупка NFT</string>
     <string name="burned">Сожжено</string>
@@ -300,4 +301,7 @@
     <string name="pending_stake">Pending stake</string>
     <string name="has_pending_stake">Has pending stake</string>
     <string name="has_pending_unstake">Has pending unstake</string>
+    <string name="tap_to_collect">Tap to collect</string>
+    <string name="unstake_ready">Unstake ready</string>
+    <string name="has_unstake_ready">%1s ready.\nTap to collect</string>
 </resources>

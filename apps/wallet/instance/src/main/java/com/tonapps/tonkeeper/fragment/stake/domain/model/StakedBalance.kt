@@ -80,6 +80,19 @@ fun StakedBalance.hasPendingUnstake(): Boolean {
             solidBalance.pendingWithdraw.compareTo(BigDecimal.ZERO) == 1
 }
 
+fun StakedBalance.hasUnstakeReady(): Boolean {
+    return solidBalance?.readyWithdraw != null &&
+            solidBalance.readyWithdraw.compareTo(BigDecimal.ZERO) == 1
+}
+
+fun StakedBalance.getUnstakeReadyBalance(): BigDecimal {
+    return solidBalance?.readyWithdraw ?: BigDecimal.ZERO
+}
+
+fun StakedBalance.getUnstakeReadyBalanceFiat(): BigDecimal {
+    return getUnstakeReadyBalance() * tonRate.value
+}
+
 fun StakedBalance.getPendingUnstakeBalance(): BigDecimal {
     return solidBalance?.pendingWithdraw ?: BigDecimal.ZERO
 }

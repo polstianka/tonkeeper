@@ -111,7 +111,7 @@ class ConfirmStakeFragment : BaseFragment(R.layout.fragment_confirm_stake), Base
     private fun ConfirmStakeEvent.CloseFlow.handle() {
         val fragment = when (type) {
             StakingTransactionType.DEPOSIT -> StakeFragment::class
-            StakingTransactionType.UNSTAKE -> StakedBalanceFragment::class
+            else -> StakedBalanceFragment::class
         }
         popBackToRootFragment(
             true,
