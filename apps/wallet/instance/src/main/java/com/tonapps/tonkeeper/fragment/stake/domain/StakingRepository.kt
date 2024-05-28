@@ -69,7 +69,7 @@ class StakingRepository(
         val a = async { stakingServicesRepository.loadStakingPools(walletAddress, testnet) }
         val b = async { dexAssetsRepository.loadAssets() }
         val c = async { nominatorPoolsRepository.loadNominatorPools(walletAddress, testnet) }
-        val d = async { dexAssetsRepository.loadBalances(walletAddress, testnet) }
+        val d = async { dexAssetsRepository.loadBalances(walletAddress, currency, testnet) }
         listOf(a, b, c, d).forEach { it.await() }
     }
 

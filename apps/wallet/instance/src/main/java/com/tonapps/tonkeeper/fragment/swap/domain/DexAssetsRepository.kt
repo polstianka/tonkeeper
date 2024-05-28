@@ -141,11 +141,13 @@ class DexAssetsRepository(
 
     suspend fun loadBalances(
         walletAddress: String,
+        currency: WalletCurrency,
         testnet: Boolean
     ) = withContext(Dispatchers.IO) {
         getJettonBalancesMutableFlow(walletAddress, testnet).apply {
             value = tokenRepository.load(WalletCurrency.DEFAULT, walletAddress, testnet)
         }
+        getTotalBalancesFlow(walletAddress, testnet, currency)
     }
 
     private fun BalanceEntity.toDomain(
