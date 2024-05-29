@@ -25,12 +25,12 @@ class ChooseOperatorViewModel(
     private val _isLoadingFlow = MutableStateFlow<Boolean>(true)
     val isLoadingFlow = _isLoadingFlow.asStateFlow()
     private var selectedItemId: String = ""
-    private val _openUrlChannel = Channel<Pair<String, FiatSuccessUrlPattern?>>()
-    val openUrlFlow = _openUrlChannel.receiveAsFlow()
-    private val _showConfirmationDialogChannel = Channel<FiatItem>()
-    val showConfirmDialogFlow = _showConfirmationDialogChannel.receiveAsFlow()
-    private val _showConfirmationScreenChannel = Channel<OperatorItem>()
-    val showConfirmationScreenFlow = _showConfirmationScreenChannel.receiveAsFlow()
+    private val openUrlChannel = Channel<Pair<String, FiatSuccessUrlPattern?>>()
+    val openUrlFlow = openUrlChannel.receiveAsFlow()
+    private val showConfirmationDialogChannel = Channel<FiatItem>()
+    val showConfirmDialogFlow = showConfirmationDialogChannel.receiveAsFlow()
+    private val showConfirmationScreenChannel = Channel<OperatorItem>()
+    val showConfirmationScreenFlow = showConfirmationScreenChannel.receiveAsFlow()
     private val fiatItemsMap = HashMap<String, FiatItem>()
 
     val itemsPresentFlow =
@@ -93,14 +93,14 @@ class ChooseOperatorViewModel(
             if (isShowConfirmation(selectedItemId)) {
                 selectedItem?.let {
                     if (it.rate == null || it.rate == 0.0) {
-                        _showConfirmationDialogChannel.send(fiatItemsMap[selectedItemId]!!)
+                        showConfirmationDialogChannel.send(fiatItemsMap[selectedItemId]!!)
                     } else {
-                        _showConfirmationScreenChannel.send(it)
+                        showConfirmationScreenChannel.send(it)
                     }
                 }
             } else {
                 selectedItem?.let {
-                    _openUrlChannel.send(selectedItem.paymentUrl to selectedItem.successUrlPattern)
+                    openUrlChannel.send(selectedItem.paymentUrl to selectedItem.successUrlPattern)
                 }
             }
         }

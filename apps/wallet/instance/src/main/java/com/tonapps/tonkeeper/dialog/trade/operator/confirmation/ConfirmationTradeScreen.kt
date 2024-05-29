@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.doKeyboardAnimation
+import uikit.extensions.hideKeyboard
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.FrescoView
 import uikit.widget.HeaderView
@@ -98,6 +100,9 @@ class ConfirmationTradeScreen :
         )
         continueButton.setOnClickListener {
             confirmationViewModel.onContinueClicked()
+        }
+        view.doKeyboardAnimation { offset, _, _ ->
+            continueButton.translationY = -offset.toFloat()
         }
         receiveEdit.post {
             if (tradeViewModel.isBuyMode.value) {
@@ -224,6 +229,8 @@ class ConfirmationTradeScreen :
                 confirmationViewModel
                     .continueFlow
                     .onEach {
+                        payEdit.hideKeyboard()
+                        receiveEdit.hideKeyboard()
                         navigation?.add(
                             FiatWebFragment.newInstance(
                                 url = it.url,
