@@ -53,7 +53,6 @@ class ChooseOperatorViewModel(
                 val rate =
                     tradeRates.firstOrNull { it.name.lowercase() == fiatItem.title.lowercase() }
                 val isSelected = items.size == 0
-                selectedItemId = fiatItem.id
                 fiatItemsMap[fiatItem.id] = fiatItem
                 items.add(
                     OperatorItem(
@@ -71,6 +70,7 @@ class ChooseOperatorViewModel(
                     ),
                 )
             }
+            selectedItemId = methods[0].id
             if (methods.isEmpty()) {
                 selectedItemId = ""
             }
@@ -90,18 +90,8 @@ class ChooseOperatorViewModel(
     fun onContinueButtonClicked() {
         viewModelScope.launch {
             val selectedItem = itemsFlow.value.firstOrNull { it.id == selectedItemId }
-            if (isShowConfirmation(selectedItemId)) {
-                selectedItem?.let {
-                    if (it.rate == null || it.rate == 0.0) {
-                        showConfirmationDialogChannel.send(fiatItemsMap[selectedItemId]!!)
-                    } else {
-                        showConfirmationScreenChannel.send(it)
-                    }
-                }
-            } else {
-                selectedItem?.let {
-                    openUrlChannel.send(selectedItem.paymentUrl to selectedItem.successUrlPattern)
-                }
+            selectedItem?.let {
+                showConfirmationScreenChannel.send(it)
             }
         }
     }
