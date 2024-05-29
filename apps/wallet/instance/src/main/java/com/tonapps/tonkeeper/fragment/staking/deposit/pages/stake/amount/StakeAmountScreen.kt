@@ -83,6 +83,7 @@ class StakeAmountScreen : BaseFragment(R.layout.fragment_stake_amount) {
 
         selectedPoolView = view.findViewById(R.id.selected)
         selectedPoolView.setOnClickListener {
+            getCurrentFocus()?.hideKeyboard()
             poolsViewModel.openPoolSelector()
         }
 
