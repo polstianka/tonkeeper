@@ -55,7 +55,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
         swapNativeViewModel.getRemoteAssets()
 
-        nextButton.isEnabled = false
+        nextButton.isEnabled = true
 
     }
 
