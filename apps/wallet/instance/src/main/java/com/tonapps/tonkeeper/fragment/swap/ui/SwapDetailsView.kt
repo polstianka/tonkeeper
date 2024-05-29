@@ -8,7 +8,11 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
+import com.tonapps.tonkeeper.fragment.swap.info.InfoArgs
+import com.tonapps.tonkeeper.fragment.swap.info.InfoFragment
 import com.tonapps.tonkeeperx.R
+import uikit.extensions.setThrottleClickListener
+import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ProcessTaskView
 import java.math.BigDecimal
 
@@ -37,9 +41,33 @@ class SwapDetailsView
         get() = findViewById(R.id.view_swap_details_price_impact)
     private val routeTextView: TextView?
         get() = findViewById(R.id.view_swap_details_route)
+    private val priceImpactInfoButton: View?
+        get() = findViewById(R.id.view_swap_details_info_price_impact)
+    private val minReceivedInfoButton: View?
+        get() = findViewById(R.id.view_swap_details_info_min_received)
+    private val liquidityProviderFeeInfoButton: View?
+        get() = findViewById(R.id.view_swap_details_info_liquidity_provider_fee)
 
     init {
         inflate(context, R.layout.view_swap_details, this)
+        priceImpactInfoButton?.setThrottleClickListener {
+            with(context) {
+                val fragment = InfoFragment.newInstance(InfoArgs.priceImpact(this))
+                navigation?.add(fragment)
+            }
+        }
+        minReceivedInfoButton?.setThrottleClickListener {
+            with(context) {
+                val fragment = InfoFragment.newInstance(InfoArgs.minReceived(this))
+                navigation?.add(fragment)
+            }
+        }
+        liquidityProviderFeeInfoButton?.setThrottleClickListener {
+            with(context) {
+                val fragment = InfoFragment.newInstance(InfoArgs.liquidityProviderFee(this))
+                navigation?.add(fragment)
+            }
+        }
     }
 
     fun updateState(simulation: SwapSimulation?) {
@@ -53,6 +81,7 @@ class SwapDetailsView
                 loader?.isVisible = true
                 detailsGroup?.isVisible = false
             }
+
             is SwapSimulation.Result -> {
                 loader?.isVisible = false
                 detailsGroup?.isVisible = true
@@ -81,6 +110,7 @@ class SwapDetailsView
                     .let { "$it%" }
                 routeTextView?.text = "${sentAsset.symbol} >> ${receivedAsset.symbol}"
             }
+
             null -> Unit
         }
     }
