@@ -1,5 +1,9 @@
 package com.tonapps.tonkeeper.extensions
 
+import android.text.Editable
+import android.widget.EditText
+import com.tonapps.blockchain.Coin
+
 fun String.substringSafe(startIndex: Int, endIndex: Int): String {
     return if (startIndex > length) {
         ""
@@ -22,4 +26,12 @@ val String.capitalized: String
         } else {
             ""
         }
+    }
+
+
+val EditText.amount: Float
+    get() {
+        text?: return 0f
+        val text = Coin.prepareValue(text.toString())
+        return text.toFloatOrNull() ?: 0f
     }

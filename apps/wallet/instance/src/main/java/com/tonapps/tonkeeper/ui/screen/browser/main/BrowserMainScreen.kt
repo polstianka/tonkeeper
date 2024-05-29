@@ -138,7 +138,7 @@ class BrowserMainScreen : BaseFragment(R.layout.fragment_browser_main) {
 
     companion object {
 
-        private const val COUNTRY_REQUEST_KEY = "country_request"
+        const val COUNTRY_REQUEST_KEY = "country_request"
 
         private val CONTAINER_ID = R.id.browser_fragment_container
 

@@ -263,4 +263,12 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+
+    <string name="balance">Баланс: %1$s</string>
+    <string name="choose">Выбери</string>
+    <string name="choose_token">Выбери токен</string>
+    <string name="swap_btn_choose_token">Выбери токен</string>
+    <string name="swap_btn_enter_amount">Введите количество</string>
+
+    <string name="swap_max">Макc</string>
 </resources>

@@ -50,6 +50,8 @@ interface Navigation {
 
     fun remove(fragment: Fragment)
 
+    fun previous(): Fragment
+
     fun openURL(url: String, external: Boolean = false)
 
     fun toast(message: String, loading: Boolean, color: Int)

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <uikit.widget.webview.bridge.StonfiWebView
+        android:id="@+id/hidden_web"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:title="@string/swap"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        app:ignoreSystemOffset="true"
+        app:makeTitleFromStart="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <com.tonapps.tonkeeper.ui.component.swap.SwapView
+        android:id="@+id/swap"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/buttons"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/itemHeight"
+        android:layout_margin="@dimen/offsetMedium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.Label1"/>
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            style="@style/Widget.App.Button"
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:filterTouchesWhenObscured="true"
+            android:text="@string/confirm"
+            android:textAppearance="@style/TextAppearance.Label1"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <uikit.widget.SnackView
+        android:id="@+id/snack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buttons"
+        android:layout_margin="@dimen/offsetMedium"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

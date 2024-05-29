@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    
+    <View
+        android:id="@+id/shimmer_from_top_left"
+        android:layout_width="56dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginStart="@dimen/offsetMedium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_from_top_right"
+        android:layout_width="120dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="@dimen/offsetMedium"
+        app:layout_constraintTop_toTopOf="@id/shimmer_from_top_left"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_from_bottom_left"
+        android:layout_width="120dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="@id/shimmer_from_top_left"
+        app:layout_constraintTop_toBottomOf="@id/shimmer_from_top_left"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_from_bottom_right"
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="@dimen/offsetMedium"
+        app:layout_constraintTop_toTopOf="@id/shimmer_from_bottom_left"
+        app:layout_constraintEnd_toEndOf="@id/shimmer_from_top_right"
+        app:layout_constraintStart_toEndOf="@id/shimmer_from_bottom_left"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+
+    <View
+        android:id="@+id/shimmer_to_top_left"
+        android:layout_width="84dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintTop_toBottomOf="@id/shimmer_from_bottom_left"
+        app:layout_constraintStart_toStartOf="@id/shimmer_from_bottom_left"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_to_top_right"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toTopOf="@id/shimmer_to_top_left"
+        app:layout_constraintEnd_toEndOf="@id/shimmer_from_bottom_right"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_to_bottom_left"
+        android:layout_width="120dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/shimmer_to_top_left"
+        app:layout_constraintStart_toStartOf="@id/shimmer_to_top_left"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+    <View
+        android:id="@+id/shimmer_to_bottom_right"
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="@dimen/offsetMedium"
+        app:layout_constraintTop_toBottomOf="@id/shimmer_to_top_left"
+        app:layout_constraintEnd_toEndOf="@id/shimmer_to_top_right"
+        app:layout_constraintStart_toEndOf="@id/shimmer_to_bottom_left"
+        android:background="@drawable/bg_tertiary_16"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

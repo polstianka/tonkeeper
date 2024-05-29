@@ -3,4 +3,16 @@
     <declare-styleable name="LabelEditorView">
         <attr name="android:button" format="string|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="TokenButtonView">
+        <attr name="android:text" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SearchInputView">
+        <attr name="android:hint" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="TransactionDetailView">
+        <attr name="positionDrawable" format="reference"/>
+    </declare-styleable>
 </resources>

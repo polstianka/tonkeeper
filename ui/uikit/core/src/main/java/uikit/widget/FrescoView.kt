@@ -22,8 +22,8 @@ class FrescoView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : SimpleDraweeView(context, attrs, defStyle) {
 
-    override fun setImageURI(uri: Uri, callerContext: Any?) {
-        if (UriUtil.isLocalResourceUri(uri)) {
+    override fun setImageURI(uri: Uri?, callerContext: Any?) {
+        if (uri != null && UriUtil.isLocalResourceUri(uri)) {
             loadLocalUri(uri, callerContext)
         } else {
             hierarchy.setPlaceholderImage(null)
