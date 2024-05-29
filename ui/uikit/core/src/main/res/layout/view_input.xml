@@ -5,14 +5,22 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/input_hint"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/barHeight"
         android:layout_marginStart="@dimen/offsetMedium"
         android:gravity="center_vertical"
-        android:transformPivotX="0dp"
-        android:transformPivotY="0dp"
         android:textAppearance="@style/TextAppearance.Body1"
         android:textColor="?attr/textSecondaryColor"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/input_suffix"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/barHeight"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/TextAppearance.Body1"
+        android:textColor="?attr/textSecondaryColor"
+        android:visibility="gone"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -41,10 +49,12 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/input_clear"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginHorizontal="@dimen/offsetExtraSmall"
+            android:layout_width="48dp"
+            android:paddingStart="28dp"
+            android:layout_height="@dimen/barHeight"
+            android:paddingEnd="@dimen/offsetExtraSmall"
             android:layout_gravity="center"
+            android:scaleType="center"
             android:visibility="gone"
             android:tint="?attr/iconSecondaryColor"
             android:src="@drawable/ic_xmark_circle_16"/>

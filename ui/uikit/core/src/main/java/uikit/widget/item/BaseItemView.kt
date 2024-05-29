@@ -15,6 +15,9 @@ open class BaseItemView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : LinearLayoutCompat(context, attrs, defStyle) {
 
+    @Deprecated("TODO: Allow dynamic height for all BaseItemView & then remove this property")
+    protected var enableWeirdConstantContentDimension: Boolean = true
+
     var position: ListCell.Position = com.tonapps.uikit.list.ListCell.Position.SINGLE
         set(value) {
             field = value
@@ -27,7 +30,12 @@ open class BaseItemView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val height = context.getDimensionPixelSize(R.dimen.itemHeight)
-        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+        val newHeightMeasureSpec = if (enableWeirdConstantContentDimension) {
+            val height = context.getDimensionPixelSize(R.dimen.itemHeight)
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        } else {
+            heightMeasureSpec
+        }
+        super.onMeasure(widthMeasureSpec, newHeightMeasureSpec)
     }
 }

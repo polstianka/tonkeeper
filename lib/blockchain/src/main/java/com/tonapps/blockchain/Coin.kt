@@ -1,9 +1,7 @@
 package com.tonapps.blockchain
 
-import android.util.Log
+import org.ton.bigint.BigInt
 import java.math.BigDecimal
-import java.math.BigInteger
-import java.math.MathContext
 import java.math.RoundingMode
 import kotlin.math.pow
 
@@ -11,51 +9,35 @@ object Coin {
 
     const val TON_DECIMALS = 9
 
-    private const val DEFAULT_DECIMALS = 18
-    private const val BASE = 1000000000L
-
+    @Deprecated("""
+        32-bit float isn't suitable for coins,
+        e.g. this method will start providing invalid results for amounts above 2^24, which is just 16.7M coins,
+        and loses precision in any kind of arithmetic operation.
+    """)
     fun parseJettonBalance(
         v: String,
         decimals: Int
     ): Float {
-        val bigDecimal = safeBigDecimal(v)
+        val bigDecimal = try {
+            val string = prepareValue(v)
+            BigDecimal(string)
+        } catch (e: Throwable) {
+            BigDecimal.ZERO
+        }
         val divisor = BigDecimal.TEN.pow(decimals)
         val result = bigDecimal.divide(divisor, decimals, RoundingMode.DOWN)
         return result.toFloat()
     }
 
-    /*fun parseFloat(
-        value: String,
-        decimals: Int = TON_DECIMALS
-    ): Float {
-        val floatValue = prepareValue(value).toFloatOrNull() ?: return 0f
-        val formatString = "%.${decimals}f"
-        val formattedString = formatString.format(floatValue)
-        return formattedString.toFloatOrNull() ?: 0f
-    }*/
-
-    fun bigDecimal(
-        value: String,
-        decimals: Int = TON_DECIMALS
-    ): BigDecimal {
-        return try {
-            BigDecimal(value).movePointRight(decimals)
-        } catch (e: Exception) {
-            BigDecimal.ZERO
-        }
-    }
-
-    private fun safeBigDecimal(
-        value: String
-    ): BigDecimal {
-        return try {
-            val string = prepareValue(value)
-            BigDecimal(string)
-        } catch (e: Throwable) {
-            BigDecimal.ZERO
-        }
-    }
-
+    @Deprecated("""
+        This method:
+            1. Isn't well optimized
+            2. For user input it doesn't take in mind different locales 
+            3. For API responses, when response format is determined, it is a rudimentary overhead.
+        
+        Use AmountInputView.doOnDecimalValueChange for user input.
+        and String?.prepareBigDecimal for everything else.
+    """)
     fun prepareValue(value: String): String {
         var v = value.trim()
         if (v.endsWith(".") || v.startsWith(",")) {
@@ -76,20 +58,72 @@ object Coin {
         return v
     }
 
+    @Deprecated("""
+        32-bit float isn't suitable for coins,
+        e.g. this method will start providing invalid results for amounts above 2^24, which is just 16.7M coins,
+        and loses precision in any kind of arithmetic operation.
+    """, replaceWith = ReplaceWith("toNano(bigDecimal, decimals)"))
     fun toNano(
-        value: Float,
+        coins: Float,
         decimals: Int = TON_DECIMALS
     ): Long {
-        // old return (value * BASE).toLong()
-        return (value * 10.0.pow(decimals)).toLong()
+        return (coins * 10.0.pow(decimals)).toLong()
     }
 
+    @Deprecated("""
+        32-bit float isn't suitable for coins,
+        e.g. this method will start providing invalid results for amounts above 2^24, which is just 16.7M coins,
+        and loses precision in any kind of arithmetic operation.
+        
+        64-bit signed long is not suitable for nano representation,
+        and will fail for large inputs or some coins.
+    """, replaceWith = ReplaceWith("toNano(nanoString, decimals)"))
     fun toCoins(
-        value: Long,
+        nano: Long,
         decimals: Int = TON_DECIMALS
     ): Float {
-        // old return value / BASE.toFloat()
-        return value / 10.0.pow(decimals).toFloat()
+        return nano / 10.0.pow(decimals).toFloat()
     }
+
+    @Deprecated("""
+        64-bit signed long is not suitable for nano representation,
+        and will fail for large inputs or some coins.
+    """, replaceWith = ReplaceWith("toNanoString(coins, decimals) or toNanoInt(coins, decimals)"))
+    fun toNano(
+        coins: BigDecimal,
+        decimals: Int = TON_DECIMALS
+    ): Long {
+        return (coins * BigDecimal.TEN.pow(decimals)).toLong()
+    }
+
+    fun toNanoInt(
+        coins: BigDecimal,
+        decimals: Int = TON_DECIMALS
+    ): BigInt =
+        coins.movePointRight(decimals).stripTrailingZeros().toBigIntegerExact()
+
+    fun toNanoString(
+        coins: BigDecimal,
+        decimals: Int = TON_DECIMALS
+    ): String =
+        coins.movePointRight(decimals).stripTrailingZeros().toPlainString()
+
+    fun toCoins(
+        nano: BigInt,
+        decimals: Int = TON_DECIMALS
+    ): BigDecimal =
+        toCoins(nano.toBigDecimal(), decimals)
+
+    fun toCoins(
+        nano: BigDecimal,
+        decimals: Int = TON_DECIMALS
+    ): BigDecimal =
+        nano.movePointLeft(decimals).stripTrailingZeros()
+
+    fun toCoins(
+        nano: String,
+        decimals: Int = TON_DECIMALS
+    ): BigDecimal =
+        toCoins(BigDecimal(nano), decimals)
 
 }

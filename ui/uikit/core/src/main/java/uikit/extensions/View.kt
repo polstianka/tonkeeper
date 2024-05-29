@@ -1,20 +1,13 @@
 package uikit.extensions
 
 import android.animation.ValueAnimator
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Outline
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.HapticFeedbackConstants
-import android.view.PixelCopy
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewOutlineProvider
 import android.view.Window
 import android.view.animation.Animation
@@ -22,26 +15,17 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateMargins
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.NestedScrollView.OnScrollChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -57,6 +41,12 @@ var View.pivot: Float
     set(value) {
         pivotX = value
         pivotY = value
+    }
+
+var View.scaledVisibility: Float
+    get() = alpha
+    set(value) {
+        alpha = value
     }
 
 val View.isVisibleForUser: Boolean
@@ -82,6 +72,20 @@ fun ViewGroup.inflate(
     layoutRes: Int
 ): View {
     return context.inflate(layoutRes, this, false)
+}
+
+fun View.updateVisibility(newVisibility: Int): Boolean {
+    val oldVisibility = this.visibility
+    this.visibility = newVisibility
+    return (oldVisibility == View.GONE) != (newVisibility == View.GONE)
+}
+
+fun View.setMarginBottom(marginBottom: Int) {
+    val layoutParams = this.layoutParams
+    if (layoutParams is MarginLayoutParams && layoutParams.bottomMargin != marginBottom) {
+        layoutParams.bottomMargin = marginBottom
+        setLayoutParams(layoutParams)
+    }
 }
 
 fun View.setPaddingTop(paddingTop: Int) {
@@ -257,9 +261,27 @@ inline fun View.doKeyboardAnimation(crossinline block: (
     ViewCompat.setWindowInsetsAnimationCallback(this, animationCallback)
 }
 
-fun View.pinToBottomInsets() {
+inline fun View.doKeyboardAnimation(crossinline block: (
+    offset: Int,
+    progress: Float,
+    isShowing: Boolean,
+    navigationBarSize: Int
+) -> Unit) {
+    val animationCallback = object : KeyboardAnimationCallback(this) {
+        override fun onKeyboardOffsetChanged(offset: Int, progress: Float, isShowing: Boolean) {
+            block(offset, progress, isShowing, navigationOffset)
+        }
+    }
+    ViewCompat.setWindowInsetsAnimationCallback(this, animationCallback)
+}
+
+fun View.isRtl(): Boolean = this.layoutDirection == View.LAYOUT_DIRECTION_RTL
+fun View.isLtr(): Boolean = this.layoutDirection == View.LAYOUT_DIRECTION_LTR
+
+fun View.pinToBottomInsets(onApply: (() -> Unit)? = null) {
     doKeyboardAnimation { offset, _, _ ->
         translationY = -offset.toFloat()
+        onApply?.invoke()
     }
 }
 

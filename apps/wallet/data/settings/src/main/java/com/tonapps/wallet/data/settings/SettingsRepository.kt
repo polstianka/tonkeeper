@@ -9,9 +9,6 @@ import com.tonapps.wallet.localization.Language
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -33,6 +30,7 @@ class SettingsRepository(
         private const val FIREBASE_TOKEN_KEY = "firebase_token"
         private const val INSTALL_ID_KEY = "install_id"
         private const val SEARCH_ENGINE_KEY = "search_engine"
+        private const val SWAP_DETAILS_OPEN_KEY = "swap_details_open"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -57,6 +55,9 @@ class SettingsRepository(
 
     private val _searchEngineFlow = MutableEffectFlow<SearchEngine>()
     val searchEngineFlow = _searchEngineFlow.stateIn(scope, SharingStarted.Eagerly, null).filterNotNull()
+
+    private val _swapDetailsOpenFlow = MutableEffectFlow<Boolean>()
+    val swapDetailsOpenFlow = _swapDetailsOpenFlow.stateIn(scope, SharingStarted.Eagerly, null).filterNotNull()
 
     private val prefs = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
@@ -146,6 +147,15 @@ class SettingsRepository(
             }
         }
 
+    var swapDetailsOpen: Boolean = prefs.getBoolean(SWAP_DETAILS_OPEN_KEY, false)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putBoolean(SWAP_DETAILS_OPEN_KEY, value).apply()
+                field = value
+                _swapDetailsOpenFlow.tryEmit(value)
+            }
+        }
+
     init {
         scope.launch(Dispatchers.IO) {
             _currencyFlow.tryEmit(currency)
@@ -155,6 +165,7 @@ class SettingsRepository(
             _firebaseTokenFlow.tryEmit(firebaseToken)
             _countryFlow.tryEmit(country)
             _searchEngineFlow.tryEmit(searchEngine)
+            _swapDetailsOpenFlow.tryEmit(swapDetailsOpen)
         }
     }
 }

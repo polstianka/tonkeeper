@@ -9,10 +9,30 @@ import androidx.core.view.doOnLayout
 import java.lang.reflect.Field
 
 
-fun EditText.cursorToEnd() {
+fun EditText.cursorToEnd() = moveCursorTo(text.length)
+
+fun EditText.moveCursorTo(position: Int) {
     try {
-        setSelection(text.length)
+        setSelection(position)
     } catch (ignored: Throwable) { }
+}
+
+fun EditText.findSelectionStart(): Int = maxOf(selectionStart, selectionEnd) // Workaround for bugs on some OEMs
+
+fun EditText.nextCursorPosition(codePointCount: Int): Int {
+    try {
+        val oldSelection = findSelectionStart()
+        var newSelection = oldSelection
+        var remaining = codePointCount
+        while (remaining > 0) {
+            val codePoint = Character.codePointAt(text, oldSelection)
+            newSelection += Character.charCount(codePoint)
+            remaining--
+        }
+        newSelection = minOf(newSelection, text.length)
+        return newSelection
+    } catch (ignored: Throwable) { }
+    return -1
 }
 
 fun EditText.requestFocusWithSelection() {

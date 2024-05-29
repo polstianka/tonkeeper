@@ -2,34 +2,21 @@ package uikit.navigation
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
-import com.tonapps.uikit.color.UIKitColor
-import com.tonapps.uikit.color.backgroundContentTintColor
 import uikit.R
 import uikit.base.BaseActivity
 import uikit.base.BaseFragment
-import uikit.extensions.doOnEnd
-import uikit.extensions.hapticConfirm
 import uikit.extensions.primaryFragment
-import uikit.extensions.runAnimation
+import uikit.widget.BottomSheetLayout
 import uikit.widget.ToastView
 
 abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.OnPreDrawListener {
@@ -168,6 +155,24 @@ abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.
         }
     }
 
+    override fun removePreviousScreen(): Boolean {
+        val fragments = supportFragmentManager.fragments
+        if (fragments.size > 2) {
+            val previousFragment = fragments[fragments.size - 2]
+            supportFragmentManager.commit {
+                remove(previousFragment)
+            }
+            supportFragmentManager.fragments.forEach { fragment ->
+                val view = fragment.view
+                if (view is BottomSheetLayout) {
+                    view.resetParentRootViewCache()
+                }
+            }
+            return true
+        }
+        return false
+    }
+
     private fun clearBackStack() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -184,11 +189,17 @@ abstract class NavigationActivity: BaseActivity(), Navigation, ViewTreeObserver.
         }
     }
 
+    fun activeBottomSheet(): Fragment? {
+        val fragments = supportFragmentManager.fragments.filter { it is BaseFragment.BottomSheet }
+        return fragments.getOrNull(fragments.size - 1)
+    }
+
     override fun toast(
         message: String,
         loading: Boolean,
-        color: Int
+        color: Int,
+        disableHaptic: Boolean
     ) {
-        toastView.show(message, loading, color)
+        toastView.show(message, loading, color, disableHaptic)
     }
 }

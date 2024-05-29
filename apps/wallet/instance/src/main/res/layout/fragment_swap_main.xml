@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        android:icon="@drawable/ic_sliders_16"
+        android:action="@drawable/ic_close_16"/>
+
+    <uikit.widget.AutoDisableNestedScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="@dimen/offsetMedium"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.tonapps.tonkeeper.ui.screen.swap.main.widget.SwapTargetLayout
+                android:id="@+id/send_wrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/bg_content"
+                app:target="send"
+                android:title="@string/swap_send"/>
+
+            <com.tonapps.tonkeeper.ui.screen.swap.main.widget.SwapTargetLayout
+                android:id="@+id/receive_wrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/gap"
+                android:layout_marginTop="@dimen/offsetMediumHalf"
+                app:layout_constraintTop_toBottomOf="@id/send_wrap"
+                android:background="@drawable/bg_content"
+                app:target="receive"
+                android:title="@string/swap_receive">
+
+                <uikit.widget.DividerView
+                    android:id="@+id/simulation_divider_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/token_duet"
+                    android:visibility="gone"/>
+
+                <uikit.widget.InfoRowView
+                    android:id="@+id/simulation_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/simulation_divider_top"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/simulation_divider_middle"
+                    android:paddingVertical="@dimen/offsetMediumHalf"
+                    android:paddingHorizontal="@dimen/offsetMedium"
+                    android:visibility="gone"/>
+                
+                <uikit.widget.LoaderView
+                    android:id="@+id/simulation_progress"
+                    android:layout_width="@dimen/iconMedium"
+                    android:layout_height="@dimen/iconMedium"
+                    android:padding="@dimen/offsetExtraSmall"
+                    app:layout_constraintTop_toTopOf="@id/simulation_rate"
+                    app:layout_constraintBottom_toBottomOf="@id/simulation_rate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:visibility="gone"/>
+                <uikit.widget.RotateImageView
+                    android:id="@+id/simulation_arrow"
+                    android:layout_width="@dimen/iconMedium"
+                    android:layout_height="@dimen/iconMedium"
+                    android:tint="?attr/iconSecondaryColor"
+                    android:src="@drawable/ic_keyboard_arrow_down_24"
+                    app:layout_constraintTop_toTopOf="@id/simulation_rate"
+                    app:layout_constraintBottom_toBottomOf="@id/simulation_rate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:visibility="gone"/>
+
+                <uikit.widget.DividerView
+                    android:id="@+id/simulation_divider_middle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/simulation_rate"
+                    android:visibility="gone"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/simulation_advancedDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/simulation_divider_middle"
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/offsetMediumHalf"
+                    android:visibility="gone">
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_priceImpact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_price_impact"
+                        android:hint="@string/swap_price_impact_hint"
+                        android:icon="@drawable/ic_information_circle_16"/>
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_minReceived"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/simulation_priceImpact"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_min_received"
+                        android:hint="@string/swap_min_received_hint"
+                        android:icon="@drawable/ic_information_circle_16"/>
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_liquidityProviderFee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/simulation_minReceived"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_fee_liquidity_provider"
+                        android:hint="@string/swap_fee_liquidity_provider_hint"
+                        android:icon="@drawable/ic_information_circle_16"/>
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_blockchainFees"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/simulation_liquidityProviderFee"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_fee_blockhain"/>
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_route"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/simulation_blockchainFees"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_route"/>
+                    <uikit.widget.InfoRowView
+                        android:id="@+id/simulation_provider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/simulation_route"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:title="@string/swap_provider"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.tonapps.tonkeeper.ui.screen.swap.main.widget.SwapTargetLayout>
+
+            <uikit.widget.RotateImageView
+                android:id="@+id/swap"
+                android:layout_width="@dimen/bigActionSize"
+                android:layout_height="@dimen/bigActionSize"
+                android:layout_marginEnd="@dimen/offsetLarge"
+                app:layout_constraintTop_toBottomOf="@id/send_wrap"
+                app:layout_constraintBottom_toTopOf="@id/receive_wrap"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:tint="?attr/buttonSecondaryForegroundColor"
+                android:backgroundTint="?attr/buttonTertiaryBackgroundColor"
+                android:background="@drawable/bg_oval_button_secondary"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_swap_vertical_16"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </uikit.widget.AutoDisableNestedScrollView>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/label_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient"
+        android:paddingTop="@dimen/offsetLarge"
+        android:paddingBottom="@dimen/offsetMedium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintHorizontal_bias="0"
+            android:paddingEnd="@dimen/offsetMediumHalf"
+            android:paddingStart="@dimen/offsetMedium"
+            android:id="@+id/label_button_cancel_wrap"
+            android:visibility="gone">
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Widget.App.Button.Secondary"
+                android:id="@+id/label_button_cancel"
+                android:clickable="false"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_secondary"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                android:text="@string/cancel"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/label_button_wrap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/offsetMedium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginStart="@dimen/offsetMediumHalf"
+            app:layout_goneMarginStart="@dimen/offsetMedium"
+            app:layout_constraintStart_toEndOf="@id/label_button_cancel_wrap"
+
+            android:background="@drawable/bg_button_secondary"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Widget.App.Button.Secondary"
+                android:background="@android:color/transparent"
+                android:clickable="false"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:id="@+id/label_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                android:text="@string/swap_btn_choose_token"/>
+
+            <uikit.widget.LoaderView
+                android:id="@+id/label_progress"
+                android:layout_width="@dimen/iconMedium"
+                android:layout_height="@dimen/iconMedium"
+                android:padding="@dimen/offsetExtraExtraSmall"
+                android:layout_gravity="center"
+                android:color="?attr/iconPrimaryColor"
+                android:visibility="gone"/>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,10 +7,10 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.util.AttributeSet
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.annotation.DrawableRes
 import com.facebook.common.util.UriUtil
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.drawable.RoundedCornersDrawable
+import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import uikit.extensions.getDrawable
@@ -71,6 +71,22 @@ class FrescoView @JvmOverloads constructor(
             return drawable
         }
         return null
+    }
+
+    fun setFailureImage(@DrawableRes resId: Int, scaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER) {
+        if (resId != 0) {
+            hierarchy.setFailureImage(resId, scaleType)
+        } else {
+            hierarchy.setFailureImage(null)
+        }
+    }
+
+    fun setFailureImage(drawable: Drawable?, scaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER) {
+        if (drawable != null) {
+            hierarchy.setFailureImage(drawable, scaleType)
+        } else {
+            hierarchy.setFailureImage(null)
+        }
     }
 
     fun clear(callerContext: Any?) {

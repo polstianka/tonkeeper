@@ -2,24 +2,18 @@ package uikit.widget
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.PathInterpolator
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.core.math.MathUtils
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
-import androidx.customview.widget.ViewDragHelper
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import uikit.R
 import uikit.base.BaseFragment
@@ -43,16 +37,37 @@ class BottomSheetLayout @JvmOverloads constructor(
         private const val parentAlpha = .8f
         private val defaultTopMargin = 22.dp
         private val interpolator = PathInterpolator(.2f, 0f, 0f, 1f)
+        private val rootContainerId = R.id.root_container
     }
 
     var doOnHide: (() -> Unit)? = null
     var doOnAnimationEnd: (() -> Unit)? = null
+    var doOnAnimationStart: (() -> Unit)? = null
     var doOnDragging: (() -> Unit)? = null
     var fragment: Fragment? = null
 
-    private val parentRootView: View? by lazy {
-        val v = context.activity?.findViewById<View>(R.id.root_container)
-        v
+    private var parentRootViewCache: View? = null
+
+    fun resetParentRootViewCache() {
+        parentRootViewCache = null
+    }
+
+    private fun findParentRootView(): View? {
+        if (parentRootViewCache != null) {
+            return parentRootViewCache
+        }
+        val currentActivity = context.activity
+        val v = currentActivity?.findViewById<View>(rootContainerId)
+        val foundRootView = if (currentActivity is FragmentActivity) {
+            val last = currentActivity.supportFragmentManager.fragments.lastOrNull {
+                it != fragment && it is BaseFragment.BottomSheet
+            }
+            last?.view ?: v
+        } else {
+            v
+        }
+        parentRootViewCache = foundRootView
+        return foundRootView
     }
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -77,7 +92,10 @@ class BottomSheetLayout @JvmOverloads constructor(
         duration = 285
         interpolator = BottomSheetLayout.interpolator
         addUpdateListener(this@BottomSheetLayout)
-        doOnStart { setLayerType(LAYER_TYPE_HARDWARE, null) }
+        doOnStart {
+            setLayerType(LAYER_TYPE_HARDWARE, null)
+            doOnAnimationStart?.invoke()
+        }
         doOnEnd {
             setLayerType(LAYER_TYPE_NONE, null)
             doOnAnimationEnd?.invoke()
@@ -139,12 +157,21 @@ class BottomSheetLayout @JvmOverloads constructor(
         contentView.translationY = height * (1 - value)
     }
 
+    private var lastProgress: Float = 0.0f
+
     private fun onAnimationUpdateParent(progress: Float) {
-        val parentView = parentRootView ?: return
+        val wasInProgress = lastProgress != 0.0f && lastProgress != 1.0f
+        val nowInProgress = progress != 0.0f && lastProgress != 1.0f
+        if (progress == 0.0f || progress == 1.0f || wasInProgress != nowInProgress) {
+            resetParentRootViewCache()
+        }
+        val parentView = findParentRootView() ?: return
         val radius = context.getDimensionPixelSize(R.dimen.cornerMedium)
         parentView.roundTop(progress.range(0, radius))
         parentView.scale = progress.range(1f, parentScale)
-        parentView.alpha = progress.range(1f, parentAlpha)
+        if (parentView.id == rootContainerId) {
+            parentView.alpha = progress.range(1f, parentAlpha)
+        }
     }
 
     private fun releaseScreen() {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@android:id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:maxLines="1"
+        android:textColor="?attr/textSecondaryColor"
+        android:textAppearance="@style/TextAppearance.Body2"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balance_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:paddingTop="@dimen/offsetMedium"
+        android:paddingBottom="@dimen/offsetMediumHalf"
+        android:paddingEnd="@dimen/offsetMedium"
+        android:paddingStart="@dimen/offsetMediumHalf"
+        android:maxLines="1"
+        android:textColor="?attr/textAccentColor"
+        android:textAppearance="@style/TextAppearance.Label2"
+        android:textAllCaps="true"
+        android:text="@string/swap_max"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@android:id/title"
+        app:layout_constraintEnd_toStartOf="@id/balance_action"
+        app:layout_goneMarginEnd="@dimen/offsetMedium"
+        android:textAlignment="viewEnd"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginStart="@dimen/offsetExtraSmall"
+        android:layout_marginEnd="@dimen/offsetExtraSmall"
+        android:ellipsize="middle"
+        android:maxLines="1"
+        android:textColor="?attr/textSecondaryColor"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:text="@string/swap_balance"/>
+
+    <uikit.widget.StretchyViewGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/offsetMedium"
+        app:layout_constraintTop_toBottomOf="@android:id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="@dimen/offsetMediumHalf"
+        android:paddingBottom="@dimen/offsetMedium"
+        android:clipToPadding="false"
+        android:id="@+id/token_duet">
+        <!-- TODO -->
+        <com.tonapps.tonkeeper.ui.screen.swap.main.widget.SwapTokenView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap"
+            android:id="@android:id/empty"/>
+        <com.tonapps.tonkeeper.ui.screen.swap.main.widget.SwapTokenView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap"
+            android:id="@+id/token"
+            android:visibility="gone"/>
+    </uikit.widget.StretchyViewGroup>
+
+    <com.tonapps.tonkeeper.core.widget.AmountInputView
+        style="@style/Widget.App.AmountEditText"
+        android:id="@+id/amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textSize="28sp"
+        android:paddingEnd="@dimen/offsetMedium"
+        android:paddingStart="@dimen/offsetExtraSmall"
+        android:textAlignment="viewEnd"
+        android:maxLines="1"
+        android:enabled="false"
+        app:layout_constraintStart_toEndOf="@id/token_duet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@android:id/title"
+        app:layout_constraintBottom_toBottomOf="@id/token_duet"/>
+
+</merge>

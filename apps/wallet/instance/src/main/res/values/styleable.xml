@@ -3,4 +3,15 @@
     <declare-styleable name="LabelEditorView">
         <attr name="android:button" format="string|reference"/>
     </declare-styleable>
+    <declare-styleable name="SwapTargetView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="target"/>
+        <!--<attr name="android:hint" format="string|reference"/>
+        <attr name="android:icon" format="reference"/>
+        <attr name="android:value" format="string|reference"/>-->
+    </declare-styleable>
+    <attr name="target">
+        <enum name="send" value="0"/>
+        <enum name="receive" value="1"/>
+    </attr>
 </resources>

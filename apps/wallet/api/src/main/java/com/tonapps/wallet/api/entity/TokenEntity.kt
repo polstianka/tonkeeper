@@ -2,6 +2,7 @@ package com.tonapps.wallet.api.entity
 
 import android.net.Uri
 import android.os.Parcelable
+import com.tonapps.blockchain.ton.extensions.toUserFriendly
 import com.tonapps.wallet.api.R
 import io.tonapi.models.JettonPreview
 import io.tonapi.models.JettonVerificationType
@@ -22,6 +23,13 @@ data class TokenEntity(
     }
 
     companion object {
+        @Deprecated("""
+            Consider dropping special address value for TON,
+            as it requires adding extra handling everywhere TokenEntity is used.
+            
+            Rely only on proper address value,
+            or, better, use special type with cache for raw & user-friendly addresses.
+        """)
         val TON = TokenEntity(
             address = "TON",
             name = "Toncoin",
@@ -31,6 +39,9 @@ data class TokenEntity(
             verification = Verification.whitelist
         )
 
+        const val TON_CONTRACT_USER_FRIENDLY_ADDRESS = "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"
+        const val TON_CONTRACT_RAW_ADDRESS = "0:0000000000000000000000000000000000000000000000000000000000000000"
+
         private fun convertVerification(verification: JettonVerificationType): Verification {
             return when (verification) {
                 JettonVerificationType.whitelist -> Verification.whitelist
@@ -38,7 +49,25 @@ data class TokenEntity(
                 else -> Verification.none
             }
         }
+
+        // TODO(API): this should not be hardcoded
+
+        const val USDT_SYMBOL = "USD₮"
+        const val USDT_CONTRACT_RAW_ADDRESS = "0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe"
+
+        fun specialSymbol(symbol: String, address: String): String? {
+            return if (isUSDT(symbol, address)) {
+                TON.symbol
+            } else {
+                null
+            }
+        }
+
+        fun isUSDT(symbol: String, address: String): Boolean {
+            return symbol == USDT_SYMBOL && address == USDT_CONTRACT_RAW_ADDRESS
+        }
     }
+
 
     val isTon: Boolean
         get() = address == TON.address
@@ -51,4 +80,20 @@ data class TokenEntity(
         decimals = jetton.decimals,
         verification = convertVerification(jetton.verification)
     )
+
+    fun getRawAddress(): String {
+        return if (isTon) {
+            TON_CONTRACT_RAW_ADDRESS
+        } else {
+            address
+        }
+    }
+
+    fun getUserFriendlyAddress(wallet: Boolean, testnet: Boolean): String {
+        return if (isTon) {
+            TON_CONTRACT_USER_FRIENDLY_ADDRESS
+        } else {
+            address.toUserFriendly(wallet, testnet)
+        }
+    }
 }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <FrameLayout
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_gradient_top"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingTop="@dimen/offsetMedium"
+        android:paddingBottom="@dimen/offsetLarge">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/searchHeight"
+            android:background="@drawable/bg_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/search_icon"
+                android:layout_width="44dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:tint="?attr/iconSecondaryColor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_magnifying_glass_16"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/search_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toEndOf="@id/search_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColorHint="?attr/textSecondaryColor"
+                android:textColor="?attr/textPrimaryColor"
+                android:textAlignment="viewStart"
+                android:background="@android:color/transparent"
+                android:hint="@string/search"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        android:title="@string/assets_choose"
+        android:action="@drawable/ic_close_16"/>
+
+    <FrameLayout
+        android:id="@+id/label_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingTop="@dimen/offsetLarge"
+        android:paddingBottom="@dimen/offsetMedium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/label_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"
+            android:text="@string/close"/>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/bottom_overlay"
+        android:background="?attr/backgroundPageColor"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,6 @@ package com.tonapps.network
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.ArrayMap
-import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
@@ -20,7 +19,6 @@ import okhttp3.Response
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
-import org.json.JSONObject
 
 private fun requestBuilder(url: String): Request.Builder {
     val builder = Request.Builder()
@@ -58,15 +56,22 @@ fun OkHttpClient.post(
     return newCall(builder.build()).execute()
 }
 
-fun OkHttpClient.get(
+fun OkHttpClient.getRequest(
     url: String,
     headers: ArrayMap<String, String>? = null
-): String {
+): Response {
     val builder = requestBuilder(url)
     headers?.forEach { (key, value) ->
         builder.addHeader(key, value)
     }
-    return newCall(builder.build()).execute().body?.string() ?: throw Exception("Empty response")
+    return newCall(builder.build()).execute()
+}
+
+fun OkHttpClient.get(
+    url: String,
+    headers: ArrayMap<String, String>? = null
+): String {
+    return getRequest(url, headers).body?.string() ?: throw Exception("Empty response")
 }
 
 fun OkHttpClient.getBitmap(url: String): Bitmap {

@@ -2,7 +2,7 @@ package uikit.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
@@ -10,6 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.WindowInsetsCompat
 import uikit.R
 import uikit.drawable.BarDrawable
@@ -49,7 +50,7 @@ open class HeaderView @JvmOverloads constructor(
     private val subtitleContainerView: View
     private val subtitleView: AppCompatTextView
     private val loaderView: LoaderView
-    private val textView: View
+    private val textView: LinearLayoutCompat
 
     var doOnCloseClick: (() -> Unit)? = null
         set(value) {
@@ -128,6 +129,13 @@ open class HeaderView @JvmOverloads constructor(
 
     fun setAction(@DrawableRes resId: Int) {
         setDrawableForView(actionView, resId)
+    }
+
+    fun alignTitleToStart() {
+        titleView.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+        closeView.visibility = View.GONE
+        (titleView.layoutParams as LayoutParams).gravity = Gravity.START
+        textView.setPaddingRelative(0, titleView.paddingTop, titleView.paddingEnd, titleView.paddingBottom)
     }
 
     fun contentMatchParent() {

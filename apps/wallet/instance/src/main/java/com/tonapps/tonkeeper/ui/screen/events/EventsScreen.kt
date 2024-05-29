@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.core.history.list.HistoryAdapter
 import com.tonapps.tonkeeper.core.history.list.HistoryItemDecoration
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.extensions.CONTEST_ENABLE_PURCHASE
+import com.tonapps.tonkeeper.extensions.buyCoins
 import com.tonapps.tonkeeper.ui.screen.main.MainScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeperx.R
@@ -55,9 +56,20 @@ class EventsScreen: MainScreen.Child(R.layout.fragment_main_events_list) {
         emptyView = view.findViewById(R.id.empty)
         emptyView.doOnButtonClick = { first ->
             if (first) {
-                FiatDialog.open(requireContext())
+                openBuyTonScreen()
             } else {
                 openQRCode()
+            }
+        }
+        if (CONTEST_ENABLE_PURCHASE) {
+            // Access legacy implementation via long press
+            emptyView.doOnButtonLongClick = { first ->
+                if (first) {
+                    openBuyTonScreen(true)
+                    true
+                } else {
+                    false
+                }
             }
         }
         collectFlow(eventsViewModel.isUpdatingFlow) { updating ->
@@ -76,8 +88,14 @@ class EventsScreen: MainScreen.Child(R.layout.fragment_main_events_list) {
         eventsViewModel.update()
     }
 
+    private fun openBuyTonScreen(legacy: Boolean = !CONTEST_ENABLE_PURCHASE) {
+        collectFlow(eventsViewModel.activeWallet()) { walletEntity ->
+            navigation?.buyCoins(walletEntity.address, walletEntity.type, TokenEntity.TON, legacy)
+        }
+    }
+
     private fun openQRCode() {
-        collectFlow(eventsViewModel.openQRCode()) { walletEntity ->
+        collectFlow(eventsViewModel.activeWallet()) { walletEntity ->
             navigation?.add(QRScreen.newInstance(walletEntity.address, TokenEntity.TON, walletEntity.type))
         }
     }

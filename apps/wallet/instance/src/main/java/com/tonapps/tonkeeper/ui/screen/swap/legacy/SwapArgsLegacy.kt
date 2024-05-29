@@ -1,11 +1,12 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.tonkeeper.ui.screen.swap.legacy
 
 import android.net.Uri
 import android.os.Bundle
 import com.tonapps.extensions.getParcelableCompat
 import uikit.base.BaseArgs
 
-data class SwapArgs(
+@Deprecated(message = "Migrate to the new SwapScreen")
+data class SwapArgsLegacy(
     val uri: Uri,
     val address: String,
     val fromToken: String,

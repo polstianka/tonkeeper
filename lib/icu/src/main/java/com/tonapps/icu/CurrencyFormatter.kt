@@ -1,15 +1,6 @@
 package com.tonapps.icu
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
 import android.util.ArrayMap
-import android.util.Log
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -125,16 +116,39 @@ object CurrencyFormatter {
         return format(currency, amount)
     }
 
+    private val TEN_POW_MINUS_TWO by lazy {
+        0.01.toBigDecimal()
+    }
+
+    fun BigDecimal.preferredDisplayDecimalCount(): Int {
+        return if (this < TEN_POW_MINUS_TWO) {
+            val remainder = this % BigDecimal.ONE
+            val scale = remainder.scale()
+            val length = remainder.unscaledValue().toString().length
+            return scale - length + 1
+        } else {
+            2
+        }
+    }
+
     fun format(
         currency: String = "",
-        value: BigDecimal
+        value: BigDecimal,
+        decimals: Int = -1,
+        optimizeScale: Boolean = true
     ): CharSequence {
-        var bigDecimal = value.stripTrailingZeros()
-        if (bigDecimal.scale() > 0) {
-            bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_DOWN)
+        var bigDecimal = value
+        if (optimizeScale) {
+            bigDecimal = value.stripTrailingZeros()
+            if (bigDecimal.scale() > 0) {
+                var preferredDecimals = bigDecimal.preferredDisplayDecimalCount()
+                if (decimals != -1) {
+                    preferredDecimals = maxOf(decimals, preferredDecimals)
+                }
+                bigDecimal = bigDecimal.setScale(preferredDecimals, RoundingMode.HALF_DOWN)
+            }
         }
-        val decimals = bigDecimal.scale()
-        val amount = getFormat(decimals).format(value)
+        val amount = getFormat(bigDecimal.scale()).format(value)
         return format(currency, amount)
     }
 

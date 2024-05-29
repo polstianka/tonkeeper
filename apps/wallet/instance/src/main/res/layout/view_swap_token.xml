@@ -1,0 +1,35 @@
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <uikit.widget.FrescoView
+        android:id="@android:id/icon"
+        app:roundAsCircle="true"
+        android:visibility="gone"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/offsetExtraSmall"
+        android:background="@drawable/bg_oval"
+        android:backgroundTint="?attr/backgroundContentAttentionColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@android:id/text1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/tertiaryHeight"
+        style="@style/Widget.App.Button.Tertiary"
+        android:layout_marginStart="@dimen/offsetExtraSmall"
+        android:layout_marginEnd="@dimen/tertiaryPadding"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        app:layout_goneMarginStart="@dimen/tertiaryPadding"
+        android:background="@null"
+        android:textAllCaps="true"
+        android:text="@string/swap_choose"
+        app:layout_constraintStart_toEndOf="@android:id/icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</merge>

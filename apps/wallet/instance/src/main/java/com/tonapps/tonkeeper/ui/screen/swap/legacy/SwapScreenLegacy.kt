@@ -1,11 +1,11 @@
-package com.tonapps.tonkeeper.ui.screen.swap
+package com.tonapps.tonkeeper.ui.screen.swap.legacy
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
+import com.tonapps.tonkeeper.ui.screen.swap.stonfi.StonfiBridge2
 import com.tonapps.tonkeeperx.BuildConfig
 import com.tonapps.tonkeeperx.R
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -14,9 +14,10 @@ import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.getDimensionPixelSize
 import uikit.widget.webview.bridge.BridgeWebView
 
-class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet {
+@Deprecated(message = "Migrate to the new SwapScreen")
+class SwapScreenLegacy: BaseFragment(R.layout.fragment_swap_legacy), BaseFragment.BottomSheet {
 
-    private val args: SwapArgs by lazy { SwapArgs(requireArguments()) }
+    private val args: SwapArgsLegacy by lazy { SwapArgsLegacy(requireArguments()) }
 
     private val rootViewModel: RootViewModel by activityViewModel()
 
@@ -63,9 +64,9 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
             address: String,
             fromToken: String,
             toToken: String? = null
-        ): SwapScreen {
-            val fragment = SwapScreen()
-            fragment.arguments = SwapArgs(uri, address, fromToken, toToken).toBundle()
+        ): SwapScreenLegacy {
+            val fragment = SwapScreenLegacy()
+            fragment.arguments = SwapArgsLegacy(uri, address, fromToken, toToken).toBundle()
             return fragment
         }
     }

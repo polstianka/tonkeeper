@@ -15,7 +15,6 @@ import android.view.WindowManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.BackEventCompat
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,11 +24,14 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tonapps.uikit.color.backgroundPageColor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import uikit.extensions.getSpannable
+import uikit.extensions.hideKeyboard
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.BottomSheetLayout
 import uikit.widget.ModalView
@@ -63,6 +65,10 @@ open class BaseFragment(
 
     interface BottomSheet {
 
+        fun onStartShowingAnimation() {
+
+        }
+
         fun onEndShowingAnimation() {
 
         }
@@ -70,6 +76,8 @@ open class BaseFragment(
         fun onDragging() {
 
         }
+
+        fun onPrepareToShow(parent: BottomSheetLayout, behavior: BottomSheetBehavior<FrameLayout>) { }
     }
 
     interface Modal {
@@ -113,8 +121,29 @@ open class BaseFragment(
 
     private var isFinished: Boolean = false
 
-    fun setArgs(args: BaseArgs) {
-        arguments = args.toBundle()
+    protected var lazyArgs: BaseArgs? = null
+        private set
+
+    fun setArgs(args: BaseArgs, ignoreErrors: Boolean = false) {
+        lazyArgs = args
+        if (!ignoreErrors) {
+            arguments = args.toBundle()
+            return
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val bundle = try {
+                args.toBundle()
+            } catch (e: Exception) {
+                return@launch
+            }
+            launch(Dispatchers.Main) {
+                try {
+                    arguments = bundle
+                } catch (e: Exception) {
+                    Log.w("Failed to save instance state", e)
+                }
+            }
+        }
     }
 
     fun getSpannable(@StringRes id: Int): SpannableString {
@@ -179,6 +208,7 @@ open class BaseFragment(
         val bottomSheetLayout = BottomSheetLayout(context)
         bottomSheetLayout.setContentView(view)
         bottomSheetLayout.doOnHide = ::finishInternal
+        bottomSheetLayout.doOnAnimationStart = ::onStartShowingAnimation
         bottomSheetLayout.doOnAnimationEnd = ::onEndShowingAnimation
         bottomSheetLayout.doOnDragging = ::onDragging
         bottomSheetLayout.fragment = this
@@ -187,6 +217,7 @@ open class BaseFragment(
         } else {
             bottomSheetLayout.doOnLayout { onEndShowingAnimation() }
         }
+        onPrepareToShow(bottomSheetLayout, bottomSheetLayout.behavior)
         return bottomSheetLayout
     }
 
@@ -241,6 +272,11 @@ open class BaseFragment(
 
     fun post(action: Runnable) {
         view?.post(action)
+    }
+
+    fun hideKeyboardAndRun(action: Runnable) {
+        getCurrentFocus()?.hideKeyboard()
+        postDelayed(80L, action)
     }
 
     @ColorInt
