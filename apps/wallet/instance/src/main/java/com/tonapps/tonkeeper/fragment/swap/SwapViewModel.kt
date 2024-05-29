@@ -43,7 +43,6 @@ class SwapViewModel(
     private val walletManager: WalletManager,
     private val tokenRepository: TokenRepository,
     private val stonfiRepository: StonfiRepository,
-    private val ratesRepository: RatesRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
