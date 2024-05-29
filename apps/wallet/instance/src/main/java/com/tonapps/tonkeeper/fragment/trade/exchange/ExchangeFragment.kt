@@ -18,9 +18,7 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
-import uikit.extensions.cornerMedium
 import uikit.extensions.dp
-import uikit.extensions.round
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.SimpleRecyclerView
@@ -65,7 +63,7 @@ class ExchangeFragment : BaseFragment(R.layout.fragment_exchange) {
 
         button?.setThrottleClickListener { viewModel.onButtonClicked() }
 
-        footer?.applyNavBottomPadding()
+        footer?.applyNavBottomPadding(16f.dp)
 
         observeFlow(viewModel.totalFiat) { rateTextView?.text = it }
         observeFlow(viewModel.methods) { adapter.submitList(it) }

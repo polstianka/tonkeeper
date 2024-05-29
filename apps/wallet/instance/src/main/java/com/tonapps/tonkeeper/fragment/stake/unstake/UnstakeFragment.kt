@@ -15,6 +15,7 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -55,7 +56,7 @@ class UnstakeFragment : BaseFragment(R.layout.fragment_unstake), BaseFragment.Bo
         super.onViewCreated(view, savedInstanceState)
         header?.doOnActionClick = { viewModel.onCloseClicked() }
 
-        footer?.applyNavBottomPadding()
+        footer?.applyNavBottomPadding(16f.dp)
 
         input?.setOnMaxClickedListener { viewModel.onMaxClicked() }
         input?.setOnAmountChangedListener { viewModel.onAmountChanged(it) }

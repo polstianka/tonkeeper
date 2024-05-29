@@ -18,6 +18,7 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
@@ -87,7 +88,7 @@ class ConfirmSwapFragment : BaseFragment(R.layout.fragment_swap_confirm), BaseFr
         super.onViewCreated(view, savedInstanceState)
         header?.onCloseClick = { viewModel.onCloseClicked() }
 
-        footer?.applyNavBottomPadding()
+        footer?.applyNavBottomPadding(16f.dp)
 
         confirmButton?.setThrottleClickListener { viewModel.onConfirmClicked() }
 

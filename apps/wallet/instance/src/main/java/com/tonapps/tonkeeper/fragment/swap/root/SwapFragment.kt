@@ -24,6 +24,7 @@ import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
+import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
@@ -94,7 +95,7 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
 
         sendInput?.doOnAmountChange { viewModel.onSendAmountChanged(it) }
 
-        footer?.applyNavBottomPadding()
+        footer?.applyNavBottomPadding(16f.dp)
 
         confirmButton?.setThrottleClickListener { viewModel.onConfirmClicked() }
 

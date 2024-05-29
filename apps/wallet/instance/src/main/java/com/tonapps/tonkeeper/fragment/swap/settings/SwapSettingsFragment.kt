@@ -14,6 +14,7 @@ import uikit.base.BaseFragment
 import uikit.drawable.InputDrawable
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.applySelectableBgContent
+import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.InputView
@@ -65,7 +66,7 @@ class SwapSettingsFragment : BaseFragment(R.layout.fragment_swap_settings), Base
         super.onViewCreated(view, savedInstanceState)
         header?.onCloseClick = { viewModel.onCloseClick() }
 
-        footer?.applyNavBottomPadding()
+        footer?.applyNavBottomPadding(16f.dp)
 
         switch?.setOnClickListener(null)
 

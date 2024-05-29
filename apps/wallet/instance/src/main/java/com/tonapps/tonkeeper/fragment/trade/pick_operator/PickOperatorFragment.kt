@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.extensions.popBackToRootFragment
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
@@ -81,7 +80,7 @@ class PickOperatorFragment : BaseFragment(R.layout.fragment_pick_operator),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonContainer?.applyNavBottomPadding()
+        buttonContainer?.applyNavBottomPadding(16f.dp)
 
         header?.setAction(UIKitIcon.ic_close_16)
         header?.doOnActionClick = { viewModel.onCrossClicked() }

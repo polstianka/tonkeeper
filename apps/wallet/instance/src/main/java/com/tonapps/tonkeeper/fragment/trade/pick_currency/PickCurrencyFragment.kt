@@ -47,6 +47,7 @@ class PickCurrencyFragment : BaseListFragment(), BaseFragment.BottomSheet {
         super.onViewCreated(view, savedInstanceState)
         setTitle(getString(com.tonapps.wallet.localization.R.string.currency))
         setAdapter(adapter)
+
         observeFlow(viewModel.items) { adapter.submitList(it) }
     }
 
