@@ -23,7 +23,7 @@ class ActionsHolder(parent: ViewGroup) : Holder<Item.Actions>(parent, R.layout.v
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { // FiatDialog.open(parent.context)
+        buyOrSellView.setOnClickListener {
             navigation?.add(TradeDialog())
         }
         scanView.setOnClickListener { navigation?.openCamera() }
