@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.dialog.trade.operator.confirmation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.dialog.trade.operator.OperatorItem
 import com.tonapps.wallet.data.core.WalletCurrency
 import kotlinx.coroutines.channels.Channel
@@ -10,6 +9,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -22,26 +22,25 @@ class ConfirmationTradeViewModel : ViewModel() {
     val paymentInfoFlow = _paymentInfoFlow.asSharedFlow()
     private val _continueFlow = Channel<ContinuePaymentItem>()
     val continueFlow = _continueFlow.receiveAsFlow()
-
     private var rate = 0.0
-    private var isPayMethod = true
+    private var isBuyMethod = true
     private var operatorItem: OperatorItem? = null
 
     fun submitOperatorItem(
         item: OperatorItem,
-        isPayMethod: Boolean,
+        isBuyMethod: Boolean,
     ) {
         this.operatorItem = item
-        this.isPayMethod = isPayMethod
+        this.isBuyMethod = isBuyMethod
         rate =
-            if (isPayMethod) {
+            if (isBuyMethod) {
                 item.rate ?: 0.0
             } else {
                 item.rate?.let {
                     (1 / it)
                 } ?: 0.0
             }
-        if (isPayMethod) {
+        if (isBuyMethod) {
             _payCurrencyFlow.value = item.fiatCurrency
             _getCurrencyFlow.value = WalletCurrency.TON.code
         } else {
@@ -50,12 +49,21 @@ class ConfirmationTradeViewModel : ViewModel() {
         }
     }
 
+    fun getContinueButtonAvailableFlow() =
+        _paymentInfoFlow.map {
+            if (isBuyMethod) {
+                return@map it.get >= (operatorItem?.minTonBuyAmount ?: 0.0)
+            } else {
+                return@map it.pay >= (operatorItem?.minTonSellAmount ?: 0.0)
+            }
+        }
+
     fun onPayChanged(sum: Double) {
         viewModelScope.launch {
             _paymentInfoFlow.emit(
                 PaymentInfo(
-                    pay = CurrencyFormatter.format("", sum),
-                    get = CurrencyFormatter.format("", sum / rate),
+                    pay = sum,
+                    get = sum / rate,
                 ),
             )
         }
@@ -65,8 +73,8 @@ class ConfirmationTradeViewModel : ViewModel() {
         viewModelScope.launch {
             _paymentInfoFlow.emit(
                 PaymentInfo(
-                    pay = CurrencyFormatter.format("", sum * rate),
-                    get = CurrencyFormatter.format("", sum),
+                    pay = sum * rate,
+                    get = sum,
                 ),
             )
         }

@@ -25,7 +25,9 @@ import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.FrescoView
 import uikit.widget.HeaderView
 
-class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), BaseFragment.BottomSheet {
+class ConfirmationTradeScreen :
+    BaseFragment(R.layout.fragment_confirmation),
+    BaseFragment.BottomSheet {
     companion object {
         private const val OPERATOR_KEY = "operator"
 
@@ -48,6 +50,7 @@ class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), Ba
     private lateinit var rateText: TextView
     private lateinit var headerView: HeaderView
     private lateinit var continueButton: Button
+    private lateinit var minAmountText: TextView
     private var payTextWatcher: TextWatcher? = null
     private var receiveTextWatcher: TextWatcher? = null
     private val tradeViewModel by activityViewModel<TradeViewModel>()
@@ -72,6 +75,7 @@ class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), Ba
         rateText = view.findViewById(R.id.rate_text)
         headerView = view.findViewById(R.id.header)
         continueButton = view.findViewById(R.id.continue_button)
+        minAmountText = view.findViewById(R.id.min_amount_text)
         headerView.doOnCloseClick = { finish() }
         headerView.doOnActionClick = { finish() }
         val operatorItem = requireArguments().getParcelable<OperatorItem>(OPERATOR_KEY)
@@ -97,9 +101,33 @@ class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), Ba
         }
         receiveEdit.post {
             if (tradeViewModel.isBuyMode.value) {
-                receiveEdit.setText(CurrencyFormatter.format("", tradeViewModel.amountFlow.value ?: 0.0).toString())
+                receiveEdit.setText(
+                    CurrencyFormatter.format(
+                        "",
+                        tradeViewModel.amountFlow.value ?: 0.0,
+                    ).toString(),
+                )
             } else {
-                payEdit.setText(CurrencyFormatter.format("", tradeViewModel.amountFlow.value ?: 0.0).toString())
+                payEdit.setText(
+                    CurrencyFormatter.format("", tradeViewModel.amountFlow.value ?: 0.0).toString(),
+                )
+            }
+        }
+        if (tradeViewModel.isBuyMode.value) {
+            if (operatorItem.minTonBuyAmount != 0.0) {
+                minAmountText.text =
+                    getString(
+                        com.tonapps.wallet.localization.R.string.min_amount,
+                        CurrencyFormatter.format("", operatorItem.minTonBuyAmount).toString(),
+                    )
+            }
+        } else {
+            if (operatorItem.minTonSellAmount != 0.0) {
+                minAmountText.text =
+                    getString(
+                        com.tonapps.wallet.localization.R.string.min_amount,
+                        CurrencyFormatter.format("", operatorItem.minTonSellAmount).toString(),
+                    )
             }
         }
         collectViewModelFlows()
@@ -183,8 +211,8 @@ class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), Ba
                 confirmationViewModel
                     .paymentInfoFlow
                     .onEach {
-                        payEdit.setText(it.pay)
-                        receiveEdit.setText(it.get)
+                        payEdit.setText(CurrencyFormatter.format("", it.pay))
+                        receiveEdit.setText(CurrencyFormatter.format("", it.get))
                         if (payEdit.isFocused) {
                             payEdit.setSelection(payEdit.text.length)
                         } else if (receiveEdit.isFocused) {
@@ -196,7 +224,17 @@ class ConfirmationTradeScreen : BaseFragment(R.layout.fragment_confirmation), Ba
                 confirmationViewModel
                     .continueFlow
                     .onEach {
-                        navigation?.add(FiatWebFragment.newInstance(url = it.url, pattern = it.pattern))
+                        navigation?.add(
+                            FiatWebFragment.newInstance(
+                                url = it.url,
+                                pattern = it.pattern,
+                            ),
+                        )
+                    }.launchIn(this)
+                confirmationViewModel
+                    .getContinueButtonAvailableFlow()
+                    .onEach { isAvailable ->
+                        continueButton.isEnabled = isAvailable
                     }.launchIn(this)
             }
         }
