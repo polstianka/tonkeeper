@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
 import uikit.R
+import uikit.extensions.useAttributes
 
 class ProgressButton @JvmOverloads constructor(
     context: Context,
@@ -18,7 +19,7 @@ class ProgressButton @JvmOverloads constructor(
     private val progressBar: ProgressBar
     private var text = ""
 
-    var onClick: ((view: View, isEnabled : Boolean) -> Unit)? = null
+    var onClick: ((view: View, isEnabled: Boolean) -> Unit)? = null
         set(value) {
             field = value
             progressButton.setOnClickListener {
@@ -32,6 +33,10 @@ class ProgressButton @JvmOverloads constructor(
 
         progressButton = findViewById(R.id.progress_button)
         progressBar = findViewById(R.id.progress_bar)
+
+        context.useAttributes(attrs, R.styleable.ProgressButton) {
+            progressButton.text = it.getString(R.styleable.ProgressButton_android_text)
+        }
 
     }
 
@@ -56,8 +61,10 @@ class ProgressButton @JvmOverloads constructor(
         super.setEnabled(enabled)
         if (enabled) {
             progressButton.setBackgroundResource(R.drawable.bg_button_primary)
+            // progressButton.setTextColor(context.buttonPrimaryForegroundColor)
         } else {
             progressButton.setBackgroundResource(R.drawable.bg_button_secondary)
+            // progressButton.setTextColor(context.buttonSecondaryForegroundColor)
         }
     }
 

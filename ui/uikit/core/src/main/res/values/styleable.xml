@@ -7,6 +7,10 @@
         <attr name="ignoreSystemOffset" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="ProgressButton">
+        <attr name="android:text" format="string|reference"/>
+    </declare-styleable>
+
     <declare-styleable name="IntroBlockView">
         <attr name="android:icon" format="reference"/>
         <attr name="android:title" format="string|reference"/>
