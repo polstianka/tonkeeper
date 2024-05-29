@@ -23,6 +23,7 @@ import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.swap.StonfiBridge
 import com.tonapps.tonkeeperx.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -169,7 +170,13 @@ class SwapScreen : BaseFragment(R.layout.fragment_swap), BaseFragment.BottomShee
         }
 
         swapView.onSwapClick = {
-            swapViewMode.onClickSwap()
+            lifecycleScope.launch {
+                val state = swapViewMode.stateFlow.firstOrNull() ?:return@launch
+                if (state.receive != null) {
+                    swapView.btnSwapView.animateMove()
+                    swapViewMode.onClickSwap()
+                }
+            }
         }
         swapView.receiveView.onSnackShow = {
             snackView.show(it)

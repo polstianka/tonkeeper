@@ -18,7 +18,7 @@ class SwapView @JvmOverloads constructor(
 
     val sendView: SendSwapView
     val receiveView: ReceiveSwapView
-    private val btnSwapView: SwapButtonView
+    val btnSwapView: SwapButtonView
 
     var onSwapClick: (() -> Unit)? = null
 

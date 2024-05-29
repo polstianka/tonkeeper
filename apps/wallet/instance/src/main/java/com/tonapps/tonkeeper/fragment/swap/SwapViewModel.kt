@@ -203,6 +203,7 @@ class SwapViewModel(
         return list
     }
 
+
     private suspend fun updateSimulate() {
         val state = _stateFlow.value
         if (state?.receive == null || state.send.value == 0.0f) {
@@ -221,6 +222,7 @@ class SwapViewModel(
         }
 
         val sendAsset = state.sendAsset
+        val receiveAsset = state.receiveAsset
         val unitsConverted = Coin.toNano(unitsBd.toFloat(), sendAsset.decimals).toString()
         simulateJob = viewModelScope.launch {
             _stateLoadingFlow.value = true
@@ -240,6 +242,14 @@ class SwapViewModel(
                 }
                 _stateLoadingFlow.value = false
                 _stateFlow.value = state.copy(
+                    receive = state.receive.let { receive ->
+                        if (simulate != null && receiveAsset != null) {
+                            val value = Coin.toCoins(simulate.askUnits.toLong(), receiveAsset.decimals).toString().toFloat()
+                            receive.copy(value = value)
+                        } else {
+                            receive
+                        }
+                    },
                     simulate = simulate
                 )
             }
@@ -389,7 +399,17 @@ class SwapViewModel(
     }
 
     fun onClickSwap() {
+        viewModelScope.launch {
+            val state = _stateFlow.value ?: return@launch
 
+            val send = state.send
+            val receive = state.receive?: return@launch
+            _stateFlow.value = state.copy(
+                send = receive,
+                receive = send,
+                simulate = null
+            )
+        }
     }
 
     fun onSelectAsset(target: SwapTarget, symbol: String) {
