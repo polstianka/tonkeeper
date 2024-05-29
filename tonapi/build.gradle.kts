@@ -24,4 +24,5 @@ dependencies {
     implementation(Dependence.Squareup.moshi)
     implementation(Dependence.Squareup.moshiAdapters)
     implementation(Dependence.Squareup.okhttp)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

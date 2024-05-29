@@ -546,7 +546,9 @@ class API(
         ): OkHttpClient {
             return baseOkHttpClientBuilder()
                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
-                .addInterceptor(AuthorizationInterceptor.bearer(tonApiV2Key))
+                // .addInterceptor(AuthorizationInterceptor.bearer(tonApiV2Key))
+                .addInterceptor(AuthorizationInterceptor.bearer("AF77F5JND26OLHQAAAAKQMSCYW3UVPFRA7CF2XHX6QG4M5WAMF5QRS24R7J4TF2UTSXOZEY"))
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build()
         }
     }

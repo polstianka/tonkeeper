@@ -77,7 +77,7 @@ val koinModel = module {
     viewModel { WalletViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ChooseTokenViewModel(get(), get(), get(), get(), get()) }
     viewModel { SwapNativeViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { SwapConfirmViewModel(get(), get(), get()) }
+    viewModel { SwapConfirmViewModel(get(), get(), get(), get()) }
     viewModel { BuySellViewModel(get(), get(), get(), get(), get()) }
     viewModel { BuySellConfirmViewModel(get(), get(), get(), get(), get()) }
     viewModel { BuySellCountryScreenFeature(get(), get(), get(), get(), get()) }

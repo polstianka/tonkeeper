@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.swapnative.choose.list
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.tonkeeperx.R
@@ -38,20 +39,20 @@ class TokenTypeHolder(
         if (item.balance == 0.0) {
             balanceView.text = "0"
             balanceView.setTextColor(context.textSecondaryColor)
+            balanceFiatView.visibility = View.GONE
         } else {
             balanceView.setTextColor(context.textPrimaryColor)
+            balanceFiatView.visibility = View.VISIBLE
             if (item.hiddenBalance) {
                 balanceView.text = HIDDEN_BALANCE
+                balanceFiatView.text = HIDDEN_BALANCE
             } else {
                 balanceView.text = item.balanceFormat
+                val fiat = item.rate * item.balance
+                balanceFiatView.text = item.FiatBalance
             }
-        }
 
-        /*balanceView.text = if (item.hiddenBalance) {
-            HIDDEN_BALANCE
-        } else {
-            item.balanceFormat
-        }*/
+        }
 
         /*if (item.testnet) {
             balanceFiatView.visibility = View.GONE

@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <uikit.widget.HeaderView
         android:id="@+id/header"
@@ -15,59 +16,92 @@
         android:title="@string/swap"
         app:ignoreSystemOffset="true" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/body"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:paddingHorizontal="@dimen/offsetMedium">
+        android:layout_weight="1">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/main_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:paddingHorizontal="@dimen/offsetMedium">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.tonapps.tonkeeper.view.SwapFromContainerView
-                    android:id="@+id/swap_from_container"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content">
 
-                <com.tonapps.tonkeeper.view.SwapToContainerView
-                    android:id="@+id/swap_to_container"
+                    <com.tonapps.tonkeeper.view.SwapFromContainerView
+                        android:id="@+id/swap_from_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.tonapps.tonkeeper.view.SwapToContainerView
+                        android:id="@+id/swap_to_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/offsetSmall"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/swap_from_container" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/switch_tokens"
+                        android:layout_width="@dimen/actionSize"
+                        android:layout_height="@dimen/actionSize"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/offsetLarge"
+                        android:background="@drawable/bg_oval_button_secondary"
+                        android:backgroundTint="?attr/buttonTertiaryBackgroundColor"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_swap"
+                        android:tint="?attr/buttonSecondaryForegroundColor"
+                        app:layout_constraintBottom_toTopOf="@+id/swap_to_container"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/swap_from_container" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:paddingHorizontal="@dimen/offsetMedium">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_cell_swap_from_skeleton" />
+
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/offsetSmall"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/swap_from_container" />
+                    android:layout_height="@dimen/offsetMedium"/>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/switch_tokens"
-                    android:layout_width="@dimen/actionSize"
-                    android:layout_height="@dimen/actionSize"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/offsetLarge"
-                    android:background="@drawable/bg_oval_button_secondary"
-                    android:backgroundTint="?attr/buttonTertiaryBackgroundColor"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_swap"
-                    android:tint="?attr/buttonSecondaryForegroundColor"
-                    app:layout_constraintBottom_toTopOf="@+id/swap_to_container"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/swap_from_container" />
+                <include layout="@layout/view_cell_swap_from_skeleton" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        </uikit.widget.SkeletonLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
 
     <uikit.widget.ProgressButton
         android:id="@+id/continue_progress_button"

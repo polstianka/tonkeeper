@@ -8,6 +8,8 @@ data class TokenTypeItem(
     val displayName: String,
     val symbol: String,
     val balance: Double,
+    val FiatBalance: String,
+    val rate : Float,
     val balanceFormat: CharSequence,
     val hiddenBalance: Boolean,
 

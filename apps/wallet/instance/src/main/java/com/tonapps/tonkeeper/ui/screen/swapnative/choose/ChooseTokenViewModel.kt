@@ -9,6 +9,7 @@ import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.ui.screen.swapnative.choose.list.TokenTypeItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.account.WalletRepository
+import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.AssetRepository
 import com.tonapps.wallet.data.token.TokenRepository
@@ -36,6 +37,8 @@ class ChooseTokenViewModel(
     private val _uiItemListFlow = MutableStateFlow<List<TokenTypeItem>>(emptyList())
     val uiItemListFlow = _uiItemListFlow.asStateFlow()
 
+    var selectedCurrency: WalletCurrency? = null
+
     init {
 
         combine(
@@ -43,6 +46,8 @@ class ChooseTokenViewModel(
             settings.currencyFlow,
             networkMonitor.isOnlineFlow
         ) { wallet, currency, isOnline ->
+
+            selectedCurrency = currency
 
             _tokenListFlow.value =
                 tokenRepository.getLocal(currency, wallet.accountId, wallet.testnet)
@@ -52,7 +57,11 @@ class ChooseTokenViewModel(
         _symbolToAssetMapFlow.combine(_tokenListFlow) { assetMap, tokenList ->
 
             tokenList.forEach { token ->
-                assetMap[token.symbol]?.balance = token.balance.value
+                assetMap.get(token.symbol)?.also {
+                    it.balance = token.balance.value
+                    it.rate = token.rateNow
+                }
+                // assetMap[token.symbol]?.balance = token.balance.value
             }
 
             populateList()
@@ -124,6 +133,13 @@ class ChooseTokenViewModel(
         return assetList.mapIndexed { index, assetEntity ->
 
             val balanceFormat = CurrencyFormatter.format(value = assetEntity.balance)
+            var fiatBalance = (assetEntity.rate * assetEntity.balance).toString()
+            if (selectedCurrency != null) {
+                fiatBalance = CurrencyFormatter.format(
+                    selectedCurrency?.code!!,
+                    (assetEntity.rate * assetEntity.balance)
+                ).toString()
+            }
 
             TokenTypeItem(
                 assetEntity.imageUrl?.toUri(),
@@ -131,6 +147,8 @@ class ChooseTokenViewModel(
                 assetEntity.displayName ?: "",
                 assetEntity.symbol,
                 assetEntity.balance,
+                fiatBalance,
+                assetEntity.rate,
                 balanceFormat,
                 hiddenBalance,
                 false,

@@ -40,6 +40,8 @@ data class AssetEntity(
 
     var balance : Double = 0.0
 
+    var rate : Float = 0f
+
     var hiddenBalance : Boolean = false
 
     val isTon = contractAddress == tonContractAddress

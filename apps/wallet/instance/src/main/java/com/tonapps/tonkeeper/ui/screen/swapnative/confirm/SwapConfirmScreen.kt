@@ -102,14 +102,7 @@ class SwapConfirmScreen : SwapBaseScreen(R.layout.fragment_swap_confirm), BaseFr
                         }
                         sellTokenIcon.setImageURI(fromAsset.imageUrl?.toUri())
 
-                        sellTokenBalance.text = if (fromAsset.hiddenBalance)
-                            "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
-                        else {
-                            String.format(
-                                getString(com.tonapps.wallet.localization.R.string.balance_format),
-                                fromAsset.balance
-                            )
-                        }
+                        sellTokenBalance.text = swapConfirmViewModel.getfromAssetFiatInput()
                         sellTokenBalance.visibility = View.VISIBLE
                     }
 
@@ -139,15 +132,7 @@ class SwapConfirmScreen : SwapBaseScreen(R.layout.fragment_swap_confirm), BaseFr
                         }
                         buyTokenIcon.setImageURI(toAsset.imageUrl?.toUri())
 
-                        buyTokenBalance.text =
-                            if (toAsset.hiddenBalance)
-                                "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
-                            else {
-                                String.format(
-                                    getString(com.tonapps.wallet.localization.R.string.balance_format),
-                                    toAsset.balance
-                                )
-                            }
+                        buyTokenBalance.text = swapConfirmViewModel.getToAssetFiatInput()
                         buyTokenBalance.visibility = View.VISIBLE
                     }
                 }

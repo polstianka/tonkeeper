@@ -19,5 +19,7 @@ open class SkeletonLayout @JvmOverloads constructor(
             .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
             .setAutoStart(true)
             .build()
+
+        startShimmer()
     }
 }

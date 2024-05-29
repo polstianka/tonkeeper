@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.blockchain.Coin
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.security.hex
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.extensions.getSeqno
@@ -12,6 +14,8 @@ import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.tonkeeper.ui.screen.swapnative.SwapData
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
+import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.SwapRepository
 import com.tonapps.wallet.data.token.entities.AssetEntity
 import com.tonapps.wallet.data.token.entities.SwapSimulateEntity
@@ -30,6 +34,7 @@ import ton.transfer.STONFI_CONSTANTS
 class SwapConfirmViewModel(
     private val swapRepository: SwapRepository,
     private val passcodeRepository: PasscodeRepository,
+    private val settingsRepository: SettingsRepository,
     private val api: API,
 ) : ViewModel() {
 
@@ -47,6 +52,8 @@ class SwapConfirmViewModel(
 
     val screenStateFlow = MutableStateFlow(SwapConfirmScreenState.initState)
 
+    var selectedCurrency: WalletCurrency? = null
+
 
     init {
         viewModelScope.launch {
@@ -54,6 +61,47 @@ class SwapConfirmViewModel(
                 ?: throw Exception("failed to get wallet")
         }
 
+        viewModelScope.launch {
+            settingsRepository.currencyFlow.collect { walletCurrency ->
+                selectedCurrency = walletCurrency
+            }
+
+        }
+
+    }
+
+    fun getfromAssetFiatInput(): String {
+        return if (selectedFromToken.value != null && swapDetailsFlow.value != null) {
+            val fromAsset = selectedFromToken.value
+            val offerUnits = swapDetailsFlow.value.offerUnits
+
+            var fiatBalance = (fromAsset.rate.toBigDecimal() * Coin.parseBigInt(
+                offerUnits.toString(),
+                fromAsset.decimals,
+                false
+            ))
+            val fiatBalanceString = if (selectedCurrency != null) {
+                CurrencyFormatter.format(selectedCurrency?.code!!, fiatBalance)
+            } else fiatBalance.toString()
+            fiatBalanceString.toString()
+        } else ""
+    }
+
+    fun getToAssetFiatInput(): String {
+        return if (selectedToToken.value != null && swapDetailsFlow.value != null) {
+            val toAsset = selectedToToken.value
+            val askUnits = swapDetailsFlow.value.askUnits
+
+            var fiatBalance = (toAsset.rate.toBigDecimal() * Coin.parseBigInt(
+                askUnits.toString(),
+                toAsset.decimals,
+                false
+            ))
+            val fiatBalanceString = if (selectedCurrency != null) {
+                CurrencyFormatter.format(selectedCurrency?.code!!, fiatBalance)
+            } else fiatBalance.toString()
+            fiatBalanceString.toString()
+        } else ""
     }
 
     fun decideSwapType(): SwapType? {

@@ -26,6 +26,7 @@ import uikit.extensions.hideKeyboard
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 import uikit.widget.ProgressButton
+import uikit.widget.SkeletonLayout
 
 class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFragment.BottomSheet,
     TokenSelectionListener, SlippageSelectionListener, SwapConfirmListener {
@@ -36,6 +37,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
     private lateinit var headerView: HeaderView
     private lateinit var nextButton: ProgressButton
+    private lateinit var mainView: View
+    private lateinit var loadingView: SkeletonLayout
 
     private lateinit var swapFromContainerView: SwapFromContainerView
     private lateinit var swapToContainerView: SwapToContainerView
@@ -62,11 +65,17 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
         swapFromContainerView = view.findViewById(R.id.swap_from_container)
         swapToContainerView = view.findViewById(R.id.swap_to_container)
+        mainView = view.findViewById(R.id.main_view)
+        loadingView = view.findViewById(R.id.loading_view)
 
         switchTokens = view.findViewById(R.id.switch_tokens)
     }
 
     private fun handleViews() {
+
+        postDelayed(2000) {
+            displayMainView()
+        }
 
         // headerView.contentMatchParent()
         headerView.doOnActionClick = { finish() }
@@ -78,7 +87,6 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                     navigation?.add(screen)
                 }
         }
-
 
         swapFromContainerView.doOnFromAssetItemClick = {
             ChooseTokenScreen.newInstance(null).also { chooseTokenScreen ->
@@ -147,6 +155,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         selectMaxSellBalance.visibility = View.GONE
 
                     } else {
+                        displayMainView()
+
                         // poppulate
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
                             sellTokenTitle.setText(fromAsset.symbol)
@@ -288,6 +298,11 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
     }
 
+    private fun displayMainView() {
+        mainView.visibility = View.VISIBLE
+        loadingView.visibility = View.GONE
+    }
+
     private fun updateInputAmountsFromApi(offerAmount: String, askAmount: String) {
         swapNativeViewModel.isProgrammaticSet = true
         swapFromContainerView.sellAmountInput.setText(offerAmount)
@@ -296,7 +311,6 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
     }
 
     private fun switchTokens() {
-        navigation?.toast("switch tokens!")
         // todo P handle simulate and edge cases!!!
 
         // TODO P disable submit button
@@ -370,15 +384,6 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                     swapNativeViewModel.setSelectedBuyToken(null)
             }
 
-
-            // todo remove
-            navigation?.toast(
-                "selected sell token: ${
-                    swapNativeViewModel.getAssetByAddress(
-                        contractAddress
-                    )?.symbol
-                }"
-            )
         }
     }
 
@@ -391,14 +396,6 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                 )
             )
 
-            // todo remove
-            navigation?.toast(
-                "selected buy token: ${
-                    swapNativeViewModel.getAssetByAddress(
-                        contractAddress
-                    )?.symbol
-                }"
-            )
         }
     }
 
