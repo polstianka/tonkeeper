@@ -142,13 +142,8 @@ class SwapViewModel(
         state: SwapState,
         target: SwapTarget
     ): ArrayList<AssetItem> {
-        val list = ArrayList<AssetItem>()
-        list.add(AssetItem.Label(Localization.swap_assets_suggested))
-        list.add(AssetItem.Label(Localization.swap_assets_other))
-
         val send = state.send
         val pairs = state.pairs[send.address]
-
 
         val filteredItems = items.filter {
             if (target == SwapTarget.Receive) {
@@ -159,14 +154,26 @@ class SwapViewModel(
                     return@filter false
                 }
             }
-            val searchResult = (it.symbol.contains(query, ignoreCase = true) || it.subtitle.contains(
-                query,
-                ignoreCase = true
-            ))
-            return@filter searchResult
+            true
         }
 
-        filteredItems.forEachIndexed { i, item ->
+
+        val suggested = if (target == SwapTarget.Send) {
+            SUGGESTED_SEND
+        } else {
+            filteredItems.filter { SUGGESTED_RECEIVE.contains(it.symbol) }.take(2).map { it.symbol }
+        }
+
+        val suggestedAssets = suggested.map {
+            state.mapAssets[it]!!
+        }
+
+        val filteredItemsSearch = filteredItems.filter { (it.symbol.contains(query, ignoreCase = true) || it.subtitle.contains(
+            query,
+            ignoreCase = true
+        )) }
+
+        filteredItemsSearch.forEachIndexed { i, item ->
             val position = when {
                 (i == 0 && filteredItems.size > 1) -> {
                     ListCell.Position.FIRST
@@ -186,7 +193,13 @@ class SwapViewModel(
             }
             item.position = position
         }
-        list.addAll(filteredItems)
+        val list = ArrayList<AssetItem>()
+        if (suggestedAssets.isNotEmpty()) {
+            list.add(AssetItem.Label(Localization.swap_assets_suggested))
+            list.add(AssetItem.Suggests(suggestedAssets))
+        }
+        list.add(AssetItem.Label(Localization.swap_assets_other))
+        list.addAll(filteredItemsSearch)
         return list
     }
 
@@ -416,7 +429,8 @@ class SwapViewModel(
 
     companion object {
         private const val TAG = "SwapViewModel"
-        private val SUGGESTED = listOf("USD₮", "ANON")
+        private val SUGGESTED_SEND = listOf("USD₮", "ANON")
+        private val SUGGESTED_RECEIVE = listOf("TON", "USD₮", "ANON", "jUSDT")
         private const val TON_SYMBOL = "TON"
     }
 
@@ -431,14 +445,4 @@ class SwapViewModel(
             }
         }
     }
-
-    /*
-            val insufficientBalance = newValue > currentBalance
-        val remaining = if (newValue > 0) {
-            val value = currentBalance - newValue
-            CurrencyFormatter.format(currentTokenCode, value)
-        } else {
-            ""
-        }
-     */
 }

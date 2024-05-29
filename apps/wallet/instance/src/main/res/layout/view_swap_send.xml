@@ -75,7 +75,7 @@
         tools:text="TON"
         tools:visibility="visible" />
 
-    <uikit.widget.AmountInput
+    <uikit.widget.AmountFixedInput
         android:id="@+id/value"
         android:layout_width="0dp"
         android:layout_height="48dp"

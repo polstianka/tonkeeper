@@ -10,6 +10,7 @@ import com.tonapps.tonkeeper.extensions.amount
 import com.tonapps.tonkeeper.fragment.swap.model.Simulate
 import com.tonapps.tonkeeper.fragment.swap.model.SwapState
 import com.tonapps.tonkeeperx.R
+import uikit.widget.AmountFixedInput
 import uikit.widget.AmountInput
 
 class SendSwapView @JvmOverloads constructor(
@@ -20,7 +21,7 @@ class SendSwapView @JvmOverloads constructor(
 
     override fun layoutId() = R.layout.view_swap_send
     private val maxView: View = findViewById(R.id.max)
-    private val valueView: AmountInput = findViewById(R.id.value)
+    private val valueView: AmountFixedInput = findViewById(R.id.value)
     private val valueTextView: TextView = findViewById(R.id.valueText)
 
     var onAmountChange: ((Float) -> Unit)? = null
