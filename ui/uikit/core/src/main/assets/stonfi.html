@@ -4,8 +4,7 @@
     <meta charset="utf-8"/>
     <title>Webpack App</title>
     <script defer="defer" src="file:///android_asset/main.js"></script>
-    <script>
-        function swapTonToJetton(address, askJettonAddress, offerAmount, minAskAmount) {
+    <script>function swapTonToJetton(address, askJettonAddress, offerAmount, minAskAmount) {
       new Promise((resolve) => {
         window.buildSwapTonToJettonTxParams(address, askJettonAddress, offerAmount, minAskAmount)
       });
@@ -21,8 +20,7 @@
       new Promise((resolve) => {
         window.buildSwapJettonToTonTxParams(address, offerJettonAddress, offerAmount, minAskAmount)
       });
-    };
-    </script>
+    };</script>
 </head>
 <body><h1>TonWeb</h1>
 <h2>Tip: Check your console</h2></body>
