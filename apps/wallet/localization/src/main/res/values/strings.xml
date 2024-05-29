@@ -301,4 +301,14 @@
     <string name="no_operators">No operators available.\nPlease try another currency</string>
     <string name="you_pay">You pay</string>
     <string name="you_get">You get</string>
+
+    <string name="balance_value">Balance: %1$s</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="choose_token">Choose Token</string>
+    <string name="suggested">Suggested</string>
+    <string name="choose">Choose</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_warning">The amount the price can change\nunfavorably before the trade reverts</string>
+    <string name="expert_mode">Expert mode</string>
+    <string name="expert_mode_warning">Allows high price impact trades.\nUse at your own risk.</string>
 </resources>

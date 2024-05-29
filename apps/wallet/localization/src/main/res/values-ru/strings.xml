@@ -299,4 +299,14 @@
     <string name="no_operators">Нет доступных операторов.\nПожалуйста попробуйте другую валюту</string>
     <string name="you_pay">Ты платишь</string>
     <string name="you_get">Ты получаешь</string>
+
+    <string name="balance_value">Баланс: %1$s</string>
+    <string name="enter_amount">Введите Количество</string>
+    <string name="choose_token">Выбери Токен</string>
+    <string name="suggested">Рекомендации</string>
+    <string name="choose">Выбрать</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_warning">Сумма, на которую цена может измениться\nв неблагоприятную сторону до возобновления сделки</string>
+    <string name="expert_mode">Экспертный режим</string>
+    <string name="expert_mode_warning">Позволяет совершать сделки, которые сильно влияют на цену. Используйте на свой страх и риск.</string>
 </resources>

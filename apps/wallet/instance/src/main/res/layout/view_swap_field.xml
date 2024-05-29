@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_field_secondary"
+    android:padding="@dimen/offsetMedium">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/send_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="?attr/textSecondaryColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balance_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="?attr/textSecondaryColor"
+        app:layout_constraintEnd_toStartOf="@id/max_label"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Balance: 100,500.01" />
+
+    <!-- TODO V enlarge clickable area-->
+    <TextView
+        android:id="@+id/max_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:text="@string/max"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="?attr/textAccentColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tonapps.tonkeeper.ui.component.AssetView
+        android:id="@+id/asset_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/send_label"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/amount_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.NUM2"
+        app:layout_constraintTop_toTopOf="@id/asset_layout"
+        app:layout_constraintBottom_toBottomOf="@id/asset_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?attr/textPrimaryColor"
+        tools:text="0" />
+</androidx.constraintlayout.widget.ConstraintLayout>
