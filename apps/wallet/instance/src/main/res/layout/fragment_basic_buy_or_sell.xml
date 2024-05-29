@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:backgroundTint="?attr/backgroundContentColor"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="16dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/inputFieldValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:minWidth="10dp"
+                    android:background="@null"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:minHeight="@dimen/barHeight"
+                    android:text="0"
+                    android:imeOptions="actionDone"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="@style/TextAppearance.NUM2"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textCursorDrawable="@drawable/cursor" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ton"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="?attr/backgroundContentColor"
+                app:cardCornerRadius="32dp"
+                app:strokeColor="?attr/buttonTertiaryBackgroundColor"
+                app:strokeWidth="2dp">
+
+
+                <View
+                    android:layout_width="86dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/txCurUsdPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textAppearance="@style/TextAppearance.Label1"
+                    android:textColor="?attr/textSecondaryColor" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/txCurItem"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:text="Min. amount: 50 TON"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textTertiaryColor" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginVertical="@dimen/offsetMedium"
+        app:layout_constraintBottom_toTopOf="@+id/closeBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchToken" />
+
+
+    <com.tonapps.tonkeeper.ui.screen.swap.view.progressButton.ProgressButton
+        android:id="@+id/progressButton"
+        android:layout_width="match_parent"
+        android:layout_marginTop="24dp"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

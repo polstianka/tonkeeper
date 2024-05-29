@@ -1,5 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.wallet.list
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
@@ -28,6 +30,11 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         const val TYPE_SPACE = 3
         const val TYPE_SKELETON = 4
         const val TYPE_PUSH = 5
+        const val TYPE_CHOS_TOKEN = 6
+        const val TYPE_RECEIVE_MORE_ITEM = 7
+        const val TYPE_CURRENCY_LIST = 8
+        const val TYPE_OPERATOR_HOLDER = 9
+        const val TYPE_LIST_PAY_METHOD = 10
 
         fun createFromParcel(parcel: Parcel): Item {
             return when (parcel.readInt()) {
@@ -50,6 +57,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         TransactionConfirmed,
         Unknown,
     }
+
+
+
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeInt(type)
@@ -253,6 +263,74 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             override fun newArray(size: Int): Array<Push?> {
                 return arrayOfNulls(size)
             }
+        }
+    }
+    @SuppressLint("ParcelCreator")
+    data class ChoseToken(
+        val position: ListCell.Position,
+        val contract_address: String,
+        val symbol: String,
+        val display_name: String,
+        val image_url: String,
+        val decimals: Int,
+        val kind: String,
+        val wallet_address: String?,
+        val balance: String?,
+        val third_party_usd_price: String?,
+        val dex_usd_price: String?,
+    ): Item(TYPE_CHOS_TOKEN) {
+        override fun marshall(dest: Parcel, flags: Int) {
+            TODO("Not yet implemented")
+        }
+
+    }
+
+    @SuppressLint("ParcelCreator")
+    data class CurrencyList(
+        val position: ListCell.Position,
+        val countryCode: String,
+        val currency: String,
+        val methods: List<String>
+    ): Item(TYPE_CURRENCY_LIST) {
+        override fun marshall(dest: Parcel, flags: Int) {
+            TODO("Not yet implemented")
+        }
+    }
+
+    @SuppressLint("ParcelCreator")
+    data class OperatorModel(
+        var position: ListCell.Position,
+        val name: String,
+        val priceResult: String,
+        val logo: String,
+        var stateSelected: Boolean,
+        val courseRate: Double,
+    ): Item(TYPE_OPERATOR_HOLDER) {
+        override fun marshall(dest: Parcel, flags: Int) {
+            TODO("Not yet implemented")
+        }
+    }
+
+
+    @SuppressLint("ParcelCreator")
+    data class ListPayMethod(
+        var position: ListCell.Position,
+        val name: String,
+        val image_url: Drawable,
+    ): Item(TYPE_LIST_PAY_METHOD) {
+        override fun marshall(dest: Parcel, flags: Int) {
+
+        }
+    }
+
+    @SuppressLint("ParcelCreator")
+    data class ReceiveMoreItem(
+        val textItemName: String,
+        val icExclamationMarkText: String?,
+        val textValueItem: String
+    ): Item(TYPE_RECEIVE_MORE_ITEM) {
+        override fun marshall(dest: Parcel, flags: Int) {
+            TODO("Not yet implemented")
         }
     }
 }

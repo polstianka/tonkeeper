@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:title="@string/swap"
+        app:ignoreSystemOffset="true" />
+
+
+    <com.tonapps.tonkeeper.ui.screen.swap.view.inputItem.InputItemView
+        android:id="@+id/inputItemView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.tonapps.tonkeeper.ui.screen.swap.view.progressButton.ProgressButton
+        android:id="@+id/progressButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <uikit.widget.webview.bridge.BridgeWebView
         android:id="@+id/web"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-</FrameLayout>
+    <com.tonapps.tonkeeper.ui.screen.swap.view.swapView.SwapView
+        android:id="@+id/swapView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
