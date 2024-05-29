@@ -1,12 +1,7 @@
 package com.tonapps.tonkeeper.fragment.send
 
 import android.net.Uri
-import android.util.Log
 import com.tonapps.blockchain.Coin
-import com.tonapps.blockchain.ton.tlb.JettonTransfer
-import com.tonapps.extensions.toByteArray
-import com.tonapps.security.Security
-import com.tonapps.security.hex
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import org.ton.block.AddrStd
@@ -17,9 +12,8 @@ import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
 import org.ton.contract.wallet.WalletTransferBuilder
 import ton.SendMode
+import ton.transfer.QueryId
 import ton.transfer.Transfer
-import java.math.BigInteger
-import java.nio.ByteBuffer
 
 data class TransactionData(
     val address: String? = null,
@@ -109,23 +103,8 @@ data class TransactionData(
             coins = amount,
             toAddress = MsgAddressInt.parse(address!!),
             responseAddress = responseAddress,
-            queryId = getWalletQueryId(),
-            body = comment,
+            queryId = QueryId.newQueryId(),
+            forwardPayload = comment,
         )
-    }
-
-    private companion object {
-
-        fun getWalletQueryId(): BigInteger {
-            try {
-                val tonkeeperSignature = 0x546de4ef.toByteArray()
-                val randomBytes = Security.randomBytes(4)
-                val value = tonkeeperSignature + randomBytes
-                val hexString = hex(value)
-                return BigInteger(hexString, 16)
-            } catch (e: Throwable) {
-                return BigInteger.ZERO
-            }
-        }
     }
 }

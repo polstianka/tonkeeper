@@ -16,12 +16,16 @@ import uikit.extensions.dp
 import uikit.extensions.scale
 import uikit.extensions.setTextOrGone
 
+typealias AlertModifier = ((titleView: AppCompatTextView, positiveButton: AppCompatTextView, negativeButton: AppCompatTextView) -> Unit)
+
 class AlertDialog private constructor(
     context: Context,
     params: Params
 ): BaseDialog(context), ValueAnimator.AnimatorUpdateListener {
 
-    private companion object {
+    companion object {
+        const val SHOW_DURATION = 220L
+        const val DISMISS_DURATION = 120L
         private const val initScale = 0.86f
         private val initTranslationY = 16f.dp
         private val showInterpolator = OvershootInterpolator(1.3f)
@@ -66,14 +70,9 @@ class AlertDialog private constructor(
         positiveButton = findViewById(R.id.alert_positive_button)
         applyButton(positiveButton, params.positiveButton)
 
-        if (params.coloredButtons) {
-            setColoredButton()
+        params.alertModifier?.let { modifyAlert ->
+            modifyAlert(titleView, positiveButton, negativeButton)
         }
-    }
-
-    private fun setColoredButton() {
-        negativeButton.setTextColor(context.accentRedColor)
-        positiveButton.setTextColor(context.accentBlueColor)
     }
 
     override fun onAnimationUpdate(animation: ValueAnimator) {
@@ -100,13 +99,13 @@ class AlertDialog private constructor(
 
     override fun show() {
         super.show()
-        animator.duration = 220
+        animator.duration = SHOW_DURATION
         animator.interpolator = showInterpolator
         animator.start()
     }
 
     override fun dismiss() {
-        animator.duration = 120
+        animator.duration = DISMISS_DURATION
         animator.interpolator = hideInterpolator
         animator.doOnEnd { super.dismiss() }
         animator.reverse()
@@ -119,7 +118,7 @@ class AlertDialog private constructor(
         val message: CharSequence?,
         val negativeButton: ParamButton?,
         val positiveButton: ParamButton?,
-        val coloredButtons: Boolean
+        val alertModifier: AlertModifier?
     )
 
     class Builder(private val context: Context) {
@@ -128,14 +127,19 @@ class AlertDialog private constructor(
         private var message: CharSequence? = null
         private var negativeButton: ParamButton? = null
         private var positiveButton: ParamButton? = null
-        private var coloredButtons: Boolean = false
+        private var alertModifier: AlertModifier? = null
 
         fun setTitle(title: CharSequence) = apply {
             this.title = title
         }
 
-        fun setColoredButtons() = apply {
-            this.coloredButtons = true
+        fun setColoredButtons() = setAlertModifier { _, positiveButton, negativeButton ->
+            negativeButton.setTextColor(context.accentRedColor)
+            positiveButton.setTextColor(context.accentBlueColor)
+        }
+
+        fun setAlertModifier(buttonModifier: AlertModifier?) = apply {
+            this.alertModifier = buttonModifier
         }
 
         fun setTitle(resId: Int) = setTitle(context.getString(resId))
@@ -158,7 +162,7 @@ class AlertDialog private constructor(
 
         fun setPositiveButton(resId: Int, action: ((dialog: AlertDialog) -> Unit)? = null) = setPositiveButton(context.getString(resId), action)
 
-        fun build() = AlertDialog(context, Params(title, message, negativeButton, positiveButton, coloredButtons))
+        fun build() = AlertDialog(context, Params(title, message, negativeButton, positiveButton, alertModifier))
 
         fun show() = build().show()
     }

@@ -92,15 +92,19 @@ class LoaderView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setSize(size: Float) {
+    fun setThickness(size: Float) {
         thickness = size
         updatePaint()
     }
+
+    fun getColor(): Int = this.color
 
     fun setColor(color: Int) {
         this.color = color
         updatePaint()
     }
+
+    fun getTrackColor(): Int = this.trackColor
 
     fun setTrackColor(color: Int) {
         this.trackColor = color

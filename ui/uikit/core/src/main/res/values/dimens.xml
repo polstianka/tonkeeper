@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="actionSize">32dp</dimen>
+    <dimen name="bigActionSize">40dp</dimen>
     <dimen name="itemHeight">56dp</dimen>
     <dimen name="barHeight">64dp</dimen>
     <dimen name="shadowSize">3dp</dimen>
     <dimen name="tertiaryHeight">36dp</dimen>
+    <dimen name="tertiaryPadding">14dp</dimen>
     <dimen name="iconSize">28dp</dimen>
+    <dimen name="iconMedium">24dp</dimen>
 
+    <dimen name="gapDouble">24dp</dimen>
     <dimen name="gap">12dp</dimen>
+    <dimen name="gapHalf">6dp</dimen>
 
     <dimen name="cornerExtraExtraSmall">4dp</dimen>
     <dimen name="cornerExtraSmall">8dp</dimen>
@@ -15,8 +20,15 @@
     <dimen name="cornerMedium">16dp</dimen>
     <dimen name="cornerLarge">20dp</dimen>
 
+    <dimen name="insetPadding">14dp</dimen>
+
+    <dimen name="searchHeight">48dp</dimen>
+
+    <dimen name="listPadding">18dp</dimen>
+
     <dimen name="offsetExtraExtraSmall">2dp</dimen>
     <dimen name="offsetExtraSmall">4dp</dimen>
+    <dimen name="offsetMediumHalf">8dp</dimen>
     <dimen name="offsetMedium">16dp</dimen>
     <dimen name="offsetLarge">32dp</dimen>
 </resources>

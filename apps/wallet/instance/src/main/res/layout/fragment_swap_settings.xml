@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        android:title="@string/settings"
+        android:action="@drawable/ic_close_16"/>
+
+    <uikit.widget.AutoDisableNestedScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                android:textAlignment="viewStart"
+                android:text="@string/swap_slippage"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                android:layout_marginBottom="@dimen/gap"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor"
+                android:textAlignment="viewStart"
+                android:text="@string/swap_slippage_desc"/>
+
+            <uikit.widget.InputView
+                android:id="@+id/percent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:digits="0123456789."
+                android:inputType="numberDecimal"
+                android:hint="@string/swap_custom_percentage"
+                android:layout_marginBottom="@dimen/gap"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/percentage_suggestions"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/barHeight"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:layout_marginBottom="@dimen/offsetMedium">
+
+                <uikit.widget.SelectableTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:gravity="center"
+
+                    tools:ignore="HardcodedText"
+                    android:text="1 %"
+
+                    android:layout_marginEnd="@dimen/gapHalf"/>
+
+                <uikit.widget.SelectableTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:gravity="center"
+
+                    tools:ignore="HardcodedText"
+                    android:text="3 %"
+
+                    android:layout_marginHorizontal="@dimen/gapHalf"/>
+
+                <uikit.widget.SelectableTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:gravity="center"
+
+                    tools:ignore="HardcodedText"
+                    android:text="5 %"
+
+                    android:layout_marginStart="@dimen/gapHalf"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <uikit.widget.item.ItemSwitchView
+                android:id="@+id/expert"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/swap_expert"
+                android:hint="@string/swap_expert_desc"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </uikit.widget.AutoDisableNestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/label_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingTop="@dimen/offsetLarge"
+        android:paddingBottom="@dimen/offsetMedium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            style="@style/Widget.App.Button"
+            android:id="@+id/label_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"
+            android:text="@string/save"/>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

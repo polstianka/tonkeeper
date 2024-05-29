@@ -48,8 +48,12 @@ data class WalletCurrency(
             "TON", "BTC",
         )
 
+        const val USD_CODE = "USD"
+        const val TON_CODE = "TON"
+
         val DEFAULT = WalletCurrency(FIAT.first())
-        val TON = WalletCurrency("TON")
+        val USD = WalletCurrency(USD_CODE)
+        val TON = WalletCurrency(TON_CODE)
 
         val ALL = FIAT + CRYPTO
     }

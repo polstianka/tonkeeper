@@ -83,7 +83,7 @@ class EventsViewModel(
         }
     }
 
-    fun openQRCode() = walletRepository.activeWalletFlow.take(1)
+    fun activeWallet() = walletRepository.activeWalletFlow.take(1)
 
     fun update() {
         viewModelScope.launch(Dispatchers.IO) {

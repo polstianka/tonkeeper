@@ -2,22 +2,21 @@ package com.tonapps.tonkeeper.sign
 
 import android.os.Parcelable
 import com.tonapps.blockchain.ton.extensions.parseCell
-import com.tonapps.blockchain.ton.extensions.safeParseCell
 import com.tonapps.blockchain.ton.extensions.toTlb
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
+import org.ton.bigint.BigInt
 import org.ton.block.AddrStd
 import org.ton.block.Coins
 import org.ton.block.StateInit
 import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
 import org.ton.contract.wallet.WalletTransferBuilder
-import java.math.BigInteger
 
 @Parcelize
 data class RawMessageEntity(
     val addressValue: String,
-    val amount: Long,
+    val amount: BigInt,
     val stateInitValue: String?,
     val payloadValue: String
 ): Parcelable {
@@ -53,11 +52,23 @@ data class RawMessageEntity(
 
     private companion object {
 
-        private fun parseAmount(value: Any): Long {
-            if (value is Long) {
-                return value
+        private fun parseAmount(value: Any): BigInt {
+            return when (value) {
+                is Long -> value.toBigInteger()
+                is String -> BigInt(value)
+                else -> error("Unsupported type: $value")
             }
-            return value.toString().toLong()
+        }
+    }
+
+    fun toJsonObject(): JSONObject {
+        return JSONObject().apply {
+            put("address", addressValue)
+            put("amount", amount.toString())
+            stateInitValue?.let {
+                put("stateInit", it)
+            }
+            put("payload", payloadValue)
         }
     }
 

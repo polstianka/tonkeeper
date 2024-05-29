@@ -29,6 +29,16 @@ data class SignRequestEntity(
         network = parseNetwork(json.opt("network"))
     )
 
+    fun toJsonObject(): JSONObject {
+        return JSONObject().apply {
+            fromValue?.let {
+                put("source", it)
+            }
+            put("valid_until", validUntil)
+            put("messages", JSONArray(messages.map { it.toJsonObject() }))
+        }
+    }
+
     private companion object {
 
         private fun parseMessages(array: JSONArray): List<RawMessageEntity> {

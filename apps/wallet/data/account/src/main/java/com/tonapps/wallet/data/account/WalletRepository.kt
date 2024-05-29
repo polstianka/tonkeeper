@@ -1,11 +1,10 @@
 package com.tonapps.wallet.data.account
 
 import android.content.Context
-import android.util.Log
+import android.net.Uri
 import com.tonapps.blockchain.ton.contract.WalletVersion
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.toAccountId
-import com.tonapps.security.securePrefs
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.MessageBodyEntity
 import com.tonapps.wallet.data.account.entities.WalletEntity
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -34,7 +32,6 @@ import org.ton.api.pk.PrivateKeyEd25519
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
-import org.ton.crypto.base64
 import org.ton.mnemonic.Mnemonic
 
 class WalletRepository(
@@ -112,6 +109,11 @@ class WalletRepository(
 
     suspend fun getWallet(accountId: String): WalletEntity? {
         val legacyWallet = legacyManager.getWallets().find { it.accountId == accountId } ?: return null
+        return WalletEntity(legacyWallet)
+    }
+
+    suspend fun getWalletByAddress(address: String): WalletEntity? {
+        val legacyWallet = legacyManager.getWallets().find { it.address == address } ?: return null
         return WalletEntity(legacyWallet)
     }
 
@@ -306,5 +308,22 @@ class WalletRepository(
             list.add(WalletEntity(legacyWallet))
         }
         return list
+    }
+
+    fun walletAddress(jettonMaster: String, owner: String): String {
+        // https://api.ston.fi/v1/jetton/${jettonMaster}/address?owner_address=${owner}
+        val url = Uri.parse("${API.STONFI_API_URL}/jetton")
+            .buildUpon()
+            .appendPath(jettonMaster)
+            .appendPath("address")
+            .appendQueryParameter("owner_address", owner)
+            .build()
+            .toString()
+        val response = api.stonfiApi(url)
+        return response.getString("address")
+    }
+
+    suspend fun walletSeqno(wallet: WalletEntity): Int {
+        return api.getAccountSeqno(wallet.accountId, wallet.testnet)
     }
  }

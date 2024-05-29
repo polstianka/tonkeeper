@@ -50,7 +50,9 @@ interface Navigation {
 
     fun remove(fragment: Fragment)
 
+    fun removePreviousScreen(): Boolean
+
     fun openURL(url: String, external: Boolean = false)
 
-    fun toast(message: String, loading: Boolean, color: Int)
+    fun toast(message: String, loading: Boolean, color: Int, disableHaptic: Boolean)
 }

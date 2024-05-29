@@ -13,8 +13,15 @@ class ItemSwitchView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : BaseItemView(context, attrs, defStyle) {
 
-    private val textView: AppCompatTextView
-    private val switchView: SwitchView
+    private val textView: AppCompatTextView by lazy {
+        findViewById(R.id.text)
+    }
+    private val hintView: AppCompatTextView? by lazy {
+        findViewById(R.id.description)
+    }
+    private val switchView: SwitchView by lazy {
+        findViewById(R.id.check)
+    }
 
     var doOnCheckedChanged: ((Boolean) -> Unit)?
         get() = switchView.doCheckedChanged
@@ -28,6 +35,12 @@ class ItemSwitchView @JvmOverloads constructor(
             textView.text = value
         }
 
+    var hint: String?
+        get() = hintView?.text.toString()
+        set(value) {
+            hintView?.text = value
+        }
+
     var checked: Boolean
         get() = switchView.checked
         set(value) {
@@ -35,19 +48,26 @@ class ItemSwitchView @JvmOverloads constructor(
         }
 
     init {
-        inflate(context, R.layout.view_item_switch, this)
-
-        textView = findViewById(R.id.text)
-        switchView = findViewById(R.id.check)
-
-        setOnClickListener {
-            checked = !checked
-        }
-
         context.useAttributes(attrs, R.styleable.ItemSwitchView) {
+            val resolvedHint = it.getString(R.styleable.ItemSwitchView_android_hint)
+            if (resolvedHint.isNullOrEmpty()) {
+                inflate(context, R.layout.view_item_switch, this)
+            } else {
+                // TODO: use single XML file for both modes.
+                // Separate layout is only needed because of the unknown purpose of constant height
+                // in BaseItemView.onMeasure, so in order to not break anything, separate one is used.
+                inflate(context, R.layout.view_item_switch_desc, this)
+                enableWeirdConstantContentDimension = false
+            }
+
             text = it.getString(R.styleable.ItemSwitchView_android_text)
+            hint = resolvedHint
             checked = it.getBoolean(R.styleable.ItemSwitchView_android_checked, false)
             position = com.tonapps.uikit.list.ListCell.from(it.getString(R.styleable.ItemSwitchView_position))
+        }
+
+        setOnClickListener {
+            this.checked = !checked
         }
     }
 

@@ -12,6 +12,7 @@ import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.data.core.HIDDEN_BALANCE
 import com.tonapps.wallet.localization.Localization
 import uikit.extensions.drawable
+import uikit.extensions.updateVisibility
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.FrescoView
 
@@ -22,6 +23,7 @@ class TokenHolder(parent: ViewGroup): Holder<Item.Token>(parent, R.layout.view_c
     private val rateView = findViewById<AppCompatTextView>(R.id.rate)
     private val balanceView = findViewById<AppCompatTextView>(R.id.balance)
     private val balanceFiatView = findViewById<AppCompatTextView>(R.id.balance_currency)
+    private val kindView = findViewById<AppCompatTextView>(R.id.kind)
 
     override fun onBind(item: Item.Token) {
         itemView.background = item.position.drawable(context)
@@ -47,6 +49,17 @@ class TokenHolder(parent: ViewGroup): Holder<Item.Token>(parent, R.layout.view_c
                 balanceFiatView.text = item.fiatFormat
             }
             setRate(item.rate, item.rateDiff24h, item.verified)
+        }
+
+        setKind(item.specialBadge)
+    }
+
+    private fun setKind(kind: CharSequence?) {
+        if (kind.isNullOrEmpty()) {
+            kindView.updateVisibility(View.GONE)
+        } else {
+            kindView.text = kind
+            kindView.updateVisibility(View.VISIBLE)
         }
     }
 

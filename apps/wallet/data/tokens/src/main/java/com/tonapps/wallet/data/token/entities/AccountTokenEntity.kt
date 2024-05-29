@@ -30,7 +30,7 @@ data class AccountTokenEntity(
         get() = balance.token.symbol
 
     val isTon: Boolean
-        get() = address == "TON"
+        get() = address == TokenEntity.TON.address
 
     val fiat: Float
         get() = rate?.fiat ?: 0f

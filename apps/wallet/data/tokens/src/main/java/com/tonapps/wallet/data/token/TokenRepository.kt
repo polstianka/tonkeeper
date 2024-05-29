@@ -15,6 +15,8 @@ import io.tonapi.models.TokenRates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 
 class TokenRepository(
@@ -195,5 +197,63 @@ class TokenRepository(
             }
         }
         ratesRepository.insertRates(currency, rates)
+    }
+
+    // Move to separate repository
+
+    fun simulateSwap(sendAddress: String, receiveAddress: String, units: String, isReverse: Boolean, slippageTolerance: String = "0.01" /*1%*/, referralAddress: String = ""): JSONObject {
+        val method = if (isReverse) {
+            "dex.reverse_simulate_swap"
+        } else {
+            "dex.simulate_swap"
+        }
+        val params = JSONObject().apply {
+            put("ask_address", receiveAddress)
+            if (isReverse) {
+                put("ask_units", units)
+            } else {
+                put("offer_units", units)
+            }
+            put("offer_address", sendAddress)
+            put("slippage_tolerance", slippageTolerance)
+            if (referralAddress.isNotEmpty()) {
+                put("referral_address", referralAddress)
+            }
+        }
+        val response = api.stonfiRpc(method, params)
+        val result = response.getJSONObject("result")
+
+        return result
+    }
+
+    fun loadRawAssets(address: String? = null, testnet: Boolean): JSONArray {
+        if (testnet) error("testnet not supported")
+
+        val method = if (address.isNullOrEmpty()) {
+            "asset.list"
+        } else {
+            "asset.balance_list"
+        }
+        val params = JSONObject().apply {
+            address?.let {
+                put("wallet_address", it)
+            }
+            put("load_community", false)
+        }
+
+        val response = api.stonfiRpc(method, params)
+        val result = response.getJSONObject("result")
+        val assets = result.getJSONArray("assets")
+
+        return assets
+    }
+
+    fun loadMarketList(): JSONArray {
+        val method = "market.list"
+        val response = api.stonfiRpc(method)
+        val result = response.getJSONObject("result")
+        val pairs = result.getJSONArray("pairs")
+
+        return pairs
     }
 }

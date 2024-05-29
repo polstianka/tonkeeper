@@ -44,11 +44,13 @@ class InputDrawable(
         style = Paint.Style.STROKE
     }
 
+    private var animationsEnabled: Boolean = true
+
     var error: Boolean = false
         set(value) {
             if (value != field) {
                 field = value
-                updateState()
+                updateState(animationsEnabled)
                 if (value) {
                     HapticHelper.warning(context)
                 }
@@ -59,14 +61,27 @@ class InputDrawable(
         set(value) {
             if (value != field) {
                 field = value
-                updateState()
+                updateState(animationsEnabled)
             }
         }
 
+    fun forceActive(value: Boolean) {
+        if (value != active) {
+            val oldValue = animationsEnabled
+            animationsEnabled = false
+            active = value
+            animationsEnabled = oldValue
+        }
+    }
+
     private val boundF = RectF()
 
+    var needBackground: Boolean = true
+
     override fun draw(canvas: Canvas) {
-        drawBackground(canvas)
+        if (needBackground) {
+            drawBackground(canvas)
+        }
         drawBorder(canvas)
     }
 
@@ -96,7 +111,7 @@ class InputDrawable(
         boundF.set(bounds)
     }
 
-    private fun updateState() {
+    private fun updateState(animated: Boolean = true) {
         val oldBackgroundColor = backgroundPaint.color
         val oldBorderColor = borderPaint.color
 
@@ -115,15 +130,18 @@ class InputDrawable(
 
         backgroundPaint.color = newBackgroundColor
         borderPaint.color = newBorderColor
-
-        animator.cancel()
-        animator.addUpdateListener {
-            val value = it.animatedValue as Float
-            backgroundPaint.color = ArgbEvaluator.instance.evaluate(value, oldBackgroundColor, newBackgroundColor)
-            borderPaint.color = ArgbEvaluator.instance.evaluate(value, oldBorderColor, newBorderColor)
+        if (animated) {
+            animator.cancel()
+            animator.addUpdateListener {
+                val value = it.animatedValue as Float
+                backgroundPaint.color = ArgbEvaluator.instance.evaluate(value, oldBackgroundColor, newBackgroundColor)
+                borderPaint.color = ArgbEvaluator.instance.evaluate(value, oldBorderColor, newBorderColor)
+                invalidateSelf()
+            }
+            animator.start()
+        } else {
             invalidateSelf()
         }
-        animator.start()
     }
 
 }

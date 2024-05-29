@@ -31,7 +31,8 @@ class ToastView @JvmOverloads constructor(
     private data class Data(
         val loading: Boolean,
         val text: CharSequence,
-        val color: Int
+        val color: Int,
+        val disableHaptic: Boolean
     )
 
     private var statusBarHeight: Int = 0
@@ -65,8 +66,8 @@ class ToastView @JvmOverloads constructor(
         textView.text = text
     }
 
-    fun show(text: CharSequence, loading: Boolean, color: Int = context.backgroundContentTintColor) {
-        val data = Data(loading, text, color)
+    fun show(text: CharSequence, loading: Boolean, color: Int = context.backgroundContentTintColor, disableHaptic: Boolean = false) {
+        val data = Data(loading, text, color, disableHaptic)
         val cancelCurrent = currentData?.let { it.text == text && it.color == color } == true
         if (cancelCurrent) {
             hide()
@@ -83,7 +84,9 @@ class ToastView @JvmOverloads constructor(
 
     private fun runData() {
         val data = currentData ?: return
-        hapticConfirm()
+        if (!data.disableHaptic) {
+            hapticConfirm()
+        }
         setText(data.text)
         background.setTint(data.color)
         visibility = View.VISIBLE

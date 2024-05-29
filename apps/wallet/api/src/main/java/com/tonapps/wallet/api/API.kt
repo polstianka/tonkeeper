@@ -2,15 +2,14 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
 import com.tonapps.network.get
+import com.tonapps.network.getRequest
 import com.tonapps.network.interceptor.AcceptLanguageInterceptor
 import com.tonapps.network.interceptor.AuthorizationInterceptor
 import com.tonapps.network.post
@@ -55,6 +54,9 @@ class API(
 
     private val tonAPIHttpClient: OkHttpClient by lazy {
         createTonAPIHttpClient(context, config.tonApiV2Key)
+    }
+    private val stonfiAPIHttpClient: OkHttpClient by lazy {
+        createStonfiAPIHttpClient(context)
     }
 
     private val internalApi = InternalApi(context, defaultHttpClient)
@@ -202,6 +204,41 @@ class API(
         return tonAPIHttpClient.sse(url)
     }
 
+    fun stonfiApi(url: String): JSONObject {
+        val response = stonfiAPIHttpClient.getRequest(url, ArrayMap<String, String>().apply {
+            set("accept", "application/json")
+        })
+        val body = response.body?.string()
+        if (!response.isSuccessful) {
+            throw Exception("Failed STON.fi API: ${response.code}, body: $body")
+        }
+        if (body.isNullOrEmpty()) {
+            throw Exception("Empty response")
+        }
+        return JSONObject(body)
+    }
+
+    fun stonfiRpc(method: String, params: JSONObject? = null, requestId: Long = ++stonfiRequestsCount, rpcVersion: String = "2.0"): JSONObject {
+        val json = JSONObject().apply {
+            put("jsonrpc", rpcVersion)
+            put("id", requestId)
+            put("method", method)
+            put("params", params ?: JSONObject())
+        }
+        val data = json.toString()
+        val response = stonfiAPIHttpClient.postJSON(STONFI_RPC_URL, data, ArrayMap<String, String>().apply {
+            set("accept", "application/json")
+        })
+        val body = response.body?.string()
+        if (!response.isSuccessful) {
+            throw Exception("Failed STON.fi RPC: ${response.code}, body: $body")
+        }
+        if (body.isNullOrEmpty()) {
+            throw Exception("Empty response")
+        }
+        return JSONObject(body)
+    }
+
     fun tonconnectPayload(): String {
         val url = "${config.tonapiMainnetHost}/v2/tonconnect/payload"
         val json = JSONObject(tonAPIHttpClient.get(url))
@@ -226,9 +263,10 @@ class API(
     ) {
         val mimeType = "text/plain".toMediaType()
         val url = "${BRIDGE_URL}/message?client_id=$publicKeyHex&to=$clientId&ttl=300"
-        val response = tonAPIHttpClient.post(url, body.toRequestBody(mimeType))
-        if (!response.isSuccessful) {
-            throw Exception("Failed sending event: ${response.code}")
+        tonAPIHttpClient.post(url, body.toRequestBody(mimeType)).use { response ->
+            if (!response.isSuccessful) {
+                throw Exception("Failed sending event: ${response.code}")
+            }
         }
     }
 
@@ -315,7 +353,9 @@ class API(
             json.put("token", firebaseToken)
             json.put("accounts", accountsArray)
 
-            return tonAPIHttpClient.postJSON(url, json.toString()).isSuccessful
+            tonAPIHttpClient.postJSON(url, json.toString()).use { response ->
+                return response.isSuccessful
+            }
         } catch (e: Throwable) {
             false
         }
@@ -344,7 +384,9 @@ class API(
 
             tonAPIHttpClient.postJSON(url, data, ArrayMap<String, String>().apply {
                 set("X-TonConnect-Auth", token)
-            }).isSuccessful
+            }).use { response ->
+                response.isSuccessful
+            }
         } catch (e: Throwable) {
             false
         }
@@ -382,6 +424,10 @@ class API(
     companion object {
 
         const val BRIDGE_URL = "https://bridge.tonapi.io/bridge"
+        const val STONFI_RPC_URL = "https://app.ston.fi/rpc"
+        const val STONFI_API_URL = "https://api.ston.fi/v1"
+
+        private var stonfiRequestsCount: Long = 0
 
         val JSON = Json { prettyPrint = true }
 
@@ -401,6 +447,14 @@ class API(
             return baseOkHttpClientBuilder()
                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
                 .addInterceptor(AuthorizationInterceptor.bearer(tonApiV2Key))
+                .build()
+        }
+
+        private fun createStonfiAPIHttpClient(
+            context: Context
+        ): OkHttpClient {
+            return baseOkHttpClientBuilder()
+                .addInterceptor(AcceptLanguageInterceptor(context.locale))
                 .build()
         }
     }

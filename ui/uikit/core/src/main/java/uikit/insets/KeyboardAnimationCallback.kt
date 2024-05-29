@@ -1,6 +1,5 @@
 package uikit.insets
 
-import android.util.Log
 import android.view.View
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,7 +12,7 @@ abstract class KeyboardAnimationCallback(
     private val view: View
 ): InsetsAnimationCallback(view, insetsBottomTypeMask) {
 
-    private val navigationOffset: Int by lazy {
+    protected val navigationOffset: Int by lazy {
         view.getRootWindowInsetsCompat()?.getInsets(WindowInsetsCompat.Type.systemBars())?.bottom ?: 0
     }
 

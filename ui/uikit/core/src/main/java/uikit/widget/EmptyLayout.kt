@@ -20,6 +20,12 @@ class EmptyLayout @JvmOverloads constructor(
             firstButton.setOnClickListener { value?.invoke(true) }
             secondButton.setOnClickListener { value?.invoke(false) }
         }
+    var doOnButtonLongClick: ((first: Boolean) -> Boolean)? = null
+        set(value) {
+            field = value
+            firstButton.setOnLongClickListener { value?.invoke(true) ?: false }
+            secondButton.setOnLongClickListener { value?.invoke(false) ?: false }
+        }
 
     private val titleView: AppCompatTextView
     private val subtitleView: AppCompatTextView

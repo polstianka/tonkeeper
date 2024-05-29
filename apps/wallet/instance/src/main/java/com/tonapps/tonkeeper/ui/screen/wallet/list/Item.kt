@@ -179,6 +179,8 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeBooleanCompat(hiddenBalance)
         }
 
+        val specialBadge: String? = TokenEntity.specialSymbol(symbol, address)
+
         companion object CREATOR : Parcelable.Creator<Token> {
             override fun createFromParcel(parcel: Parcel) = Token(parcel)
 
