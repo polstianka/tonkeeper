@@ -5,12 +5,16 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.info.InfoArgs
 import com.tonapps.tonkeeper.fragment.swap.info.InfoFragment
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.color.accentOrangeColor
+import com.tonapps.uikit.color.accentRedColor
+import com.tonapps.uikit.color.textPrimaryColor
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ProcessTaskView
@@ -83,6 +87,7 @@ class SwapDetailsView
             }
 
             is SwapSimulation.Result -> {
+                val textColor = priceImpactColor()
                 loader?.isVisible = false
                 detailsGroup?.isVisible = true
                 rateTitle?.text = CurrencyFormatter.format(
@@ -106,12 +111,23 @@ class SwapDetailsView
                     blockchainFee
                 )
                 priceImpactTextView?.text = priceImpact.movePointRight(2)
-                    .toPlainString()
+                    .let { CurrencyFormatter.format("", it) }
                     .let { "$it%" }
+                priceImpactTextView?.setTextColor(textColor)
+                rateValue?.setTextColor(textColor)
                 routeTextView?.text = "${sentAsset.symbol} >> ${receivedAsset.symbol}"
             }
 
             null -> Unit
+        }
+    }
+
+    @ColorInt
+    private fun SwapSimulation.Result.priceImpactColor(): Int {
+        return when {
+            priceImpact >= BigDecimal("0.05") -> context.accentRedColor
+            priceImpact >= BigDecimal("0.01") -> context.accentOrangeColor
+            else -> context.textPrimaryColor
         }
     }
 }
