@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.tonapps.tonkeeperx.R
 import uikit.extensions.dp
+import uikit.extensions.requestFocusWithSelectionAndKeyboard
 import kotlin.math.min
 
 class AmountInputContainer @JvmOverloads constructor(
@@ -25,6 +26,8 @@ class AmountInputContainer @JvmOverloads constructor(
         rowView = findViewById(R.id.value_wrapper)
         inputView = findViewById(R.id.value)
         currencyView = findViewById(R.id.value_currency)
+
+        setOnClickListener{ inputView.requestFocusWithSelectionAndKeyboard() }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

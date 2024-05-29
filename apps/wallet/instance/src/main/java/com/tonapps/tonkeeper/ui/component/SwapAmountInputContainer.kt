@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import com.tonapps.tonkeeperx.R
+import uikit.extensions.requestFocusWithSelectionAndKeyboard
 import kotlin.math.min
 
 class SwapAmountInputContainer @JvmOverloads constructor(
@@ -21,6 +22,8 @@ class SwapAmountInputContainer @JvmOverloads constructor(
         inflate(context, R.layout.view_amount_swap_input, this)
         rowView = findViewById(R.id.value_wrapper)
         inputView = findViewById(R.id.input)
+
+        setOnClickListener{ inputView.requestFocusWithSelectionAndKeyboard() }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

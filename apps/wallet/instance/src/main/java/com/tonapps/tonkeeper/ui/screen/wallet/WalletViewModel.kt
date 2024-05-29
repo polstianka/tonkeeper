@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.ui.screen.wallet
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -189,7 +188,6 @@ class WalletViewModel(
     }
 
     private fun setStatus(status: Item.Status) {
-        Log.i("WTF_DEBUG", "STATUS " + status.name)
         _statusFlow.tryEmit(status)
     }
 
@@ -244,7 +242,6 @@ class WalletViewModel(
         push: List<AppPushEntity>,
         apps: List<DAppEntity>,
     ) {
-        Log.i("WTF_DEBUG", "BUILD_ITEMS " + status.name)
         val items = mutableListOf<Item>()
         items.add(Item.Balance(
             balance = balance,

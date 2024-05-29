@@ -19,8 +19,8 @@ import uikit.drawable.InputDrawable
 import uikit.extensions.bottomScrolled
 import uikit.extensions.collectFlow
 import uikit.extensions.dp
-import uikit.extensions.focusWithKeyboard
 import uikit.extensions.hideKeyboard
+import uikit.extensions.requestFocusWithSelectionAndKeyboard
 import uikit.extensions.topScrolled
 import uikit.widget.FooterViewEmpty
 import uikit.widget.HeaderViewSimple
@@ -204,7 +204,7 @@ class SwapSettingsScreen : BaseFragment(R.layout.fragment_swap_settings), BaseFr
         fun updateFocus(view: AppCompatEditText, focus: Boolean) {
             if (view.isFocused != focus) {
                 if (focus) {
-                    view.focusWithKeyboard()
+                    view.requestFocusWithSelectionAndKeyboard()
                 } else {
                     view.clearFocus()
                 }

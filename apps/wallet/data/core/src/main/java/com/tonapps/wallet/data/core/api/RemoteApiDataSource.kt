@@ -1,6 +1,5 @@
 package com.tonapps.wallet.data.core.api
 
-import android.util.Log
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -31,12 +30,10 @@ abstract class RemoteApiDataSource<Req: Request, Res> {
         if (existingRequest != null) {
             return@withContext existingRequest.await()
         } else {
-            Log.i("EMIT_REQUEST", "REQUEST_" + key)
             val newRequest = async {
                 try {
                     requestImpl(request)
                 } catch (t: Throwable) {
-                    Log.i("REQUEST_ERROR", t.toString())
                     null
                 }
             }

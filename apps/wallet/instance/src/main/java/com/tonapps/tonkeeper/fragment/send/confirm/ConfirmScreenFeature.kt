@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.send.confirm
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
@@ -227,7 +226,6 @@ class ConfirmScreenFeature(
                 }
 
             } catch (e: Throwable) {
-                Log.i("WTF_DEBUG", "Error " + e.toString())
                 updateUiState {
                     it.copy(
                         feeValue = 0,

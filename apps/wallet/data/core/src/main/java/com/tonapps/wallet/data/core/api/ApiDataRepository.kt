@@ -1,7 +1,6 @@
 package com.tonapps.wallet.data.core.api
 
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
@@ -36,8 +35,6 @@ abstract class ApiDataRepository<Req: Request, Res: Parcelable, Storage: Reposit
     }
 
     fun emit(key: String) {
-        Log.i("EMIT_UPDATE", "EMIT_UPDATE_" + key)
-
         seqno++
         _flow.value = Seqno(value = storage(), seqno = seqno)
     }

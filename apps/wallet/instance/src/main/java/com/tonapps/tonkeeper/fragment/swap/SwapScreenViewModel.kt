@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.fragment.swap
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.ton.tlb.StonFiTlb
@@ -430,13 +429,11 @@ class SwapScreenViewModel(
                         _simulatedSwapLoadingFlow.value = false
                         delay(DELAY_NORMAL)
                         continue
-                    } catch (t: CancellationException) {
-                        Log.i("WTF_DEBUG", "cancel")
+                    } catch (_: CancellationException) {
                     } catch (t: Throwable) {
                         if (_simulatedSwapFlow.value?.key != key) {
                             _simulatedSwapFlow.value = null
                         }
-                        Log.i("WTF_DEBUG", t.toString())
                     }
                     _simulatedSwapLoadingFlow.value = false
                     delay(DELAY_ERROR)

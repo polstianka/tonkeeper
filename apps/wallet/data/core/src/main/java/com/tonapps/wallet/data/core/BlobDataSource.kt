@@ -1,7 +1,6 @@
 package com.tonapps.wallet.data.core
 
 import android.content.Context
-import android.util.Log
 import com.tonapps.extensions.cacheFolder
 import com.tonapps.extensions.file
 import java.io.File
@@ -74,7 +73,6 @@ abstract class BlobDataSource<D>(
         return try {
             val bytes = file.readBytes()
             if (bytes.isEmpty()) {
-                Log.e("WTF_DEBUG", "Parcel bytes read error: " + key)
                 null
             } else bytes
         } catch (e: IOException) {

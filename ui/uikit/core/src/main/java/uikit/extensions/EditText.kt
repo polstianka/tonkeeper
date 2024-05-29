@@ -20,6 +20,12 @@ fun EditText.requestFocusWithSelection() {
     cursorToEnd()
 }
 
+fun EditText.requestFocusWithSelectionAndKeyboard() {
+    requestFocus()
+    cursorToEnd()
+    getInsetsControllerCompat()?.show(WindowInsetsCompat.Type.ime())
+}
+
 fun EditText.focusWithKeyboard() {
     doOnLayout {
         post {
