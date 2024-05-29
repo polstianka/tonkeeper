@@ -13,6 +13,7 @@ import com.tonapps.tonkeeper.fragment.swap.domain.model.SwapSimulation
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetResult
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.PickAssetType
 import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
+import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -118,9 +119,10 @@ class SwapViewModel(
         }
         observeFlow(flow) { (isLoading, wallet, currency) ->
             if (isLoading) return@observeFlow
-            val defaultToken = repository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
-                .first()
-                .first { it.tokenEntity.isTon }
+            val defaultToken =
+                repository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
+                    .first()
+                    .first { it.tokenEntity.isTon }
             _pickedSendAsset.value = defaultToken
         }
     }
@@ -135,13 +137,22 @@ class SwapViewModel(
         emit(_events, SwapEvent.NavigateBack)
     }
 
-    fun onSendTokenClicked() {
-        val event = SwapEvent.NavigateToPickAsset(PickAssetType.SEND)
+    fun onSendTokenClicked() = viewModelScope.launch {
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.SEND, collectPickedAssets())
         emit(_events, event)
     }
 
-    fun onReceiveTokenClicked() {
-        val event = SwapEvent.NavigateToPickAsset(PickAssetType.RECEIVE)
+    private suspend fun collectPickedAssets(): List<TokenEntity> {
+        val pickedAssets = mutableListOf<TokenEntity>()
+        val toSend = _pickedSendAsset.value
+        val toReceive = _pickedReceiveAsset.value
+        toSend?.let { pickedAssets.add(it.tokenEntity) }
+        toReceive?.let { pickedAssets.add(it.tokenEntity) }
+        return pickedAssets
+    }
+
+    fun onReceiveTokenClicked() = viewModelScope.launch {
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.RECEIVE, collectPickedAssets())
         emit(_events, event)
     }
 

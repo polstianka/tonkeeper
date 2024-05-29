@@ -181,7 +181,7 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     }
 
     private fun SwapEvent.NavigateToPickAsset.handle() {
-        val fragment = PickAssetFragment.newInstance(type)
+        val fragment = PickAssetFragment.newInstance(type, pickedAssets)
         navigation?.add(fragment)
     }
 }

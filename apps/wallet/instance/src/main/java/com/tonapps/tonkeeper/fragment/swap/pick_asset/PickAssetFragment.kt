@@ -5,9 +5,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.fragment.swap.pick_asset.rv.TokenAdapter
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.api.entity.TokenEntity
 import core.extensions.observeFlow
-import uikit.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.ModalHeader
@@ -16,9 +17,12 @@ import uikit.widget.SearchInput
 class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragment.BottomSheet {
 
     companion object {
-        fun newInstance(type: PickAssetType) = PickAssetFragment().apply {
+        fun newInstance(
+            type: PickAssetType,
+            pickedAssets: List<TokenEntity>
+        ) = PickAssetFragment().apply {
             setArgs(
-                PickAssetArgs(type)
+                PickAssetArgs(type, pickedAssets)
             )
         }
     }

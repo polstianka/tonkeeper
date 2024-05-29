@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
@@ -38,12 +39,14 @@ class PickAssetViewModel(
 
     private val domainItems = combine(
         walletRepository.activeWalletFlow,
-        settings.currencyFlow
-    ) { wallet, currency ->
-        wallet to currency
+        settings.currencyFlow,
+        args
+    ) { wallet, currency, args ->
+        Triple(wallet, currency, args.pickedItems)
     }
-        .flatMapLatest { (wallet, currency) ->
+        .flatMapLatest { (wallet, currency, pickedItems) ->
             dexAssetsRepository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
+                .map { list -> list.filter { !pickedItems.contains(it.tokenEntity) } }
         }
 
     init {
