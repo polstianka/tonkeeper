@@ -318,4 +318,6 @@
     <string name="tap_to_collect">Tap to collect</string>
     <string name="unstake_ready">Unstake ready</string>
     <string name="has_unstake_ready">%1s ready.\nTap to collect</string>
+    <string name="to_send">To send</string>
+    <string name="to_receive">To receive</string>
 </resources>

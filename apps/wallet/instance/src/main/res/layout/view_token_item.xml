@@ -35,6 +35,13 @@
                 android:textColor="?textPrimaryColor"
                 tools:text="ton" />
 
+            <uikit.widget.ChipView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/view_token_item_chip"
+                tools:text="To receive"
+                android:layout_marginStart="6dp"
+                tools:color="@color/accentBlueBlue"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"

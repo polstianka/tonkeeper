@@ -13,7 +13,8 @@ sealed class SwapEvent {
     data class FillInput(val text: String) : SwapEvent()
     data class NavigateToPickAsset(
         val type: PickAssetType,
-        val pickedAssets: List<TokenEntity>
+        val toSend: TokenEntity?,
+        val toReceive: TokenEntity?
     ) : SwapEvent()
     data class NavigateToSwapSettings(val settings: SwapSettings) : SwapEvent()
     data class NavigateToConfirm(

@@ -138,21 +138,23 @@ class SwapViewModel(
     }
 
     fun onSendTokenClicked() = viewModelScope.launch {
-        val event = SwapEvent.NavigateToPickAsset(PickAssetType.SEND, collectPickedAssets())
+        val (toSend, toReceive) = collectPickedAssets()
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.SEND, toSend, toReceive)
         emit(_events, event)
     }
 
-    private suspend fun collectPickedAssets(): List<TokenEntity> {
+    private suspend fun collectPickedAssets(): Pair<TokenEntity?, TokenEntity?> {
         val pickedAssets = mutableListOf<TokenEntity>()
         val toSend = _pickedSendAsset.value
         val toReceive = _pickedReceiveAsset.value
         toSend?.let { pickedAssets.add(it.tokenEntity) }
         toReceive?.let { pickedAssets.add(it.tokenEntity) }
-        return pickedAssets
+        return toSend?.tokenEntity to toReceive?.tokenEntity
     }
 
     fun onReceiveTokenClicked() = viewModelScope.launch {
-        val event = SwapEvent.NavigateToPickAsset(PickAssetType.RECEIVE, collectPickedAssets())
+        val (toSend, toReceive) = collectPickedAssets()
+        val event = SwapEvent.NavigateToPickAsset(PickAssetType.RECEIVE, toSend, toReceive)
         emit(_events, event)
     }
 

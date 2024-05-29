@@ -10,5 +10,12 @@ data class TokenListItem(
     val iconUri: Uri,
     val symbol: String,
     val name: String,
-    val position: ListCell.Position
+    val position: ListCell.Position,
+    val itemType: TokenItemType
 ) : BaseListItem(1)
+
+enum class TokenItemType {
+    TO_SEND,
+    TO_RECEIVE,
+    NORMAL
+}

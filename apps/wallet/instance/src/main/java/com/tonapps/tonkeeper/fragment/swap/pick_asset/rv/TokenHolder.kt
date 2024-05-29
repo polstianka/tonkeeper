@@ -4,14 +4,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.view.isVisible
 import coil.transform.RoundedCornersTransformation
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.core.loadUri
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.accentGreenColor
 import com.tonapps.uikit.color.resolveColor
 import com.tonapps.uikit.list.BaseListHolder
+import com.tonapps.wallet.localization.Localization
 import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
+import uikit.widget.ChipView
 import uikit.widget.item.BaseItemView
 import java.math.BigDecimal
 
@@ -26,6 +31,7 @@ class TokenHolder(
     private val amountCrypto: TextView = findViewById(R.id.view_token_item_amount_crypto)
     private val amountFiat: TextView = findViewById(R.id.view_token_item_amount_fiat)
     private val name: TextView = findViewById(R.id.view_token_item_name)
+    private val chip: ChipView = findViewById(R.id.view_token_item_chip)
 
     override fun onBind(item: TokenListItem) {
         baseItemView.position = item.position
@@ -43,6 +49,21 @@ class TokenHolder(
             CurrencyFormatter.format(item.model.rate.currency.code, fiatAmount)
         }
         amountFiat.text = fiatText
+        when (item.itemType) {
+            TokenItemType.TO_SEND -> {
+                chip.isVisible = true
+                chip.text = getString(Localization.to_send)
+                chip.color = context.accentBlueColor
+            }
+            TokenItemType.TO_RECEIVE -> {
+               chip.isVisible = true
+                chip.text = getString(Localization.to_receive)
+                chip.color = context.accentGreenColor
+            }
+            TokenItemType.NORMAL -> {
+                chip.isVisible = false
+            }
+        }
     }
 
     @ColorInt

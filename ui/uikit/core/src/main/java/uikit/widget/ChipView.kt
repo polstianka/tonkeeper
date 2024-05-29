@@ -25,6 +25,11 @@ class ChipView @JvmOverloads constructor(
             textView.setTextColor(value)
             background.setTint(value)
         }
+    var text: String = ""
+        set(value) {
+            field = value
+            textView.text = value
+        }
 
     init {
         background = ContextCompat.getDrawable(context, R.drawable.bg_chip)
@@ -38,7 +43,7 @@ class ChipView @JvmOverloads constructor(
                 color = attrs.getColor(R.styleable.ChipView_color, 0)
             }
             if (attrs.hasValue(R.styleable.ChipView_text)) {
-                textView.text = attrs.getText(R.styleable.ChipView_text)
+                text = attrs.getText(R.styleable.ChipView_text).toString()
             }
         }
     }

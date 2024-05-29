@@ -42,15 +42,28 @@ class PickAssetViewModel(
         settings.currencyFlow,
         args
     ) { wallet, currency, args ->
-        Triple(wallet, currency, args.pickedItems)
+        Triple(wallet, currency, args)
     }
-        .flatMapLatest { (wallet, currency, pickedItems) ->
+        .flatMapLatest { (wallet, currency, args) ->
+            val toHide = when (args.type) {
+                PickAssetType.SEND -> args.toReceive
+                PickAssetType.RECEIVE -> args.toSend
+            }
             dexAssetsRepository.getTotalBalancesFlow(wallet.address, wallet.testnet, currency)
-                .map { list -> list.filter { !pickedItems.contains(it.tokenEntity) } }
+                .map { list ->
+                    if (toHide == null) {
+                        list
+                    } else {
+                        list.filter { it.tokenEntity != toHide }
+                    }
+                }
         }
 
     init {
-        observeFlow(domainItems) { listHelper.submitItems(it) }
+        val flow = combine(domainItems, args) { domainItems, args -> domainItems to args }
+        observeFlow(flow) { (domainItems, args) ->
+            listHelper.submitItems(domainItems, args.type, args.toSend, args.toReceive)
+        }
     }
 
     fun provideArgs(args: PickAssetArgs) {

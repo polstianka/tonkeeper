@@ -8,24 +8,28 @@ import uikit.base.BaseArgs
 
 data class PickAssetArgs(
     val type: PickAssetType,
-    val pickedItems: List<TokenEntity>
+    val toSend: TokenEntity?,
+    val toReceive: TokenEntity?
 ) : BaseArgs() {
 
     companion object {
         private const val KEY_TYPE = "KEY_TYPE "
-        private const val KEY_PICKED_ITEMS = "KEY_PICKED_ITEMS "
+        private const val KEY_TO_SEND = "KEY_TO_SEND "
+        private const val KEY_TO_RECEIVE = "KEY_TO_RECEIVE"
+
     }
 
     override fun toBundle(): Bundle {
         return Bundle().apply {
             putEnum(KEY_TYPE, type)
-            putParcelableArray(KEY_PICKED_ITEMS, pickedItems.toTypedArray())
+            putParcelable(KEY_TO_RECEIVE, toReceive)
+            putParcelable(KEY_TO_SEND, toSend)
         }
     }
 
     constructor(bundle: Bundle) : this(
         type = bundle.getEnum(KEY_TYPE, PickAssetType.SEND),
-        pickedItems = bundle.getParcelableArray(KEY_PICKED_ITEMS)!!
-            .filterIsInstance<TokenEntity>()
+        toSend = bundle.getParcelable(KEY_TO_SEND),
+        toReceive = bundle.getParcelable(KEY_TO_RECEIVE)
     )
 }

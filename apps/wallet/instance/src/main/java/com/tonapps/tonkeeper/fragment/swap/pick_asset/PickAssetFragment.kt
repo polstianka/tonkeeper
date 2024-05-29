@@ -19,10 +19,11 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
     companion object {
         fun newInstance(
             type: PickAssetType,
-            pickedAssets: List<TokenEntity>
+            toSend: TokenEntity?,
+            toReceive: TokenEntity?
         ) = PickAssetFragment().apply {
             setArgs(
-                PickAssetArgs(type, pickedAssets)
+                PickAssetArgs(type, toSend, toReceive)
             )
         }
     }
