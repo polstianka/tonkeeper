@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
-class TokenListHelper {
+class TokenListHelper(
+    private val mapper: TokenListItemMapper
+) {
 
     private val _items = MutableStateFlow(listOf<TokenListItem>())
     private val searchText = MutableStateFlow("")
@@ -63,14 +65,7 @@ class TokenListHelper {
                 }
                 else -> TokenItemType.NORMAL
             }
-            TokenListItem(
-                model = item,
-                iconUri = item.imageUri,
-                symbol = item.symbol,
-                name = item.displayName,
-                position = ListCell.getPosition(domainItems.size, index),
-                itemType = itemType
-            )
+            mapper.map(item, itemType, domainItems.size, index)
         }
     }
 
