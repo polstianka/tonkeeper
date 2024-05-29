@@ -28,7 +28,7 @@ import uikit.extensions.dp
 import uikit.extensions.setThrottleClickListener
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
-import uikit.widget.ProcessTaskView
+import uikit.widget.SkeletonLayout
 
 class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.BottomSheet {
 
@@ -39,8 +39,6 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     private val viewModel: SwapViewModel by viewModel()
     private val header: HeaderView?
         get() = view?.findViewById(R.id.fragment_swap_new_header)
-    private val loaderView: ProcessTaskView?
-        get() = view?.findViewById(R.id.fragment_swap_new_process_task_view)
     private val sendGroup: View?
         get() = view?.findViewById(R.id.fragment_swap_new_send_group)
     private val sendButton: View?
@@ -69,6 +67,10 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         get() = view?.findViewById(R.id.fragment_swap_new_max_button)
     private val receiveBalance: TextView?
         get() = view?.findViewById(R.id.fragment_swap_new_receive_balance)
+    private val contentGroup: View?
+        get() = view?.findViewById(R.id.fragment_swap_new_real_content)
+    private val skeleton: SkeletonLayout?
+        get() = view?.findViewById(R.id.fragment_swap_new_skeleton)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,10 +147,12 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
     }
 
     private fun updateLoading(isLoading: Boolean) {
-        loaderView?.isVisible = isLoading
+        contentGroup?.isVisible = !isLoading
         sendGroup?.isVisible = !isLoading
         receiveGroup?.isVisible = !isLoading
         swapButton?.isVisible = !isLoading
+        footer?.isVisible = !isLoading
+        skeleton?.isVisible = isLoading
     }
 
     private fun handleEvent(event: SwapEvent) {

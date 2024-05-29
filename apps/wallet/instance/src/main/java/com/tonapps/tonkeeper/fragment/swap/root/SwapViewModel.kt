@@ -50,8 +50,7 @@ class SwapViewModel(
     private val _events = MutableSharedFlow<SwapEvent>()
     private val sendAmount = MutableStateFlow(BigDecimal.ZERO)
 
-    val isLoading = walletRepository.activeWalletFlow
-        .flatMapLatest { repository.isLoading }
+    val isLoading = repository.isLoading
     val events: Flow<SwapEvent>
         get() = _events
     val pickedSendAsset: Flow<DexAssetBalance?>
