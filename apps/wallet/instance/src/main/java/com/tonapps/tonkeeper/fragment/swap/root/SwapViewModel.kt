@@ -99,6 +99,11 @@ class SwapViewModel(
                 text to false
             }
 
+            amount > pair.first.balance -> {
+                val text = TextWrapper.StringResource(LocalizationR.string.insufficient_balance)
+                text to false
+            }
+
             else -> {
                 val text = TextWrapper.StringResource(LocalizationR.string.continue_action)
                 text to true
