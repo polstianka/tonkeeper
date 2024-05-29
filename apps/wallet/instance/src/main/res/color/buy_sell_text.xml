@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:enterFadeDuration="300"
+    android:exitFadeDuration="300">
+    <item android:state_selected="true" android:color="?attr/textPrimaryColor" />
+    <item android:color="?attr/textSecondaryColor" />
+</selector>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/offsetMedium"
+            android:orientation="vertical"
+            android:background="@drawable/bg_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                    android:id="@+id/value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48.76dp"
+                    android:layout_marginVertical="@dimen/offsetMedium"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:digits="0123456789."
+                    android:inputType="numberDecimal"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:gravity="center_vertical"
+                    android:text="0"
+                    android:hint="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/value_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:textAppearance="@style/TextAppearance.NUM2"
+                    android:textColor="?attr/textSecondaryColor"
+                    app:layout_constraintStart_toEndOf="@id/value"
+                    app:layout_constraintTop_toTopOf="@id/value"
+                    app:layout_constraintBottom_toBottomOf="@id/value"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:background="@drawable/bg_island_border"
+                android:textColor="?attr/textSecondaryColor"
+                android:textAppearance="@style/TextAppearance.Body1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/min_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:fontFamily="@font/montserrat"
+                android:textColor="?attr/textTertiaryColor"
+                android:textSize="14sp"
+                tools:text="Min. amount 5 TON"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <uikit.widget.SimpleRecyclerView
+            android:id="@+id/typeList"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/continue_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        android:enabled="false"
+        android:text="@string/continue_action"/>
+
+</FrameLayout>

@@ -91,6 +91,10 @@ open class BaseFragment(
         }
     }
 
+    interface CustomBackground {
+
+    }
+
     val window: Window?
         get() = activity?.window
 
@@ -131,7 +135,9 @@ open class BaseFragment(
         val view = if (this is Modal) {
             wrapInModal(inflater.context, contentView, savedInstanceState)
         } else {
-            contentView.setBackgroundColor(requireContext().backgroundPageColor)
+            if (this !is CustomBackground) {
+                contentView.setBackgroundColor(requireContext().backgroundPageColor)
+            }
             when (this) {
                 is SwipeBack -> wrapInSwipeBack(inflater.context, contentView, savedInstanceState)
                 is BottomSheet -> wrapInBottomSheet(inflater.context, contentView, savedInstanceState)

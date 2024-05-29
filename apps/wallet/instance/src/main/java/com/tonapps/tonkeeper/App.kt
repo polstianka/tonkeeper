@@ -12,6 +12,7 @@ import com.facebook.imagepipeline.core.ImageTranscoderType
 import com.facebook.imagepipeline.core.MemoryChunkType
 import com.tonapps.tonkeeper.core.fiat.Fiat
 import com.tonapps.tonkeeper.koin.koinModel
+import com.tonapps.tonkeeper.ui.screen.stake.stakingModule
 import com.tonapps.wallet.api.apiModule
 import com.tonapps.wallet.data.account.accountModule
 import com.tonapps.wallet.data.rates.ratesModule
@@ -37,7 +38,7 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
         lateinit var walletManager: WalletManager
 
         lateinit var fiat: Fiat
-
+        lateinit var settings: SettingsRepository
         lateinit var instance: App
     }
 
@@ -53,8 +54,10 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
+            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule, stakingModule)
         }
+        // sorry, just to simplify merging with new dev code
+        settings = getKoin().get()
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         initFresco()

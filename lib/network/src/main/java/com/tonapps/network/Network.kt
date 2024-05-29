@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.retry
 import com.tonapps.network.interceptor.AuthorizationInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
@@ -34,6 +35,12 @@ object Network {
     @Deprecated("Use okHttpClient instead")
     fun get(url: String): String {
         val request = newRequest(url).build()
+        val response = newCall(request).execute()
+        return response.body?.string()!!
+    }
+
+    fun post(url: String, body: RequestBody): String {
+        val request = newRequest(url).post(body).build()
         val response = newCall(request).execute()
         return response.body?.string()!!
     }

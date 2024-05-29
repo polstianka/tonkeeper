@@ -35,7 +35,11 @@ class TokenScreen: BaseListFragment(), BaseFragment.SwipeBack {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setTitle(args.symbol)
+        if (args.staking) {
+            setTitle(args.name)
+        } else {
+            setTitle(args.symbol)
+        }
         setAdapter(ConcatAdapter(tokenAdapter, historyAdapter))
         addItemDecoration(HistoryItemDecoration)
         addScrollListener(paginationListener)
@@ -56,9 +60,9 @@ class TokenScreen: BaseListFragment(), BaseFragment.SwipeBack {
     }
 
     companion object {
-        fun newInstance(address: String, name: String, symbol: String): TokenScreen {
+        fun newInstance(address: String, name: String, symbol: String, isStaking: Boolean = false): TokenScreen {
             val fragment = TokenScreen()
-            fragment.setArgs(TokenArgs(address, name, symbol))
+            fragment.setArgs(TokenArgs(address, name, symbol, isStaking))
             return fragment
         }
     }

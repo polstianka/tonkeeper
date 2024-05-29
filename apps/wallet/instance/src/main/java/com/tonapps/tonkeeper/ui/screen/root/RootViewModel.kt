@@ -327,6 +327,10 @@ class RootViewModel(
         }
     }
 
+    fun goHistory() {
+        _eventFlow.tryEmit(RootEvent.OpenTab("tonkeeper://activity"))
+    }
+
     private fun resolveOther(_uri: Uri, wallet: WalletEntity) {
         val url = _uri.toString().replace("ton://", "https://app.tonkeeper.com/").replace("tonkeeper://", "https://app.tonkeeper.com/")
         val uri = Uri.parse(url)

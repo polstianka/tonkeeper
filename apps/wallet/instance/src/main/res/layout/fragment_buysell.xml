@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ignoreSystemOffset="true"
+            android:action="@drawable/ic_close_16"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lang"
+            android:layout_width="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label2"
+            android:textColor="?attr/buttonSecondaryForegroundColor"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            tools:text="EN"
+            android:background="@drawable/bg_content"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:paddingVertical="6dp"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/offsetMedium"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/buy"
+            android:layout_width="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label2"
+            android:textColor="@color/buy_sell_text"
+            android:textSize="16sp"
+            android:text="@string/buy"
+            android:background="@drawable/bg_bs_selectable"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:paddingTop="4dp"
+            android:paddingBottom="10dp"
+            android:layout_marginEnd="36dp"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sell"
+            android:layout_width="wrap_content"
+            android:textAppearance="@style/TextAppearance.Label2"
+            android:textColor="@color/buy_sell_text"
+            android:textSize="16sp"
+            android:text="@string/sell"
+            android:background="@drawable/bg_bs_selectable"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:paddingTop="4dp"
+            android:paddingBottom="10dp"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="36dp"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

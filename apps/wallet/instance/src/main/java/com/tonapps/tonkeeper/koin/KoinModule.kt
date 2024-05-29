@@ -2,6 +2,8 @@ package com.tonapps.tonkeeper.koin
 
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.App
+import com.tonapps.tonkeeper.api.buysell.BuySellRepository
+import com.tonapps.tonkeeper.api.swap.SwapRepository
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.fragment.country.CountryScreenFeature
 import com.tonapps.tonkeeper.ui.screen.main.MainViewModel
@@ -20,6 +22,10 @@ import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.explore.BrowserExploreViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.main.BrowserMainViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.search.BrowserSearchViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.amount.BuySellAmountScreenFeature
+import com.tonapps.tonkeeper.ui.screen.buysell.confirm.BuySellConfirmScreenFeature
+import com.tonapps.tonkeeper.ui.screen.buysell.currency.BuySellCurrencyScreenFeature
+import com.tonapps.tonkeeper.ui.screen.buysell.operator.BuySellOperatorScreenFeature
 import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesViewModel
 import com.tonapps.tonkeeper.ui.screen.dialog.encrypted.EncryptedCommentViewModel
 import com.tonapps.tonkeeper.ui.screen.events.EventsViewModel
@@ -35,6 +41,14 @@ import com.tonapps.tonkeeper.ui.screen.settings.main.SettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.passcode.ChangePasscodeViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.security.SecurityViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.theme.ThemeViewModel
+import com.tonapps.tonkeeper.ui.screen.stake.amount.StakeAmountScreenFeature
+import com.tonapps.tonkeeper.ui.screen.stake.choose.StakeChooseScreenFeature
+import com.tonapps.tonkeeper.ui.screen.stake.confirm.StakeConfirmScreenFeature
+import com.tonapps.tonkeeper.ui.screen.stake.options.StakeOptionsScreenFeature
+import com.tonapps.tonkeeper.ui.screen.swap.amount.SwapAmountScreenFeature
+import com.tonapps.tonkeeper.ui.screen.swap.choose.SwapChooseScreenFeature
+import com.tonapps.tonkeeper.ui.screen.swap.confirm.SwapConfirmScreenFeature
+import com.tonapps.tonkeeper.ui.screen.swap.settings.SwapSettingsScreenFeature
 import com.tonapps.tonkeeper.ui.screen.token.TokenViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletViewModel
 import com.tonapps.tonkeeper.ui.screen.wallet.list.WalletAdapter
@@ -56,6 +70,8 @@ val koinModel = module {
     single { PushManager(get(), get(), get(), get(), get(), get(), get()) }
     single { SignManager(get(), get(), get(), get(), get()) }
     single { HistoryHelper(get(), get(), get(), get()) }
+    single { SwapRepository(get()) }
+    single { BuySellRepository(get()) }
 
     uiAdapter { WalletAdapter(get()) }
     uiAdapter { WalletPickerAdapter() }
@@ -90,4 +106,19 @@ val koinModel = module {
     viewModel { ConfirmScreenFeature(get(), get(), get(), get(), get()) }
     viewModel { AmountScreenFeature(get(), get(), get()) }
     viewModel { CountryScreenFeature(get()) }
+
+    viewModel { StakeConfirmScreenFeature(get(), get(), get(), get(), get()) }
+    viewModel { StakeAmountScreenFeature(get(), get(), get(), get()) }
+    viewModel { StakeOptionsScreenFeature(get(), get(), get()) }
+    viewModel { StakeChooseScreenFeature(get()) }
+
+    viewModel { SwapAmountScreenFeature(get(), get(), get(), get()) }
+    viewModel { SwapChooseScreenFeature(get(), get(), get()) }
+    viewModel { SwapConfirmScreenFeature(get(), get(), get(), get()) }
+    viewModel { SwapSettingsScreenFeature(get()) }
+
+    viewModel { BuySellAmountScreenFeature(get(), get(), get(), get()) }
+    viewModel { BuySellOperatorScreenFeature(get()) }
+    viewModel { BuySellConfirmScreenFeature(get()) }
+    viewModel { BuySellCurrencyScreenFeature() }
 }

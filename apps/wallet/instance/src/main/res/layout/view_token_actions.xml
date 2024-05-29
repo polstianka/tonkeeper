@@ -30,6 +30,22 @@
             android:icon="@drawable/ic_swap_horizontal_outline_28"
             android:title="@string/swap"/>
 
+        <uikit.widget.IconButtonView
+            android:id="@+id/stake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:icon="@drawable/ic_plus_outline_28"
+            android:title="@string/stake"/>
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/unstake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:icon="@drawable/ic_minus_outline_28"
+            android:title="@string/unstake"/>
+
     </uikit.widget.ButtonsLayout>
 
 </FrameLayout>

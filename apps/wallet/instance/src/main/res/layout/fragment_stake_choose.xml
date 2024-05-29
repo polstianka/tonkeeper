@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/bg_content"
+            android:padding="@dimen/offsetMedium"
+            android:clipToPadding="false"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/apy_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/apy"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/maxapy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:visibility="gone"
+                android:layout_marginHorizontal="8dp"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textSize="10sp"
+                android:paddingVertical="4dp"
+                android:textAllCaps="true"
+                android:translationY="-2dp"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingHorizontal="6dp"
+                android:text="MAX"
+                android:background="@drawable/bg_max"
+                android:textColor="?attr/accentGreenColor"
+                app:layout_constraintStart_toEndOf="@id/apy_text"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/minimal_deposit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/minimal_deposit"
+                app:layout_constraintTop_toTopOf="@id/apy_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/apy_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text=""
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/minimal_deposit_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text=""
+                app:layout_constraintTop_toTopOf="@id/apy_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="14sp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/stake_hint"
+            android:textColor="?attr/textTertiaryColor"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/links_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/links"
+            android:layout_marginTop="28dp"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="20sp" />
+
+        <com.tonapps.tonkeeper.ui.screen.stake.choose.FlowLayout
+            android:id="@+id/links"
+            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/continue_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        android:text="@string/choose"/>
+
+</FrameLayout>

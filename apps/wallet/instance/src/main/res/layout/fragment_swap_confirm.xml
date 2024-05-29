@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_modal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/offsetMedium"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/offsetMedium"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/confirm_swap"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical|end"
+                android:background="@drawable/bg_oval_button_secondary"
+                android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_close_16"
+                android:tint="?attr/buttonSecondaryForegroundColor" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/offsetMedium"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingBottom="@dimen/offsetLarge"
+            android:layout_marginBottom="@dimen/offsetExtraSmall"
+            android:orientation="vertical"
+            android:background="@drawable/bg_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/send"
+                android:paddingBottom="@dimen/offsetExtraSmall"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.tonapps.tonkeeper.ui.screen.swap.SwapChooseView
+                android:id="@+id/token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/send"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Balance: 100"
+                android:gravity="end"
+                android:textColor="?attr/textSecondaryColor"/>
+
+            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                android:id="@+id/value"
+                android:layout_width="0dp"
+                android:layout_height="48.76dp"
+                android:background="@null"
+                android:singleLine="true"
+                android:enabled="false"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="?attr/textPrimaryColor"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textAlignment="gravity"
+                android:gravity="center_vertical|end"
+                android:text="0"
+                android:hint="0"
+                app:layout_constraintStart_toEndOf="@id/token"
+                app:layout_constraintTop_toBottomOf="@id/available"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/offsetLarge"
+            android:layout_marginTop="@dimen/offsetExtraSmall"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="@dimen/offsetExtraSmall"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/bg_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/receive"
+                android:paddingBottom="@dimen/offsetExtraSmall"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.tonapps.tonkeeper.ui.screen.swap.SwapChooseView
+                android:id="@+id/token_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/receive"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/available_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/offsetExtraSmall"
+                android:textAppearance="@style/TextAppearance.Body2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Balance: 100,000.01"
+                android:gravity="end"
+                android:textColor="?attr/textSecondaryColor"/>
+
+            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                android:id="@+id/value_rec"
+                android:layout_width="0dp"
+                android:layout_height="48.76dp"
+                android:background="@null"
+                android:singleLine="true"
+                android:digits="0123456789.,"
+                android:enabled="false"
+                android:inputType="numberDecimal"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="?attr/textPrimaryColor"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textAlignment="gravity"
+                android:gravity="center_vertical|end"
+                android:text="0"
+                android:hint="0"
+                app:layout_constraintStart_toEndOf="@id/token_rec"
+                app:layout_constraintTop_toBottomOf="@id/available_rec"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="-16dp"
+                android:layout_marginRight="-16dp"
+                android:layout_marginTop="6dp"
+                app:layout_constraintTop_toBottomOf="@id/value_rec"
+                android:background="?attr/separatorCommonColor"
+                android:layout_height="1dp" />
+
+            <com.tonapps.tonkeeper.ui.screen.swap.SwapSimulationView
+                android:id="@+id/simulation"
+                android:visibility="visible"
+                android:layout_marginTop="14dp"
+                android:paddingBottom="4dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                android:layout_height="wrap_content" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/button_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/itemHeight"
+            android:layout_marginBottom="@dimen/offsetExtraSmall"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/offsetLarge"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:background="@drawable/bg_content_selectable">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:includeFontPadding="false"
+                android:text="@string/cancel"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="?attr/textPrimaryColor" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/button_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/itemHeight"
+            android:layout_marginBottom="@dimen/offsetExtraSmall"
+            android:layout_marginStart="@dimen/offsetMedium"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/offsetLarge"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:background="@drawable/bg_content_selectable">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:includeFontPadding="false"
+                android:text="@string/continue_action"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="?attr/textPrimaryColor" />
+
+            <uikit.widget.LoaderView
+                android:id="@+id/loader"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:color="@color/constantWhite"
+                android:trackTint="#52ffffff"/>
+
+        </FrameLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <uikit.widget.webview.bridge.BridgeWebView
+        android:id="@+id/bridgeWebView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</FrameLayout>

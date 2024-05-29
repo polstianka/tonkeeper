@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_modal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/settings"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/close"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:layout_marginEnd="@dimen/offsetMedium"
+        android:background="@drawable/bg_oval_button_secondary"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_close_16"
+        android:tint="?attr/buttonSecondaryForegroundColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/slippage_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:text="@string/slippage"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/textPrimaryColor"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/slippage_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:layout_marginEnd="70dp"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/slippage_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/slippage_header"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp" />
+
+    <FrameLayout
+        android:id="@+id/slippage_content"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/slippage_hint"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/buttons_perc"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_height="wrap_content">
+            <FrameLayout
+                android:id="@+id/button_perc1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/itemHeight"
+                android:layout_marginBottom="@dimen/offsetExtraSmall"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:foreground="@drawable/bg_swap_ripple"
+                android:background="@drawable/bg_content_selectable2">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:includeFontPadding="false"
+                    android:text="1 %"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/button_perc2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/itemHeight"
+                android:layout_marginBottom="@dimen/offsetExtraSmall"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:foreground="@drawable/bg_swap_ripple"
+                android:background="@drawable/bg_content_selectable2">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:includeFontPadding="false"
+                    android:text="3 %"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/button_perc3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/itemHeight"
+                android:layout_marginBottom="@dimen/offsetExtraSmall"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:foreground="@drawable/bg_swap_ripple"
+                android:background="@drawable/bg_content_selectable2">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:includeFontPadding="false"
+                    android:text="5 %"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </FrameLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <FrameLayout
+            android:id="@+id/custom"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="88dp"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:paddingStart="@dimen/offsetExtraSmall"
+            android:background="@drawable/bg_content_selectable2">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/custom_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:digits="0123456789.,"
+                android:textSize="16sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="numberDecimal"
+                android:fontFamily="@font/montserrat"
+                android:textColor="?attr/textPrimaryColor"
+                android:textColorHint="?attr/textSecondaryColor"
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:hint="@string/custom"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/percent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:fontFamily="@font/montserrat"
+                android:text="%"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="16sp" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/expert_mode"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/slippage_content"
+        android:background="@drawable/bg_content"
+        android:foreground="@drawable/bg_swap_ripple"
+        android:padding="@dimen/offsetMedium"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text="@string/expert_mode"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="60dp"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/expert_mode_hint"
+            android:textColor="?attr/textSecondaryColor"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/slippage_header" />
+
+        <uikit.widget.SwitchView
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"/>
+
+    </FrameLayout>
+
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/continue_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="?attr/textPrimaryColor"
+        android:text="@string/save"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

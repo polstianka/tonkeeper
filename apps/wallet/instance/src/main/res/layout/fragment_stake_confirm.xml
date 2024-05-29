@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:orientation="vertical">
+
+            <uikit.widget.FrescoView
+                android:id="@+id/icon"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+                app:roundAsCircle="true"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/deposit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:text="@string/deposit"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?attr/textSecondaryColor"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.H2"
+                android:textSize="24sp"
+                android:textColor="?attr/textPrimaryColor"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/amount_cur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textSize="16sp"
+                android:textColor="?attr/textSecondaryColor"/>
+
+            <com.tonapps.tonkeeper.view.TransactionDetailView
+                android:id="@+id/wallet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetLarge"/>
+
+            <com.tonapps.tonkeeper.view.TransactionDetailView
+                android:id="@+id/recipient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.tonapps.tonkeeper.view.TransactionDetailView
+                android:id="@+id/apy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.tonapps.tonkeeper.view.TransactionDetailView
+                android:id="@+id/fee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom">
+
+        <uikit.widget.SlideActionView
+            android:id="@+id/send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/slide_to_confirm"/>
+
+        <uikit.widget.ProcessTaskView
+            android:id="@+id/process"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:successLabel="@string/done"
+            app:errorLabel="@string/error"/>
+
+    </FrameLayout>
+
+</FrameLayout>

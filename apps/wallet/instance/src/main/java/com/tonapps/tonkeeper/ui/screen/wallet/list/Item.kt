@@ -146,6 +146,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
     ): Item(TYPE_TOKEN) {
 
         val isTon = symbol == "TON"
+        val isStaking = symbol == "tsTON"
 
         constructor(parcel: Parcel) : this(
             parcel.readEnum(ListCell.Position::class.java)!!,
