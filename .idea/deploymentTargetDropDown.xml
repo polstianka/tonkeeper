@@ -2,7 +2,23 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="apps.wallet.instance">
+      <entry key="TON_Apps.apps.signer">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_7_API_24.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-02-01T03:19:41.139682Z" />
+        </State>
+      </entry>
+      <entry key="TON_Apps.apps.wallet.instance">
         <State />
       </entry>
     </value>
