@@ -72,13 +72,32 @@ class BuySellOperatorScreen :
         adapter.submitList(state.operators)
         continueButton.isEnabled = state.selectedOperator != null
         if (state.loading) {
+            skeleton.alpha = 1f
             skeleton.isVisible = true
             typeList.isVisible = false
             empty.isVisible = false
         } else {
-            skeleton.isVisible = false
-            empty.isVisible = state.operators.isEmpty()
-            typeList.isVisible = state.operators.isNotEmpty()
+            if (skeleton.isVisible && skeleton.alpha == 1f) {
+                skeleton.animate().cancel()
+                skeleton.animate().alpha(0f).setDuration(500).start()
+                if (state.operators.isNotEmpty()) {
+                    empty.isVisible = false
+                    typeList.isVisible = true
+                    typeList.alpha = 0f
+                    typeList.animate().cancel()
+                    typeList.animate().alpha(1f).setDuration(500).start()
+                } else {
+                    typeList.isVisible = false
+                    empty.isVisible = true
+                    empty.alpha = 0f
+                    empty.animate().cancel()
+                    empty.animate().alpha(1f).setDuration(500).start()
+                }
+            } else {
+                skeleton.isVisible = false
+                empty.isVisible = state.operators.isEmpty()
+                typeList.isVisible = state.operators.isNotEmpty()
+            }
         }
         currencyCode.text = state.currency.code
         currencyName.text = getString(CurrencyViewModel.getNameResIdForCurrency(state.currency.code))

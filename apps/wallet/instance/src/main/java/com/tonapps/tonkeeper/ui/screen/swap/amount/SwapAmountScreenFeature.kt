@@ -97,7 +97,7 @@ class SwapAmountScreenFeature(
         }
 
         val from = assets.find { it.symbol == currentTokenCode.ifEmpty { "TON" } }
-        val to = if (initialTo == null) null else assets.find { it.symbol == currentTokenCode.ifEmpty { initialTo } }
+        val to = if (initialTo == null || initialTo == "TON") null else assets.find { it.symbol == currentTokenCode.ifEmpty { initialTo } }
 
         updateUiState {
             it.copy(
