@@ -20,6 +20,7 @@ import com.tonapps.tonkeeper.fragment.swap.settings.SwapSettingsResult
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapDetailsView
 import com.tonapps.tonkeeper.fragment.swap.ui.SwapTokenButton
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.localization.Localization
 import core.extensions.observeFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -108,11 +109,9 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         observeFlow(viewModel.pickedSendAsset) { updatePickedSendAsset(it) }
         observeFlow(viewModel.pickedReceiveAsset) {
             receiveButton?.asset = it
-            val text = if (it == null) {
-                ""
-            } else {
-                CurrencyFormatter.format(it.symbol, it.balance)
-            }
+            val text = it?.let { CurrencyFormatter.format("", it.balance) }
+                ?.let { getString(Localization.balance_mask, it) }
+                ?: ""
             receiveBalance?.text = text
         }
         observeFlow(viewModel.receiveAmount) { pair ->
@@ -136,10 +135,9 @@ class SwapFragment : BaseFragment(R.layout.fragment_swap_new), BaseFragment.Bott
         sendTokenButton?.asset = asset
         balanceTextView?.isVisible = asset != null
         asset ?: return
-        balanceTextView?.text = CurrencyFormatter.format(
-            asset.symbol,
-            asset.balance
-        )
+        asset.let { CurrencyFormatter.format("", it.balance) }
+            .let { getString(Localization.balance_mask, it) }
+            .let { balanceTextView?.text = it }
     }
 
     private fun SwapSimulation?.updateSimulation() {
