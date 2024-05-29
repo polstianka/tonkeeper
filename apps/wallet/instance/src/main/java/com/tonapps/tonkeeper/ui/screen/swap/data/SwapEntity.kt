@@ -103,7 +103,9 @@ data class SwapEntityDisplayData(
         fun valueOf (asset: AssetEntity?, accountToken: AccountTokenEntity?, amount: SwapAmount,
                      minDecimalsInWtfIsKilometer: Int,
                      minDecimalsInUserCurrency: Int): SwapEntityDisplayData? {
-            val balance = asset?.balance?.number ?: accountToken?.balance?.value?.toBigDecimal()?.stripTrailingZeros()
+            val balance = asset?.let {
+                it.balance?.number ?: BigDecimal.ZERO
+            } ?: accountToken?.balance?.value?.toBigDecimal()?.stripTrailingZeros()
             val token = asset?.token ?: accountToken?.balance?.token
 
             if (balance == null) return null
