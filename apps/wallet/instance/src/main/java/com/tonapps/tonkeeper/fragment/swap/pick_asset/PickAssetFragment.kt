@@ -52,6 +52,7 @@ class PickAssetFragment : BaseFragment(R.layout.fragment_pick_asset), BaseFragme
 
         recyclerView?.adapter = adapter
         recyclerView?.applyNavBottomPadding()
+        recyclerView?.isNestedScrollingEnabled = true
 
         searchInput?.doOnTextChanged = { viewModel.onSearchTextChanged(it) }
 
