@@ -44,6 +44,7 @@ class AssetsScreen: BaseFragment(R.layout.fragment_assets), BaseFragment.BottomS
 
         val adapter = AssetsListAdapter(
             onClickListener = { symbol: String ->
+                swapViewMode.onAssetSearch("")
                 swapViewMode.onSelectAsset(target, symbol)
                 finish()
             }
@@ -68,6 +69,16 @@ class AssetsScreen: BaseFragment(R.layout.fragment_assets), BaseFragment.BottomS
             adapter.submitList(it)
         }
 
+    }
+
+    fun clear() {
+        swapViewMode.onAssetSearch("")
+        searchView.cancel()
+    }
+
+    override fun finish() {
+        clear()
+        super.finish()
     }
 
     override fun isDraggable(): Boolean {

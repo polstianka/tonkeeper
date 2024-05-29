@@ -12,10 +12,21 @@ class StonfiRepository(
 ) {
     private val stonfiApi: StonfiApi = StonfiApi.provideApi(context)
     private var cacheAssets: List<StonfiAsset>? = null
+    private var cachedPairs: Map<String, List<String>>? = null
 
     suspend fun assets(
     ): List<StonfiAsset> {
         return cacheAssets ?: loadAssets()
+    }
+
+    suspend fun pairs(): Map<String, List<String>> {
+        return cachedPairs ?: loadPairs()
+    }
+
+    private suspend fun loadPairs(): Map<String, List<String>> {
+        val pairs = stonfiApi.pairs().getPairs()
+        cachedPairs = pairs
+        return pairs
     }
 
     private suspend fun loadAssets(): List<StonfiAsset> {

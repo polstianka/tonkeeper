@@ -5,11 +5,13 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.tonapps.extensions.getParcelableCompat
 import com.tonapps.tonkeeper.fragment.swap.assets.AssetsScreen
 import com.tonapps.tonkeeper.fragment.swap.model.Slippage
@@ -26,10 +28,12 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
+import uikit.extensions.setBottomInset
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 import uikit.widget.LoaderView
 import uikit.widget.SkeletonLayout
+import uikit.widget.SnackView
 import uikit.widget.webview.bridge.BridgeWebView
 import uikit.widget.webview.bridge.StonfiWebView
 import kotlin.coroutines.suspendCoroutine
@@ -63,6 +67,10 @@ class SwapScreen : BaseFragment(R.layout.fragment_swap), BaseFragment.BottomShee
         requireView().findViewById(R.id.confirm_loading)
     }
 
+    private val snackView: SnackView by lazy(LazyThreadSafetyMode.NONE) {
+        requireView().findViewById(R.id.snack)
+    }
+
     private var initContent: (() -> Unit)? = {
         animateLoadingContentEnd()
         initListeners()
@@ -74,6 +82,8 @@ class SwapScreen : BaseFragment(R.layout.fragment_swap), BaseFragment.BottomShee
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireView().findViewById<ViewGroup>(R.id.container).setBottomInset()
 
         if (savedInstanceState == null) {
             swapViewMode.resetState()
@@ -89,25 +99,6 @@ class SwapScreen : BaseFragment(R.layout.fragment_swap), BaseFragment.BottomShee
             close = ::finish,
             sendTransaction = ::sing
         )
-
-        //test confirm
-        requireView().findViewById<View>(R.id.test_confirm).setOnClickListener {
-
-            lifecycleScope.launch(Dispatchers.IO){
-                val args = swapViewMode.getSwapArgs() ?:return@launch
-
-                withContext(Dispatchers.Main){
-
-                    webView.swapTonToJetton(
-                        addressWallet = address,
-                        askJettonAddress = args.receive.address,
-                        offerAmount = args.offerAmount,
-                        minAskAmount = args.minAskAmount
-                    )
-                }
-            }
-
-        }
     }
 
     private suspend fun sing(
@@ -179,6 +170,9 @@ class SwapScreen : BaseFragment(R.layout.fragment_swap), BaseFragment.BottomShee
 
         swapView.onSwapClick = {
             swapViewMode.onClickSwap()
+        }
+        swapView.receiveView.onSnackShow = {
+            snackView.show(it)
         }
     }
 

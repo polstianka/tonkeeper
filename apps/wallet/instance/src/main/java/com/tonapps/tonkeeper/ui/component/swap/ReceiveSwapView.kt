@@ -43,6 +43,8 @@ class ReceiveSwapView @JvmOverloads constructor(
 
     private var isExpanded = false
 
+    var onSnackShow: ((String) -> Unit)? = null
+
     private val dividerEndReceive: DividerView = findViewById(R.id.divider_end_receive)
     private val detailSwapRate: DetailLoadingView = findViewById(R.id.detail_swap_rate)
     private val dividerStartInfo: DividerView = findViewById(R.id.divider_start_info)
@@ -142,10 +144,20 @@ class ReceiveSwapView @JvmOverloads constructor(
             valueView.setTextColor(textPrimaryColor)
             detailSwapRate.title = simulate.swapRate
             detailPriceImpact.value = simulate.priceImpact
+            detailPriceImpact.setHint(onClickListener = {
+                onSnackShow?.invoke("The difference between the market price and estimated price due to trade size.")
+            })
             detailMinimumReceived.value = simulate.minimumReceived
+            detailMinimumReceived.setHint(onClickListener = {
+                onSnackShow?.invoke("Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.")
+            })
             detailLiquidityProviderFee.value = simulate.liquidityProviderFee
+            detailLiquidityProviderFee.setHint(onClickListener = {
+                onSnackShow?.invoke("A portion of each trade goes to liquidity providers as a protocol incentive.")
+            })
             detailBlockchainFee.value = simulate.blockchainFee
             detailRoute.value = simulate.route
+
         } else {
             valueView.text = "0"
             valueView.setTextColor(textTertiaryColor)

@@ -2,8 +2,10 @@ package uikit.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.isVisible
 import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.setPaddingHorizontal
 import com.tonapps.uikit.list.ListCell
@@ -28,6 +30,7 @@ class DetailDescriptionView @JvmOverloads constructor(
 
     private val titleView: AppCompatTextView
     private val valueView: AppCompatTextView
+    val image: ImageView
 
     var title: CharSequence?
         get() = titleView.text
@@ -48,11 +51,17 @@ class DetailDescriptionView @JvmOverloads constructor(
 
         titleView = findViewById(R.id.title)
         valueView = findViewById(R.id.value)
+        image = findViewById(R.id.image)
 
         context.useAttributes(attrs, R.styleable.DetailDescriptionView) {
             title = it.getString(R.styleable.DetailDescriptionView_android_title) ?: title
             value = it.getString(R.styleable.DetailDescriptionView_android_value) ?: value
         }
+    }
+
+    fun setHint(onClickListener: OnClickListener) {
+        image.isVisible = true
+        image.setOnClickListener(onClickListener)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

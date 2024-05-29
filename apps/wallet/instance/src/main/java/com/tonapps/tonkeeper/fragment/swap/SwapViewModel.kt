@@ -25,6 +25,8 @@ import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -130,34 +132,39 @@ class SwapViewModel(
     }
 
     fun getItemsFlow(target: SwapTarget): Flow<List<AssetItem>> {
-        return when (target) {
-            SwapTarget.Send -> {
-                combine(queryFlow, assetsFlow) { query, items ->
-                    createListItems(items, query)
-                }
-            }
-
-            SwapTarget.Receive -> {
-                combine(queryFlow, stateFlow, assetsFlow) { query, state, items ->
-                    createListItems(items, query, filterSymbol = state.send.symbol.toString())
-                }
-            }
+        return combine(queryFlow, stateFlow, assetsFlow) { query, state, items ->
+            createListItems(items, query, state, target)
         }
     }
 
     private fun createListItems(
         items: List<AssetItem.Item>,
         query: String,
-        filterSymbol: String? = null
+        state: SwapState,
+        target: SwapTarget
     ): ArrayList<AssetItem> {
         val list = ArrayList<AssetItem>()
         list.add(AssetItem.Label(Localization.swap_assets_suggested))
         list.add(AssetItem.Label(Localization.swap_assets_other))
+
+        val send = state.send
+        val pairs = state.pairs[send.address]
+
+
         val filteredItems = items.filter {
-            (it.symbol.contains(query, ignoreCase = true) || it.subtitle.contains(
+            if (target == SwapTarget.Receive) {
+                if (send.isTon && it.symbol == send.symbol)  {
+                    return@filter false
+                }
+                if (pairs != null && !pairs.contains(it.address)) {
+                    return@filter false
+                }
+            }
+            val searchResult = (it.symbol.contains(query, ignoreCase = true) || it.subtitle.contains(
                 query,
                 ignoreCase = true
-            )) && filterSymbol != it.symbol
+            ))
+            return@filter searchResult
         }
 
         filteredItems.forEachIndexed { i, item ->
@@ -247,7 +254,16 @@ class SwapViewModel(
     private suspend fun loadData() = withContext(Dispatchers.IO) {
         val wallet = walletManager.getWalletInfo()!!
         val accountId = wallet.accountId
-        val assets = stonfiRepository.assets()
+
+        val mergedResponse = listOf(
+            async { stonfiRepository.assets()},
+            async { stonfiRepository.pairs() }
+        )
+        @Suppress("UNCHECKED_CAST")
+        val assets = mergedResponse[0].await() as List<StonfiAsset>
+        @Suppress("UNCHECKED_CAST")
+        val pairs = mergedResponse[1].await() as Map<String, List<String>>
+
         val mapAssets = assets.associateBy { it.symbol }
 
         val tokens = tokenRepository.get(settingsRepository.currency, accountId, wallet.testnet)
@@ -257,6 +273,7 @@ class SwapViewModel(
             wallet = wallet,
             mapAssets = mapAssets,
             mapTokens = mapTokens,
+            pairs = pairs,
             send = getTokenState(mapAssets, mapTokens, SwapTarget.Send, TON_SYMBOL),
             receive = null,
             simulate = null,
@@ -291,7 +308,8 @@ class SwapViewModel(
                 subtitle = asset.displayName ?: "",
                 balanceFormat = balanceFormat,
                 balanceFiatFormat = balanceFiatFormat,
-                byTon = asset.kind == StonfiAsset.StonfiAssetKind.Wton
+                byTon = asset.kind == StonfiAsset.StonfiAssetKind.Wton,
+                address = asset.contractAddress
             )
         }.sortedByDescending { it.balanceFormat != "0" }
     }

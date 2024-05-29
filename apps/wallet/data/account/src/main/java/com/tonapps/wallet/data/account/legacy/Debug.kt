@@ -6,7 +6,7 @@ import com.tonapps.wallet.data.account.WalletType
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.crypto.hex
 
-val IsDebug = true
+val IsDebug = false
 
 val DebugWallet = WalletLegacy(
     id = 999,

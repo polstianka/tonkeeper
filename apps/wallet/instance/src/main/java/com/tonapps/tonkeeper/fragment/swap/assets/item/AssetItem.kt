@@ -22,6 +22,7 @@ sealed class AssetItem(
         val subtitle: String,
         val balanceFormat: CharSequence,
         val balanceFiatFormat: CharSequence,
+        val address: CharSequence,
         val byTon: Boolean,
     ): AssetItem(TYPE_ITEM)
 

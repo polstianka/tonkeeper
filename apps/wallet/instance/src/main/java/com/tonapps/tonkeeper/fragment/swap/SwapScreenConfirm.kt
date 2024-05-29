@@ -14,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
 import uikit.extensions.setBottomInset
 import uikit.widget.HeaderView
+import uikit.widget.SnackView
 import uikit.widget.webview.bridge.StonfiWebView
 
 class SwapScreenConfirm : BaseFragment(R.layout.fragment_swap_confirm), BaseFragment.BottomSheet {
@@ -34,6 +35,11 @@ class SwapScreenConfirm : BaseFragment(R.layout.fragment_swap_confirm), BaseFrag
 
     private val swapConfirmArgs: SwapConfirmArgs by lazy(LazyThreadSafetyMode.NONE) {
         requireArguments().getParcelableCompat(KEY_SWAP_CONFIRM)!!
+    }
+
+
+    private val snackView: SnackView by lazy(LazyThreadSafetyMode.NONE) {
+        requireView().findViewById(R.id.snack)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,6 +107,9 @@ class SwapScreenConfirm : BaseFragment(R.layout.fragment_swap_confirm), BaseFrag
         val args = swapConfirmArgs
         swapView.setConfirmMode(args.send, args.receive, args.simulate)
 
+        swapView.receiveView.onSnackShow = {
+            snackView.show(it)
+        }
     }
 
     private fun initHeader() {

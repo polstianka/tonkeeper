@@ -12,6 +12,7 @@ data class SwapState(
     val wallet: WalletLegacy,
     val mapAssets: Map<String, StonfiAsset>,
     val mapTokens: Map<String, AccountTokenEntity>,
+    val pairs: Map<String, List<String>>,
     val send: TokenState,
     val receive: TokenState?,
     val simulate: StonfiSimulate?,

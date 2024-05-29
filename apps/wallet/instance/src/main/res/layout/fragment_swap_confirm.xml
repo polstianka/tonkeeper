@@ -70,5 +70,15 @@
             android:textAppearance="@style/TextAppearance.Label1"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <uikit.widget.SnackView
+        android:id="@+id/snack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buttons"
+        android:layout_margin="@dimen/offsetMedium"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
