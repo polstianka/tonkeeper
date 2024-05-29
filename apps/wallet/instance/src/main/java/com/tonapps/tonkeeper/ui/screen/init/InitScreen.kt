@@ -23,8 +23,6 @@ import uikit.widget.HeaderView
 
 class InitScreen: BaseFragment(R.layout.fragment_init), BaseFragment.SwipeBack {
 
-
-
     private val args: InitArgs by lazy {
         InitArgs(requireArguments())
     }

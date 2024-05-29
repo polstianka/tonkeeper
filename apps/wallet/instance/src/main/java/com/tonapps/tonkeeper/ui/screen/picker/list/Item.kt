@@ -23,7 +23,8 @@ sealed class Item(type: Int): BaseListItem(type) {
         val walletType: WalletType,
         val selected: Boolean,
         val position: ListCell.Position,
-        val balance: CharSequence
+        val balance: CharSequence,
+        val hiddenBalance: Boolean
     ): Item(TYPE_WALLET) {
 
         val color: Int

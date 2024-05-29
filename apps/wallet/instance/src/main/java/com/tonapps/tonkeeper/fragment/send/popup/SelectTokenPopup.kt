@@ -1,11 +1,8 @@
 package com.tonapps.tonkeeper.fragment.send.popup
 
 import android.content.Context
-import android.net.Uri
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.uikit.icon.UIKitIcon
-import com.tonapps.tonkeeper.api.parsedBalance
-import io.tonapi.models.JettonBalance
 import uikit.extensions.textWithLabel
 import com.tonapps.tonkeeper.popup.ActionSheet
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity

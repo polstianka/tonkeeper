@@ -3,6 +3,31 @@
     <string name="ton" translatable="false">TON</string>
     <string name="toncoin" translatable="false">Toncoin</string>
 
+    <string name="encrypted_comment">Зашифрованный комментарий</string>
+    <string name="encrypted_comment_description">Комментарий зашифрован отправителем и может быть расшифрован только вами. Пожалуйста, будьте осторожны с контентом и остерегайтесь мошенничества.</string>
+    <string name="decrypted_comment_action">Расшифровать комментарий</string>
+    <string name="comment_decrypted_hint">Будет виден всем.</string>
+    <string name="encrypt_comment">Зашифровать комментарий</string>
+    <string name="comment_encrypted_hint">Будет виден только получателю и вам.</string>
+    <string name="decrypt_comment">Расшифровать</string>
+    <string name="unnamed_collection">Безымянная коллекция</string>
+    <string name="view_details">Подробнее</string>
+
+    <string name="connected_placeholder_title">Подключенные приложения будут отображаться здесь</string>
+    <string name="connected_placeholder_subtitle">Исследуйте приложения и сервисы в браузере Tonkeeper.</string>
+
+    <string name="push_notifications">Уведомления</string>
+    <string name="push_notifications_description">Получайте уведомления о получении TON, токенов и NFT. Уведомления от подключенных приложений.</string>
+
+    <string name="apps">Приложения</string>
+    <string name="apps_notifications_description">Уведомления от подключенных приложений в вашей активности</string>
+
+
+    <string name="refresh">Обновить</string>
+    <string name="mute">Загоушить</string>
+    <string name="disconnect">Отключится</string>
+    <string name="notifications">Оповещения</string>
+    <string name="rate_tonkeeper">Оценить Tonkeeper</string>
     <string name="delete_watch_account_alert">Удалить аккаунт для просмотра?</string>
     <string name="delete">Удалить</string>
     <string name="failed">Ошибка</string>
@@ -85,6 +110,7 @@
     <string name="buy_or_sell">Торговля</string>
     <string name="fiat_open_description">Вы открываете внешнее приложение, которым не управляет Tonkeeper.</string>
     <string name="buy">Купить</string>
+    <string name="sell">Продать</string>
     <string name="search">Поиск</string>
     <string name="country_title">Выберите вашу страну</string>
     <string name="intro_description">Создайте новый кошелек или добавьте существующий</string>
@@ -105,6 +131,8 @@
     <string name="passcode_enter">Введите пин-код</string>
     <string name="passcode_create">Создать пин-код</string>
     <string name="passcode_re_enter">Введите пин-код ещё раз</string>
+    <string name="passcode_current">Текущий пин-код</string>
+    <string name="passcode_new">Установите новый пин-код</string>
     <string name="cancel">Отмена</string>
     <string name="fee">Комиссия</string>
     <string name="period_24h">24ч</string>
@@ -263,4 +291,22 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+    <string name="min_amount">Мин. количество: %1$s TON</string>
+    <string name="operator">Оператор</string>
+    <string name="credit_card">Кредитная карта</string>
+    <string name="switch_method">Переключить способ оплаты</string>
+    <string name="rate_for_one_ton">%1$s за 1 TON</string>
+    <string name="no_operators">Нет доступных операторов.\nПожалуйста попробуйте другую валюту</string>
+    <string name="you_pay">Ты платишь</string>
+    <string name="you_get">Ты получаешь</string>
+
+    <string name="balance_value">Баланс: %1$s</string>
+    <string name="enter_amount">Введите Количество</string>
+    <string name="choose_token">Выбери Токен</string>
+    <string name="suggested">Рекомендации</string>
+    <string name="choose">Выбрать</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_warning">Сумма, на которую цена может измениться\nв неблагоприятную сторону до возобновления сделки</string>
+    <string name="expert_mode">Экспертный режим</string>
+    <string name="expert_mode_warning">Позволяет совершать сделки, которые сильно влияют на цену. Используйте на свой страх и риск.</string>
 </resources>

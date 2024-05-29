@@ -1,12 +1,15 @@
 package com.tonapps.signer.screen.create.child
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.signer.R
+import com.tonapps.signer.extensions.authorizationRequiredError
 import com.tonapps.signer.screen.create.CreateViewModel
 import com.tonapps.signer.screen.create.pager.PageType
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -56,6 +59,10 @@ class CreateNameFragment: BaseFragment(R.layout.fragment_create_name) {
             nameInput.focus()
         }
 
+        collectFlow(createViewModel.page(PageType.RepeatPassword)) {
+            nameInput.clear()
+        }
+
         collectFlow(createViewModel.uiTopOffset) {
             contentView.setPaddingTop(it)
         }
@@ -66,12 +73,23 @@ class CreateNameFragment: BaseFragment(R.layout.fragment_create_name) {
         if (name.isBlank()) {
             return
         }
-
         createViewModel.setName(name)
-        createViewModel.addKey(requireContext())
+        collectFlow(createViewModel.addKey(requireContext())) { done ->
+            if (!done) {
+                applyDefaultState()
+            }
+        }
+        applyLoadingState()
+    }
 
+    private fun applyLoadingState() {
         loaderView.visibility = View.VISIBLE
         doneButton.visibility = View.GONE
         nameInput.hideKeyboard()
+    }
+
+    private fun applyDefaultState() {
+        loaderView.visibility = View.GONE
+        doneButton.visibility = View.VISIBLE
     }
 }

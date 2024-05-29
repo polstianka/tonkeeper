@@ -25,6 +25,8 @@ class PasscodeRepository(
         dataStore.setPinCode(code)
     }
 
+    suspend fun change(oldCode: String, newCode: String) = dataStore.change(oldCode, newCode)
+
     suspend fun compare(code: String) = dataStore.compare(code)
 
     suspend fun confirmation(context: Context): Boolean = withContext(Dispatchers.Main) {

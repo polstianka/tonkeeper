@@ -12,7 +12,7 @@ import com.tonapps.wallet.data.account.legacy.WalletLegacy
 
 val WalletLegacy.label: WalletLabel
     get() = WalletLabel(
-        name = name,
+        accountName = name,
         emoji = emoji,
         color = color,
     )

@@ -16,8 +16,8 @@
     <string name="name">Name</string>
     <string name="scan">Scan</string>
     <string name="sign_out">Sign out</string>
-    <string name="sign_out_question">Sign out?</string>
-    <string name="sign_out_subtitle">This will erase keys to the wallet. Make sure you have backed up your secret recovery phrase.</string>
+    <string name="sign_out_question">Sign Out of All Wallets??</string>
+    <string name="sign_out_subtitle">This will erase keys to all wallets. Make sure you have backed up your secret recovery phrases.</string>
     <string name="authorization_required">Authorization required</string>
     <string name="change_password">Change password</string>
     <string name="enter_current_password">Enter current password</string>
@@ -38,9 +38,9 @@
     <string name="add_key_subtitle">Create a new key or add an existing one.</string>
     <string name="password_limit">Minimum 4 characters</string>
 
-    <string name="hex_address">Hex address</string>
-    <string name="recover_phrase">Recovery phrase</string>
-    <string name="delete_key">Delete key</string>
+    <string name="hex_address">Hex Address</string>
+    <string name="recover_phrase">Recovery Phrase</string>
+    <string name="delete_key">Delete Key</string>
 
     <string name="copied">Copied</string>
     <string name="copy">Copy</string>
@@ -62,8 +62,14 @@
     <string name="support">Support</string>
     <string name="send">Send</string>
     <string name="version">Version %1$s</string>
-    <string name="recovery_phrase_subtitle">Keep your seed phrase in secure location. Do not enter it into unknown apps.</string>
+    <string name="recovery_phrase_subtitle">Write these words with their numbers and store them in a safe place down. Do not enter it into unknown apps.</string>
+    <string name="add_key_dialog">Add key</string>
+    <string name="legal">Legal</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
     <string name="enter_recovery_phrase">Enter Recovery Phrase</string>
     <string name="enter_recovery_phrase_subtitle">When you created this wallet, you got a 24-word recovery phrase. Enter it to restore access to your wallet.</string>
+
+    <string name="import_key_wrong">It\'s safer to create a new key in Signer. Your old key may have been compromised by you previously.</string>
 </resources>

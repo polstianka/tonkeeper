@@ -24,7 +24,13 @@ object TonMnemonic {
         }
         for (divider in mnemonicDividers) {
             if (value.contains(divider)) {
-                return value.split(divider).filter { it.isNotBlank() }
+                return value.split(divider).filter { it.isNotBlank() }.map {
+                    it.trim()
+                }.map {
+                    it.removePrefix(",").removeSuffix(",")
+                }.map {
+                    it.removePrefix(";").removeSuffix(";")
+                }
             }
         }
         return emptyList()

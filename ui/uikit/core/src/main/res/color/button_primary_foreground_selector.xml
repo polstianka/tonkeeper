@@ -2,7 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_enabled="false"
-        android:color="?attr/buttonPrimaryForegroundColor"/>
+        android:color="?attr/buttonPrimaryForegroundColor"
+        android:alpha="0.48"/>
 
     <item
         android:color="?attr/buttonPrimaryForegroundColor"/>

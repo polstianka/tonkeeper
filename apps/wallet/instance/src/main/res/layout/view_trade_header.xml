@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="uikit.widget.RowLayout">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/header_close"
+        android:layout_width="@dimen/actionSize"
+        android:layout_height="@dimen/actionSize"
+        android:layout_gravity="center"
+        android:alpha="0"
+        android:background="@drawable/bg_oval_button_secondary"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:scaleType="centerInside"
+        android:tint="?attr/buttonSecondaryForegroundColor" />
+
+    <com.tonapps.tonkeeper.dialog.trade.TabSwitcherView
+        android:id="@+id/tab_switcher"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        app:customIndicatorColor="@color/accentBlueDark"
+        app:customTextPrimaryColor="@color/textPrimaryDark"
+        app:customTextSecondaryColor="@color/textSecondaryDark"
+        tools:tabLabels="Buy,Sell" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/header_action"
+        android:layout_width="@dimen/actionSize"
+        android:layout_height="@dimen/actionSize"
+        android:layout_gravity="center"
+        android:alpha="0"
+        android:background="@drawable/bg_oval_button_secondary"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:scaleType="centerInside"
+        android:tint="?attr/buttonSecondaryForegroundColor" />
+
+</merge>

@@ -11,13 +11,16 @@ sealed class Item(type: Int): BaseListItem(type) {
         const val TYPE_SKELETON = 1
     }
 
-    data class Nft(val entity: NftEntity): Item(TYPE_NFT) {
+    data class Nft(
+        val entity: NftEntity,
+        val hiddenBalance: Boolean
+    ): Item(TYPE_NFT) {
 
         val nftAddress: String
             get() = entity.address
 
         val imageURI: Uri
-            get() = entity.mediumUri
+            get() = if (hiddenBalance) entity.thumbUri else entity.mediumUri
 
         val title: String
             get() = entity.name
@@ -27,6 +30,12 @@ sealed class Item(type: Int): BaseListItem(type) {
 
         val testnet: Boolean
             get() = entity.testnet
+
+        val verifier: Boolean
+            get() = entity.verified
+
+        val sale: Boolean
+            get() = entity.inSale
 
     }
 

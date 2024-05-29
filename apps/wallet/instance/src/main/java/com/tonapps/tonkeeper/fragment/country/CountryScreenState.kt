@@ -4,7 +4,7 @@ import com.tonapps.tonkeeper.fragment.country.list.CountryItem
 import uikit.mvi.UiState
 
 data class CountryScreenState(
-    val selectedCountry: String = com.tonapps.tonkeeper.App.settings.country,
+    val selectedCountry: String = "EE",
     val countries: List<CountryScreenFeature.Country> = emptyList(),
 ): UiState() {
 

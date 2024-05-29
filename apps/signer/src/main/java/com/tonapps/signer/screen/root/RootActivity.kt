@@ -16,6 +16,7 @@ import com.tonapps.signer.SimpleState
 import com.tonapps.signer.extensions.toast
 import com.tonapps.signer.password.Password
 import com.tonapps.signer.password.ui.PasswordView
+import com.tonapps.signer.screen.crash.CrashActivity
 import com.tonapps.signer.screen.intro.IntroFragment
 import com.tonapps.signer.screen.main.MainFragment
 import com.tonapps.signer.screen.root.action.RootAction
@@ -138,10 +139,27 @@ class RootActivity: NavigationActivity() {
 
     private fun onAction(action: RootAction) {
         when (action) {
-            is RootAction.RequestBodySign -> add(SignFragment.newInstance(action.id, action.body, action.v, action.returnResult))
+            is RootAction.RequestBodySign -> requestSign(action)
             is RootAction.ResponseBoc -> responseBoc(action.boc)
             is RootAction.ResponseKey -> responseKey(action.publicKey, action.name)
         }
+    }
+
+    private fun requestSign(request: RootAction.RequestBodySign) {
+        removeSignSheets {
+            add(SignFragment.newInstance(request.id, request.body, request.v, request.returnResult))
+        }
+    }
+
+    private fun removeSignSheets(runnable: Runnable) {
+        val transaction = supportFragmentManager.beginTransaction()
+        supportFragmentManager.fragments.forEach {
+            if (it is SignFragment) {
+                transaction.remove(it)
+            }
+        }
+        transaction.runOnCommit(runnable)
+        transaction.commitNow()
     }
 
     private fun responseBoc(boc: String) {
@@ -207,14 +225,18 @@ class RootActivity: NavigationActivity() {
         checkPasswordJob?.cancel()
     }
 
-    /*override fun onWindowFocusChanged(hasFocus: Boolean) {
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        if (BuildConfig.DEBUG) {
+            return
+        }
+
         if (hasFocus) {
             baseContainer.visibility = View.VISIBLE
         } else {
             baseContainer.visibility = View.GONE
         }
-    }*/
+    }
 
     override fun onResume() {
         super.onResume()

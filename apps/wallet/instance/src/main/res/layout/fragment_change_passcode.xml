@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_close_16"/>
+
+    <com.tonapps.tonkeeper.ui.component.PasscodeView
+        android:id="@+id/passcode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</uikit.widget.ColumnLayout>

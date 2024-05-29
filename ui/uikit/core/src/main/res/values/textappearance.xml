@@ -20,13 +20,11 @@
         <item name="android:textSize">24sp</item>
         <item name="android:lineHeight" tools:targetApi="p">32sp</item>
         <item name="android:fontFamily">@font/montserrat_bold</item>
-        <item name="android:textFontWeight" tools:targetApi="p">700</item>
     </style>
 
     <style name="TextAppearance.H3" parent="@android:style/TextAppearance">
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/montserrat_bold</item>
-        <item name="android:textFontWeight" tools:targetApi="p">700</item>
     </style>
 
     <style name="TextAppearance.Label1" parent="@android:style/TextAppearance">
@@ -64,5 +62,11 @@
         <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">@font/montserrat_semi_bold</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.H0" parent="@android:style/TextAppearance">
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textFontWeight" tools:targetApi="p">600</item>
     </style>
 </resources>

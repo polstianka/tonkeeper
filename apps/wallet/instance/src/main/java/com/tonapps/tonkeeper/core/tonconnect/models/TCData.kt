@@ -23,5 +23,5 @@ data class TCData(
         get() = manifest.url
 
     val host: String
-        get() = Uri.parse(url).host!!
+        get() = Uri.parse(url).host ?: ""
 }

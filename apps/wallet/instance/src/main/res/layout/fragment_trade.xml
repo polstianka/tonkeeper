@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.tonapps.tonkeeper.dialog.trade.TradeHeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:icon="@drawable/ic_globe_16"
+            android:title="@string/buy_or_sell"
+            app:ignoreSystemOffset="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:background="@drawable/bg_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/currency_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:paddingTop="32dp">
+
+                <EditText
+                    android:id="@+id/currency_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:inputType="numberDecimal"
+                    android:textAppearance="@style/TextAppearance.H0"
+                    android:textColor="@color/textPrimaryDark"
+                    android:hint="0"
+                    tools:text="50" />
+
+                <TextView
+                    android:id="@+id/currency_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/ton"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.NUM2"
+                    android:textColor="@color/textSecondaryDark" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/conversion_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_island_border"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:paddingVertical="@dimen/offsetSmall"
+                android:textColor="@color/textSecondaryDark"
+                tools:text="6,000.01 USD" />
+
+            <TextView
+                android:id="@+id/min_amount_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="@color/textTertiaryDark"
+                tools:text="Min. amount: 50 TON" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/payment_methods_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingBottom="@dimen/offsetMedium" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/continue_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:text="@string/continue_action"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</FrameLayout>

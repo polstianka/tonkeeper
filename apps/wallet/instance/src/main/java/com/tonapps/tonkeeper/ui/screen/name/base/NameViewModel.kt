@@ -47,7 +47,7 @@ class NameViewModel(
 
     private fun updateWalletLabel() {
         _walletLabelFlow.value = WalletLabel(
-            name = savedState.name,
+            accountName = savedState.name,
             emoji = savedState.emoji,
             color = savedState.color,
         )

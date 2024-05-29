@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.core.fiat.models.FiatSuccessUrlPattern
 import com.tonapps.tonkeeper.dialog.fiat.list.MethodAdapter
 import com.tonapps.tonkeeper.fragment.country.CountryScreen
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
+import com.tonapps.tonkeeper.koin.settingsRepository
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,7 +59,8 @@ class FiatDialog(
 
     override fun show() {
         scope.launch {
-            val items = com.tonapps.tonkeeper.App.fiat.getMethods(com.tonapps.tonkeeper.App.settings.country)
+            val country = context.settingsRepository?.country!!
+            val items = com.tonapps.tonkeeper.App.fiat.getMethods(country)
             showWithData(items)
         }
     }

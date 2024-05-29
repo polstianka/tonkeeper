@@ -29,6 +29,10 @@ import kotlinx.coroutines.launch
 import org.ton.api.pk.PrivateKeyEd25519
 import org.ton.mnemonic.Mnemonic
 import com.tonapps.security.tryCallGC
+import com.tonapps.signer.extensions.authorizationRequiredError
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.withContext
 import javax.crypto.SecretKey
 
 class CreateViewModel(
@@ -54,14 +58,18 @@ class CreateViewModel(
         add(PageType.Name)
     }
 
-    private val _onReady = Channel<Unit>(Channel.BUFFERED)
-    val onReady: Flow<Unit> = _onReady.receiveAsFlow()
+    private val _onReady = MutableSharedFlow<Unit>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val onReady: Flow<Unit> = _onReady.asSharedFlow()
 
-    private val _currentPage = MutableStateFlow(pages.first())
+    private val _currentPage = MutableSharedFlow<PageType>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val currentPage = _currentPage.asSharedFlow()
 
     private val _uiTopOffset = MutableStateFlow(0)
     val uiTopOffset = _uiTopOffset.asStateFlow()
+
+    init {
+        _currentPage.tryEmit(pages.first())
+    }
 
     fun pageIndex() = currentPage.map { pageIndex(it) }
 
@@ -98,22 +106,27 @@ class CreateViewModel(
         return true
     }
 
-    fun addKey(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val name = args.name ?: throw IllegalStateException("Name is null")
-                val secret = masterSecret(context).single()
-                Password.setUnlock()
+    fun addKey(context: Context) = flow {
+        try {
+            val name = args.name ?: throw IllegalStateException("Name is null")
+            val secret = masterSecret(context).single()
+            Password.setUnlock()
 
-                if (import) {
-                    val mnemonic = args.mnemonic ?: throw IllegalStateException("Mnemonic is null")
-                    addNewKey(secret, name, mnemonic)
-                } else {
-                    createNewKey(secret, name)
-                }
+            if (import) {
+                val mnemonic = args.mnemonic ?: throw IllegalStateException("Mnemonic is null")
+                addNewKey(secret, name, mnemonic)
+            } else {
+                createNewKey(secret, name)
+            }
 
-                _onReady.trySend(Unit)
-            } catch (e: Throwable) {
+            emit(true)
+            _onReady.tryEmit(Unit)
+
+        } catch (e: Throwable) {
+            emit(false)
+            if (e is Password.UserCancelThrowable) {
+                context.authorizationRequiredError()
+            } else {
                 CrashActivity.open(e, context)
                 _currentPage.tryEmit(pages.first())
             }
@@ -131,14 +144,21 @@ class CreateViewModel(
 
     private fun createMasterSecret(password: CharArray) = flow {
         emit(vault.createMasterSecret(password))
-    }.take(1)
+    }.take(1).flowOn(Dispatchers.IO)
 
-    private suspend fun createNewKey(secret: SecretKey, name: String) {
+    private suspend fun createNewKey(
+        secret: SecretKey,
+        name: String
+    ) = withContext(Dispatchers.IO) {
         val mnemonic = Mnemonic.generate()
         addNewKey(secret, name, mnemonic)
     }
 
-    private suspend fun addNewKey(secret: SecretKey, name: String, mnemonic: List<String>) {
+    private suspend fun addNewKey(
+        secret: SecretKey,
+        name: String,
+        mnemonic: List<String>
+    ) = withContext(Dispatchers.IO) {
         val seed = Mnemonic.toSeed(mnemonic)
         val publicKey = PrivateKeyEd25519(seed).publicKey()
 

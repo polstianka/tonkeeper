@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="intro_subtitle">Место хранения ваших ключей для подписания транзакций в Tonkeeper.</string>
-    <string name="new_key">Создать Новый Ключ</string>
-    <string name="import_key">Импортировать Ключ</string>
-    <string name="create_password">Создать Пароль</string>
-    <string name="re_enter_password">Повторите Пароль</string>
-    <string name="enter_password">Введите Пароль</string>
+    <string name="intro_subtitle">Безопасное место для хранения ключей и подписи транзакций в Tonkeeper</string>
+    <string name="new_key">Создать новый ключ</string>
+    <string name="import_key">Добавить существующий</string>
+    <string name="create_password">Задайте новый пароль</string>
+    <string name="re_enter_password">Введите пароль ещё раз</string>
+    <string name="enter_password">Введите пароль</string>
     <string name="paste">Вставить</string>
     <string name="done">Готово</string>
     <string name="continue_text">Продолжить</string>
-    <string name="name_your_key">Имя Ключа</string>
+    <string name="name_your_key">Добавьте имя ключа</string>
     <string name="name_your_key_subtitle">Это упростит поиск необходимого ключа в списке ключей.</string>
     <string name="name">Имя</string>
     <string name="scan">Сканировать</string>
     <string name="sign_out">Выйти</string>
-    <string name="sign_out_question">Выйти?</string>
-    <string name="sign_out_subtitle">Это приведет к удалению ключей кошелька. Убедитесь, что вы сохранили секретную фразу восстановления.</string>
+    <string name="sign_out_question">Выйти из всех кошельков?</string>
+    <string name="sign_out_subtitle">Доступ к кошелькам будет отключён. Убедитесь, что вы сохранили все секретные ключи.</string>
     <string name="authorization_required">Требуется авторизация</string>
-    <string name="change_password">Сменить пароль</string>
+    <string name="change_password">Поменять пароль</string>
     <string name="enter_current_password">Введите текущий пароль</string>
-    <string name="enter_new_password">Введите новый пароль</string>
+    <string name="enter_new_password">Задайте новый пароль</string>
     <string name="password_changed">Пароль изменен</string>
-    <string name="add_key">Добавить ключ</string>
+    <string name="add_key">Новый ключ</string>
     <string name="settings">Настройки</string>
     <string name="wrong_url">Неверный URL</string>
     <string name="unknown_error">Неизвестная ошибка</string>
-    <string name="key_export_qr_title">Связать с другим устройством</string>
-    <string name="key_export_qr_subtitle">Открыть Tonkeeper » Импортировать Существующий Кошелек » Подключить Signer</string>
-    <string name="key_export_tonkeeper">Связать с Tonkeeper</string>
-    <string name="key_export_tonkeeper_web">Связать с Tonkeeper Web</string>
-    <string name="open_settings">Открыть Настройки</string>
+    <string name="key_export_qr_title">Добавить на другое устройство</string>
+    <string name="key_export_qr_subtitle">Откройте Tonkeeper » Добавить кошелёк » Подключить Signer</string>
+    <string name="key_export_tonkeeper">Добавить в Tonkeeper</string>
+    <string name="key_export_tonkeeper_web">Добавить в Tonkeeper Web</string>
+    <string name="open_settings">Открыть настройки</string>
     <string name="camera_permission">Включите доступ к камере, чтобы можно было сканировать QR-коды.</string>
-
+    <string name="add_key_dialog">Добавить ключ</string>
     <string name="add_key_subtitle">Создайте новый ключ или добавьте существующий.</string>
 
     <string name="password_limit">Минимум 4 символа</string>
 
     <string name="hex_address">Hex адрес</string>
-    <string name="recover_phrase">Секретная фраза</string>
+    <string name="recover_phrase">Секретный ключ</string>
     <string name="delete_key">Удалить ключ</string>
     <string name="copied">Скопировано</string>
-    <string name="copy">Копировать</string>
+    <string name="copy">Скопировать</string>
     <string name="delete_key_question">Удалить ключ?</string>
-    <string name="delete_key_question_subtitle">Это приведет к удалению ключей кошелька. Убедитесь, что вы сохранили секретную фразу восстановления.</string>
+    <string name="delete_key_question_subtitle">Это сотрёт ключ к кошельку. Убедитесь, что вы создали резервную копию секретной ключа для восстановления.</string>
     <string name="sign_transaction">Подписать транзакцию</string>
     <string name="audit_transaction">Проверить транзакцию</string>
     <string name="slide_to_sign">Свайп для подписи</string>
@@ -54,13 +54,17 @@
     <string name="scan_qr_code_subtitle">Со страницы подтверждения действий в Tonkeeper</string>
     <string name="qr_sign_title">Сканируйте QR-код с помощью Tonkeeper</string>
     <string name="qr_sign_subtitle">После сканирования транзакция будет отправлена в сеть.</string>
-    <string name="recovery_phrase">Фраза Восстановления</string>
+    <string name="recovery_phrase">Секретный ключ</string>
     <string name="signed_transaction">Подписанная Транзакция</string>
     <string name="support">Поддержка</string>
     <string name="send">Отправить</string>
     <string name="version">Версия %1$s</string>
-    <string name="recovery_phrase_subtitle">Храните вашу ключевую фразу в безопасном месте. Не вводите её в неизвестные приложения.</string>
+    <string name="legal">Юридические документы</string>
+    <string name="terms_of_service">Условия использования</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="recovery_phrase_subtitle">Запишите эти слова с их номерами и сохраните их в надёжном месте. Не вводите ключ в неизвестных вам приложениях.</string>
 
-    <string name="enter_recovery_phrase">Введите Секретную Фразу</string>
-    <string name="enter_recovery_phrase_subtitle">Когда вы создавали этот кошелек, вы получили 24-словную фразу восстановления. Введите её, чтобы восстановить доступ к вашему кошельку.</string>
+    <string name="enter_recovery_phrase">Введите секретный ключ</string>
+    <string name="enter_recovery_phrase_subtitle">Чтобы восстановить доступ, введите 24 секретных слова, которые вы получили при создании кошелька.</string>
+    <string name="import_key_wrong">Безопаснее создать новый ключ в Signer. Ваш старый ключ мог быть скомпрометирован вами ранее.</string>
 </resources>

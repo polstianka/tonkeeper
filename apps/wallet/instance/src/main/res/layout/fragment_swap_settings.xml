@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:action="@drawable/ic_close_16"
+            android:title="@string/settings"
+            app:ignoreSystemOffset="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/slippage_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="12dp"
+            android:text="@string/slippage"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="@color/textPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+        <TextView
+            android:id="@+id/slippage_warning_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="@dimen/offsetExtraSmall"
+            android:text="@string/slippage_warning"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/textSecondaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/slippage_label" />
+
+        <com.tonapps.tonkeeper.ui.component.swap.PercentageEditText
+            android:id="@+id/percentage_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="12dp"
+            android:hint="Custom %"
+            android:padding="@dimen/offsetMedium"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="@color/textPrimaryDark"
+            android:textColorHint="@color/textSecondaryDark"
+            app:layout_constraintTop_toBottomOf="@id/slippage_warning_label"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <LinearLayout
+            android:id="@+id/percentage_suggestions_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/percentage_edit">
+
+            <com.tonapps.tonkeeper.ui.component.swap.SelectionTextView
+                android:id="@+id/percentage_label_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/offsetMedium"
+                android:text="1 %"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="@color/textPrimaryDark" />
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="0dp" />
+
+            <com.tonapps.tonkeeper.ui.component.swap.SelectionTextView
+                android:id="@+id/percentage_label_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/offsetMedium"
+                android:text="3 %"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="@color/textPrimaryDark" />
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="0dp" />
+
+            <com.tonapps.tonkeeper.ui.component.swap.SelectionTextView
+                android:id="@+id/percentage_label_five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/offsetMedium"
+                android:text="5 %"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="@color/textPrimaryDark" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_content"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/percentage_suggestions_layout">
+
+            <TextView
+                android:id="@+id/expert_mode_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expert_mode"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="@color/textPrimaryDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/expert_mode_warning_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetExtraSmall"
+                android:text="@string/expert_mode_warning"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="@color/textSecondaryDark"
+                app:layout_constraintEnd_toStartOf="@+id/switchView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/expert_mode_label" />
+
+            <uikit.widget.SwitchView
+                android:id="@+id/switchView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/save_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:enabled="false"
+        android:layout_gravity="bottom"
+        android:text="@string/save"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</FrameLayout>

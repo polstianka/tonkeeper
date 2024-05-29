@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LabelEditorView">
-        <attr name="android:button" format="string|reference"/>
+        <attr name="android:button" format="string|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="TabSwitcherView">
+        <attr name="tabLabels" format="string" />
+        <attr name="customTextPrimaryColor" format="color" />
+        <attr name="customTextSecondaryColor" format="color" />
+        <attr name="customIndicatorColor" format="color" />
     </declare-styleable>
 </resources>

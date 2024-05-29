@@ -5,30 +5,31 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import androidx.lifecycle.lifecycleScope
-import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.fiat.models.FiatSuccessUrlPattern
+import com.tonapps.tonkeeper.koin.settingsRepository
+import com.tonapps.tonkeeperx.R
 import kotlinx.coroutines.launch
 import uikit.base.BaseFragment
 import uikit.widget.HeaderView
 import uikit.widget.LoaderView
 import uikit.widget.webview.WebViewFixed
 
-class FiatWebFragment: BaseFragment(R.layout.fragment_web_fiat) {
-
+class FiatWebFragment : BaseFragment(R.layout.fragment_web_fiat), BaseFragment.BottomSheet {
     companion object {
         private const val URL = "url"
         private const val SUCCESS_URL_PATTERN = "success_url_pattern"
 
         fun newInstance(
             url: String,
-            pattern: FiatSuccessUrlPattern?
+            pattern: FiatSuccessUrlPattern?,
         ): FiatWebFragment {
             val fragment = FiatWebFragment()
-            fragment.arguments = Bundle().apply {
-                putString(URL, url)
-                putString(SUCCESS_URL_PATTERN, pattern?.toJSON().toString())
-            }
+            fragment.arguments =
+                Bundle().apply {
+                    putString(URL, url)
+                    putString(SUCCESS_URL_PATTERN, pattern?.toJSON().toString())
+                }
             return fragment
         }
     }
@@ -47,7 +48,10 @@ class FiatWebFragment: BaseFragment(R.layout.fragment_web_fiat) {
     private lateinit var loaderView: LoaderView
     private lateinit var webView: WebViewFixed
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         headerView = view.findViewById(R.id.header)
         headerView.doOnActionClick = { finish() }
@@ -55,31 +59,38 @@ class FiatWebFragment: BaseFragment(R.layout.fragment_web_fiat) {
         loaderView = view.findViewById(R.id.loader)
 
         webView = view.findViewById(R.id.web)
-        webView.webChromeClient = object : android.webkit.WebChromeClient() {
-
-        }
-        webView.webViewClient = object : android.webkit.WebViewClient() {
-
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url)
-                view.visibility = View.VISIBLE
-                loaderView.visibility = View.GONE
+        webView.webChromeClient =
+            object : android.webkit.WebChromeClient() {
             }
-
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                if (url?.matches(".*#endsession".toRegex()) == true) {
-                    finish()
-                    return
+        webView.webViewClient =
+            object : android.webkit.WebViewClient() {
+                override fun onPageFinished(
+                    view: WebView,
+                    url: String,
+                ) {
+                    super.onPageFinished(view, url)
+                    view.visibility = View.VISIBLE
+                    loaderView.visibility = View.GONE
                 }
 
-                val successUrlPattern = successUrlPattern?.pattern ?: return
-                val regexp = Regex(successUrlPattern, RegexOption.IGNORE_CASE)
+                override fun onPageStarted(
+                    view: WebView?,
+                    url: String?,
+                    favicon: Bitmap?,
+                ) {
+                    super.onPageStarted(view, url, favicon)
+                    if (url?.matches(".*#endsession".toRegex()) == true) {
+                        finish()
+                        return
+                    }
 
-                regexp.find(url ?: "")?.groupValues ?: return
-                finish()
+                    val successUrlPattern = successUrlPattern?.pattern ?: return
+                    val regexp = Regex(successUrlPattern, RegexOption.IGNORE_CASE)
+
+                    regexp.find(url ?: "")?.groupValues ?: return
+                    finish()
+                }
             }
-        }
 
         loadUrl()
     }
@@ -88,7 +99,8 @@ class FiatWebFragment: BaseFragment(R.layout.fragment_web_fiat) {
         lifecycleScope.launch {
             val wallet = App.walletManager.getWalletInfo() ?: return@launch
             val address = wallet.address
-            val replacedUrl = App.fiat.replaceUrl(url, address, App.settings.currency.code)
+
+            val replacedUrl = App.fiat.replaceUrl(url, address, context?.settingsRepository?.currency!!.code)
             loadUrl(replacedUrl)
         }
     }

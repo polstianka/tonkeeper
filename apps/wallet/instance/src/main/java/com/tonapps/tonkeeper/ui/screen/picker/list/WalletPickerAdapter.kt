@@ -22,7 +22,8 @@ class WalletPickerAdapter: BaseListAdapter() {
         fun map(
             wallets: List<WalletEntity>,
             activeWallet: WalletEntity,
-            balances: List<CharSequence>
+            balances: List<CharSequence>,
+            hiddenBalance: Boolean
         ): List<Item> {
             val uiItems = mutableListOf<Item>()
             for ((index, wallet) in wallets.withIndex()) {
@@ -34,6 +35,7 @@ class WalletPickerAdapter: BaseListAdapter() {
                     selected = wallet.id == activeWallet.id,
                     position = ListCell.getPosition(wallets.size, index),
                     balance = balances[index],
+                    hiddenBalance = hiddenBalance
                 )
                 uiItems.add(item)
             }

@@ -23,7 +23,8 @@
             android:layout_width="84dp"
             android:layout_height="84dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_camera_84"/>
+            android:src="@drawable/ic_camera_84"
+            android:tint="?attr/accentBlueColor"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"

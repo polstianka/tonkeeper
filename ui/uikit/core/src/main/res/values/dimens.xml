@@ -17,6 +17,7 @@
 
     <dimen name="offsetExtraExtraSmall">2dp</dimen>
     <dimen name="offsetExtraSmall">4dp</dimen>
+    <dimen name="offsetSmall">8dp</dimen>
     <dimen name="offsetMedium">16dp</dimen>
     <dimen name="offsetLarge">32dp</dimen>
 </resources>

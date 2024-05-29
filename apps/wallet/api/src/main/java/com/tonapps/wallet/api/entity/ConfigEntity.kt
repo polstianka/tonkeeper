@@ -2,7 +2,6 @@ package com.tonapps.wallet.api.entity
 
 import android.net.Uri
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 
@@ -20,11 +19,11 @@ data class ConfigEntity(
     val tonkeeperNewsUrl: String,
     val tonCommunityUrl: String,
     val tonCommunityChatUrl: String,
+    val bootTonkeeperUrl: String,
     val tonApiV2Key: String,
     val featuredPlayInterval: Int,
     val flags: FlagsEntity,
-): Parcelable {
-
+) : Parcelable {
     val swapUri: Uri
         get() = Uri.parse(stonfiUrl)
 
@@ -41,13 +40,15 @@ data class ConfigEntity(
         tonkeeperNewsUrl = json.getString("tonkeeperNewsUrl"),
         tonCommunityUrl = json.getString("tonCommunityUrl"),
         tonCommunityChatUrl = json.getString("tonCommunityChatUrl"),
+        bootTonkeeperUrl = "https://boot.tonkeeper.com/",
         tonApiV2Key = json.getString("tonApiV2Key"),
         featuredPlayInterval = json.optInt("featured_play_interval", 3000),
-        flags = if (debug) {
-            FlagsEntity()
-        } else {
-            FlagsEntity(json.getJSONObject("flags"))
-        }
+        flags =
+            if (debug) {
+                FlagsEntity()
+            } else {
+                FlagsEntity(json.getJSONObject("flags"))
+            },
     )
 
     constructor() : this(
@@ -63,9 +64,10 @@ data class ConfigEntity(
         tonkeeperNewsUrl = "https://t.me/tonkeeper_new",
         tonCommunityUrl = "https://t.me/toncoin",
         tonCommunityChatUrl = "https://t.me/toncoin_chat",
+        bootTonkeeperUrl = "https://boot.tonkeeper.com/",
         tonApiV2Key = "",
         featuredPlayInterval = 3000,
-        flags = FlagsEntity()
+        flags = FlagsEntity(),
     )
 
     companion object {

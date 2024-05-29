@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="92dp"
+    android:padding="@dimen/offsetMedium">
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/push_notifications"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/push_notifications_description"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor"/>
+
+    </uikit.widget.ColumnLayout>
+
+    <uikit.widget.SwitchView
+        android:id="@+id/push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/offsetMedium"/>
+
+</uikit.widget.RowLayout>

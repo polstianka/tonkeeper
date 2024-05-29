@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/offsetMedium">
+
+    <RadioButton
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:clickable="false"
+        android:theme="@style/RadioButton"
+        android:layout_gravity="center"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        tools:text = "Cryptocurrency"
+        android:singleLine="true"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/payment_type_image"
+        android:layout_width="80dp"
+        android:layout_height="24dp"
+        android:scaleType="fitEnd"
+        android:layout_gravity="center_vertical"
+        tools:src="@drawable/cryptos"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

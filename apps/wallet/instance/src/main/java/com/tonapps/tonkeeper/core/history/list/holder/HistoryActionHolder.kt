@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.core.history.list.holder
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.view.View
@@ -7,6 +8,8 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.postprocessors.BlurPostProcessor
+import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.core.history.ActionType
 import com.tonapps.tonkeeper.core.history.HistoryHelper
@@ -14,6 +17,8 @@ import com.tonapps.tonkeeper.core.history.iconRes
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.core.history.nameRes
 import com.tonapps.tonkeeper.dialog.TransactionDialog
+import com.tonapps.tonkeeper.ui.screen.dialog.encrypted.EncryptedCommentScreen
+import com.tonapps.tonkeeper.ui.screen.nft.NftScreen
 import com.tonapps.uikit.color.UIKitColor
 import com.tonapps.uikit.color.accentGreenColor
 import com.tonapps.uikit.color.iconSecondaryColor
@@ -21,7 +26,12 @@ import com.tonapps.uikit.color.stateList
 import com.tonapps.uikit.color.textPrimaryColor
 import com.tonapps.uikit.color.textTertiaryColor
 import com.tonapps.uikit.icon.UIKitIcon
+import com.tonapps.wallet.data.core.HIDDEN_BALANCE
+import com.tonapps.wallet.localization.Localization
+import uikit.extensions.clearDrawables
 import uikit.extensions.drawable
+import uikit.extensions.setLeftDrawable
+import uikit.navigation.Navigation
 import uikit.widget.FrescoView
 import uikit.widget.LoaderView
 
@@ -45,11 +55,18 @@ class HistoryActionHolder(
     private val warningView = findViewById<AppCompatTextView>(R.id.warning)
 
     private val nftView = findViewById<View>(R.id.nft)
-    private val nftIconView = findViewById<SimpleDraweeView>(R.id.nft_icon)
+    private val nftIconView = findViewById<FrescoView>(R.id.nft_icon)
     private val nftNameView = findViewById<AppCompatTextView>(R.id.nft_name)
     private val nftCollectionView = findViewById<AppCompatTextView>(R.id.nft_collection)
+    private val lockDrawable: Drawable by lazy {
+        val drawable = context.drawable(UIKitIcon.ic_lock_16)
+        drawable.setTint(context.accentGreenColor)
+        drawable
+    }
 
     override fun onBind(item: HistoryItem.Event) {
+        commentView.clearDrawables()
+
         if (!disableOpenAction) {
             itemView.setOnClickListener { TransactionDialog.open(context, item) }
         }
@@ -74,8 +91,13 @@ class HistoryActionHolder(
 
         bindPending(item.pending)
         bindComment(item.comment)
+        bindEncryptedComment(item.cipherText, item.address?:"")
         bindNft(item)
         bindAmount(item)
+    }
+
+    private fun decryptComment(cipherText: String, senderAddress: String) {
+        Navigation.from(context)?.add(EncryptedCommentScreen.newInstance(cipherText, senderAddress))
     }
 
     private fun loadIcon(uri: Uri) {
@@ -97,23 +119,46 @@ class HistoryActionHolder(
         } else {
             amountView.setTextColor(getAmountColor(item.value))
         }
-        amountView.text = item.value
+        if (item.hiddenBalance) {
+            amountView.text = HIDDEN_BALANCE
+        } else {
+            amountView.text = item.value
+        }
+
 
         if (item.value2.isEmpty()) {
             amount2View.visibility = View.GONE
         } else {
             amount2View.visibility = View.VISIBLE
-            amount2View.text = item.value2
+            if (item.hiddenBalance) {
+                amount2View.text = HIDDEN_BALANCE
+            } else {
+                amount2View.text = item.value2
+            }
         }
     }
 
     private fun bindComment(comment: String?) {
         if (comment.isNullOrBlank()) {
             commentView.visibility = View.GONE
-        } else {
-            commentView.visibility = View.VISIBLE
-            commentView.text = comment
+            return
         }
+
+        commentView.visibility = View.VISIBLE
+        commentView.text = comment
+        commentView.setOnClickListener(null)
+    }
+
+    private fun bindEncryptedComment(cipherText: String?, senderAddress: String) {
+        if (cipherText.isNullOrBlank()) {
+            commentView.visibility = View.GONE
+            return
+        }
+
+        commentView.visibility = View.VISIBLE
+        commentView.text = context.getString(Localization.encrypted_comment)
+        commentView.setLeftDrawable(lockDrawable)
+        commentView.setOnClickListener { decryptComment(cipherText, senderAddress) }
     }
 
     private fun bindNft(item: HistoryItem.Event) {
@@ -122,13 +167,32 @@ class HistoryActionHolder(
             return
         }
 
+        val nft = item.nft!!
         nftView.visibility = View.VISIBLE
         nftView.setOnClickListener {
-            // Navigation.from(context)?.add(NftScreen.newInstance(item.nftAddress!!))
+            Navigation.from(context)?.add(NftScreen.newInstance(nft))
         }
-        nftIconView.setImageURI(item.nftImageURL)
-        nftNameView.text = item.nftTitle
-        nftCollectionView.text = item.nftCollection
+        loadNftImage(nft.mediumUri, item.hiddenBalance)
+        if (item.hiddenBalance) {
+            nftNameView.text = HIDDEN_BALANCE
+            nftCollectionView.text = HIDDEN_BALANCE
+        } else {
+            nftNameView.text = nft.name
+            nftCollectionView.text = nft.collectionName.ifEmpty {
+                getString(Localization.unnamed_collection)
+            }
+        }
+    }
+
+    private fun loadNftImage(uri: Uri, blur: Boolean) {
+        if (blur) {
+            val request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setPostprocessor(BlurPostProcessor(25, context, 3))
+                .build()
+            nftIconView.setImageRequest(request)
+        } else {
+            nftIconView.setImageURI(uri, null)
+        }
     }
 
     @ColorInt

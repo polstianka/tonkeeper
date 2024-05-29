@@ -1,11 +1,15 @@
 package com.tonapps.tonkeeper.ui.screen.root
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.biometric.BiometricPrompt
+import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -54,8 +58,10 @@ class RootActivity: NavigationActivity() {
     private lateinit var lockSignOut: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(rootViewModel.themeId)
+        setTheme(rootViewModel.theme.resId)
         super.onCreate(savedInstanceState)
+        windowInsetsController.isAppearanceLightStatusBars = rootViewModel.theme.light
+        windowInsetsController.isAppearanceLightNavigationBars = rootViewModel.theme.light
         uiHandler = Handler(mainLooper)
 
         handleIntent(intent)
@@ -104,7 +110,6 @@ class RootActivity: NavigationActivity() {
                 }
             })
         }
-
     }
 
     private suspend fun onDAppEvent(event: DAppEventEntity) {

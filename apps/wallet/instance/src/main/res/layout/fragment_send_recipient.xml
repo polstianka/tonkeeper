@@ -34,6 +34,30 @@
             android:textColor="?attr/accentOrangeColor"
             android:textAppearance="@style/TextAppearance.Body2"/>
 
+        <uikit.widget.RowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/offsetMedium">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/comment_encrypt_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comment_decrypted_hint"
+                android:textColor="?attr/textSecondaryColor"
+                android:textAppearance="@style/TextAppearance.Body2"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/comment_encrypt_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/encrypt_comment"
+                android:textColor="?attr/textAccentColor"
+                android:textAppearance="@style/TextAppearance.Body2"/>
+
+        </uikit.widget.RowLayout>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <Button

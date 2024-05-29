@@ -26,10 +26,15 @@ class InputDrawable(
         duration = 160
     }
 
+    var activeBorderColor = context.fieldActiveBorderColor
+        set(value) {
+            field = value
+            updateState()
+        }
+
     private val cornerRadius = context.getDimension(R.dimen.cornerMedium)
     private val borderSize = 1.5f.dp
     private val backgroundColor = context.fieldBackgroundColor
-    private val borderColor = context.fieldActiveBorderColor
 
     private val errorBackgroundColor = context.fieldErrorBackgroundColor
     private val errorBorderColor = context.fieldErrorBorderColor
@@ -107,7 +112,7 @@ class InputDrawable(
             newBorderColor = errorBorderColor
         } else if (active) {
             newBackgroundColor = backgroundColor
-            newBorderColor = borderColor
+            newBorderColor = activeBorderColor
         } else {
             newBackgroundColor = backgroundColor
             newBorderColor = Color.TRANSPARENT

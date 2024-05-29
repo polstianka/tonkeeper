@@ -11,7 +11,10 @@ import com.tonapps.signer.password.Password
 import com.tonapps.signer.screen.root.action.RootAction
 import com.tonapps.signer.vault.SignerVault
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.ton.cell.Cell
+import uikit.extensions.collectFlow
 
 class RootViewModel(
     private val vault: SignerVault,
@@ -32,8 +36,8 @@ class RootViewModel(
         it.isNotEmpty()
     }.distinctUntilChanged()
 
-    private val _action = Channel<RootAction>(Channel.BUFFERED)
-    val action = _action.receiveAsFlow()
+    private val _action = MutableSharedFlow<RootAction>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val action = _action.asSharedFlow()
 
     fun checkPassword(password: CharArray) = flow {
         val valid = vault.isValidPassword(password)
@@ -51,7 +55,7 @@ class RootViewModel(
     }
 
     fun responseSignedBoc(boc: String) {
-        _action.trySend(RootAction.ResponseBoc(boc))
+        _action.tryEmit(RootAction.ResponseBoc(boc))
     }
 
     fun processDeepLink(uri: Uri, fromApp: Boolean): Boolean {
@@ -71,17 +75,13 @@ class RootViewModel(
     }
 
     private fun signRequest(signRequest: SignRequestEntity) {
-        keyRepository.findIdByPublicKey(signRequest.publicKey).onEach { id ->
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = keyRepository.findIdByPublicKey(signRequest.publicKey) ?: return@launch
             sign(id, signRequest.body, signRequest.v, signRequest.returnResult)
-        }.launchIn(viewModelScope)
+        }
     }
 
     private fun sign(id: Long, body: Cell, v: String, returnResult: ReturnResultEntity) {
-        _action.trySend(RootAction.RequestBodySign(id, body, v, returnResult))
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        _action.close()
+        _action.tryEmit(RootAction.RequestBodySign(id, body, v, returnResult))
     }
 }

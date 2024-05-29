@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:icon="@drawable/ic_chevron_left_16"
+            app:ignoreSystemOffset="true" />
+
+        <uikit.widget.FrescoView
+            android:id="@+id/operator_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            app:roundedCornerRadius="20dp" />
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetLarge"
+            android:textAppearance="@style/TextAppearance.H2"
+            android:textColor="@color/textPrimaryDark"
+            tools:text="Mercurio" />
+
+        <TextView
+            android:id="@+id/subtitle_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetExtraSmall"
+            android:layout_marginBottom="@dimen/offsetLarge"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="@color/textSecondaryDark"
+            tools:text="Instantly buy with a credit card" />
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:background="@drawable/bg_content"
+            android:padding="@dimen/offsetMedium">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/pay_input_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/you_pay"
+                android:textAppearance="@style/TextAppearance.Body3"
+                android:textColor="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/payment_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:maxLength="220"
+                    android:maxLines="4"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="@color/textPrimaryDark"
+                    android:textColorHint="@color/textPrimaryDark"
+                    android:textCursorDrawable="@drawable/cursor" />
+
+                <TextView
+                    android:id="@+id/payment_edit_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="@color/textSecondaryDark"
+                    tools:text="TON" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </uikit.widget.ColumnLayout>
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:background="@drawable/bg_content"
+            android:padding="@dimen/offsetMedium">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/get_pay_input_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/you_get"
+                android:textAppearance="@style/TextAppearance.Body3"
+                android:textColor="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/get_payment_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:maxLength="220"
+                    android:maxLines="4"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="@color/textPrimaryDark"
+                    android:textColorHint="@color/textPrimaryDark"
+                    android:textCursorDrawable="@drawable/cursor" />
+
+                <TextView
+                    android:id="@+id/get_payment_edit_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColor="@color/textSecondaryDark"
+                    tools:text="TON" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </uikit.widget.ColumnLayout>
+
+        <TextView
+            android:id="@+id/rate_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetLarge"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:gravity="start"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="@color/textTertiaryDark"
+            tools:text="2,3300 AMD for 1 TON" />
+
+        <TextView
+            android:id="@+id/min_amount_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetLarge"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:gravity="start"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="@color/textTertiaryDark"
+            tools:text="Min. amount: 50 TON" />
+
+    </uikit.widget.ColumnLayout>
+
+    <Button
+        android:id="@+id/continue_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:text="@string/continue_action"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</FrameLayout>

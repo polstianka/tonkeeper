@@ -7,14 +7,27 @@
     android:background="@drawable/bg_nft"
     android:orientation="vertical">
 
-    <uikit.widget.FrescoView
-        android:id="@+id/image"
+    <uikit.widget.SquareFrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/bg_nft_image"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:viewAspectRatio="1" />
+        android:background="@drawable/bg_nft_image">
+
+        <uikit.widget.FrescoView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="centerCrop" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/sale_badge"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_margin="8dp"
+            android:layout_gravity="end|top"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_sale_badge_16"/>
+
+    </uikit.widget.SquareFrameLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"

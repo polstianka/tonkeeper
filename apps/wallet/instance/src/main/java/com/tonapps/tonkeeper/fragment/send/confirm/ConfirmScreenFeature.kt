@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import org.ton.cell.Cell
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.settings.SettingsRepository
 import org.ton.bitstring.BitString
 import org.ton.block.StateInit
 import uikit.mvi.UiFeature
@@ -34,10 +35,11 @@ class ConfirmScreenFeature(
     private val ratesRepository: RatesRepository,
     private val api: API,
     private val historyHelper: HistoryHelper,
+    private val settingsRepository: SettingsRepository,
 ): UiFeature<ConfirmScreenState, ConfirmScreenEffect>(ConfirmScreenState()) {
 
     private val currency: WalletCurrency
-        get() = App.settings.currency
+        get() = settingsRepository.currency
 
     private var lastSeqno = -1
     private var lastUnsignedBody: Cell? = null
@@ -51,6 +53,7 @@ class ConfirmScreenFeature(
                     walletLabel = wallet.label
                 )
             }
+            lastSeqno = getSeqno(wallet)
         }
     }
 
@@ -238,7 +241,7 @@ class ConfirmScreenFeature(
     }
 
     private suspend fun getSeqno(wallet: WalletLegacy): Int {
-        if (lastSeqno == 0) {
+        if (0 >= lastSeqno) {
             lastSeqno = wallet.getSeqno(api)
         }
         return lastSeqno

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:icon="@drawable/ic_chevron_left_16"
+            android:title="@string/operator"
+            app:ignoreSystemOffset="true" />
+
+        <uikit.widget.RowLayout
+            android:id="@+id/currency_select_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:background="@drawable/bg_content"
+            android:clickable="true"
+            android:padding="@dimen/offsetMedium">
+
+            <TextView
+                android:id="@+id/currency_code_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="@color/textPrimaryDark"
+                tools:text="AMD" />
+
+            <TextView
+                android:id="@+id/currency_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="@color/textSecondaryDark"
+                tools:text="Armenian Dram" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:clickable="false"
+                android:contentDescription="@string/switch_method"
+                app:srcCompat="@drawable/ic_switch_16" />
+        </uikit.widget.RowLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingBottom="@dimen/offsetMedium" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/offsetLarge"
+            android:text="@string/no_operators"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="@color/textSecondaryDark" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/continue_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:text="@string/continue_action"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</FrameLayout>

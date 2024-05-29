@@ -38,7 +38,7 @@ data class WalletEntity(
         type = legacy.type,
         version = legacy.version,
         label = WalletLabel(
-            name = legacy.name,
+            accountName = legacy.name,
             emoji = legacy.emoji.toString(),
             color = legacy.color
         ),
@@ -87,14 +87,4 @@ data class WalletEntity(
             unsignedBody = body,
         )
     }
-
-
-    /*
-    val cell = contract.createTransferMessageCell(
-            address = contract.address,
-            privateKey = EmptyPrivateKeyEd25519,
-            seqno = seqno,
-            unsignedBody = unsignedBody,
-        )
-     */
 }

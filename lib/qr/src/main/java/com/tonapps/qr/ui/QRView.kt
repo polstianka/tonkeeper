@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -56,6 +57,10 @@ class QRView @JvmOverloads constructor(
                 recycle()
             }
         }
+    }
+
+    fun setContent(uri: Uri) {
+        setContent(uri.toString())
     }
 
     fun setContent(content: String) {

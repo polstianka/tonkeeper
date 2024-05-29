@@ -40,7 +40,16 @@
                 android:icon="@drawable/ic_message_bubble_28"
                 android:text="@string/support"
                 android:tint="?attr/iconSecondaryColor"
-                app:position="single"/>
+                app:position="first"/>
+
+            <uikit.widget.item.ItemIconView
+                android:id="@+id/legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_doc_28"
+                android:text="@string/legal"
+                android:tint="?attr/iconSecondaryColor"
+                app:position="last"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"

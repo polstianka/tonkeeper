@@ -2,7 +2,7 @@ package com.tonapps.tonkeeper.ui.screen.wallet.list.holder
 
 import android.view.View
 import android.view.ViewGroup
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.dialog.trade.TradeDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
@@ -13,8 +13,7 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
 
-class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
-
+class ActionsHolder(parent: ViewGroup) : Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
     private val sendView = findViewById<View>(R.id.send)
     private val receiveView = findViewById<View>(R.id.receive)
     private val buyOrSellView = findViewById<View>(R.id.buy_or_sell)
@@ -24,7 +23,9 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
+        buyOrSellView.setOnClickListener {
+            navigation?.add(TradeDialog())
+        }
         scanView.setOnClickListener { navigation?.openCamera() }
     }
 
@@ -39,7 +40,6 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
         swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
         sendView.isEnabled = item.walletType != WalletType.Watch
         scanView.isEnabled = item.walletType != WalletType.Watch
-        buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap
+        buyOrSellView.isEnabled = true // TODO V item.walletType != WalletType.Testnet && !item.disableSwap
     }
-
 }

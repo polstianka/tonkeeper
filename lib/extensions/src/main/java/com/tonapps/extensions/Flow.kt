@@ -13,3 +13,7 @@ fun <T> MutableEffectFlow(): MutableSharedFlow<T> {
 fun <T, R> Flow<List<T>>.mapList(transform: (T) -> R): Flow<List<R>> = map { list ->
     list.map(transform)
 }
+
+fun <T> Flow<List<T>>.filterList(predicate: (T) -> Boolean): Flow<List<T>> = map { list ->
+    list.filter(predicate)
+}

@@ -19,11 +19,18 @@ object TKDeepLink {
         return builder.build()
     }
 
-    fun buildLinkUri(publicKey: PublicKeyEd25519, name: String): Uri {
+    fun buildLinkUri(
+        publicKey: PublicKeyEd25519,
+        name: String,
+        local: Boolean
+    ): Uri {
         val baseUri = Uri.parse("${APP_SCHEME}://signer/link")
         val builder = baseUri.buildUpon()
         builder.appendQueryParameter("pk", publicKey.base64())
         builder.appendQueryParameter("name", name)
+        if (local) {
+            builder.appendQueryParameter("local", "true")
+        }
         return builder.build()
     }
 
@@ -32,6 +39,7 @@ object TKDeepLink {
         val builder = baseUri.buildUpon()
         builder.appendQueryParameter("pk", publicKey.base64())
         builder.appendQueryParameter("name", name)
+        builder.appendQueryParameter("local", "true")
         return builder.build()
     }
 
