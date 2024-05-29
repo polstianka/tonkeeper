@@ -322,4 +322,10 @@
     <string name="swap_sign_failed">Swap signing failed.</string>
     <string name="swap_failed">Swap failed.</string>
     <string name="swap_success">Swap done successfully.</string>
+    <string name="min_amount">Min amount: %s</string>
+    <string name="enter_amount">Enter amount.</string>
+    <string name="select_payment_method">Select payment method.</string>
+    <string name="operator">Operator</string>
+    <string name="you_pay">you pay</string>
+    <string name="you_get">you get</string>
 </resources>

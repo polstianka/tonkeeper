@@ -27,6 +27,7 @@ import com.tonapps.wallet.data.core.Theme
 import com.tonapps.wallet.data.core.dataModule
 import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
+import com.tonapps.wallet.data.rates.operatorRatesModule
 import com.tonapps.wallet.data.token.assetModule
 import com.tonapps.wallet.data.token.swapModule
 import com.tonapps.wallet.data.tonconnect.tonConnectModule
@@ -56,7 +57,7 @@ class App: MultiDexApplication(), CameraXConfig.Provider, KoinComponent {
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule, assetModule, swapModule)
+            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule, assetModule, swapModule, operatorRatesModule)
         }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

@@ -30,6 +30,7 @@ import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.MessageConsequences
 import io.tonapi.models.MethodExecutionResult
 import io.tonapi.models.NftItem
+import io.tonapi.models.OperatorBuyRate
 import io.tonapi.models.SendBlockchainMessageRequest
 import io.tonapi.models.SwapSimulateDetail
 import io.tonapi.models.TokenRates
@@ -69,6 +70,7 @@ class API(
 
     private val provider: Provider by lazy {
         Provider(
+            config.bootTonkeeper,
             config.stonfiHost,
             config.tonapiMainnetHost,
             config.tonapiTestnetHost,
@@ -77,6 +79,8 @@ class API(
     }
 
     fun swap(testnet: Boolean) = provider.swap.get(testnet)
+
+    fun operatorRate(testnet: Boolean) = provider.operatorRate.get(testnet)
 
     fun accounts(testnet: Boolean) = provider.accounts.get(testnet)
 
@@ -259,6 +263,14 @@ class API(
             rates().getRates(tokens.joinToString(","), currency).rates
         } catch (e: Throwable) {
             mapOf()
+        }
+    }
+
+    fun getOperatorRates(currencyCode: String): List<OperatorBuyRate> {
+        return try {
+            operatorRate(false).getFiatOperatorRates(currencyCode).items
+        } catch (e: Throwable) {
+            emptyList()
         }
     }
 

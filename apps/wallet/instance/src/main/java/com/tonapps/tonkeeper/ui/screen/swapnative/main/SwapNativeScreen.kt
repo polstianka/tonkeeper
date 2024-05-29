@@ -18,6 +18,7 @@ import com.tonapps.tonkeeper.view.SwapFromContainerView
 import com.tonapps.tonkeeper.view.SwapToContainerView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.core.HIDDEN_BALANCE
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -136,7 +137,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                     if (fromAsset == null) {
                         // reset
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
-                            sellTokenTitle.setText(getString(com.tonapps.wallet.localization.R.string.choose))
+                            sellTokenTitle.setText(getString(Localization.choose))
                             sellTokenIcon.visibility = View.GONE
                         }
                         sellTokenIcon.clear(requireContext())
@@ -156,10 +157,10 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
                         sellTokenBalance.text =
                             if (fromAsset.hiddenBalance)
-                                "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
+                                "${getString(Localization.balance)} $HIDDEN_BALANCE"
                             else {
                                 String.format(
-                                    getString(com.tonapps.wallet.localization.R.string.balance_format),
+                                    getString(Localization.balance_format),
                                     fromAsset.balance
                                 )
                             }
@@ -179,7 +180,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         // reset
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
                             buyTokenTitle.text =
-                                getString(com.tonapps.wallet.localization.R.string.choose)
+                                getString(Localization.choose)
                             buyTokenIcon.visibility = View.GONE
                         }
                         buyTokenIcon.clear(requireContext())
@@ -202,7 +203,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                             "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
                         else {
                             String.format(
-                                getString(com.tonapps.wallet.localization.R.string.balance_format),
+                                getString(Localization.balance_format),
                                 toAsset.balance
                             )
                         }
@@ -273,7 +274,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
             }
         }
 
-        nextButton.setText(requireContext().getString(com.tonapps.wallet.localization.R.string.continue_action))
+        nextButton.setText(requireContext().getString(Localization.continue_action))
         nextButton.onClick = { view, isEnabled ->
             val swapConfirmArgs = swapNativeViewModel.generateConfirmArgs()
             if (swapConfirmArgs != null) {

@@ -148,6 +148,14 @@ class SignViewModel(
         }
     }
 
+    private fun parseSwap(opCode: Int, cell: Cell?): com.tonapps.blockchain.ton.tlb.SwapTransfer? {
+        return if (opCode == 0x25938561) {
+            cell?.parse { loadTlb(com.tonapps.blockchain.ton.tlb.SwapTransfer.tlbCodec()) }
+        } else {
+            null
+        }
+    }
+
     private fun parseJettonTransfer(opCode: Int, cell: Cell?): com.tonapps.blockchain.ton.tlb.JettonTransfer? {
         return if (opCode == 0xf8a7ea5) {
             cell?.parse { loadTlb(com.tonapps.blockchain.ton.tlb.JettonTransfer.tlbCodec()) }

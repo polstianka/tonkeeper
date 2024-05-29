@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
+import com.tonapps.tonkeeper.ui.screen.buysell.main.BuySellScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
@@ -13,7 +14,8 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
 
-class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
+class ActionsHolder(parent: ViewGroup) :
+    Holder<Item.Actions>(parent, R.layout.view_wallet_actions) {
 
     private val sendView = findViewById<View>(R.id.send)
     private val receiveView = findViewById<View>(R.id.receive)
@@ -24,7 +26,10 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
+        buyOrSellView.setOnClickListener {
+            // FiatDialog.open(context)
+            navigation?.add(BuySellScreen.newInstance())
+        }
         scanView.setOnClickListener { navigation?.openCamera() }
     }
 

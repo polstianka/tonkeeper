@@ -20,6 +20,11 @@ import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.explore.BrowserExploreViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.main.BrowserMainViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.search.BrowserSearchViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.country.BuySellCountryScreenFeature
+import com.tonapps.tonkeeper.ui.screen.buysell.currency.BuySellCurrencyViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.confirm.BuySellConfirmViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.main.BuySellViewModel
+import com.tonapps.tonkeeper.ui.screen.buysell.operator.OperatorViewModel
 import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesViewModel
 import com.tonapps.tonkeeper.ui.screen.dialog.encrypted.EncryptedCommentViewModel
 import com.tonapps.tonkeeper.ui.screen.events.EventsViewModel
@@ -73,6 +78,11 @@ val koinModel = module {
     viewModel { ChooseTokenViewModel(get(), get(), get(), get(), get()) }
     viewModel { SwapNativeViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SwapConfirmViewModel(get(), get(), get()) }
+    viewModel { BuySellViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BuySellConfirmViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BuySellCountryScreenFeature(get(), get(), get(), get(), get()) }
+    viewModel { BuySellCurrencyViewModel(get()) }
+    viewModel { OperatorViewModel(get(), get(), get(), get(), get()) }
     viewModel { CurrencyViewModel(get()) }
     viewModel { SettingsViewModel(get(), get(), get()) }
     viewModel { EditNameViewModel(get()) }
