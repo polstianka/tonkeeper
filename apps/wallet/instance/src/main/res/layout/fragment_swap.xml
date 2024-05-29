@@ -44,6 +44,7 @@
                             android:textColor="?attr/textSecondaryColor" />
 
                         <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/balance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

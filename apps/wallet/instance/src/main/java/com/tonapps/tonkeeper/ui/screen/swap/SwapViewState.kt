@@ -5,7 +5,8 @@ data class SwapViewState(
     var toTokenTitle: String?,
     var fromTokenIcon: String?,
     var toTokenIcon: String?,
-    var amount: String,
-    var balance: String,
-    var swapButton: String
+    var toAmount: String,
+    var fromAmount: String,
+    var swapButton: String,
+    var balance: String?
 )

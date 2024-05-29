@@ -3,15 +3,18 @@ package com.tonapps.tonkeeper.ui.screen.swap
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
+import com.tonapps.tonkeeper.koin.koin
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.settings.slippage.SlippageScreen
 import com.tonapps.tonkeeperx.R
+import com.tonapps.wallet.data.token.TokenRepository
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
@@ -28,6 +31,7 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
     private val rootViewModel: RootViewModel by activityViewModel()
     private lateinit var viewModel: SwapViewModel
     private lateinit var headerView: HeaderView
+    private lateinit var balanceView: AppCompatTextView
     private lateinit var sendTitle: AppCompatTextView
     private lateinit var sendImage: AppCompatImageView
     private lateinit var receiveTitle: AppCompatTextView
@@ -39,13 +43,13 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = SwapViewModel(SwapViewState(args.fromToken, args.toToken,null, null, "0", "0", "Choose Token"))
+        viewModel = SwapViewModel(SwapViewState(args.fromToken, args.toToken,null, null, "0", "0", "Choose Token", null), context?.koin?.get<TokenRepository>(), lifecycleScope)
+        balanceView = view.findViewById(R.id.balance)
         sendTitle = view.findViewById(R.id.title)
         sendImage = view.findViewById(R.id.icon)
         receiveTitle = view.findViewById(R.id.choose_title)
         receiveImage = view.findViewById(R.id.choose_icon)
         swapTokenButton = view.findViewById(R.id.swap_token_button)
-
         headerView = view.findViewById(R.id.header)
         navigation = Navigation.from(view.context)
         headerView.doOnCloseClick = {
@@ -62,10 +66,10 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         headerView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetExtraExtraSmall))
         lifecycleScope.launch {
             viewModel.stateFlow.collect{
+                balanceView.text = "Balance: ${it.balance}"
                 updateTokenView(
                     it.fromTokenTitle,
-                    it.toTokenTitle,
-                    )
+                    it.toTokenTitle)
             }
         }
         swapTokenButton.setOnClickListener {
