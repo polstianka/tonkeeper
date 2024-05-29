@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <uikit.widget.ButtonsLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/stake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_plus_outline_28"
+            android:title="@string/staking_action_stake"/>
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/unstake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_minus_outline_28"
+            android:title="@string/staking_action_unstake"/>
+
+    </uikit.widget.ButtonsLayout>
+
+</FrameLayout>

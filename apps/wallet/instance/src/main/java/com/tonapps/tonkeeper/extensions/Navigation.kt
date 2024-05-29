@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import com.tonapps.tonkeeper.fragment.camera.CameraFragment
-import com.tonapps.tonkeeper.ui.screen.root.RootActivity
+import com.tonapps.tonkeeper.fragment.fiat.FiatScreen
 import com.tonapps.tonkeeper.fragment.send.SendScreen
+import com.tonapps.tonkeeper.fragment.staking.deposit.DepositScreen
+import com.tonapps.tonkeeper.fragment.swap.SwapAmountScreen
+import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.wallet.localization.Localization
-import io.tonapi.models.JettonBalance
 import uikit.extensions.findFragment
 import uikit.navigation.Navigation
 
@@ -51,5 +53,38 @@ fun Navigation.sendCoin(
         currentFragment.forceSetJetton(jettonAddress)
     } else {
         add(SendScreen.newInstance(address, text, amount, jettonAddress))
+    }
+}
+
+fun Navigation.fiat() {
+    if (this !is RootActivity) return
+
+    val currentFragment = supportFragmentManager.findFragment<FiatScreen>()
+    if (currentFragment is FiatScreen) {
+
+    } else {
+        add(FiatScreen.newInstance())
+    }
+}
+
+fun Navigation.swap() {
+    if (this !is RootActivity) return
+
+    val currentFragment = supportFragmentManager.findFragment<SwapAmountScreen>()
+    if (currentFragment is SwapAmountScreen) {
+
+    } else {
+        add(SwapAmountScreen.newInstance())
+    }
+}
+
+fun Navigation.stake() {
+    if (this !is RootActivity) return
+
+    val currentFragment = supportFragmentManager.findFragment<DepositScreen>()
+    if (currentFragment is DepositScreen) {
+
+    } else {
+        add(DepositScreen.newInstance())
     }
 }

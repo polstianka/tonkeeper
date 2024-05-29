@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_content">
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:id="@+id/row_apy"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:title="@string/staking_apy">
+    </com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView>
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:id="@+id/row_deposit"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:title="@string/staking_min_deposit">
+    </com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView>
+</androidx.appcompat.widget.LinearLayoutCompat>

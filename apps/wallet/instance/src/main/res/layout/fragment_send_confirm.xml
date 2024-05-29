@@ -85,7 +85,7 @@
             android:id="@+id/send"
             style="@style/Widget.App.Button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:filterTouchesWhenObscured="true"
             android:textAppearance="@style/TextAppearance.Label1"
             android:textColor="?attr/textPrimaryColor"

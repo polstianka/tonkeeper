@@ -114,7 +114,7 @@ data class TransactionData(
         )
     }
 
-    private companion object {
+    companion object {
 
         fun getWalletQueryId(): BigInteger {
             try {

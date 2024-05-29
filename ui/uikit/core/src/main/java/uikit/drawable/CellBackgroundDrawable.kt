@@ -21,7 +21,8 @@ import uikit.extensions.getDimension
 class CellBackgroundDrawable(
     context: Context,
     private val position: ListCell.Position,
-    backgroundColor: Int = context.backgroundContentColor
+    backgroundColor: Int = context.backgroundContentColor,
+    private val radius: Float = context.getDimension(R.dimen.cornerMedium)
 ): BaseDrawable() {
 
     companion object {
@@ -42,12 +43,13 @@ class CellBackgroundDrawable(
         fun create(
             context: Context,
             position: ListCell.Position,
-            backgroundColor: Int = context.backgroundContentColor
+            backgroundColor: Int = context.backgroundContentColor,
+            radius: Float = context.getDimension(R.dimen.cornerMedium)
         ): Drawable {
             val color = context.backgroundHighlightedColor
             return RippleDrawable(
                 ColorStateList.valueOf(color),
-                CellBackgroundDrawable(context, position, backgroundColor),
+                CellBackgroundDrawable(context, position, backgroundColor, radius),
                 null
             )
         }
@@ -56,7 +58,6 @@ class CellBackgroundDrawable(
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = backgroundColor
     }
-    private val radius = context.getDimension(R.dimen.cornerMedium)
     private val firstCorners = createCorners(radius, radius, 0f, 0f)
     private val lastCorners = createCorners(0f, 0f, radius, radius)
     private val singleCorners = createCorners(radius, radius, radius, radius)

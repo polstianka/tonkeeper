@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.tonapps.tonkeeper.ui.component.BlurredRecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        app:ignoreTopSystemOffset="false"
+        app:ignoreBottomSystemOffset="false"/>
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_chevron_left_16"/>
+    <uikit.widget.SkeletonLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="64dp">
+        <include layout="@layout/shimmer_jetton"/>
+    </uikit.widget.SkeletonLayout>
+    <uikit.widget.FooterViewEmpty
+        android:id="@+id/footer"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </uikit.widget.FooterViewEmpty>
+</FrameLayout>

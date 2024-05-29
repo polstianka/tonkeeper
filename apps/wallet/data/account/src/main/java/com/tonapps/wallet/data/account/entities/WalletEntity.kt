@@ -7,15 +7,16 @@ import com.tonapps.blockchain.ton.contract.WalletV4R1Contract
 import com.tonapps.blockchain.ton.contract.WalletV4R2Contract
 import com.tonapps.blockchain.ton.contract.WalletVersion
 import com.tonapps.blockchain.ton.extensions.EmptyPrivateKeyEd25519
+import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.toAccountId
 import com.tonapps.blockchain.ton.extensions.toWalletAddress
+import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.WalletSource
 import com.tonapps.wallet.data.account.WalletType
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
+import io.tonapi.models.MessageConsequences
 import org.ton.api.pk.PrivateKeyEd25519
 import org.ton.api.pub.PublicKeyEd25519
-import org.ton.block.AddrStd
-import org.ton.block.MsgAddressInt
 import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
 
@@ -97,4 +98,49 @@ data class WalletEntity(
             unsignedBody = unsignedBody,
         )
      */
+
+    suspend fun buildUnsignedBody(api: API, transfer: WalletTransfer): Pair<Cell, Int> {
+        val seqno = requestSeqno(api)
+        val cell = contract.createTransferUnsignedBody(seqno = seqno, gifts = arrayOf(transfer))
+        return Pair(cell, seqno)
+    }
+
+    suspend fun send(api: API, privateKey: PrivateKeyEd25519, transfer: WalletTransfer) {
+        val (unsignedBody, seqno) = buildUnsignedBody(api, transfer)
+        val messageCell = contract.createTransferMessageCell(
+            address = contract.address,
+            privateKey = privateKey,
+            seqno = seqno,
+            unsignedBody = unsignedBody,
+        )
+
+        send(api, messageCell)
+    }
+
+    suspend fun send(api: API, messageCell: Cell) {
+        api.sendToBlockchainUnsafe(messageCell.base64(), testnet)
+    }
+
+    suspend fun emulate(api: API, transfer: WalletTransfer): MessageConsequences {
+        val privateKey = EmptyPrivateKeyEd25519
+        val seqno = requestSeqno(api)
+
+        val unsignedBody = contract.createTransferUnsignedBody(seqno = seqno, gifts = arrayOf(transfer))
+        val messageCell = contract.createTransferMessageCell(
+            address = contract.address,
+            privateKey = privateKey,
+            seqno = seqno,
+            unsignedBody = unsignedBody,
+        )
+
+        return api.emulate(messageCell.base64(), testnet)
+    }
+
+    suspend fun requestSeqno(api: API, defaultValue: Int = 0): Int {
+        return try {
+            api.getAccountSeqno(accountId, testnet)
+        } catch (e: Throwable) {
+            defaultValue
+        }
+    }
 }

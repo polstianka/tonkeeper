@@ -1,5 +1,7 @@
 package com.tonapps.tonkeeper.api
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.squareup.moshi.adapter
 import com.tonapps.blockchain.Coin
@@ -23,6 +25,7 @@ import io.tonapi.models.NftItem
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.TokenRates
 import kotlinx.coroutines.delay
+import java.math.BigDecimal
 import kotlin.math.abs
 
 private val nftItemPreviewSizes = arrayOf(
@@ -58,14 +61,42 @@ val AccountEvent.withTON: Boolean
 val PoolImplementationType.icon: Int
     get() {
         return when (this) {
-            PoolImplementationType.tf -> R.drawable.ic_staking_tf
-            PoolImplementationType.whales -> R.drawable.ic_staking_whales
-            PoolImplementationType.liquidTF -> R.drawable.ic_staking_tonstakers
+            PoolImplementationType.tf -> com.tonapps.uikit.icon.R.drawable.ic_staking_tf
+            PoolImplementationType.whales -> com.tonapps.uikit.icon.R.drawable.ic_staking_whales
+            PoolImplementationType.liquidTF -> com.tonapps.uikit.icon.R.drawable.ic_staking_tonstakers
         }
     }
 
+val Uri.icon: Int
+    get() {
+        return when (this.host) {
+            "t.me" -> R.drawable.ic_telegram_16
+            "tonviewer.com" -> com.tonapps.uikit.icon.R.drawable.ic_magnifying_glass_16
+            "twitter.com" -> R.drawable.ic_twitter_16
+            else -> R.drawable.ic_globe_16
+        }
+    }
+
+fun Uri.getName(context: Context): String {
+    return when (this.host) {
+        "t.me" -> context.getString(com.tonapps.wallet.localization.R.string.link_community)
+        "twitter.com" -> context.getString(com.tonapps.wallet.localization.R.string.link_twitter)
+        else -> this.host ?: ""
+    }
+}
+
+val Float.percentage: String
+    get() = BigDecimal(this.toDouble()).percentage
+
+val BigDecimal.percentage: String
+    get() = this.setScale(2, BigDecimal.ROUND_DOWN).toPlainString() + "%"
+
 val PoolImplementationType.iconURL: String
     get() = "res:/${icon}"
+
+val PoolImplementationType.iconUri: Uri
+    get() = Uri.parse(iconURL)
+
 
 suspend fun <R> withRetry(
     times: Int = 5,

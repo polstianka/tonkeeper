@@ -55,7 +55,7 @@ abstract class BaseListAdapter: ListAdapter<BaseListItem, BaseListHolder<out Bas
         super.onAttachedToRecyclerView(recyclerView)
         recyclerViewRef = recyclerView
         recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = false
+        recyclerView.isNestedScrollingEnabled = false // WHY ???
         recyclerView.itemAnimator = null
         recyclerView.layoutAnimation = null
     }

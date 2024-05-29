@@ -39,6 +39,7 @@ inline fun <reified T: Parcelable> ByteArray.toParcel(): T? {
         parcel.recycle()
         value
     } catch (e: Throwable) {
+        Log.e("WTF_DEBUG", "Parcel read error: " + e.toString())
         null
     }
 }
@@ -54,6 +55,7 @@ inline fun <reified T: Parcelable> ByteArray.toListParcel(): List<T>? {
         parcel.recycle()
         list
     } catch (e: Throwable) {
+        Log.e("WTF_DEBUG", "Parcel read error: " + e.toString())
         null
     }
 }
@@ -68,6 +70,7 @@ inline fun <reified T: Parcelable> ByteArray.toListParcel(block: (parcel: Parcel
         parcel.recycle()
         list
     } catch (e: Throwable) {
+        Log.e("WTF_DEBUG", "Parcel read error: " + e.toString())
         null
     }
 }

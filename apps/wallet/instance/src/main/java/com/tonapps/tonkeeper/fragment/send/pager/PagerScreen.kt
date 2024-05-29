@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.tonapps.tonkeeper.fragment.send.SendScreenFeature
-import com.tonapps.tonkeeper.fragment.send.view.SendFrameLayout
 import uikit.mvi.UiEffect
 import uikit.mvi.UiFeature
 import uikit.mvi.UiScreen
@@ -25,7 +24,7 @@ abstract class PagerScreen<S: UiState, E: UiEffect, F: UiFeature<S, E>>(
                 onVisibleChange(value)
             }
         }
-
+/*
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +35,7 @@ abstract class PagerScreen<S: UiState, E: UiEffect, F: UiFeature<S, E>>(
         rootView.addView(view, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         return rootView
     }
-
+*/
     open fun onVisibleChange(visible: Boolean) {
 
     }

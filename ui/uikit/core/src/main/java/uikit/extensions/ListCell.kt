@@ -8,7 +8,8 @@ import uikit.drawable.CellBackgroundDrawable
 
 fun ListCell.Position.drawable(
     context: Context,
-    backgroundColor: Int = context.backgroundContentColor
+    backgroundColor: Int = context.backgroundContentColor,
+    radius: Float = 16f.dp
 ): Drawable {
-    return CellBackgroundDrawable.create(context, this, backgroundColor)
+    return CellBackgroundDrawable.create(context, this, backgroundColor, radius)
 }

@@ -284,12 +284,17 @@ class LoaderView @JvmOverloads constructor(
         stopAnimation()
     }*/
 
+    private var visibleOld: Boolean = false
+
     override fun onVisibilityAggregated(isVisible: Boolean) {
         super.onVisibilityAggregated(isVisible)
-        if (isVisible) {
-            startAnimation()
-        } else {
-            stopAnimation()
+        if (visibleOld != isVisible) {
+            visibleOld = isVisible
+            if (isVisible) {
+                startAnimation()
+            } else {
+                stopAnimation()
+            }
         }
     }
 

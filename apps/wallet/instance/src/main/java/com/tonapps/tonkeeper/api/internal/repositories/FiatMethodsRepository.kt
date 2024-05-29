@@ -24,7 +24,7 @@ class FiatMethodsRepository(context: Context): BaseBlobRepository<FiatData>("fia
         countryCode: String
     ): FiatData? = withContext(Dispatchers.IO) {
         val response = withRetry {
-            Tonkeeper.get("fiat/methods")
+            Tonkeeper.get("fiat/methods", countryCode)
         } ?: return@withContext null
         val json = response.getJSONObject("data")
         saveCache(

@@ -13,9 +13,12 @@
         app:ignoreSystemOffset="true"
         android:action="@drawable/ic_close_16"/>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <com.tonapps.tonkeeper.view.InsetsFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent">
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.tonapps.tonkeeper.view.InsetsFrameLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

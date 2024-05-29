@@ -8,7 +8,7 @@ import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.entity.RateEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 
-internal class BlobDataSource(context: Context): BlobDataSource<RatesEntity>(
+class BlobDataSource(context: Context): BlobDataSource<RatesEntity>(
     context = context,
     path = "rates",
     lruInitialCapacity = 3
@@ -27,12 +27,12 @@ internal class BlobDataSource(context: Context): BlobDataSource<RatesEntity>(
         return rates.copy()
     }
 
-    fun add(currency: WalletCurrency, list: List<RateEntity>) {
+    fun add(currency: WalletCurrency, list: List<RateEntity>): Boolean {
         if (list.isEmpty()) {
-            return
+            return false
         }
         val rates = get(currency).merge(list)
-        setCache(currency.code, rates)
+        return updateCache(currency.code, rates)
     }
 
 }

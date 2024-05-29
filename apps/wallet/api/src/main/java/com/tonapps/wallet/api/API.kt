@@ -2,11 +2,8 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
-import android.util.Log
-import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -16,15 +13,18 @@ import com.tonapps.network.interceptor.AuthorizationInterceptor
 import com.tonapps.network.post
 import com.tonapps.network.postJSON
 import com.tonapps.network.sse
+import com.tonapps.wallet.api.core.BaseStonFiAPI
 import com.tonapps.wallet.api.entity.AccountDetailsEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
+import io.tonapi.infrastructure.ClientException
 import io.tonapi.models.Account
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.AccountEvents
+import io.tonapi.models.AccountStakingInfo
 import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.MessageConsequences
 import io.tonapi.models.NftItem
@@ -60,6 +60,10 @@ class API(
     private val internalApi = InternalApi(context, defaultHttpClient)
     private val configRepository = ConfigRepository(context, scope, internalApi)
 
+    val stonFiApi: BaseStonFiAPI by lazy {
+        BaseStonFiAPI("https://api.ston.fi", tonAPIHttpClient)
+    }
+
     val config: ConfigEntity
         get() = configRepository.configEntity
 
@@ -76,6 +80,8 @@ class API(
     fun blockchain(testnet: Boolean) = provider.blockchain.get(testnet)
 
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
+
+    fun staking(testnet: Boolean) = provider.staking.get(testnet)
 
     fun rates() = provider.rates.get(false)
 
@@ -108,7 +114,21 @@ class API(
         testnet: Boolean
     ): BalanceEntity {
         val account = accounts(testnet).getAccount(accountId)
-        return BalanceEntity(TokenEntity.TON, Coin.toCoins(account.balance), accountId)
+        return BalanceEntity(TokenEntity.TON, account.balance.toBigInteger(), accountId, stake = null)
+    }
+
+    fun getAccountNominatorsPools(
+        accountId: String,
+        testnet: Boolean
+    ): List<AccountStakingInfo> {
+        try {
+            return staking(testnet).getAccountNominatorsPools(accountId).pools
+        } catch (t: ClientException) {
+            if (t.statusCode == 404) {
+                return emptyList()
+            }
+            throw t
+        }
     }
 
     fun getJettonsBalances(
@@ -120,7 +140,24 @@ class API(
             accountId = accountId,
             currencies = currency
         ).balances
-        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
+        return jettonsBalances.map { BalanceEntity(it) } //.filter { it.value > 0 }
+    }
+
+    fun getJettonsWalletAddress(
+        jettonId: String,
+        accountId: String,
+        testnet: Boolean
+    ): String {
+        //return try {
+            val result = blockchain(testnet).execGetMethodForBlockchainAccount(
+                jettonId,
+                "get_wallet_address",
+                listOf(accountId)
+            )
+            return (result.decoded as Map<*, *>)["jetton_wallet_address"] as String
+        /*} catch (e: Throwable) {
+            null
+        }*/
     }
 
     fun resolveAddressOrName(
@@ -258,6 +295,14 @@ class API(
         } catch (e: Throwable) {
             false
         }
+    }
+
+    suspend fun sendToBlockchainUnsafe(
+        boc: String,
+        testnet: Boolean
+    ) = withContext(Dispatchers.IO) {
+        val request = SendBlockchainMessageRequest(boc)
+        blockchain(testnet).sendBlockchainMessage(request)
     }
 
     suspend fun sendToBlockchain(

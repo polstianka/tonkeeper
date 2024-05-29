@@ -16,8 +16,6 @@ import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.core.signer.SingerArgs
 import com.tonapps.tonkeeper.core.widget.Widget
 import com.tonapps.tonkeeper.password.PasscodeRepository
-import com.tonapps.wallet.data.push.GooglePushService
-import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.tonkeeper.sign.SignManager
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.main.MainScreen
@@ -31,26 +29,23 @@ import com.tonapps.wallet.data.account.WalletSource
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.push.GooglePushService
 import com.tonapps.wallet.data.settings.SettingsRepository
-import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.data.token.TokenRepositoryV2
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
 import com.tonapps.wallet.data.tonconnect.entities.DAppEventEntity
 import com.tonapps.wallet.data.tonconnect.entities.DAppRequestEntity
 import com.tonapps.wallet.data.tonconnect.entities.reply.DAppSuccessEntity
 import com.tonapps.wallet.localization.Localization
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -58,14 +53,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import uikit.extensions.collectFlow
 import uikit.navigation.Navigation.Companion.navigation
 
 class RootViewModel(
@@ -80,7 +74,7 @@ class RootViewModel(
     private val screenCacheSource: ScreenCacheSource,
     private val walletAdapter: WalletAdapter,
     private val walletPickerAdapter: WalletPickerAdapter,
-    private val tokenRepository: TokenRepository
+    private val tokenRepositoryV2: TokenRepositoryV2
 ): AndroidViewModel(application) {
 
     data class Passcode(
@@ -139,9 +133,10 @@ class RootViewModel(
 
         combine(
             walletRepository.walletsFlow,
-            walletRepository.activeWalletFlow
-        ) { wallets, wallet ->
-            val balances = getBalances(wallets)
+            walletRepository.activeWalletFlow,
+            tokenRepositoryV2.storageFlow,
+        ) { wallets, wallet, storage ->
+            val balances = getBalances(storage, wallets)
             walletPickerAdapter.submitList(WalletPickerAdapter.map(wallets, wallet, balances))
         }.launchIn(viewModelScope)
 
@@ -327,17 +322,19 @@ class RootViewModel(
         _eventFlow.tryEmit(RootEvent.Toast(resId))
     }
 
-    private suspend fun getBalances(
+    private fun getBalances(
+        storage: TokenRepositoryV2.Storage,
         wallets: List<WalletEntity>
-    ): List<CharSequence> = withContext(Dispatchers.IO) {
-        val list = mutableListOf<Deferred<CharSequence>>()
+    ): List<CharSequence> {
+        val list = mutableListOf<CharSequence>()
         for (wallet in wallets) {
-            list.add(async { getBalance(wallet.accountId, wallet.testnet) })
+            list.add(getBalance(storage, wallet.accountId, wallet.testnet))
         }
-        list.map { it.await() }
+        return list
     }
 
-    private suspend fun getBalance(
+    private fun getBalance(
+        storage: TokenRepositoryV2.Storage,
         accountId: String,
         testnet: Boolean
     ): CharSequence {
@@ -346,7 +343,7 @@ class RootViewModel(
         } else {
             settingsRepository.currency
         }
-        val totalBalance = tokenRepository.getTotalBalances(currency, accountId, testnet)
+        val totalBalance = storage.totalBalance(accountId, testnet, currency)// tokenRepository.getTotalBalances(currency, accountId, testnet)
         return CurrencyFormatter.formatFiat(currency.code, totalBalance)
     }
 }

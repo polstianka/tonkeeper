@@ -21,7 +21,10 @@ class SettingsRepository(
     private val context: Context
 ) {
 
-    private companion object {
+    companion object {
+        const val DEFAULT_SLIPPAGE = 0.005f
+        const val DEFAULT_PRICE_IMPACT = 0.05f
+
         private const val NAME = "settings"
         private const val CURRENCY_CODE_KEY = "currency_code"
         private const val LOCK_SCREEN_KEY = "lock_screen"
@@ -33,7 +36,19 @@ class SettingsRepository(
         private const val FIREBASE_TOKEN_KEY = "firebase_token"
         private const val INSTALL_ID_KEY = "install_id"
         private const val SEARCH_ENGINE_KEY = "search_engine"
+
+        private const val SWAP_SLIPPAGE = "swap_slippage"
+        private const val SWAP_SLIPPAGE_USE_CUSTOM = "swap_slippage_use_custom"
+        private const val SWAP_PRICE_IMPACT = "swap_price_impact"
+        private const val SWAP_PRICE_IMPACT_USE_CUSTOM = "swap_price_impact_use_custom"
     }
+
+    data class SwapSettings(
+        val slippage: Float,
+        val slippageUseCustom: Boolean,
+        val priceImpact: Float,
+        val priceImpactUseCustom: Boolean,
+    )
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -57,6 +72,9 @@ class SettingsRepository(
 
     private val _searchEngineFlow = MutableEffectFlow<SearchEngine>()
     val searchEngineFlow = _searchEngineFlow.stateIn(scope, SharingStarted.Eagerly, null).filterNotNull()
+
+    private val _swapSettingsFlow = MutableEffectFlow<SwapSettings?>()
+    val swapSettingsFlow = _swapSettingsFlow.stateIn(scope, SharingStarted.Eagerly, null).filterNotNull()
 
     private val prefs = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
@@ -146,6 +164,31 @@ class SettingsRepository(
             }
         }
 
+    var swapSettings: SwapSettings = loadSwapSettings()
+        set(value) {
+            saveSwapSettings(value)
+            field = value
+            _swapSettingsFlow.tryEmit(value)
+        }
+
+    private fun loadSwapSettings(): SwapSettings {
+        return SwapSettings(
+            slippage = prefs.getFloat(SWAP_SLIPPAGE, DEFAULT_SLIPPAGE),
+            slippageUseCustom = prefs.getBoolean(SWAP_SLIPPAGE_USE_CUSTOM, false),
+            priceImpact = prefs.getFloat(SWAP_PRICE_IMPACT, DEFAULT_PRICE_IMPACT),
+            priceImpactUseCustom = prefs.getBoolean(SWAP_PRICE_IMPACT_USE_CUSTOM, false)
+        )
+    }
+
+    private fun saveSwapSettings(value: SwapSettings) {
+        val editor = prefs.edit()
+        editor.putFloat(SWAP_SLIPPAGE, value.slippage)
+        editor.putBoolean(SWAP_SLIPPAGE_USE_CUSTOM, value.slippageUseCustom)
+        editor.putFloat(SWAP_PRICE_IMPACT, value.priceImpact)
+        editor.putBoolean(SWAP_PRICE_IMPACT_USE_CUSTOM, value.priceImpactUseCustom)
+        editor.apply()
+    }
+
     init {
         scope.launch(Dispatchers.IO) {
             _currencyFlow.tryEmit(currency)
@@ -155,6 +198,7 @@ class SettingsRepository(
             _firebaseTokenFlow.tryEmit(firebaseToken)
             _countryFlow.tryEmit(country)
             _searchEngineFlow.tryEmit(searchEngine)
+            _swapSettingsFlow.tryEmit(swapSettings)
         }
     }
 }

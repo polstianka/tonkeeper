@@ -106,6 +106,15 @@ object CurrencyFormatter {
 
     fun format(
         currency: String = "",
+        value: BigDecimal,
+        decimals: Int
+    ): CharSequence {
+        val amount = getFormat(decimals).format(value)
+        return format(currency, amount)
+    }
+
+    fun format(
+        currency: String = "",
         value: Float,
     ): CharSequence {
         val decimals = decimalCount(value)

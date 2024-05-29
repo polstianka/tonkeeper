@@ -27,7 +27,9 @@ dependencies {
     implementation(Dependence.Koin.core)
     implementation(project(Dependence.Module.tonApi))
     implementation(project(Dependence.Wallet.Data.core))
+    implementation(project(Dependence.Wallet.Data.pools))
     implementation(project(Dependence.Wallet.Data.rates))
     implementation(project(Dependence.Wallet.api))
     implementation(project(Dependence.Lib.extensions))
+    implementation(project(Dependence.Lib.blockchain))
 }

@@ -2,23 +2,20 @@ package uikit.widget
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.view.MotionEvent
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.PathInterpolator
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.core.math.MathUtils
+import androidx.core.view.NestedScrollingChild
+import androidx.core.view.NestedScrollingParent
+import androidx.core.view.NestedScrollingParent2
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
-import androidx.customview.widget.ViewDragHelper
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import uikit.R
@@ -31,6 +28,8 @@ import uikit.extensions.roundTop
 import uikit.extensions.scale
 import uikit.extensions.setView
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class BottomSheetLayout @JvmOverloads constructor(
     context: Context,
@@ -140,11 +139,33 @@ class BottomSheetLayout @JvmOverloads constructor(
     }
 
     private fun onAnimationUpdateParent(progress: Float) {
+        val fragments = fragment?.activity?.supportFragmentManager?.fragments?.filterIsInstance<BaseFragment.BottomSheet>()
+
+        val fragmentsCount = fragments?.size ?: 0   // fragment?.activity?.supportFragmentManager?.fragments?.count { it is BaseFragment.BottomSheet } ?: 0
+        val sheetsVisibility = max(fragmentsCount + progress - 1f, 0f)
+        val sheetsVisibilityProgress = min(sheetsVisibility, 1f)
+
         val parentView = parentRootView ?: return
+        val parentViewHeight = parentView.measuredHeight
+        val sheetOffset = parentViewHeight - behavior.peekHeight.toFloat()
+
         val radius = context.getDimensionPixelSize(R.dimen.cornerMedium)
-        parentView.roundTop(progress.range(0, radius))
-        parentView.scale = progress.range(1f, parentScale)
-        parentView.alpha = progress.range(1f, parentAlpha)
+        val parentViewScale = sheetsVisibilityProgress.range(1f, parentScale)
+        parentView.scale = parentViewScale
+        parentView.roundTop(sheetsVisibilityProgress.range(0, radius))
+        parentView.alpha = sheetsVisibilityProgress.range(1f, parentAlpha)
+
+        fragments?.forEachIndexed{ i, fragment ->
+            val f = fragment as BaseFragment
+            val p = min(max(fragmentsCount - i - 2 + progress, 0f), 1f)
+            val scale = p.range(1f, (2f / 3f).range(parentScale, 1f))
+            val m = (1f - parentViewScale) / 2f
+            val m2 = (1f - scale) / 2f
+
+            f.view?.scale = scale
+            // f.view?.alpha = p.range(1f, parentAlpha)
+            // f.view?.translationY = -p.range(0f, sheetOffset * parentViewScale - (parentViewHeight * m) + (f.view?.measuredHeight ?: 0) * m2)
+        }
     }
 
     private fun releaseScreen() {

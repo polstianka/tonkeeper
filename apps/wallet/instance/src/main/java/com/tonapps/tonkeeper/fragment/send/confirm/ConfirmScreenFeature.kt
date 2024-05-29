@@ -1,11 +1,12 @@
 package com.tonapps.tonkeeper.fragment.send.confirm
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.tonapps.blockchain.Coin
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.api.totalFees
-import com.tonapps.blockchain.Coin
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.event.WalletStateUpdateEvent
 import com.tonapps.tonkeeper.extensions.emulate
@@ -15,16 +16,16 @@ import com.tonapps.tonkeeper.extensions.sendToBlockchain
 import com.tonapps.tonkeeper.fragment.send.TransactionData
 import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.rates.RatesRepository
 import core.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.ton.cell.Cell
-import com.tonapps.wallet.data.account.legacy.WalletLegacy
-import com.tonapps.wallet.data.rates.RatesRepository
 import org.ton.bitstring.BitString
 import org.ton.block.StateInit
+import org.ton.cell.Cell
 import uikit.mvi.UiFeature
 import uikit.widget.ProcessTaskView
 
@@ -113,9 +114,9 @@ class ConfirmScreenFeature(
         if (lastSeqno == -1) {
             lastSeqno = getSeqno(wallet)
         }
-        if (lastSeqno == 0) {
+        /*if (lastSeqno == 0) {
             return wallet.contract.stateInit
-        }
+        }*/
         return null
     }
 
@@ -226,6 +227,7 @@ class ConfirmScreenFeature(
                 }
 
             } catch (e: Throwable) {
+                Log.i("WTF_DEBUG", "Error " + e.toString())
                 updateUiState {
                     it.copy(
                         feeValue = 0,
@@ -238,7 +240,7 @@ class ConfirmScreenFeature(
     }
 
     private suspend fun getSeqno(wallet: WalletLegacy): Int {
-        if (lastSeqno == 0) {
+        if (lastSeqno == 0 || lastSeqno == -1) {
             lastSeqno = wallet.getSeqno(api)
         }
         return lastSeqno

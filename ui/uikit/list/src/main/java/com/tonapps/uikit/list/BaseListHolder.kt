@@ -39,6 +39,7 @@ abstract class BaseListHolder<I: BaseListItem>(
 
     fun unbind() {
         item = null
+        onUnbind()
     }
 
     @CallSuper

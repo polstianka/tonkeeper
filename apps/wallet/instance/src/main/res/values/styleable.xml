@@ -3,4 +3,14 @@
     <declare-styleable name="LabelEditorView">
         <attr name="android:button" format="string|reference"/>
     </declare-styleable>
+    <declare-styleable name="SwapInfoRowView">
+        <attr name="android:title" format="string|reference"/>
+        <attr name="android:hint" format="string|reference"/>
+    </declare-styleable>
+    <declare-styleable name="SwapTokenInputLayoutView">
+        <attr name="android:title" format="string|reference"/>
+    </declare-styleable>
+    <declare-styleable name="LabelView">
+        <attr name="android:textColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

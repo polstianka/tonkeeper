@@ -267,4 +267,70 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+
+    <string name="insufficient_balance_ton" translatable="false">Insufficient TON balance</string>
+    <string name="slide_to_confirm" translatable="false">Slide to Confirm</string>
+    <string name="get_withdrawal" translatable="false">Get Withdrawal</string>
+
+    <string name="other" translatable="false">Other</string>
+    <string name="suggested" translatable="false">Suggested</string>
+    <string name="staking_liquid" translatable="false">Liquid Staking</string>
+
+    <string name="link_community" translatable="false">Community</string>
+    <string name="link_twitter" translatable="false">Twitter</string>
+
+    <string name="swap_simulate_error" translatable="false">Swap simulation error</string>
+    <string name="swap_choose_token" translatable="false">Choose Token</string>
+    <string name="swap_high_price_impact" translatable="false">Price impact is too high</string>
+    <string name="swap_enter_amount" translatable="false">Enter Amount</string>
+    <string name="swap_choose_token_default" translatable="false">CHOOSE</string>
+    <string name="swap_settings_custom_hint" translatable="false">Custom</string>
+    <string name="swap_send" translatable="false">Send</string>
+    <string name="swap_receive" translatable="false">Receive</string>
+    <string name="swap_settings" translatable="false">Settings</string>
+    <string name="swap_confirm" translatable="false">Confirm Swap</string>
+    <string name="swap_info_price_impact" translatable="false">Price impact</string>
+    <string name="swap_info_price_impact_hint" translatable="false">The difference between the market price and estimated price due to trade size</string>
+    <string name="swap_info_minimum_received" translatable="false">Minimum received</string>
+    <string name="swap_info_minimum_received_hint" translatable="false">Your transaction will revert if there is large, unfavorable price movement before it is confirmed</string>
+    <string name="swap_info_liquidity_provider_fee" translatable="false">Liquidity provider fee</string>
+    <string name="swap_info_liquidity_provider_fee_hint" translatable="false">A portion of each trade goes to liquidity providers as a protocol incentive</string>
+    <string name="swap_info_blockchain_fee" translatable="false">Blockchain fee</string>
+    <string name="swap_info_route" translatable="false">Route</string>
+    <string name="swap_info_provider" translatable="false">Provider</string>
+
+    <string name="staking_deposit" translatable="false">Deposit</string>
+    <string name="staking_staked" translatable="false">Staked</string>
+    <string name="staking_choose_pool" translatable="false">Choose</string>
+    <string name="staking_options" translatable="false">Options</string>
+    <string name="staking_max_apy_label" translatable="false">MAX APY</string>
+    <string name="staking_pool_description" translatable="false">Minimum deposit %1$s.\nAPY ≈ %2$s</string>
+    <string name="staking_pool_description_apy" translatable="false">APY ≈ %1$s</string>
+    <string name="staking_warning" translatable="false">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
+    <string name="staking_tonstakers_description" translatable="false">When you stake TON in a Tonstakers pool, you receive a token called tsTON that represents your share in the pool. As the pool accumulates profits, your tsTON represents larger amount of TON..</string>
+    <string name="staking_apy" translatable="false">APY</string>
+    <string name="staking_links" translatable="false">Links</string>
+    <string name="staking_min_deposit" translatable="false">Minimal deposit</string>
+    <string name="staking_minimal_stake" translatable="false">Minimal deposit is %1$s</string>
+    <string name="staking_pending_deposit" translatable="false">%1$s staked in %2$s</string>
+    <string name="staking_pending_withdraw" translatable="false">%1$s unstaked in %2$s</string>
+    <string name="staking_ready_withdraw" translatable="false">Tap to take %1$s</string>
+
+    <string name="staking_pending_deposit_simple" translatable="false">Staked in %1$s</string>
+    <string name="staking_pending_withdraw_simple" translatable="false">Unstaked in %1$s</string>
+    <string name="staking_ready_withdraw_simple" translatable="false">Tap to take</string>
+
+    <string name="staking_action_stake" translatable="false">Stake</string>
+    <string name="staking_action_unstake" translatable="false">Unstake</string>
+    <string name="staking_unstake_hint" translatable="false">Unstake request will be processed after the end of the validation cycle in %1$s</string>
+
+    <string name="staking_ready_withdrawal_title" translatable="false">Unstake ready</string>
+    <string name="staking_pending_deposit_title" translatable="false">Pending Deposit</string>
+    <string name="staking_pending_withdrawal_title" translatable="false">Pending Withdrawal</string>
+
+    <string name="fiat_buy" translatable="false">Buy</string>
+    <string name="fiat_sell" translatable="false">Sell</string>
+
+
+
 </resources>

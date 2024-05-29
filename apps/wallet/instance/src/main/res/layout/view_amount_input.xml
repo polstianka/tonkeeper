@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/value_wrapper"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+    <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="48.76dp"
+        android:background="@null"
+        android:singleLine="true"
+        android:digits="0123456789.,"
+        android:inputType="numberDecimal"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:textColor="?attr/textPrimaryColor"
+        android:textCursorDrawable="@drawable/cursor"
+        android:gravity="center_vertical"
+        android:text="0"
+        android:hint="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/value_currency"
+        android:text="@string/ton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginStart="6dp"
+        android:textAppearance="@style/TextAppearance.NUM2"
+        android:textColor="?attr/textSecondaryColor"
+        app:layout_constraintStart_toEndOf="@id/value"
+        app:layout_constraintTop_toTopOf="@id/value"
+        app:layout_constraintBottom_toBottomOf="@id/value"/>
+</uikit.widget.RowLayout>

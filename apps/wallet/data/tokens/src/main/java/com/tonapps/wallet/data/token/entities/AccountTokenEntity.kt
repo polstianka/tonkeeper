@@ -43,4 +43,7 @@ data class AccountTokenEntity(
 
     val verified: Boolean
         get() = balance.token.verification == TokenEntity.Verification.whitelist
+
+    val isStake: Boolean
+        get() = balance.stake != null
 }

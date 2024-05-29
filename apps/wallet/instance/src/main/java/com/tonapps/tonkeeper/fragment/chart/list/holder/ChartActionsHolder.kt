@@ -4,13 +4,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateMargins
 import androidx.recyclerview.widget.RecyclerView
-import com.tonapps.tonkeeperx.R
-import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
+import com.tonapps.tonkeeper.extensions.fiat
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
+import com.tonapps.tonkeeper.extensions.swap
 import com.tonapps.tonkeeper.fragment.chart.list.ChartItem
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
-import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
+import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import uikit.navigation.Navigation
@@ -30,7 +30,7 @@ class ChartActionsHolder(
         val offsetVertical = context.resources.getDimensionPixelSize(uikit.R.dimen.offsetMedium)
         (itemView.layoutParams as RecyclerView.LayoutParams).updateMargins(top = offsetVertical, bottom = offsetVertical)
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
+        buyOrSellView.setOnClickListener { navigation?.fiat() }
         scanView.setOnClickListener { navigation?.openCamera() }
     }
 
@@ -40,10 +40,10 @@ class ChartActionsHolder(
         }
 
         swapView.setOnClickListener {
-            navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, "TON"))
+            navigation?.swap()
         }
 
-        swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
+        swapView.isEnabled = item.walletType != WalletType.Watch && !item.disableSwap
         sendView.isEnabled = item.walletType != WalletType.Watch
         scanView.isEnabled = item.walletType != WalletType.Watch
         buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableBuyOrSell

@@ -1,0 +1,12 @@
+openapi-generator-cli generate -i openapi.yml -g kotlin --additional-properties packageName=io.stonfi
+
+rm -rf settings.gradle
+rm -rf docs
+rm -rf gradle
+rm -rf .openapi-generator
+rm -rf README.md
+rm -rf build.gradle
+rm -rf .openapi-generator-ignore
+rm -rf gradlew
+rm -rf gradlew.bat
+rm -rf src/test

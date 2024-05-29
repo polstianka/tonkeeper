@@ -30,7 +30,7 @@ import com.squareup.moshi.JsonClass
 data class ApyHistory (
 
     @Json(name = "apy")
-    val apy: java.math.BigDecimal,
+    val apy: java.math.BigDecimal?,
 
     @Json(name = "time")
     val time: kotlin.Int

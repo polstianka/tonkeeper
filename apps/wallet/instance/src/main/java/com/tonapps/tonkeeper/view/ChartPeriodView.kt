@@ -18,7 +18,7 @@ class ChartPeriodView @JvmOverloads constructor(
 
     var doOnPeriodSelected: ((period: ChartPeriod) -> Unit)? = null
 
-    private var selectedPeriod: ChartPeriod = ChartPeriod.week
+    var selectedPeriod: ChartPeriod = ChartPeriod.week
         set(value) {
             if (field != value) {
                 field = value

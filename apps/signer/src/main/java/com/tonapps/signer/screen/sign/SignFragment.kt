@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.signer.Key
 import com.tonapps.signer.R
-import com.tonapps.signer.deeplink.TKDeepLink
 import com.tonapps.signer.core.entities.KeyEntity
+import com.tonapps.signer.deeplink.TKDeepLink
 import com.tonapps.signer.deeplink.entities.ReturnResultEntity
 import com.tonapps.signer.extensions.authorizationRequiredError
 import com.tonapps.signer.extensions.copyToClipboard
@@ -36,7 +36,6 @@ import uikit.extensions.collectFlow
 import uikit.extensions.setColor
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.LoaderView
-import uikit.widget.ModalView
 import uikit.widget.SimpleRecyclerView
 import uikit.widget.SlideActionView
 
@@ -169,7 +168,7 @@ class SignFragment: BaseFragment(R.layout.fragment_sign), BaseFragment.Modal {
     }
 
     private fun finishDelay() {
-        postDelayed(ModalView.animationDuration) {
+        postDelayed(/*ModalView.animationDuration*/220) {
             finish()
         }
     }

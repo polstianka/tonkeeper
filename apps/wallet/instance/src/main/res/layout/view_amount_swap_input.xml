@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/value_wrapper"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+    <com.tonapps.tonkeeper.fragment.swap.view.AmountInput
+        android:id="@+id/input"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:background="@null"
+        android:singleLine="true"
+        android:digits="0123456789."
+        android:inputType="numberDecimal"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:textSize="28sp"
+        android:textColor="?attr/textPrimaryColor"
+        android:textCursorDrawable="@drawable/cursor"
+        android:hint="0" />
+</uikit.widget.RowLayout>

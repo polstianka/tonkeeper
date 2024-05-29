@@ -36,7 +36,7 @@ abstract class KeyboardAnimationCallback(
 
     override fun onUpdateInsets(insets: WindowInsetsCompat, animation: WindowInsetsAnimationCompat) {
         val fraction = animation.interpolatedFraction
-        val offset = insets.bottomBarsOffset
+        val offset = insets.systemWindowInsetBottom
         keyboardOffsetChanged(offset, fraction)
     }
 

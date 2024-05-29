@@ -92,4 +92,11 @@ object Coin {
         return value / 10.0.pow(decimals).toFloat()
     }
 
+    fun toCoins(
+        value: BigInteger,
+        decimals: Int = TON_DECIMALS
+    ): Float {
+        return BigDecimal(value, decimals).toFloat()
+    }
+
 }

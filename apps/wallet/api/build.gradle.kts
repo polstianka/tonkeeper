@@ -25,9 +25,11 @@ android {
 dependencies {
     implementation(Dependence.Koin.core)
     implementation(project(Dependence.Module.tonApi))
+    implementation(project(Dependence.Module.stonApi))
     implementation(project(Dependence.Lib.network))
     implementation(project(Dependence.Lib.blockchain))
     implementation(project(Dependence.Lib.extensions))
+    implementation(project(Dependence.UIKit.icon))
     implementation(Dependence.Squareup.okhttp)
     implementation(Dependence.Squareup.sse)
     implementation(Dependence.Squareup.moshi)

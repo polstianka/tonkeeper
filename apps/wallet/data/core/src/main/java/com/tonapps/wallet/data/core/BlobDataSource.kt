@@ -1,6 +1,7 @@
 package com.tonapps.wallet.data.core
 
 import android.content.Context
+import android.util.Log
 import com.tonapps.extensions.cacheFolder
 import com.tonapps.extensions.file
 import java.io.File
@@ -24,6 +25,10 @@ abstract class BlobDataSource<D>(
         setDiskCache(key, value)
     }
 
+    fun updateCache(key: String, value: D): Boolean {   // true if cache changed
+        return setDiskCache(key, value)
+    }
+
     fun clearCache(key: String) {
         lruCache.remove(key)
         diskFile(key).delete()
@@ -44,11 +49,20 @@ abstract class BlobDataSource<D>(
         return value
     }
 
-    private fun setDiskCache(key: String, value: D) {
+    private fun setDiskCache(key: String, value: D): Boolean {  // true if file changed
         val file = diskFile(key)
+
+        val oldBytes: ByteArray? = try {
+           file.readBytes()
+        } catch (e: IOException) {
+            null
+        }
+
         val bytes = onMarshall(value)
         file.writeBytes(bytes)
         setLruCache(key, value)
+
+        return !bytes.contentEquals(oldBytes)
     }
 
     private fun diskFile(key: String): File {
@@ -59,7 +73,10 @@ abstract class BlobDataSource<D>(
         val file = diskFile(key)
         return try {
             val bytes = file.readBytes()
-            if (bytes.isEmpty()) null else bytes
+            if (bytes.isEmpty()) {
+                Log.e("WTF_DEBUG", "Parcel bytes read error: " + key)
+                null
+            } else bytes
         } catch (e: IOException) {
             null
         }

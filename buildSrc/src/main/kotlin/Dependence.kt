@@ -92,6 +92,7 @@ object Dependence {
         const val core = ":core"
         const val ton = ":ton"
         const val tonApi = ":tonapi"
+        const val stonApi = ":stonfi"
 
         const val shimmer = ":ui:shimmer"
         const val blur = ":ui:blur"
@@ -125,6 +126,8 @@ object Dependence {
             const val settings = ":apps:wallet:data:settings"
             const val rates = ":apps:wallet:data:rates"
             const val tokens = ":apps:wallet:data:tokens"
+            const val stonfi = ":apps:wallet:data:stonfi"
+            const val pools = ":apps:wallet:data:pools"
             const val collectibles = ":apps:wallet:data:collectibles"
             const val events = ":apps:wallet:data:events"
             const val tonconnect = ":apps:wallet:data:tonconnect"

@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.wallet
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
@@ -12,15 +13,17 @@ import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.entities.WalletEvent
 import com.tonapps.wallet.data.core.ScreenCacheSource
-import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.wallet.data.push.entities.AppPushEntity
 import com.tonapps.wallet.data.settings.SettingsRepository
-import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.data.token.TokenRepositoryV2
+import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,13 +40,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
 
 class WalletViewModel(
     private val walletRepository: WalletRepository,
     private val settings: SettingsRepository,
-    private val tokenRepository: TokenRepository,
+    private val tokenRepositoryV2: TokenRepositoryV2,
     private val api: API,
     private val networkMonitor: NetworkMonitor,
     private val pushManager: PushManager,
@@ -51,17 +53,29 @@ class WalletViewModel(
     private val screenCacheSource: ScreenCacheSource
 ): ViewModel() {
 
-    private data class Tokens(
+    private data class Params(
         val wallet: WalletEntity,
         val currency: WalletCurrency,
-        val list: List<AccountTokenEntity>,
         val isOnline: Boolean,
         val push: List<AppPushEntity>,
         val apps: List<DAppEntity>,
     )
 
-    private val _tokensFlow = MutableStateFlow<Tokens?>(null)
-    private val tokensFlow = _tokensFlow.asStateFlow().filterNotNull().filter { it.list.isNotEmpty() }
+    private data class Tokens(
+        val params: Params,
+        val list: List<AccountTokenEntity>
+    ) {
+        val wallet get() = params.wallet
+        val currency get() = params.currency
+        val isOnline get() = params.isOnline
+        val push get() = params.push
+        val apps get() = params.apps
+    }
+
+    private val _paramsFlow = MutableStateFlow<Params?>(null)
+    private val tokensFlow = combine(_paramsFlow.asStateFlow().filterNotNull(), tokenRepositoryV2.storageFlowIgnoreRates) { params, assetsStorage ->
+        Tokens(params, assetsStorage.assets(params.wallet.accountId, params.wallet.testnet, params.currency))
+    }.filterNotNull().filter { it.list.isNotEmpty() }
 
     private val _lastLtFlow = MutableStateFlow<Long>(0)
     private val lastLtFlow = _lastLtFlow.asStateFlow()
@@ -114,21 +128,24 @@ class WalletViewModel(
             lastLtFlow,
             pushManager.dAppPushFlow,
         ) { wallet, currency, isOnline, lastLt, push ->
+            unsubscribe()
+
             val pushes = push?.distinctBy { it.dappUrl } ?: emptyList()
 
             if (lastLt == 0L) {
                 setStatus(Item.Status.Updating)
-                _tokensFlow.value = getLocalTokens(wallet, currency, isOnline, pushes)
             }
 
+            _paramsFlow.value = Params(wallet, currency, isOnline, pushes, getApps(wallet, pushes))
             if (!isOnline) {
                 return@combine null
             }
 
-            getRemoteTokens(wallet, currency, pushes)?.let { tokens ->
+            if (tokenRepositoryV2.doRequest(wallet.accountId, wallet.testnet, currency)) {
                 setStatus(Item.Status.Default)
-                _tokensFlow.value = tokens
-            }
+            } else { }
+
+            subscribe(wallet.accountId, wallet.testnet, currency)
         }.launchIn(viewModelScope)
 
         combine(
@@ -172,34 +189,8 @@ class WalletViewModel(
     }
 
     private fun setStatus(status: Item.Status) {
+        Log.i("WTF_DEBUG", "STATUS " + status.name)
         _statusFlow.tryEmit(status)
-    }
-
-    private suspend fun getLocalTokens(
-        wallet: WalletEntity,
-        currency: WalletCurrency,
-        isOnline: Boolean,
-        push: List<AppPushEntity>
-    ): Tokens? = withContext(Dispatchers.IO) {
-        val tokens = tokenRepository.getLocal(currency, wallet.accountId, wallet.testnet)
-        if (tokens.isEmpty()) {
-            return@withContext null
-        }
-
-        Tokens(wallet, currency, tokens, isOnline, push, getApps(wallet, push))
-    }
-
-    private suspend fun getRemoteTokens(
-        wallet: WalletEntity,
-        currency: WalletCurrency,
-        push: List<AppPushEntity>
-    ): Tokens? = withContext(Dispatchers.IO) {
-        try {
-            val tokens = tokenRepository.getRemote(currency, wallet.accountId, wallet.testnet)
-            Tokens(wallet, currency, tokens, true, push, getApps(wallet, push))
-        } catch (e: Throwable) {
-            null
-        }
     }
 
     private fun getApps(wallet: WalletEntity, events: List<AppPushEntity>): List<DAppEntity> {
@@ -220,7 +211,7 @@ class WalletViewModel(
         for ((index, token) in tokens.withIndex()) {
             fiatBalance += token.fiat
 
-            val balanceFormat = CurrencyFormatter.format(value = token.balance.value)
+            val balanceFormat = CurrencyFormatter.format(value = token.balance.stakeOrTokenValue)
             val fiatFormat = CurrencyFormatter.formatFiat(currency.code, token.fiat)
 
             val item = Item.Token(
@@ -229,7 +220,7 @@ class WalletViewModel(
                 address = token.address,
                 symbol = token.symbol,
                 name = token.name,
-                balance = token.balance.value,
+                balance = token.balance.stakeOrTokenValue,
                 balanceFormat = balanceFormat,
                 fiat = token.fiat,
                 fiatFormat = fiatFormat,
@@ -237,6 +228,7 @@ class WalletViewModel(
                 rateDiff24h = token.rateDiff24h,
                 verified = token.verified,
                 testnet = testnet,
+                stake = token.balance.stake,
                 hiddenBalance = settings.hiddenBalances
             )
             uiItems.add(item)
@@ -252,6 +244,7 @@ class WalletViewModel(
         push: List<AppPushEntity>,
         apps: List<DAppEntity>,
     ) {
+        Log.i("WTF_DEBUG", "BUILD_ITEMS " + status.name)
         val items = mutableListOf<Item>()
         items.add(Item.Balance(
             balance = balance,
@@ -280,6 +273,39 @@ class WalletViewModel(
     private fun setCached(wallet: WalletEntity, items: List<Item>) {
         screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, items)
     }
+
+
+
+
+
+
+
+
+    private var subscriptionScope: CoroutineScope? = null
+
+    private fun subscribe(accountId: String, testnet: Boolean, currency: WalletCurrency) {
+        unsubscribe()
+
+        subscriptionScope = CoroutineScope(Dispatchers.IO)
+        subscriptionScope!!.launch {
+            while (true) {
+                delay(30000)
+
+                tokenRepositoryV2.doRequestWithoutAllPools(accountId, testnet, currency)
+            }
+        }
+    }
+
+    private fun unsubscribe() {
+        subscriptionScope?.cancel()
+        subscriptionScope = null
+    }
+
+    override fun onCleared() {
+        unsubscribe()
+        super.onCleared()
+    }
+
 
     companion object {
         private const val CACHE_NAME = "wallet"

@@ -34,7 +34,13 @@ class ChartView @JvmOverloads constructor(
         }
     }
 
-    private val accentColor = context.accentBlueColor
+    private var accentColor = context.accentBlueColor
+
+    fun setColor(color: Int) {
+        accentColor = color
+        linePaint.color = color
+        gradientPaint.color = color
+    }
 
     private val path = Path()
 

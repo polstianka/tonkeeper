@@ -48,6 +48,9 @@ class SearchInput @JvmOverloads constructor(
         context.useAttributes(attrs, R.styleable.SearchInput) {
             fieldView.hint = it.getString(R.styleable.SearchInput_android_hint)
             actionView.text = it.getString(R.styleable.SearchInput_android_button)
+            if (actionView.text.isNullOrEmpty()) {
+                actionView.visibility = GONE;
+            }
         }
     }
 
@@ -58,10 +61,5 @@ class SearchInput @JvmOverloads constructor(
 
     fun focus() {
         fieldView.focusWithKeyboard()
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val height = 80.dp
-        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
     }
 }

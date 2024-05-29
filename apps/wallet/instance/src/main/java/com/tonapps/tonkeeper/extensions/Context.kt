@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.tonapps.uikit.color.accentGreenColor
+import com.tonapps.uikit.color.accentOrangeColor
 import com.tonapps.uikit.color.accentRedColor
 import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.uikit.color.textSecondaryColor
@@ -60,6 +61,23 @@ fun Context.rateSpannable(rate: CharSequence, diff24h: String): SpannableString 
         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
     return span
+}
+
+fun Context.getSwapRateColor(priceImpact: Float): Int {
+    return when {
+        priceImpact < 0.01f -> textSecondaryColor
+        priceImpact < 0.05f -> accentOrangeColor
+        else -> accentRedColor
+    }
+}
+
+@ColorInt
+fun Context.getPriceImpactColor(priceImpact: Float): Int {
+    return when {
+        priceImpact < 0.01f -> accentGreenColor
+        priceImpact < 0.05f -> accentOrangeColor
+        else -> accentRedColor
+    }
 }
 
 @ColorInt

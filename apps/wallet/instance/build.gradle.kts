@@ -61,6 +61,8 @@ dependencies {
 
     implementation(project(Dependence.Wallet.Data.core))
     implementation(project(Dependence.Wallet.Data.tokens))
+    implementation(project(Dependence.Wallet.Data.stonfi))
+    implementation(project(Dependence.Wallet.Data.pools))
     implementation(project(Dependence.Wallet.Data.account))
     implementation(project(Dependence.Wallet.Data.settings))
     implementation(project(Dependence.Wallet.Data.rates))
@@ -96,6 +98,7 @@ dependencies {
 
     implementation(project(Dependence.Module.core))
     implementation(project(Dependence.Module.tonApi))
+    implementation(project(Dependence.Module.stonApi))
     implementation(project(Dependence.Module.blur))
 
     implementation(project(Dependence.Lib.network))

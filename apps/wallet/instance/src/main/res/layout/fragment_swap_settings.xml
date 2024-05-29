@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.tonapps.tonkeeper.ui.component.BlurredScrollView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:ignoreTopSystemOffset="true"
+        app:ignoreBottomSystemOffset="false">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:text="Slippage"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="The amount the price can change unfavorably before the trade reverts"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:textColor="?attr/textSecondaryColor" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:layout_marginBottom="12dp">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/slippage_option_1"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="0.1%"
+                    android:layout_marginHorizontal="6dp"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:background="@drawable/bg_content"
+                    android:textColor="?attr/textPrimaryColor" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/slippage_option_2"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="0.5%"
+                    android:layout_marginHorizontal="6dp"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:background="@drawable/bg_content"
+                    android:textColor="?attr/textPrimaryColor" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/slippage_option_3"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="1%"
+                    android:layout_marginHorizontal="6dp"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:background="@drawable/bg_content"
+                    android:textColor="?attr/textPrimaryColor" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/slippage_option_custom_container"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="start"
+                android:padding="@dimen/offsetMedium"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/offsetMedium"
+                android:background="@drawable/bg_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/slippage_option_custom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48.76dp"
+                        android:layout_marginVertical="@dimen/offsetMedium"
+                        android:background="@null"
+                        android:singleLine="true"
+                        android:digits="0123456789."
+                        android:inputType="numberDecimal"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:gravity="center_vertical"
+                        android:textAppearance="@style/TextAppearance.Body1"
+                        android:textColorHint="?attr/textSecondaryColor"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textAppearance="@style/TextAppearance.Body1"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:text="%"
+                        app:layout_constraintStart_toEndOf="@id/slippage_option_custom"
+                        app:layout_constraintTop_toTopOf="@id/slippage_option_custom"
+                        app:layout_constraintBottom_toBottomOf="@id/slippage_option_custom"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetMedium"
+                android:layout_marginHorizontal="@dimen/offsetMedium"
+                android:padding="@dimen/offsetMedium"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_content">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Custom price impact limit"
+                        android:layout_marginBottom="4dp"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?attr/textPrimaryColor" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Allows the trades with custom price impact limit. Use at your own risk."
+                        android:textAppearance="@style/TextAppearance.Body2"
+                        android:textColor="?attr/textSecondaryColor" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+                <uikit.widget.SwitchView
+                    android:id="@+id/check"
+                    android:layout_marginStart="@dimen/offsetMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:visibility="gone"
+                android:id="@+id/expert_mode_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/price_impact_option_custom_container"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="start"
+                    android:padding="@dimen/offsetMedium"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_content">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/price_impact_option_custom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48.76dp"
+                            android:layout_marginVertical="@dimen/offsetMedium"
+                            android:background="@null"
+                            android:singleLine="true"
+                            android:digits="0123456789."
+                            android:hint="Custom"
+                            android:inputType="numberDecimal"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:textColor="?attr/textPrimaryColor"
+                            android:textCursorDrawable="@drawable/cursor"
+                            android:gravity="center_vertical"
+                            android:textAppearance="@style/TextAppearance.Body1"
+                            android:textColorHint="?attr/textSecondaryColor"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:textAppearance="@style/TextAppearance.Body1"
+                            android:textColor="?attr/textSecondaryColor"
+                            android:text="%"
+                            app:layout_constraintStart_toEndOf="@id/price_impact_option_custom"
+                            app:layout_constraintTop_toTopOf="@id/price_impact_option_custom"
+                            app:layout_constraintBottom_toBottomOf="@id/price_impact_option_custom"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginHorizontal="@dimen/offsetMedium"
+                    android:padding="@dimen/offsetMedium"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_content_tint_16">
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pay attention"
+                            android:layout_marginBottom="4dp"
+                            android:textAppearance="@style/TextAppearance.Label1"
+                            android:textColor="?attr/textPrimaryColor" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Customized price impact limit may lead to loss of funds. Use it at your own risk."
+                            android:textAppearance="@style/TextAppearance.Body2"
+                            android:textColor="?attr/textSecondaryColor" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.tonapps.tonkeeper.ui.component.BlurredScrollView>
+
+    <uikit.widget.HeaderViewSimple
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="@string/swap_settings"
+        app:ignoreSystemOffset="true"
+        android:action="@drawable/ic_close_16"/>
+    <uikit.widget.FooterViewEmpty
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+        <Button
+            style="@style/Widget.App.Button"
+            android:layout_margin="16dp"
+            android:id="@+id/next"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"
+            android:enabled="false"
+            android:text="@string/save"/>
+    </uikit.widget.FooterViewEmpty>
+
+</FrameLayout>

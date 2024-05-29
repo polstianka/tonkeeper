@@ -1,10 +1,10 @@
 package com.tonapps.tonkeeper.core.fiat
 
 import android.app.Application
-import com.tonapps.tonkeeper.core.fiat.models.FiatData
-import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import com.tonapps.tonkeeper.api.internal.repositories.FiatMethodsRepository
 import com.tonapps.tonkeeper.api.internal.repositories.KeysRepository
+import com.tonapps.tonkeeper.core.fiat.models.FiatData
+import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import core.keyvalue.KeyValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,11 +27,12 @@ class Fiat(
     suspend fun replaceUrl(
         url: String,
         address: String,
-        currency: String
+        currencyFrom: String,
+        currencyTo: String = "TON"
     ): String {
         var replacedUrl = url.replace("{ADDRESS}", address)
-        replacedUrl = replacedUrl.replace("{CUR_FROM}", currency)
-        replacedUrl = replacedUrl.replace("{CUR_TO}", "TON")
+        replacedUrl = replacedUrl.replace("{CUR_FROM}", currencyFrom)
+        replacedUrl = replacedUrl.replace("{CUR_TO}", currencyTo)
 
         if (replacedUrl.contains("TX_ID")) {
             val mercuryoSecret = keysRepository.getValue("mercuryoSecret") ?: ""

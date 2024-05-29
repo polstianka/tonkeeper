@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_price_impact"
+        android:title="@string/swap_info_price_impact"
+        android:hint="@string/swap_info_price_impact_hint" />
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_minimum_received"
+        android:title="@string/swap_info_minimum_received"
+        android:hint="@string/swap_info_minimum_received_hint" />
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_liquidity_provider_fee"
+        android:title="@string/swap_info_liquidity_provider_fee"
+        android:hint="@string/swap_info_liquidity_provider_fee_hint" />
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_blockchain_fee"
+        android:title="@string/swap_info_blockchain_fee" />
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_route"
+        android:title="@string/swap_info_route" />
+    <com.tonapps.tonkeeper.fragment.swap.view.SwapInfoRowView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:id="@+id/swap_info_provider"
+        android:title="@string/swap_info_provider" />
+</merge>

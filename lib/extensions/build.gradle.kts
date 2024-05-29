@@ -27,5 +27,6 @@ dependencies {
     implementation(Dependence.Koin.core)
     implementation(Dependence.AndroidX.core)
     implementation(project(Dependence.UIKit.core))
+    implementation(project(Dependence.UIKit.icon))
     implementation(project(Dependence.Lib.icu))
 }

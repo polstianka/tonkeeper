@@ -109,7 +109,7 @@
         style="@style/Widget.App.Button"
         android:id="@+id/continue_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="@dimen/offsetMedium"
         android:layout_marginBottom="@dimen/offsetMedium"
         android:layout_gravity="bottom"

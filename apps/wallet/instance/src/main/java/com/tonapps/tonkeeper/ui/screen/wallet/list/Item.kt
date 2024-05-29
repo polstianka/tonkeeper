@@ -14,6 +14,7 @@ import com.tonapps.extensions.writeCharSequenceCompat
 import com.tonapps.extensions.writeEnum
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
+import com.tonapps.wallet.api.entity.BalanceStakeEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import com.tonapps.wallet.data.push.entities.AppPushEntity
@@ -142,7 +143,8 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val rateDiff24h: String,
         val verified: Boolean,
         val testnet: Boolean,
-        val hiddenBalance: Boolean
+        val hiddenBalance: Boolean,
+        val stake: BalanceStakeEntity?,
     ): Item(TYPE_TOKEN) {
 
         constructor(parcel: Parcel) : this(
@@ -159,7 +161,8 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             parcel.readString()!!,
             parcel.readBooleanCompat(),
             parcel.readBooleanCompat(),
-            parcel.readBooleanCompat()
+            parcel.readBooleanCompat(),
+            parcel.readParcelableCompat()
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
@@ -177,7 +180,12 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeBooleanCompat(verified)
             dest.writeBooleanCompat(testnet)
             dest.writeBooleanCompat(hiddenBalance)
+            dest.writeParcelable(stake, flags)
         }
+
+        val isTon: Boolean get() = address == TokenEntity.TON.address && !isStake
+        val isStake: Boolean get() = stake != null
+
 
         companion object CREATOR : Parcelable.Creator<Token> {
             override fun createFromParcel(parcel: Parcel) = Token(parcel)

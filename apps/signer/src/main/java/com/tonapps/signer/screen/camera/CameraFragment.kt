@@ -13,6 +13,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.tonapps.qr.QRImageAnalyzer
 import com.tonapps.signer.Key
 import com.tonapps.signer.R
 import com.tonapps.signer.extensions.openAppSettings
@@ -24,12 +25,10 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.HapticHelper
 import uikit.base.BaseFragment
+import uikit.extensions.applyBottomInsets
 import uikit.widget.HeaderView
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.tonapps.qr.QRImageAnalyzer
-import uikit.extensions.applyBottomInsets
-import uikit.widget.ModalView
 
 class CameraFragment: BaseFragment(R.layout.fragment_camera), BaseFragment.BottomSheet {
 
@@ -113,7 +112,7 @@ class CameraFragment: BaseFragment(R.layout.fragment_camera), BaseFragment.Botto
     }
 
     private fun finishDelay() {
-        postDelayed(ModalView.animationDuration) {
+        postDelayed(/*ModalView.animationDuration*/220) {
             finish()
         }
     }

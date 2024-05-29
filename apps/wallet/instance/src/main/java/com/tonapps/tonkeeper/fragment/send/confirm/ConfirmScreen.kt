@@ -80,7 +80,7 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
         commentView.position = com.tonapps.uikit.list.ListCell.Position.LAST
 
         actionView = view.findViewById(R.id.action)
-        actionView.pinToBottomInsets()
+        // actionView.pinToBottomInsets()
 
         sendButton = view.findViewById(R.id.send)
 

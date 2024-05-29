@@ -1,0 +1,588 @@
+openapi: 3.0.3
+info:
+  title: ston-server
+  description: ''
+  license:
+    name: Proprietary
+  version: 1.14.1
+paths:
+  /v1/assets:
+    get:
+      tags:
+        - Dex
+      operationId: get_asset_list
+      responses:
+        '200':
+          $ref: '#/components/responses/AssetListResponse'
+  /v1/farms:
+    get:
+      tags:
+        - Dex
+      operationId: get_farm_list
+      responses:
+        '200':
+          $ref: '#/components/responses/FarmListResponse'
+  /v1/markets:
+    get:
+      tags:
+        - Dex
+      operationId: get_market_list
+      responses:
+        '200':
+          $ref: '#/components/responses/MarketListResponse'
+  /v1/pools:
+    get:
+      tags:
+        - Dex
+      operationId: get_pool_list
+      responses:
+        '200':
+          $ref: '#/components/responses/PoolListResponse'
+  /v1/reverse_swap/simulate:
+    post:
+      tags:
+        - Dex
+      operationId: dex_reverse_simulate_swap
+      parameters:
+        - name: offer_address
+          in: query
+          description: The address of the token we want to sell
+          required: true
+          schema:
+            type: string
+          example: EQBynBO23ywHy_CgarY9NK9FTz0yDsG82PtcbSTQgGoXwiuA
+        - name: ask_address
+          in: query
+          description: The address of the token we want to buy
+          required: true
+          schema:
+            type: string
+          example: EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
+        - name: units
+          in: query
+          description: Number of token units we want to sell
+          required: true
+          schema:
+            type: string
+          example: '300'
+        - name: slippage_tolerance
+          in: query
+          description: The maximum possible difference between the rates that we expect and which will actually be, in fractions (for example, 0.001 is 0.1%)
+          required: true
+          schema:
+            type: string
+          example: '0.001'
+        - name: referral_address
+          in: query
+          description: Referral address
+          required: false
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          $ref: '#/components/responses/SimulateSwapResponse'
+  /v1/swap/simulate:
+    post:
+      tags:
+        - Dex
+      operationId: dex_simulate_swap
+      parameters:
+        - name: offer_address
+          in: query
+          description: The address of the token we want to sell
+          required: true
+          schema:
+            type: string
+          example: EQBynBO23ywHy_CgarY9NK9FTz0yDsG82PtcbSTQgGoXwiuA
+        - name: ask_address
+          in: query
+          description: The address of the token we want to buy
+          required: true
+          schema:
+            type: string
+          example: EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
+        - name: units
+          in: query
+          description: Number of token units we want to sell
+          required: true
+          schema:
+            type: string
+          example: '300'
+        - name: slippage_tolerance
+          in: query
+          description: The maximum possible difference between the rates that we expect and which will actually be, in fractions (for example, 0.001 is 0.1%)
+          required: true
+          schema:
+            type: string
+          example: '0.001'
+        - name: referral_address
+          in: query
+          description: Referral address
+          required: false
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          $ref: '#/components/responses/SimulateSwapResponse'
+  /v1/swap/status:
+    get:
+      tags:
+        - Dex
+      operationId: dex_swap_status
+      parameters:
+        - name: router_address
+          in: query
+          description: Address of the operation router
+          required: true
+          schema:
+            type: string
+          example: EQB3ncyBUTjZUA5EnFKR5_EnOMI9V1tTEAAPaiU71gc4TiUt
+        - name: owner_address
+          in: query
+          description: Owner`s wallet address
+          required: true
+          schema:
+            type: string
+          example: EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez
+        - name: query_id
+          in: query
+          description: Id of operation status query
+          required: true
+          schema:
+            type: string
+          example: '1'
+      responses:
+        '200':
+          $ref: '#/components/responses/OperationStatusResponse'
+components:
+  schemas:
+    AssetInfoSchema:
+      type: object
+      required:
+        - contract_address
+        - symbol
+        - decimals
+        - kind
+        - deprecated
+        - community
+        - blacklisted
+        - default_symbol
+      properties:
+        balance:
+          type: string
+          description: Asset balance
+          nullable: true
+        blacklisted:
+          type: boolean
+          description: Asset is blacklisted
+        community:
+          type: boolean
+          description: Asset is community created
+        contract_address:
+          type: string
+          description: Address of smart contract
+        decimals:
+          type: integer
+          format: int32
+          description: Number of decimal places used to represent fractional amounts of an asset
+          minimum: 0
+        default_symbol:
+          type: boolean
+          description: Asset has default symbol
+        deprecated:
+          type: boolean
+          description: Asset is deprecated
+        dex_price_usd:
+          type: string
+          description: Ston internal asset price in USD
+          nullable: true
+        dex_usd_price:
+          type: string
+          description: '[DEPRECATED] Ston internal asset price in USD'
+          nullable: true
+        display_name:
+          type: string
+          description: Displayable name
+          nullable: true
+        image_url:
+          type: string
+          description: URL to asset image
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/AssetKindSchema'
+        symbol:
+          type: string
+          description: Asset symbol
+        third_party_price_usd:
+          type: string
+          description: Asset price in USD
+          nullable: true
+        third_party_usd_price:
+          type: string
+          description: '[DEPRECATED] Asset price in USD'
+          nullable: true
+        wallet_address:
+          type: string
+          description: Asset wallet address
+          nullable: true
+    AssetKindSchema:
+      type: string
+      enum:
+        - Jetton
+        - Wton
+        - Ton
+    TonAddress:
+      type: string
+    FarmInfoSchema:
+      type: object
+      required:
+        - minter_address
+        - pool_address
+        - reward_token_address
+        - status
+        - min_stake_duration_s
+        - nft_infos
+      properties:
+        apy:
+          type: string
+          description: Annual percentage yield
+          nullable: true
+        min_stake_duration_s:
+          type: string
+          description: Minimal stake duration seconds
+        minter_address:
+          type: string
+          description: Address of the farm
+        nft_infos:
+          type: array
+          items:
+            $ref: '#/components/schemas/FarmNftInfoSchema'
+          description: Farm NFT list
+        pool_address:
+          type: string
+          description: Address of the pool
+        reward_token_address:
+          type: string
+          description: Address of the reward token
+        status:
+          type: string
+          description: Minter status
+    FarmNftInfoSchema:
+      type: object
+      required:
+        - address
+        - staked_tokens
+        - nonclaimed_rewards
+        - min_unstake_timestamp
+        - status
+        - create_timestamp
+      properties:
+        address:
+          type: string
+          description: NFT address
+        create_timestamp:
+          type: string
+          description: NFT creation timestamp
+        min_unstake_timestamp:
+          type: string
+          description: Minimal unstake timestamp
+        nonclaimed_rewards:
+          type: string
+          description: Nonclaimed rewards
+        staked_tokens:
+          type: string
+          description: Amount of staked tokens
+        status:
+          type: string
+          description: NFT status
+    OperationStatus:
+      type: object
+      required:
+        - address
+        - query_id
+        - exit_code
+        - coins
+        - logical_time
+        - tx_hash
+        - balance_deltas
+      properties:
+        address:
+          type: string
+          description: Wallet address
+        balance_deltas:
+          type: string
+          description: Changes in balance
+        coins:
+          type: string
+          description: Transaction coins
+        exit_code:
+          type: string
+          description: Exit code of operation
+        logical_time:
+          type: string
+          description: Operation logical time
+        query_id:
+          type: string
+          description: Id of operation status query
+        tx_hash:
+          type: string
+          format: binary
+          description: Operation hash
+    PoolInfoSchema:
+      type: object
+      required:
+        - address
+        - router_address
+        - reserve0
+        - reserve1
+        - token0_address
+        - token1_address
+        - lp_total_supply
+        - lp_fee
+        - protocol_fee
+        - ref_fee
+        - protocol_fee_address
+        - collected_token0_protocol_fee
+        - collected_token1_protocol_fee
+        - deprecated
+      properties:
+        address:
+          type: string
+          description: Address of pool
+        apy_1d:
+          type: string
+          description: Annual percentage yield on the last day
+          nullable: true
+        apy_30d:
+          type: string
+          description: Annual percentage yield on the last month
+          nullable: true
+        apy_7d:
+          type: string
+          description: Annual percentage yield on the last week
+          nullable: true
+        collected_token0_protocol_fee:
+          type: string
+          description: Protocol fee collected in token0
+        collected_token1_protocol_fee:
+          type: string
+          description: Protocol fee collected in token1
+        deprecated:
+          type: boolean
+          description: Pool is deprecated
+        lp_account_address:
+          type: string
+          description: Account address of liquidity pool tokens
+          nullable: true
+        lp_balance:
+          type: string
+          description: Balance of liquidity pool tokens
+          nullable: true
+        lp_fee:
+          type: string
+          description: Fee of liquidity pool token
+        lp_price_usd:
+          type: string
+          description: Price of liquidity pool token in USD
+          nullable: true
+        lp_total_supply:
+          type: string
+          description: Total supply of liquidity pool tokens
+        lp_total_supply_usd:
+          type: string
+          description: Total supply of liquidity pool tokens in USD
+          nullable: true
+        lp_wallet_address:
+          type: string
+          description: Wallet address of liquidity pool tokens
+          nullable: true
+        protocol_fee:
+          type: string
+          description: Fee of protocol
+        protocol_fee_address:
+          type: string
+          description: Address of protocol fee
+        ref_fee:
+          type: string
+          description: Referral fee
+        reserve0:
+          type: string
+          description: Reserve of token0 in pool
+        reserve1:
+          type: string
+          description: Reserve of token1 in pool
+        router_address:
+          type: string
+          description: Address of router
+        token0_address:
+          type: string
+          description: Address of token0
+        token0_balance:
+          type: string
+          description: Balance of token0
+          nullable: true
+        token1_address:
+          type: string
+          description: Address of token1
+        token1_balance:
+          type: string
+          description: Balance of token1
+          nullable: true
+  responses:
+    AddressResponse:
+      description: Ton Address
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - address
+            properties:
+              address:
+                type: string
+    AssetListResponse:
+      description: List of available assets
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - asset_list
+            properties:
+              asset_list:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetInfoSchema'
+    FarmListResponse:
+      description: List of available farms
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - farm_list
+            properties:
+              farm_list:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FarmInfoSchema'
+    MarketListResponse:
+      description: List of available pairs
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - pairs
+            properties:
+              pairs:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TonAddress'
+                uniqueItems: true
+    OperationStatusResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - allOf:
+                  - $ref: '#/components/schemas/OperationStatus'
+                  - type: object
+                    required:
+                      - '@type'
+                    properties:
+                      '@type':
+                        type: string
+                        enum:
+                          - Found
+              - type: object
+                required:
+                  - '@type'
+                properties:
+                  '@type':
+                    type: string
+                    enum:
+                      - NotFound
+            discriminator:
+              propertyName: '@type'
+    PoolListResponse:
+      description: List of available pools
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - pool_list
+            properties:
+              pool_list:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoolInfoSchema'
+    SimulateSwapResponse:
+      description: Simulate swap response
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - offer_address
+              - ask_address
+              - router_address
+              - pool_address
+              - offer_units
+              - ask_units
+              - slippage_tolerance
+              - min_ask_units
+              - swap_rate
+              - price_impact
+              - fee_address
+              - fee_units
+              - fee_percent
+            properties:
+              ask_address:
+                type: string
+                description: Address of the wallet to which the operation is simulated
+              ask_units:
+                type: string
+                description: Token units asked
+              fee_address:
+                type: string
+                description: Fee address
+              fee_percent:
+                type: string
+                description: fee percent
+              fee_units:
+                type: string
+                description: Fee units
+              min_ask_units:
+                type: string
+                description: Minimal amount of ask units
+              offer_address:
+                type: string
+                description: Address of the wallet from which the operation is simulated
+              offer_units:
+                type: string
+                description: Token units offered
+              pool_address:
+                type: string
+                description: Address of the pool
+              price_impact:
+                type: string
+                description: Price impact
+              router_address:
+                type: string
+                description: Address of the operation router
+              slippage_tolerance:
+                type: string
+                description: Difference between the original price of order and the final price
+              swap_rate:
+                type: string
+                description: Swap rate
+tags:
+  - name: Dex
+    description: DEX operations and entities

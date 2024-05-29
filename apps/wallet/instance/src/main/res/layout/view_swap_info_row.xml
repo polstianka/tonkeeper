@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="?attr/textSecondaryColor"
+        android:textAppearance="@style/TextAppearance.Body2"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/information"
+        android:scaleType="centerInside"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/ic_information_circle_16"
+        android:tint="?attr/textTertiaryColor" />
+    <com.tonapps.tonkeeper.ui.component.label.LabelView
+        android:id="@+id/label"
+        android:text="@string/max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginStart="6dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:textColor="?attr/accentGreenColor"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/value"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        android:textColor="?attr/textPrimaryColor"
+        android:textAppearance="@style/TextAppearance.Body2"/>
+</merge>

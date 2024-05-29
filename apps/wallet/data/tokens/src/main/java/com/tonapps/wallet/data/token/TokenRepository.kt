@@ -1,59 +1,20 @@
 package com.tonapps.wallet.data.token
 
-import android.content.Context
-import androidx.collection.ArrayMap
-import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.token.entities.TokenRateEntity
-import com.tonapps.wallet.data.token.source.LocalDataSource
-import com.tonapps.wallet.data.token.source.RemoteDataSource
-import io.tonapi.models.TokenRates
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import java.util.concurrent.ConcurrentHashMap
+import java.math.BigInteger
 
+@Deprecated("USE V2")
 class TokenRepository(
-    private val context: Context,
     private val ratesRepository: RatesRepository,
-    private val api: API
+    private val tokensRepository: RawTokensRepository,
 ) {
-
-    private val totalBalanceCache = ConcurrentHashMap<String, Float>(3, 1.0f, 2)
-
-    private val localDataSource = LocalDataSource(context)
-    private val remoteDataSource = RemoteDataSource(api)
-
-    suspend fun getTotalBalances(
-        currency: WalletCurrency,
-        accountId: String,
-        testnet: Boolean
-    ): Float {
-        return totalBalanceCache[cacheKey(accountId, testnet)] ?: loadTotalBalances(currency, accountId, testnet)
-    }
-
-    private suspend fun loadTotalBalances(
-        currency: WalletCurrency,
-        accountId: String,
-        testnet: Boolean
-    ): Float {
-        val tokens = get(currency, accountId, testnet)
-        var fiatBalance = 0f
-        if (testnet) {
-            fiatBalance = tokens.first().balance.value
-        } else {
-            for (token in tokens) {
-                fiatBalance += token.fiat
-            }
-        }
-        totalBalanceCache[cacheKey(accountId, testnet)] = fiatBalance
-        return fiatBalance
-    }
-
     suspend fun get(
         currency: WalletCurrency,
         accountId: String,
@@ -111,6 +72,9 @@ class TokenRepository(
         val unverified = mutableListOf<AccountTokenEntity>()
         for (balance in balances) {
             val tokenAddress = balance.token.address
+            if (balance.nano == BigInteger.ZERO && !balance.token.isTon) {
+                continue
+            }
             val tokenRate = TokenRateEntity(
                 currency = currency,
                 fiat = rates.convert(tokenAddress, balance.value),
@@ -157,7 +121,7 @@ class TokenRepository(
         accountId: String,
         testnet: Boolean
     ): List<BalanceEntity> {
-        return localDataSource.getCache(cacheKey(accountId, testnet)) ?: emptyList()
+        return tokensRepository.getLocal(accountId, testnet) ?: emptyList()
     }
 
     private suspend fun load(
@@ -165,35 +129,6 @@ class TokenRepository(
         accountId: String,
         testnet: Boolean
     ): List<BalanceEntity> = withContext(Dispatchers.IO) {
-        if (testnet) {
-            val balances = remoteDataSource.load(currency, accountId, true)
-            totalBalanceCache.remove(cacheKey(accountId, true))
-            return@withContext balances
-        }
-
-        val rates = async { ratesRepository.load(currency, "TON") }
-        val balances = remoteDataSource.load(currency, accountId, false)
-        insertRates(currency, balances)
-        localDataSource.setCache(cacheKey(accountId, false), balances)
-        rates.await()
-        totalBalanceCache.remove(cacheKey(accountId, false))
-        balances
-    }
-
-    private fun cacheKey(accountId: String, testnet: Boolean): String {
-        if (!testnet) {
-            return accountId
-        }
-        return "${accountId}_testnet"
-    }
-
-    private fun insertRates(currency: WalletCurrency, list: List<BalanceEntity>) {
-        val rates = ArrayMap<String, TokenRates>()
-        for (balance in list) {
-            balance.rates?.let {
-                rates[balance.token.address] = it
-            }
-        }
-        ratesRepository.insertRates(currency, rates)
+        tokensRepository.getRemote(currency, accountId, testnet)
     }
 }

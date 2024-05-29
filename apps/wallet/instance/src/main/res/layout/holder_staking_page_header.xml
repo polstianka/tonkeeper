@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="88dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.H2"
+            android:textColor="?attr/textPrimaryColor" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/currency_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_oval"
+        android:backgroundTint="?attr/backgroundContentColor"
+        app:roundAsCircle="true" />
+    <FrameLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end|top"
+        android:background="@drawable/bg_oval"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="1dp"
+        android:backgroundTint="?attr/backgroundPageColor">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/icon_label"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_oval"
+            app:roundAsCircle="true" />
+    </FrameLayout>
+</FrameLayout>

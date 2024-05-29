@@ -57,7 +57,7 @@ class RecipientScreen: PagerScreen<RecipientScreenState, RecipientScreenEffect, 
         nextButton.setOnClickListener {
             sendFeature.nextPage()
         }
-        nextButton.pinToBottomInsets()
+        // nextButton.pinToBottomInsets()
 
         collectFlow(sendFeature.onReadyView) {
             openKeyboard()
