@@ -298,4 +298,39 @@
     <string name="close">закрывать</string>
     <string name="select">Выбирать</string>
     <string name="balance_format">Баланс: %f</string>
+
+    <string name="balance">Баланс:</string>
+    <string name="choose">Выбрать</string>
+    <string name="price_impact">Влияние на цену</string>
+    <string name="minimum_received">Минимум получено</string>
+    <string name="liquidity_provider_fee">Комиссия поставщика ликвидности</string>
+    <string name="blockchain_fee">Комиссия блокчейна</string>
+    <string name="route">Маршрут</string>
+    <string name="provider">Поставщик</string>
+    <string name="ston_fi">STON.fi</string>
+    <string name="price_impact_tooltip">Разница между рыночной ценой и расчетной ценой из-за объема сделки.</string>
+    <string name="minimum_received_tooltip">Ваша транзакция будет отменена, если произойдет значительное неблагоприятное изменение цены до ее подтверждения.</string>
+    <string name="provider_fee_tooltip">Часть каждой сделки идет поставщикам ликвидности в качестве протокольного вознаграждения.</string>
+    <string name="custom">Пользовательский</string>
+    <string name="expert_mode">Режим эксперта</string>
+    <string name="expert_mode_description">Позволяет сделки с высоким влиянием на цену. Используйте на свой страх и риск.</string>
+    <string name="expert_mode_error">Включите режим эксперта для проскальзываний выше 50%.</string>
+    <string name="confirm_swap">Подтвердить обмен</string>
+    <string name="swap_sign_failed">Не удалось подписать обмен.</string>
+    <string name="swap_failed">Обмен не выполнен.</string>
+    <string name="swap_success">Обмен успешно завершен.</string>
+    <string name="min_amount">Минимальная сумма: %s</string>
+    <string name="enter_amount">Введите сумму.</string>
+    <string name="select_payment_method">Выберите способ оплаты.</string>
+    <string name="operator">Оператор</string>
+    <string name="you_pay">вы платите</string>
+    <string name="you_get">вы получаете</string>
+    <string name="insufficient_asset_balance">Недостаточно баланса %s</string>
+    <string name="insufficient_ton_balance">Недостаточно баланса. Купите TON</string>
+    <string name="enter_an_amount">Введите сумму</string>
+    <string name="select_token">Выберите токен</string>
+    <string name="best">Лучший</string>
+    <string name="suggested">Рекомендуемый</string>
+    <string name="other">Другой</string>
+
 </resources>

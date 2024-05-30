@@ -3,14 +3,13 @@ package com.tonapps.tonkeeper.ui.screen.swapnative.choose
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.ui.screen.swapnative.choose.list.ChooseTokenAdapter
 import com.tonapps.tonkeeper.ui.screen.swapnative.main.TokenSelectionListener
-import com.tonapps.tonkeeper.ui.screen.swapnative.choose.list.TokenTypeAdapter
 import com.tonapps.tonkeeperx.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
@@ -30,7 +29,11 @@ class ChooseTokenScreen : BaseFragment(R.layout.fragment_choose_token), BaseFrag
     private lateinit var listView: RecyclerView
     private lateinit var closeButton: Button
 
-    private val adapter = TokenTypeAdapter { selectToken(it.address) }
+    private val adapter = ChooseTokenAdapter {
+        it.contractAddress?.also { address ->
+            selectToken(address)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,11 +70,6 @@ class ChooseTokenScreen : BaseFragment(R.layout.fragment_choose_token), BaseFrag
         listView.layoutManager = com.tonapps.uikit.list.LinearLayoutManager(view.context)
         listView.adapter = adapter
 
-        /*webView.clipToPadding = false
-        webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))*/
-
-        // todo P get list of tokens and display them
-        // adapter.submitList(state.items)
 
         if (currentMode() == SelectionMode.BUY)
             chooseTokenViewModel.getBuyAssets(args.sellContractAddress!!)
@@ -80,8 +78,6 @@ class ChooseTokenScreen : BaseFragment(R.layout.fragment_choose_token), BaseFrag
     }
 
     private fun selectToken(contractAddress: String) {
-        // chooseTokenViewModel.selectSellToken(contractAddress)
-
         if (currentMode() == SelectionMode.SELL)
             tokenSelectionListener?.onSellTokenSelected(contractAddress)
         else tokenSelectionListener?.onBuyTokenSelected(contractAddress)

@@ -328,4 +328,11 @@
     <string name="operator">Operator</string>
     <string name="you_pay">you pay</string>
     <string name="you_get">you get</string>
+    <string name="insufficient_asset_balance">Insufficient %s balance</string>
+    <string name="insufficient_ton_balance">Insufficient balance. Buy TON</string>
+    <string name="enter_an_amount">Enter an amount</string>
+    <string name="select_token">Select a token</string>
+    <string name="best">Best</string>
+    <string name="suggested">Suggested</string>
+    <string name="other">Other</string>
 </resources>

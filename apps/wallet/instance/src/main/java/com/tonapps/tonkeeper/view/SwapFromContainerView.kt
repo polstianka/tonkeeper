@@ -55,6 +55,12 @@ class SwapFromContainerView @JvmOverloads constructor(
             sellTokenTitle.text = value
         }
 
+    var isInputEnabled: Boolean
+        get() = sellAmountInput.isEnabled
+        set(value) {
+            sellAmountInput.isEnabled = value
+        }
+
     init {
 
         inflate(context, R.layout.view_cell_swap_from, this)
@@ -66,17 +72,6 @@ class SwapFromContainerView @JvmOverloads constructor(
         sellTokenTitle = findViewById(R.id.send_token_title)
         fromAssetItemContainer = findViewById(R.id.from_asset_item_container)
 
-
-//        context.useAttributes(attrs, R.styleable.HeaderView) {
-//            ignoreSystemOffset = it.getBoolean(R.styleable.HeaderView_ignoreSystemOffset, false)
-//            val iconResId = it.getResourceId(R.styleable.HeaderView_android_icon, 0)
-//            setIcon(iconResId)
-//
-//            titleView.text = it.getString(R.styleable.HeaderView_android_title)
-//
-//            val actionResId = it.getResourceId(R.styleable.HeaderView_android_action, 0)
-//            setAction(actionResId)
-//        }
     }
 
     fun setConfirmMode(isConfirmMode: Boolean) {

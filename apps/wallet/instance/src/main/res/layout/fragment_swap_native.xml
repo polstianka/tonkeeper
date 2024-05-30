@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -26,9 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingHorizontal="@dimen/offsetMedium"
             android:visibility="gone"
-            tools:visibility="visible"
-            android:paddingHorizontal="@dimen/offsetMedium">
+            tools:visibility="visible">
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/scroll_view"
@@ -81,8 +81,8 @@
             android:id="@+id/loading_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
-            android:paddingHorizontal="@dimen/offsetMedium">
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +93,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/offsetMedium"/>
+                    android:layout_height="@dimen/offsetMedium" />
 
                 <include layout="@layout/view_cell_swap_from_skeleton" />
 
@@ -105,13 +105,9 @@
 
     <uikit.widget.ProgressButton
         android:id="@+id/continue_progress_button"
-        style="@style/Widget.App.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/offsetMedium"
-        android:layout_marginVertical="@dimen/offsetMedium"
-        android:text="@string/continue_action"
-        android:textAppearance="@style/TextAppearance.Label1"
-        android:textColor="?attr/textPrimaryColor" />
+        android:layout_marginVertical="@dimen/offsetMedium" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

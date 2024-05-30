@@ -21,13 +21,36 @@
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/offsetMedium">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor"
-            android:singleLine="true"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                android:singleLine="true"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/best_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginHorizontal="@dimen/offsetSmall"
+                android:background="@drawable/bg_best_badge"
+                android:paddingHorizontal="@dimen/offsetExtraSmall"
+                android:text="@string/best"
+                android:textAllCaps="true"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Body4CAPS"
+                android:textColor="?attr/accentBlueColor"
+                android:visibility="gone"/>
+
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/subtitle"

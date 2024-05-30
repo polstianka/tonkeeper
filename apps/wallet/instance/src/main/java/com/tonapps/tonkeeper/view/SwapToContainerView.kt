@@ -89,6 +89,12 @@ class SwapToContainerView @JvmOverloads constructor(
             }
         }
 
+    var isInputEnabled: Boolean
+        get() = buyAmountInput.isEnabled
+        set(value) {
+            buyAmountInput.isEnabled = value
+        }
+
     init {
 
         inflate(context, R.layout.view_cell_swap_to, this)

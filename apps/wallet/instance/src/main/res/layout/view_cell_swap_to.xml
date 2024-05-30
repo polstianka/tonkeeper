@@ -5,7 +5,6 @@
     android:id="@+id/view_cell_swap_receive"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:background="@drawable/bg_content"
     android:orientation="vertical"
     android:paddingTop="@dimen/offsetLarge">
@@ -20,6 +19,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView

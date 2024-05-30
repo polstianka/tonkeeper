@@ -99,11 +99,11 @@ class SwapConfirmScreen : SwapBaseScreen(R.layout.fragment_swap_confirm), BaseFr
                             sellTokenTitle.setText(fromAsset.symbol)
                             //sellTokenTitle.text = fromAsset.symbol
                             sellTokenIcon.visibility = View.VISIBLE
+
+                            sellTokenBalance.text = swapConfirmViewModel.getfromAssetFiatInput()
+                            sellTokenBalance.visibility = View.VISIBLE
                         }
                         sellTokenIcon.setImageURI(fromAsset.imageUrl?.toUri())
-
-                        sellTokenBalance.text = swapConfirmViewModel.getfromAssetFiatInput()
-                        sellTokenBalance.visibility = View.VISIBLE
                     }
 
                 }
@@ -129,11 +129,11 @@ class SwapConfirmScreen : SwapBaseScreen(R.layout.fragment_swap_confirm), BaseFr
                         postDelayed(SwapNativeScreen.ANIMATE_LAYOUT_CHANGE_DELAY) {
                             buyTokenTitle.text = toAsset.symbol
                             buyTokenIcon.visibility = View.VISIBLE
+
+                            buyTokenBalance.text = swapConfirmViewModel.getToAssetFiatInput()
+                            buyTokenBalance.visibility = View.VISIBLE
                         }
                         buyTokenIcon.setImageURI(toAsset.imageUrl?.toUri())
-
-                        buyTokenBalance.text = swapConfirmViewModel.getToAssetFiatInput()
-                        buyTokenBalance.visibility = View.VISIBLE
                     }
                 }
             }

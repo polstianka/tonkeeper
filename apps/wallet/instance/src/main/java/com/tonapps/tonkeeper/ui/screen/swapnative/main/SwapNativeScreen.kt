@@ -1,18 +1,18 @@
 package com.tonapps.tonkeeper.ui.screen.swapnative.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.StringFormatter
-import com.tonapps.tonkeeper.core.signer.SingerResultContract
 import com.tonapps.tonkeeper.extensions.toast
-import com.tonapps.tonkeeper.ui.screen.swapnative.confirm.SwapConfirmScreen
+import com.tonapps.tonkeeper.ui.screen.buysell.main.BuySellScreen
 import com.tonapps.tonkeeper.ui.screen.swapnative.SwapBaseScreen
 import com.tonapps.tonkeeper.ui.screen.swapnative.choose.ChooseTokenScreen
+import com.tonapps.tonkeeper.ui.screen.swapnative.confirm.SwapConfirmScreen
+import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeViewModel.Companion.DEFAULT_INPUT_AMOUNT_VALUE
 import com.tonapps.tonkeeper.ui.screen.swapnative.settings.SwapSettingsScreen
 import com.tonapps.tonkeeper.view.SwapFromContainerView
 import com.tonapps.tonkeeper.view.SwapToContainerView
@@ -53,18 +53,20 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         handleViews()
         handleViewModel()
 
-        swapNativeViewModel.getRemoteAssets()
-
-        nextButton.isEnabled = true
+        // swapNativeViewModel.getRemoteAssets()
 
     }
 
     private fun initializeViews(view: View) {
         headerView = view.findViewById(R.id.header)
         nextButton = view.findViewById(R.id.continue_progress_button)
+        /*webView.clipToPadding = false
+        webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))*/
+        // listView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.cornerMedium))
 
         swapFromContainerView = view.findViewById(R.id.swap_from_container)
         swapToContainerView = view.findViewById(R.id.swap_to_container)
+
         mainView = view.findViewById(R.id.main_view)
         loadingView = view.findViewById(R.id.loading_view)
 
@@ -104,7 +106,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
         swapFromContainerView.doAfterFromAmountInputTextChanged = {
             swapNativeViewModel.onFromAmountChanged(
-                if (it.isNullOrEmpty()) "0"
+                if (it.isNullOrEmpty() || it.isBlank()) DEFAULT_INPUT_AMOUNT_VALUE
                 else it.toString()
             )
         }
@@ -120,7 +122,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         }
         swapToContainerView.doAfterToAmountInputTextChanged = {
             swapNativeViewModel.onToAmountChanged(
-                if (it.isNullOrEmpty()) "0"
+                if (it.isNullOrEmpty() || it.isBlank()) DEFAULT_INPUT_AMOUNT_VALUE
                 else it.toString()
             )
         }
@@ -142,6 +144,12 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         viewLifecycleOwner.lifecycleScope.launch {
             swapNativeViewModel.selectedFromToken.collect { fromAsset ->
                 swapFromContainerView.apply {
+
+                    swapNativeViewModel.isProgrammaticSet = true
+                    swapFromContainerView.sellAmountInput.setText("0")
+                    swapToContainerView.buyAmountInput.setText("0")
+                    swapNativeViewModel.isProgrammaticSet = false
+
                     if (fromAsset == null) {
                         // reset
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
@@ -157,26 +165,26 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                     } else {
                         displayMainView()
 
-                        // poppulate
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
                             sellTokenTitle.setText(fromAsset.symbol)
                             //sellTokenTitle.text = fromAsset.symbol
                             sellTokenIcon.visibility = View.VISIBLE
+
+                            sellTokenBalance.text =
+                                if (fromAsset.hiddenBalance)
+                                    "${getString(Localization.balance)} $HIDDEN_BALANCE"
+                                else {
+                                    String.format(
+                                        getString(Localization.balance_format),
+                                        fromAsset.balance
+                                    )
+                                }
+                            sellTokenBalance.visibility = View.VISIBLE
+
+                            selectMaxSellBalance.visibility = View.VISIBLE
                         }
+
                         sellTokenIcon.setImageURI(fromAsset.imageUrl?.toUri())
-
-                        sellTokenBalance.text =
-                            if (fromAsset.hiddenBalance)
-                                "${getString(Localization.balance)} $HIDDEN_BALANCE"
-                            else {
-                                String.format(
-                                    getString(Localization.balance_format),
-                                    fromAsset.balance
-                                )
-                            }
-                        sellTokenBalance.visibility = View.VISIBLE
-
-                        selectMaxSellBalance.visibility = View.VISIBLE
                     }
 
                 }
@@ -206,18 +214,19 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
                             buyTokenTitle.text = toAsset.symbol
                             buyTokenIcon.visibility = View.VISIBLE
-                        }
-                        buyTokenIcon.setImageURI(toAsset.imageUrl?.toUri())
 
-                        buyTokenBalance.text = if (toAsset.hiddenBalance)
-                            "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
-                        else {
-                            String.format(
-                                getString(Localization.balance_format),
-                                toAsset.balance
-                            )
+                            buyTokenBalance.text = if (toAsset.hiddenBalance)
+                                "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
+                            else {
+                                String.format(
+                                    getString(Localization.balance_format),
+                                    toAsset.balance
+                                )
+                            }
+                            buyTokenBalance.visibility = View.VISIBLE
                         }
-                        buyTokenBalance.visibility = View.VISIBLE
+
+                        buyTokenIcon.setImageURI(toAsset.imageUrl?.toUri())
                     }
                 }
             }
@@ -284,18 +293,48 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
             }
         }
 
-        nextButton.setText(requireContext().getString(Localization.continue_action))
         nextButton.onClick = { view, isEnabled ->
-            val swapConfirmArgs = swapNativeViewModel.generateConfirmArgs()
-            if (swapConfirmArgs != null) {
-                val screen = SwapConfirmScreen.newInstance(swapConfirmArgs)
-                screen.setSwapConfirmListener(this)
-                navigation?.add(screen)
-            } else {
-                // todo show error
+            when (swapNativeViewModel.screenStateFlow.value.continueState) {
+                is SwapNativeScreenState.ContinueState.INSUFFICIENT_TON_BALANCE -> {
+                    navigation?.add(BuySellScreen.newInstance())
+                    finish()
+                }
+
+                is SwapNativeScreenState.ContinueState.NEXT -> {
+                    val swapConfirmArgs = swapNativeViewModel.generateConfirmArgs()
+                    if (swapConfirmArgs != null) {
+                        postDelayed(500) { getCurrentFocus()?.hideKeyboard() }
+
+                        val screen = SwapConfirmScreen.newInstance(swapConfirmArgs)
+                        screen.setSwapConfirmListener(this)
+                        navigation?.add(screen)
+                    } else {
+                        // error
+                    }
+                }
+
+                else -> {}
             }
         }
 
+    }
+
+    private fun newUiState(screenState: SwapNativeScreenState) = screenState.also { state ->
+        nextButton.toggleProgressDisplay(state.continueState is SwapNativeScreenState.ContinueState.LOADING)
+        state.continueState.text?.also { text ->
+
+            if (state.continueState is SwapNativeScreenState.ContinueState.INSUFFICIENT_BALANCE) {
+                nextButton.setText(
+                    String.format(
+                        getString(text),
+                        swapNativeViewModel.selectedFromToken.value?.symbol ?: ""
+                    )
+                )
+            } else {
+                nextButton.setText(requireContext().getString(text))
+            }
+        }
+        nextButton.setEnabled(state.continueState.enabled)
     }
 
     private fun displayMainView() {
@@ -311,41 +350,33 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
     }
 
     private fun switchTokens() {
-        // todo P handle simulate and edge cases!!!
-
-        // TODO P disable submit button
-
         swapNativeViewModel.apply {
-            val sell = selectedFromToken.value
-            val sellAmount = selectedFromTokenAmount.value
-            val buy = selectedToToken.value
-            val buyAmount = selectedToTokenAmount.value
+            stopPeriodicSwapSimulate()
+            cancelPreviousSwapDetailRequests()
 
-            setSelectedSellToken(buy)
-            setSelectedBuyToken(sell)
+            val from = selectedFromToken.value
+            val fromAmount = selectedFromTokenAmount.value
+            val to = selectedToToken.value
+            val toAmount = selectedToTokenAmount.value
+
+            setSelectedFromToken(to, true)
+            setSelectedToToken(from, true)
 
             swapNativeViewModel.isProgrammaticSet = true
-            swapFromContainerView.sellAmountInput.setText(buyAmount)
-            swapToContainerView.buyAmountInput.setText(sellAmount)
+            swapFromContainerView.sellAmountInput.setText(toAmount)
+            swapToContainerView.buyAmountInput.setText(fromAmount)
             swapNativeViewModel.isProgrammaticSet = false
+
             triggerSimulateSwap(false)
         }
-
     }
 
     private fun handleViewModel() = swapNativeViewModel.apply {
         viewLifecycleOwner.lifecycleScope.launch {
-            openSignerAppFlow.collect { openSignerAppAction ->
-                signerLauncher.launch(
-                    SingerResultContract.Input(
-                        openSignerAppAction.body,
-                        openSignerAppAction.publicKey
-                    )
-                )
+            swapNativeViewModel.screenStateFlow.collect { screenState ->
+                newUiState(screenState)
             }
         }
-
-
     }
 
     companion object {
@@ -367,7 +398,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
     override fun onSellTokenSelected(contractAddress: String) {
         viewLifecycleOwner.lifecycleScope.launch {
 
-            swapNativeViewModel.setSelectedSellToken(
+            swapNativeViewModel.setSelectedFromToken(
                 swapNativeViewModel.getAssetByAddress(
                     contractAddress
                 )
@@ -381,7 +412,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                     ) ?: false
 
                 if (!isBuyTokenSwappable)
-                    swapNativeViewModel.setSelectedBuyToken(null)
+                    swapNativeViewModel.setSelectedToToken(null)
             }
 
         }
@@ -390,7 +421,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
     override fun onBuyTokenSelected(contractAddress: String) {
         viewLifecycleOwner.lifecycleScope.launch {
 
-            swapNativeViewModel.setSelectedBuyToken(
+            swapNativeViewModel.setSelectedToToken(
                 swapNativeViewModel.getAssetByAddress(
                     contractAddress
                 )
@@ -401,22 +432,6 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
     override fun onSlippageSelected(amount: Float) {
         swapNativeViewModel.selectedSlippageFlow.value = amount
-    }
-
-    private val signerLauncher = registerForActivityResult(SingerResultContract()) {
-        if (it == null) {
-            // feature.setFailedResult()
-            Log.d(
-                "swap-log",
-                "# signer result failed"
-            )
-        } else {
-            swapNativeViewModel.sendSignature(it)
-            Log.d(
-                "swap-log",
-                "# signer result success"
-            )
-        }
     }
 
     override fun onSwapConfirmSuccess() {

@@ -5,7 +5,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/progress_button"
-        style="@style/Widget.App.Button"
+        style="@style/Widget.App.Button.Transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Label1"

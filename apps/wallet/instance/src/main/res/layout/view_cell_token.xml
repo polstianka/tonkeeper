@@ -3,33 +3,55 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="76dp"
-    android:paddingHorizontal="@dimen/offsetMedium"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/offsetMedium">
 
     <uikit.widget.FrescoView
         android:id="@+id/icon"
-        fresco:roundAsCircle="true"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_oval"
-        android:backgroundTint="?attr/backgroundContentTintColor"/>
+        android:backgroundTint="?attr/backgroundContentTintColor"
+        fresco:roundAsCircle="true" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/offsetMedium"
         android:layout_gravity="center"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:layout_weight="1"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/token_symbol"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor" />
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/token_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/network_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/offsetSmall"
+                android:background="@drawable/bg_wallet_type"
+                android:paddingHorizontal="@dimen/offsetExtraSmall"
+                android:text="@string/ton"
+                android:textAllCaps="true"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Body4CAPS"
+                android:textColor="?attr/textSecondaryColor"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/token_name"
@@ -45,20 +67,20 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:layout_gravity="end"
+            android:layout_marginTop="2dp"
             android:gravity="end"
-            android:singleLine="true"
             android:maxLength="12"
+            android:singleLine="true"
             android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor"/>
+            android:textColor="?attr/textPrimaryColor" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/balance_currency"

@@ -6,7 +6,6 @@
     android:id="@+id/view_cell_swap_send"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:background="@drawable/bg_content"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/offsetMedium"
@@ -16,7 +15,8 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:animateLayoutChanges="true">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cell_title_send"

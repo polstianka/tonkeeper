@@ -1,12 +1,11 @@
 package com.tonapps.tonkeeper.ui.screen.swapnative.choose
 
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
-import com.tonapps.tonkeeper.ui.screen.swapnative.choose.list.TokenTypeItem
+import com.tonapps.tonkeeper.ui.screen.swapnative.choose.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.core.WalletCurrency
@@ -15,6 +14,7 @@ import com.tonapps.wallet.data.token.AssetRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.token.entities.AssetEntity
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +34,7 @@ class ChooseTokenViewModel(
     private val _symbolToAssetMapFlow = MutableStateFlow<Map<String, AssetEntity>>(emptyMap())
     private val _tokenListFlow = MutableStateFlow<List<AccountTokenEntity>>(emptyList())
 
-    private val _uiItemListFlow = MutableStateFlow<List<TokenTypeItem>>(emptyList())
+    private val _uiItemListFlow = MutableStateFlow<List<Item>>(emptyList())
     val uiItemListFlow = _uiItemListFlow.asStateFlow()
 
     var selectedCurrency: WalletCurrency? = null
@@ -84,8 +84,6 @@ class ChooseTokenViewModel(
                 it.balance
             }.thenBy { it.symbol.lowercase() })
 
-        Log.d("search-asset", "populateList: ${searchQuery}, ${assetMap}, ${sortedAssetList}")
-
         _uiItemListFlow.value = generateList(sortedAssetList)
     }
 
@@ -114,11 +112,9 @@ class ChooseTokenViewModel(
                 }
 
                 _symbolToAssetMapFlow.value = assets
-                Log.d("asset-get", "getRemoteAssets: ${assets.toString()}")
 
             } catch (e: Throwable) {
                 _symbolToAssetMapFlow.value = emptyMap()
-                Log.d("asset-get", "getRemoteAssets: ${e.message}")
             }
         }
 
@@ -127,35 +123,83 @@ class ChooseTokenViewModel(
         assetRepository.setSelectedSellToken(contractAddress)
     }
 
-    private fun generateList(assetList: List<AssetEntity>): List<TokenTypeItem> {
+    private fun generateList(assetList: List<AssetEntity>): List<Item> {
         val hiddenBalance = settings.hiddenBalances
 
-        return assetList.mapIndexed { index, assetEntity ->
+        val SuggestedTitleItem = Item.Title(Localization.suggested, ListCell.Position.SINGLE)
+        val OtherTitleItem = Item.Title(Localization.other, ListCell.Position.SINGLE)
 
-            val balanceFormat = CurrencyFormatter.format(value = assetEntity.balance)
-            var fiatBalance = (assetEntity.rate * assetEntity.balance).toString()
-            if (selectedCurrency != null) {
-                fiatBalance = CurrencyFormatter.format(
-                    selectedCurrency?.code!!,
-                    (assetEntity.rate * assetEntity.balance)
-                ).toString()
+        val suggestedItemList = assetList.filter { listOf("USD₮").contains(it.symbol) }
+            .mapIndexed { index, assetEntity ->
+                createItemSuggested(assetEntity, hiddenBalance)
             }
 
-            TokenTypeItem(
-                assetEntity.imageUrl?.toUri(),
-                assetEntity.contractAddress,
-                assetEntity.displayName ?: "",
-                assetEntity.symbol,
-                assetEntity.balance,
-                fiatBalance,
-                assetEntity.rate,
-                balanceFormat,
+        val tokenList = assetList.mapIndexed { index, assetEntity ->
+            createItemTypeToken(
+                assetEntity,
                 hiddenBalance,
-                false,
                 ListCell.getPosition(assetList.size, index)
             )
-
         }
+
+        return listOf(SuggestedTitleItem) + suggestedItemList + listOf(OtherTitleItem) + tokenList
+    }
+
+    private fun createItemTypeToken(
+        assetEntity: AssetEntity,
+        hiddenBalance: Boolean,
+        position: ListCell.Position
+    ): Item.TokenType {
+        val balanceFormat = CurrencyFormatter.format(value = assetEntity.balance)
+        var fiatBalance = (assetEntity.rate * assetEntity.balance).toString()
+        if (selectedCurrency != null) {
+            fiatBalance = CurrencyFormatter.format(
+                selectedCurrency?.code!!,
+                (assetEntity.rate * assetEntity.balance)
+            ).toString()
+        }
+
+        return Item.TokenType(
+            assetEntity.imageUrl?.toUri(),
+            assetEntity.contractAddress,
+            assetEntity.displayName ?: "",
+            assetEntity.symbol,
+            assetEntity.balance,
+            fiatBalance,
+            assetEntity.rate,
+            balanceFormat,
+            hiddenBalance,
+            false,
+            position
+        )
+    }
+
+    private fun createItemSuggested(
+        assetEntity: AssetEntity,
+        hiddenBalance: Boolean
+    ): Item.Suggested {
+        val balanceFormat = CurrencyFormatter.format(value = assetEntity.balance)
+        var fiatBalance = (assetEntity.rate * assetEntity.balance).toString()
+        if (selectedCurrency != null) {
+            fiatBalance = CurrencyFormatter.format(
+                selectedCurrency?.code!!,
+                (assetEntity.rate * assetEntity.balance)
+            ).toString()
+        }
+
+        return Item.Suggested(
+            assetEntity.imageUrl?.toUri(),
+            assetEntity.contractAddress,
+            assetEntity.displayName ?: "",
+            assetEntity.symbol,
+            assetEntity.balance,
+            fiatBalance,
+            assetEntity.rate,
+            balanceFormat,
+            hiddenBalance,
+            false,
+            ListCell.Position.SINGLE
+        )
     }
 
 }

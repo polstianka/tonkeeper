@@ -47,6 +47,7 @@ data class AssetEntity(
     val isTon = contractAddress == tonContractAddress
 
     companion object {
+        const val tonSymbol = "TON"
         const val tonContractAddress = "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"
     }
 
