@@ -298,6 +298,7 @@
     <string name="close">закрывать</string>
     <string name="select">Выбирать</string>
     <string name="balance_format">Баланс: %f</string>
+    <string name="balance_format_int">Баланс: %d</string>
 
     <string name="balance">Баланс:</string>
     <string name="choose">Выбрать</string>
@@ -332,5 +333,6 @@
     <string name="best">Лучший</string>
     <string name="suggested">Рекомендуемый</string>
     <string name="other">Другой</string>
+    <string name="asset_list_loading_failed">Не удалось загрузить список активов.</string>
 
 </resources>

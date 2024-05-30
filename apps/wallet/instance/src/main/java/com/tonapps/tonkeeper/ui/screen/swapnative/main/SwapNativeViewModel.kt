@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.ui.screen.swapnative.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
@@ -17,10 +16,15 @@ import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import com.tonapps.wallet.data.token.entities.AssetEntity
 import com.tonapps.wallet.data.token.entities.SwapSimulateEntity
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
@@ -39,14 +43,19 @@ class SwapNativeViewModel(
     private val _screenStateFlow = MutableStateFlow(SwapNativeScreenState())
     val screenStateFlow: StateFlow<SwapNativeScreenState> = _screenStateFlow
 
+    private val _screenEffectFlow = MutableSharedFlow<SwapNativeScreenEffect>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val screenEffectFlow: SharedFlow<SwapNativeScreenEffect> = _screenEffectFlow.asSharedFlow()
+
     private var _selectedFromToken = MutableStateFlow<AssetEntity?>(null)
     var selectedFromToken: StateFlow<AssetEntity?> = _selectedFromToken
-
     private var _selectedToToken = MutableStateFlow<AssetEntity?>(null)
     var selectedToToken: StateFlow<AssetEntity?> = _selectedToToken
 
-    private var _swapDetailsFlow = MutableStateFlow<SwapSimulateEntity?>(null)
-    var swapDetailsFlow: StateFlow<SwapSimulateEntity?> = _swapDetailsFlow
+    private var _swapDetailsFlow = MutableStateFlow<SwapDetailsResult?>(null)
+    var swapDetailsFlow: StateFlow<SwapDetailsResult?> = _swapDetailsFlow
 
     private var _selectedFromTokenAmount = MutableStateFlow<String>(DEFAULT_INPUT_AMOUNT_VALUE)
     var selectedFromTokenAmount: StateFlow<String> = _selectedFromTokenAmount
@@ -71,6 +80,9 @@ class SwapNativeViewModel(
             settings.currencyFlow,
             networkMonitor.isOnlineFlow
         ) { wallet, currency, isOnline ->
+            _screenStateFlow.update {
+                it.copy(showMainLoading = true)
+            }
 
             // confirm swap
             walletEntity = wallet
@@ -80,6 +92,13 @@ class SwapNativeViewModel(
             _tokenListFlow.value =
                 tokenRepository.getLocal(currency, wallet.accountId, wallet.testnet)
             val assetMap = assetRepository.get(false).values.toList().associateBy { it.symbol }
+
+            if (assetMap.isEmpty()) {
+                _screenEffectFlow.tryEmit(SwapNativeScreenEffect.Finish(Localization.asset_list_loading_failed))
+            }
+            _screenStateFlow.update {
+                it.copy(showMainLoading = false)
+            }
 
             val hiddenBalance = settings.hiddenBalances
             _tokenListFlow.value.forEach { token ->
@@ -244,7 +263,8 @@ class SwapNativeViewModel(
             }
 
             updateContinueButtonState()
-            _swapDetailsFlow.value = swapDetails
+            _swapDetailsFlow.value =
+                if (swapDetails != null) SwapDetailsResult(swapDetails, isReverse) else null
         }
     }
 
@@ -286,7 +306,7 @@ class SwapNativeViewModel(
             SwapConfirmArgs(
                 selectedFromToken.value,
                 selectedToToken.value,
-                swapDetailsFlow.value
+                swapDetailsFlow.value?.swapSimulateEntity
             )
         } else null
     }
@@ -299,5 +319,10 @@ class SwapNativeViewModel(
 
         const val DEFAULT_INPUT_AMOUNT_VALUE = "0"
     }
+
+    data class SwapDetailsResult(
+        val swapSimulateEntity: SwapSimulateEntity,
+        val isReverse: Boolean
+    )
 
 }

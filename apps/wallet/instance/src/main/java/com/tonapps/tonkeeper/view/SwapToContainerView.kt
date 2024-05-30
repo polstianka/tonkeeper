@@ -35,6 +35,9 @@ class SwapToContainerView @JvmOverloads constructor(
     var providerFeeTv: AppCompatTextView
     var blockchainFeeTv: AppCompatTextView
     var routeTv: AppCompatTextView
+    var priceImpactContainer: View
+    var minReceivedContainer: View
+    var providerFeeContiner: View
 
     var priceImpactInfo: View
     var minReceivedInfo: View
@@ -59,7 +62,7 @@ class SwapToContainerView @JvmOverloads constructor(
     var onPriceImpactInfoClicked: ((view: View, message: String) -> Unit)? = null
         set(value) {
             field = value
-            priceImpactInfo.setOnClickListener {
+            priceImpactContainer.setOnClickListener {
                 value?.invoke(
                     it,
                     context.getString(com.tonapps.wallet.localization.R.string.price_impact_tooltip)
@@ -70,7 +73,7 @@ class SwapToContainerView @JvmOverloads constructor(
     var onMinReceivedInfoClicked: ((view: View, message: String) -> Unit)? = null
         set(value) {
             field = value
-            minReceivedInfo.setOnClickListener {
+            minReceivedContainer.setOnClickListener {
                 value?.invoke(
                     it,
                     context.getString(com.tonapps.wallet.localization.R.string.minimum_received_tooltip)
@@ -81,7 +84,7 @@ class SwapToContainerView @JvmOverloads constructor(
     var onProviderFeeInfoClicked: ((view: View, message: String) -> Unit)? = null
         set(value) {
             field = value
-            providerFeeInfo.setOnClickListener {
+            providerFeeContiner.setOnClickListener {
                 value?.invoke(
                     it,
                     context.getString(com.tonapps.wallet.localization.R.string.provider_fee_tooltip)
@@ -113,8 +116,11 @@ class SwapToContainerView @JvmOverloads constructor(
         swapDetailSubContainer = findViewById(R.id.swap_detail_sub_container)
         swapTitleTv = findViewById(R.id.swap_title)
         priceImpactTv = findViewById(R.id.price_impact)
+        priceImpactContainer = findViewById(R.id.price_impact_container)
         minReceivedTv = findViewById(R.id.min_received)
+        minReceivedContainer = findViewById(R.id.min_received_container)
         providerFeeTv = findViewById(R.id.provider_fee)
+        providerFeeContiner= findViewById(R.id.provider_fee_container)
         blockchainFeeTv = findViewById(R.id.blockchain_fee)
         routeTv = findViewById(R.id.route)
 

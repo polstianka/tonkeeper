@@ -106,6 +106,7 @@
             android:hint="0"
             android:inputType="numberDecimal"
             android:singleLine="true"
+            android:enabled="false"
             android:textAppearance="@style/TextAppearance.NUM2"
             android:textColor="?attr/textPrimaryColor"
             android:textColorHint="?attr/textSecondaryColor" />

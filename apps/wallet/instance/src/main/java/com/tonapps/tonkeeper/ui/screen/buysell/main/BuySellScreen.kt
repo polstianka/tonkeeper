@@ -63,7 +63,10 @@ class BuySellScreen : BaseFragment(R.layout.fragment_buy_sell), BaseFragment.Bot
 
         headerView.doOnActionClick = { finish() }
         headerView.doOnCloseClick = {
+            // Because APIs are not completed yet, it currently makes more sense to select the currency
+            // instead of selecting, the country.
             navigation?.add(BuySellCurrencyScreen.newInstance())
+            // navigation?.add(BuySellCountryScreen.newInstance(BUY_SELL_REQUEST))
         }
 
         minAmountText.setText(String.format(getString(Localization.min_amount), "50 TON"))

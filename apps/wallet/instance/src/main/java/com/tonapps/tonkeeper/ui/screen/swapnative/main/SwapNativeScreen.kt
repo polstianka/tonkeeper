@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.net.toUri
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.icu.StringFormatter
@@ -38,7 +40,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
     private lateinit var headerView: HeaderView
     private lateinit var nextButton: ProgressButton
     private lateinit var mainView: View
-    private lateinit var loadingView: SkeletonLayout
+    private lateinit var skeletonView: SkeletonLayout
 
     private lateinit var swapFromContainerView: SwapFromContainerView
     private lateinit var swapToContainerView: SwapToContainerView
@@ -68,7 +70,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         swapToContainerView = view.findViewById(R.id.swap_to_container)
 
         mainView = view.findViewById(R.id.main_view)
-        loadingView = view.findViewById(R.id.loading_view)
+        skeletonView = view.findViewById(R.id.skeleton_view)
 
         switchTokens = view.findViewById(R.id.switch_tokens)
     }
@@ -146,8 +148,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                 swapFromContainerView.apply {
 
                     swapNativeViewModel.isProgrammaticSet = true
-                    swapFromContainerView.sellAmountInput.setText("0")
-                    swapToContainerView.buyAmountInput.setText("0")
+                    swapFromContainerView.sellAmountInput.setText("")
+                    swapToContainerView.buyAmountInput.setText("")
                     swapNativeViewModel.isProgrammaticSet = false
 
                     if (fromAsset == null) {
@@ -162,6 +164,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         sellTokenBalance.visibility = View.GONE
                         selectMaxSellBalance.visibility = View.GONE
 
+                        swapFromContainerView.isInputEnabled = false
                     } else {
                         displayMainView()
 
@@ -173,7 +176,9 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                             sellTokenBalance.text =
                                 if (fromAsset.hiddenBalance)
                                     "${getString(Localization.balance)} $HIDDEN_BALANCE"
-                                else {
+                                else if (fromAsset.balance == 0.0) {
+                                    String.format(getString(Localization.balance_format_int), 0)
+                                } else {
                                     String.format(
                                         getString(Localization.balance_format),
                                         fromAsset.balance
@@ -185,6 +190,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         }
 
                         sellTokenIcon.setImageURI(fromAsset.imageUrl?.toUri())
+
+                        swapFromContainerView.isInputEnabled = true
                     }
 
                 }
@@ -204,11 +211,13 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         buyTokenIcon.clear(requireContext())
 
                         swapNativeViewModel.isProgrammaticSet = true
-                        swapToContainerView.buyAmountInput.setText("0")
+                        swapToContainerView.buyAmountInput.setText("")
                         swapNativeViewModel.isProgrammaticSet = false
 
                         buyTokenBalance.text = "0"
                         buyTokenBalance.visibility = View.GONE
+
+                        swapToContainerView.isInputEnabled = false
                     } else {
                         // populate
                         postDelayed(ANIMATE_LAYOUT_CHANGE_DELAY) {
@@ -217,7 +226,9 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
                             buyTokenBalance.text = if (toAsset.hiddenBalance)
                                 "${getString(com.tonapps.wallet.localization.R.string.balance)} $HIDDEN_BALANCE"
-                            else {
+                            else if (toAsset.balance == 0.0) {
+                                String.format(getString(Localization.balance_format_int), 0)
+                            } else {
                                 String.format(
                                     getString(Localization.balance_format),
                                     toAsset.balance
@@ -227,6 +238,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                         }
 
                         buyTokenIcon.setImageURI(toAsset.imageUrl?.toUri())
+
+                        swapToContainerView.isInputEnabled = true
                     }
                 }
             }
@@ -234,12 +247,12 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
 
 
         viewLifecycleOwner.lifecycleScope.launch {
-            swapNativeViewModel.swapDetailsFlow.collect { swapDetails ->
+            swapNativeViewModel.swapDetailsFlow.collect { swapSimulateResult ->
 
                 swapToContainerView.apply {
                     swapDetailContainer.visibility = View.GONE
 
-                    swapDetails?.apply {
+                    swapSimulateResult?.swapSimulateEntity?.apply {
 
                         val sellSymbol = swapNativeViewModel.selectedFromToken.value?.symbol ?: ""
                         val buySymbol = swapNativeViewModel.selectedToToken.value?.symbol ?: ""
@@ -268,7 +281,8 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
                             Coin.parseBigInt(offerUnits.toString(), fromDecimals!!, false)
                                 .toPlainString(),
                             Coin.parseBigInt(askUnits.toString(), toDecimals!!, false)
-                                .toPlainString()
+                                .toPlainString(),
+                            swapSimulateResult.isReverse
                         )
                     }
 
@@ -277,7 +291,7 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         }
 
         swapToContainerView.apply {
-            toggleSwapDetails.setOnClickListener {
+            swapTitleContaienr.setOnClickListener {
 
                 val rotationAngle = if (swapDetailSubContainer.visibility == View.GONE) 0f else 180f
                 toggleSwapDetails.animate()
@@ -335,17 +349,38 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
             }
         }
         nextButton.setEnabled(state.continueState.enabled)
+
+        state.showMainLoading.also { show ->
+            mainView.isInvisible = show
+            skeletonView.isVisible = show
+            if (!show) {
+                postDelayed(500) {
+                    nextButton.isInvisible = false
+                }
+            } else nextButton.isInvisible = true
+        }
+    }
+
+    private fun onEffect(screenEffect: SwapNativeScreenEffect) = screenEffect.also { effect ->
+        when (effect) {
+            is SwapNativeScreenEffect.Finish -> {
+                if (effect.toast != null) {
+                    navigation?.toast(getString(effect.toast))
+                }
+                finish()
+            }
+        }
     }
 
     private fun displayMainView() {
-        mainView.visibility = View.VISIBLE
-        loadingView.visibility = View.GONE
+        // mainView.visibility = View.VISIBLE
+        // loadingView.visibility = View.GONE
     }
 
-    private fun updateInputAmountsFromApi(offerAmount: String, askAmount: String) {
+    private fun updateInputAmountsFromApi(offerAmount: String, askAmount: String, isReverse: Boolean) {
         swapNativeViewModel.isProgrammaticSet = true
-        swapFromContainerView.sellAmountInput.setText(offerAmount)
-        swapToContainerView.buyAmountInput.setText(askAmount)
+        if(isReverse) swapFromContainerView.sellAmountInput.setText(offerAmount)
+        if(!isReverse) swapToContainerView.buyAmountInput.setText(askAmount)
         swapNativeViewModel.isProgrammaticSet = false
     }
 
@@ -375,6 +410,11 @@ class SwapNativeScreen : SwapBaseScreen(R.layout.fragment_swap_native), BaseFrag
         viewLifecycleOwner.lifecycleScope.launch {
             swapNativeViewModel.screenStateFlow.collect { screenState ->
                 newUiState(screenState)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            swapNativeViewModel.screenEffectFlow.collect { effect ->
+                onEffect(effect)
             }
         }
     }

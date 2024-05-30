@@ -301,6 +301,7 @@
     <string name="close">close</string>
     <string name="select">Select</string>
     <string name="balance_format">Balance: %f</string>
+    <string name="balance_format_int">Balance: %d</string>
 
     <string name="balance">Balance:</string>
     <string name="choose">Choose</string>
@@ -335,4 +336,5 @@
     <string name="best">Best</string>
     <string name="suggested">Suggested</string>
     <string name="other">Other</string>
+    <string name="asset_list_loading_failed">Asset list failed to load.</string>
 </resources>
