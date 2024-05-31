@@ -142,7 +142,9 @@ class ChooseTokenViewModel(
             )
         }
 
-        return listOf(SuggestedTitleItem) + suggestedItemList + listOf(OtherTitleItem) + tokenList
+        val suggestedList = if(suggestedItemList.isEmpty()) emptyList() else listOf(SuggestedTitleItem) + suggestedItemList + listOf(OtherTitleItem)
+
+        return suggestedList + tokenList
     }
 
     private fun createItemTypeToken(

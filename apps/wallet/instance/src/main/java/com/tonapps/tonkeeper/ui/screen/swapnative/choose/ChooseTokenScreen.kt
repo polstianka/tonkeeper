@@ -40,6 +40,9 @@ class ChooseTokenScreen : BaseFragment(R.layout.fragment_choose_token), BaseFrag
 
         collectFlow(chooseTokenViewModel.uiItemListFlow) { itemList ->
             adapter.submitList(itemList)
+            if (::listView.isInitialized) {
+                listView.smoothScrollToPosition(0)
+            }
         }
     }
 
