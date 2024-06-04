@@ -68,9 +68,13 @@ data class TokenEntity(
         address = if (jetton.contractAddress == "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c") "TON" else jetton.contractAddress.toRawAddress(),
         name = jetton.displayName ?: "",
         symbol = jetton.symbol,
-        imageUri = if (jetton.contractAddress == "EQC98_qAmNEptUtPc7W6xdHh_ZHrBUFpw5Ft_IzNU20QAJav")
-            Uri.Builder().scheme("res").path(com.tonapps.uikit.icon.R.drawable.ic_staking_tonstakers.toString()).build()
-            else Uri.parse(jetton.imageUrl),
+        imageUri = try {
+            if (jetton.contractAddress == "EQC98_qAmNEptUtPc7W6xdHh_ZHrBUFpw5Ft_IzNU20QAJav")
+                Uri.Builder().scheme("res").path(com.tonapps.uikit.icon.R.drawable.ic_staking_tonstakers.toString()).build()
+            else Uri.parse(jetton.imageUrl)
+        } catch (t: Throwable) {
+           Uri.EMPTY
+       },
         decimals = jetton.decimals,
         verification = if (jetton.blacklisted) Verification.blacklist else Verification.whitelist
     )
