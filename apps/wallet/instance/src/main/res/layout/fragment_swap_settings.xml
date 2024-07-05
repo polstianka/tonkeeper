@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <uikit.widget.StartTextHeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:title="@string/swap_settings"
+        app:ignoreSystemOffset="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/offsetMedium">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="@string/slippage"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/offsetExtraExtraSmall"
+                android:text="@string/slippage_detail"
+                android:textAppearance="@style/TextAppearance.Label2"
+                android:textColor="?attr/textSecondaryColor" />
+
+            <FrameLayout
+                android:id="@+id/search_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingVertical="@dimen/offsetMedium">
+
+                <uikit.widget.PercentInputView
+                    android:id="@+id/slippage_percent_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+<!--                &lt;!&ndash; todo p display outline when selected     &ndash;&gt;-->
+<!--                <uikit.widget.RowLayout-->
+<!--                    android:id="@+id/search"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:background="@drawable/bg_content"-->
+<!--                    android:paddingHorizontal="@dimen/offsetMedium">-->
+
+<!--                    <androidx.appcompat.widget.AppCompatEditText-->
+<!--                        android:id="@+id/slippage_percent_input"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:singleLine="true"-->
+<!--                        android:inputType="number"-->
+<!--                        android:maxLength="2"-->
+<!--                        android:textAppearance="@style/TextAppearance.Body1"-->
+<!--                        android:textColor="?attr/textPrimaryColor"-->
+<!--                        android:textColorHint="?attr/textSecondaryColor" />-->
+
+<!--                    <androidx.appcompat.widget.AppCompatTextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="%"-->
+<!--                        android:paddingStart="@dimen/offsetExtraExtraSmall"-->
+<!--                        android:focusable="false"-->
+<!--                        android:selectable="false"-->
+<!--                        android:textAppearance="@style/TextAppearance.Body1"-->
+<!--                        android:textColor="?attr/textSecondaryColor"/>-->
+
+<!--                </uikit.widget.RowLayout>-->
+
+            </FrameLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/first_slippage_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="1 %"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:textAppearance="@style/TextAppearance.Label1"/>
+
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/second_slippage_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="3 %"
+                    android:layout_marginEnd="@dimen/offsetSmall"
+                    android:textAppearance="@style/TextAppearance.Label1"/>
+
+                <Button
+                    style="@style/Widget.App.Button.Secondary"
+                    android:id="@+id/third_slippage_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="5 %"
+                    android:textAppearance="@style/TextAppearance.Label1"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetLarge"
+                android:padding="@dimen/offsetMedium"
+                android:background="@drawable/bg_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/offsetMedium"
+                    android:layout_weight="1">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/expert_mode"
+                        android:textAppearance="@style/TextAppearance.Label1"
+                        android:textColor="?attr/textPrimaryColor" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/offsetExtraExtraSmall"
+                        android:text="@string/expert_mode_description"
+                        android:textAppearance="@style/TextAppearance.Label2"
+                        android:textColor="?attr/textSecondaryColor" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <uikit.widget.SwitchView
+                    android:id="@+id/check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/save"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginVertical="@dimen/offsetMedium"
+        android:text="@string/save"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

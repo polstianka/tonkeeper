@@ -12,6 +12,8 @@ data class ConfigEntity(
     val nftExplorer: String,
     val transactionExplorer: String,
     val mercuryoSecret: String,
+    val bootTonkeeper: String,
+    val stonfiHost: String,
     val tonapiMainnetHost: String,
     val tonapiTestnetHost: String,
     val stonfiUrl: String,
@@ -23,6 +25,7 @@ data class ConfigEntity(
     val tonApiV2Key: String,
     val featuredPlayInterval: Int,
     val flags: FlagsEntity,
+    val faqUrl: String
 ): Parcelable {
 
     val swapUri: Uri
@@ -33,6 +36,8 @@ data class ConfigEntity(
         nftExplorer = json.getString("NFTOnExplorerUrl"),
         transactionExplorer = json.getString("transactionExplorer"),
         mercuryoSecret = json.getString("mercuryoSecret"),
+        bootTonkeeper = json.getString("bootTonkeeper"),
+        stonfiHost = json.getString("stonfiHost"),
         tonapiMainnetHost = json.getString("tonapiMainnetHost"),
         tonapiTestnetHost = json.getString("tonapiTestnetHost"),
         stonfiUrl = json.getString("stonfiUrl"),
@@ -47,7 +52,8 @@ data class ConfigEntity(
             FlagsEntity()
         } else {
             FlagsEntity(json.getJSONObject("flags"))
-        }
+        },
+        faqUrl = json.getString("faq_url")
     )
 
     constructor() : this(
@@ -55,6 +61,8 @@ data class ConfigEntity(
         nftExplorer = "https://tonviewer.com/nft/%s",
         transactionExplorer = "https://tonviewer.com/transaction/%s",
         mercuryoSecret = "",
+        bootTonkeeper = "https://boot.tonkeeper.com/",
+        stonfiHost = "https://api.ston.fi",
         tonapiMainnetHost = "https://keeper.tonapi.io",
         tonapiTestnetHost = "https://testnet.tonapi.io",
         stonfiUrl = "https://tonkeeper.ston.fi/swap",
@@ -63,9 +71,10 @@ data class ConfigEntity(
         tonkeeperNewsUrl = "https://t.me/tonkeeper_new",
         tonCommunityUrl = "https://t.me/toncoin",
         tonCommunityChatUrl = "https://t.me/toncoin_chat",
-        tonApiV2Key = "",
+        tonApiV2Key = "AF77F5JND26OLHQAAAAKQMSCYW3UVPFRA7CF2XHX6QG4M5WAMF5QRS24R7J4TF2UTSXOZEY",
         featuredPlayInterval = 3000,
-        flags = FlagsEntity()
+        flags = FlagsEntity(),
+        faqUrl = "https://tonkeeper.helpscoutdocs.com/"
     )
 
     companion object {

@@ -15,6 +15,7 @@ import com.tonapps.tonkeeper.core.history.nameRes
 import com.tonapps.tonkeeper.extensions.copyWithToast
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.tonkeeper.view.TransactionDetailView
+import com.tonapps.wallet.data.core.HIDDEN_BALANCE
 import kotlinx.coroutines.CoroutineScope
 import uikit.base.BaseSheetDialog
 import uikit.extensions.activity
@@ -73,15 +74,20 @@ class TransactionDialog(
 
     fun show(action: HistoryItem.Event) {
         super.show()
-        amountView.text = action.value
+        if (action.hiddenBalance) {
+            amountView.text = HIDDEN_BALANCE
+            feeView.setData(HIDDEN_BALANCE, HIDDEN_BALANCE)
+        } else {
+            amountView.text = action.value
+            feeView.setData(action.fee!!, action.feeInCurrency!!)
+        }
 
         applyIcon(action.coinIconUrl)
         applyComment(action.comment)
         applyAccount(action.isOut, action.address, action.addressName?.ifPunycodeToUnicode())
-        applyCurrency(action.currency)
+        applyCurrency(action.currency, action.hiddenBalance)
         applyDate(action.action, action.date)
 
-        feeView.setData(action.fee!!, action.feeInCurrency!!)
         txView.setData(action.txId.shortHash, "")
         txView.setOnClickListener {
             context.copyWithToast(action.txId)
@@ -102,12 +108,16 @@ class TransactionDialog(
         dateView.text = "$prefix $date"
     }
 
-    private fun applyCurrency(currency: CharSequence?) {
+    private fun applyCurrency(currency: CharSequence?, hiddenBalance: Boolean) {
         if (currency.isNullOrBlank()) {
             currencyView.visibility = View.GONE
         } else {
             currencyView.visibility = View.VISIBLE
-            currencyView.text = currency
+            if (hiddenBalance) {
+                currencyView.text = HIDDEN_BALANCE
+            } else {
+                currencyView.text = currency
+            }
         }
     }
 

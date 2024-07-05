@@ -12,9 +12,15 @@ import com.tonapps.tonkeeper.core.signer.SingerResultContract
 import com.tonapps.tonkeeper.fragment.send.SendScreenEffect
 import com.tonapps.tonkeeper.fragment.send.pager.PagerScreen
 import com.tonapps.tonkeeper.view.TransactionDetailView
+import com.tonapps.uikit.color.accentGreenColor
+import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.uikit.list.ListCell
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.crypto.base64
+import org.ton.crypto.hex
+import uikit.extensions.collectFlow
+import uikit.extensions.drawable
 import uikit.extensions.pinToBottomInsets
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.FrescoView
@@ -45,7 +51,7 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
         if (it == null) {
             feature.setFailedResult()
         } else {
-            feature.sendSignature(base64(it))
+            feature.sendSignature(it)
         }
     }
 
@@ -96,6 +102,16 @@ class ConfirmScreen: PagerScreen<ConfirmScreenState, ConfirmScreenEffect, Confir
                 titleView.setText(Localization.transfer)
             } else {
                 titleView.text = getString(Localization.jetton_transfer, transaction.tokenName)
+            }
+        }
+
+        collectFlow(sendFeature.transactionFlow.map { it.encryptComment }) { encryptComment ->
+            if (encryptComment) {
+                val drawable = requireContext().drawable(UIKitIcon.ic_lock_16)
+                drawable.setTint(requireContext().accentGreenColor)
+                commentView.setTitleRightDrawable(drawable)
+            } else {
+                commentView.setTitleRightDrawable(null)
             }
         }
     }

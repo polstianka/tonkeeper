@@ -34,12 +34,6 @@ class BridgeWebView @JvmOverloads constructor(
 ) : WebViewFixed(context, attrs, defStyle) {
 
     var jsBridge: JsBridge? = null
-        set(value) {
-            field = value
-            value?.let {
-                executeJS(value.jsInjection())
-            }
-        }
 
     private var isPageLoaded = false
         set(value) {
@@ -61,6 +55,7 @@ class BridgeWebView @JvmOverloads constructor(
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 isPageLoaded = true
+                initBridge()
                 clientCallbacks.forEach { it.onPageStarted(view, url, favicon) }
             }
 
@@ -90,6 +85,11 @@ class BridgeWebView @JvmOverloads constructor(
         } else {
             jsExecuteQueue.add(code)
         }
+    }
+
+    private fun initBridge() {
+        val value = jsBridge ?: return
+        executeJS(value.jsInjection())
     }
 
     private fun executeJsQueue() {

@@ -3,6 +3,7 @@ package com.tonapps.wallet.data.push
 import android.app.Notification
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import com.tonapps.blockchain.ton.extensions.toUserFriendly
 import com.tonapps.extensions.locale
 import com.tonapps.network.getBitmap
@@ -56,6 +57,7 @@ class PushManager(
         combine(
             settingsRepository.firebaseTokenFlow,
             walletRepository.walletsFlow,
+            settingsRepository.walletPush,
             ::subscribe
         ).flowOn(Dispatchers.IO).launchIn(scope)
 
@@ -154,81 +156,15 @@ class PushManager(
         return false
     }
 
-    private fun forceUpdatePushToken() {
-        scope.launch {
-            val firebaseToken = GooglePushService.requestToken() ?: return@launch
-            tonConnectRepository.updatePushToken(firebaseToken)
-        }
-    }
-
-
-
-
-    /*@SuppressLint("MissingPermission")
-    private suspend fun displayNotification(push: PushData) {
-        val activeNotifications = notificationManager.activeNotifications
-        val oldNotification: StatusBarNotification? = activeNotifications.firstOrNull { it.notification.extras?.getCharSequence(Notification.EXTRA_TEXT) == push.notificationBody }
-        val isNew = oldNotification == null
-        val notificationTag = oldNotification?.tag ?: push.type
-        val notificationId = oldNotification?.id ?: randomNotificationId()
-
-        try {
-            val event = getEvent(push)
-            val wallet = walletRepository.getWallet(push.account) ?: return
-            if (wallet.testnet) {
-                return
-            }
-            val walletLabel = wallet.label
-            val builder = NotificationCompat.Builder(context, notificationChannelDefault)
-            builder.setContentTitle(walletLabel.title)
-            builder.setContentText(push.notificationBody)
-            builder.setSmallIcon(R.drawable.ic_push)
-            builder.setColorized(true)
-            builder.setGroupSummary(true)
-            builder.setShowWhen(true)
-            builder.setGroup(push.type)
-            if (!isNew) {
-                builder.setOnlyAlertOnce(true)
-            }
-            builder.setColor(walletLabel.color)
-            builder.setLargeIcon(getLargeIcon(event))
-            builder.setContentIntent(createPendingIntent(push.deeplink))
-            notificationManager.notify(notificationTag, notificationId, builder.build())
-        } catch (ignored: Throwable) { }
-    }
-
-    private fun getLargeIcon(event: EventEntity?): Bitmap? {
-        val firstAction = event?.actions?.firstOrNull() ?: return null
-        val bigIconUri = (firstAction.sender?.iconUri ?: firstAction.token?.imageUri) ?: return null
-        if (bigIconUri.isLocal) {
-            return null
-        }
-        return bigIconUri.getBitmap()
-    }
-
-    private suspend fun getEvent(
-        push: PushData
-    ): EventEntity? {
-        return try {
-            val eventId = push.transactionHash ?: return null
-            eventsRepository.getSingleRemote(push.account, false, eventId)
-        } catch (ignored: Throwable) {
-            null
-        }
-    }
-
-    private fun createPendingIntent(deepLink: String): PendingIntent {
-        val intent = Intent(Intent.ACTION_VIEW, deepLink.toUri())
-        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        return PendingIntent.getActivity(context, 0, intent, flags)
-    }
-
-     */
-
-    private suspend fun subscribe(firebaseToken: String, wallets: List<WalletEntity>) {
-        tonConnectRepository.updatePushToken(firebaseToken)
-
-        val accounts = wallets.filter { !it.testnet }.map { it.accountId.toUserFriendly(testnet = false) }
+    private suspend fun subscribe(
+        firebaseToken: String,
+        wallets: List<WalletEntity>,
+        walletPush: Map<Long, Boolean>
+    ) {
+        val accounts = wallets.filter { !it.testnet && settingsRepository.getPushWallet(it.id) }
+            .map { it.accountId.toUserFriendly(testnet = false) }
         api.pushSubscribe(context.locale, firebaseToken, settingsRepository.installId, accounts)
+
+        tonConnectRepository.updatePushToken(firebaseToken)
     }
 }

@@ -178,6 +178,7 @@
             android:layout_marginTop="8dp"
             android:paddingHorizontal="14dp"
             android:paddingVertical="8dp"
+            android:drawablePadding="4dp"
             android:background="@drawable/bg_content_tint"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="?attr/textPrimaryColor"

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/offsetMedium"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ignoreSystemOffset="true"
+        android:action="@drawable/ic_close_16"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/emulation_qr"
+        android:textColor="?attr/textPrimaryColor"
+        android:textAppearance="@style/TextAppearance.H2"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/offsetLarge"
+        android:background="@drawable/bg_qr"
+        android:padding="24dp">
+        <com.tonapps.qr.ui.QRView
+            android:id="@+id/qr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <Button
+        style="@style/Widget.App.Button.Secondary"
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/offsetLarge"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:text="@string/close"/>
+</uikit.widget.ColumnLayout>

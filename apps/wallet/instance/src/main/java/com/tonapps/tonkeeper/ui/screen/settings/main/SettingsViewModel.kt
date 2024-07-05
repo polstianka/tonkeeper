@@ -64,6 +64,7 @@ class SettingsViewModel(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             uiItems.add(Item.Widget(ListCell.Position.MIDDLE))
         }
+        uiItems.add(Item.Notifications(ListCell.Position.MIDDLE))
         uiItems.add(Item.Currency(currency.code, ListCell.Position.LAST))
 
         uiItems.add(Item.Space)
@@ -72,9 +73,11 @@ class SettingsViewModel(
         uiItems.add(Item.Language(language.nameLocalized.capitalized, ListCell.Position.LAST))
 
         uiItems.add(Item.Space)
-        uiItems.add(Item.Support(ListCell.Position.FIRST, api.config.directSupportUrl))
+        uiItems.add(Item.FAQ(ListCell.Position.FIRST, api.config.faqUrl))
+        uiItems.add(Item.Support(ListCell.Position.MIDDLE, api.config.directSupportUrl))
         uiItems.add(Item.News(ListCell.Position.MIDDLE, api.config.tonkeeperNewsUrl))
         uiItems.add(Item.Contact(ListCell.Position.MIDDLE, api.config.supportLink))
+        uiItems.add(Item.Rate(ListCell.Position.MIDDLE))
         uiItems.add(Item.Legal(ListCell.Position.LAST))
 
         uiItems.add(Item.Space)

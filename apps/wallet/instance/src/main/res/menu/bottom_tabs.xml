@@ -16,5 +16,5 @@
     <item android:id="@+id/collectibles"
         android:icon="@drawable/ic_tab_collectibles_28"
         android:checkable="true"
-        android:title="@string/purchases" />
+        android:title="@string/collectibles" />
 </menu>

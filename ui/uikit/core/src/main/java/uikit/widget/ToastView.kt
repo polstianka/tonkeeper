@@ -4,21 +4,17 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.animation.doOnEnd
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.setPadding
-import androidx.core.view.updateLayoutParams
 import com.tonapps.uikit.color.backgroundContentTintColor
 import uikit.R
 import uikit.extensions.dp
+import uikit.extensions.getDimension
 import uikit.extensions.getDimensionPixelSize
-import uikit.extensions.getRootWindowInsetsCompat
 import uikit.extensions.hapticConfirm
 
 class ToastView @JvmOverloads constructor(
@@ -45,17 +41,21 @@ class ToastView @JvmOverloads constructor(
     private val textView: AppCompatTextView
 
     private val animator: ValueAnimator by lazy {
-        val valueAnimator = ValueAnimator.ofFloat(-measuredHeight.toFloat(), statusBarHeight + 24f.dp)
+        val valueAnimator =
+            ValueAnimator.ofFloat(-measuredHeight.toFloat(), statusBarHeight + 24f.dp)
         valueAnimator.duration = 200L
         valueAnimator.addListener(this@ToastView)
         valueAnimator.addUpdateListener(this@ToastView)
         valueAnimator
     }
 
+    private val horizontalOffset = 24.dp
+    private val verticalOffset = context.getDimensionPixelSize(R.dimen.offsetMedium)
+
     init {
         inflate(context, R.layout.view_toast, this)
         setBackgroundResource(R.drawable.bg_content_tint_24)
-        setPadding(context.getDimensionPixelSize(R.dimen.offsetMedium))
+        setPadding(horizontalOffset, verticalOffset, horizontalOffset, verticalOffset)
         visibility = View.GONE
         loaderView = findViewById(R.id.toast_loader)
         textView = findViewById(R.id.toast_text)
@@ -65,7 +65,11 @@ class ToastView @JvmOverloads constructor(
         textView.text = text
     }
 
-    fun show(text: CharSequence, loading: Boolean, color: Int = context.backgroundContentTintColor) {
+    fun show(
+        text: CharSequence,
+        loading: Boolean,
+        color: Int = context.backgroundContentTintColor
+    ) {
         val data = Data(loading, text, color)
         val cancelCurrent = currentData?.let { it.text == text && it.color == color } == true
         if (cancelCurrent) {
@@ -96,7 +100,20 @@ class ToastView @JvmOverloads constructor(
             } else {
                 showDefault()
             }
+
+            setHorizontalMargin()
         }
+    }
+
+    private fun setHorizontalMargin() {
+        val params = layoutParams as FrameLayout.LayoutParams
+        params.setMargins(
+            context.getDimension(R.dimen.offsetMedium).toInt(),
+            0,
+            context.getDimension(R.dimen.offsetMedium).toInt(),
+            0
+        )
+        layoutParams = params
     }
 
     private fun showLoading() {

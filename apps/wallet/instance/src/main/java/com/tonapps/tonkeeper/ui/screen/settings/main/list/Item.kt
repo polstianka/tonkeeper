@@ -98,6 +98,16 @@ sealed class Item(type: Int): BaseListItem(type) {
         secondaryIcon = false
     )
 
+    class FAQ(
+        position: ListCell.Position,
+        val url: String
+    ): Icon(
+        titleRes = Localization.faq,
+        iconRes = UIKitIcon.ic_question_28,
+        position = position,
+        secondaryIcon = false
+    )
+
     class News(
         position: ListCell.Position,
         val url: String
@@ -122,9 +132,18 @@ sealed class Item(type: Int): BaseListItem(type) {
         position: ListCell.Position
     ): Icon(
         titleRes = Localization.legal,
-        iconRes = R.drawable.ic_doc_28,
+        iconRes = UIKitIcon.ic_doc_28,
         position = position,
         secondaryIcon = true
+    )
+
+    class Notifications(
+        position: ListCell.Position
+    ): Icon(
+        titleRes = Localization.notifications,
+        iconRes = UIKitIcon.ic_notifications_28,
+        position = position,
+        secondaryIcon = false
     )
 
     class Logout(
@@ -161,5 +180,14 @@ sealed class Item(type: Int): BaseListItem(type) {
         titleRes = Localization.search,
         value = engine.title,
         position = position
+    )
+
+    class Rate(
+        position: ListCell.Position
+    ): Icon(
+        titleRes = Localization.rate_tonkeeper,
+        iconRes = UIKitIcon.ic_star_28,
+        position = position,
+        secondaryIcon = true
     )
 }

@@ -2,19 +2,30 @@ package com.tonapps.tonkeeper.ui.screen.root
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.core.app.Person
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.crashlytics.setCustomKeys
+import com.google.firebase.ktx.Firebase
 import com.tonapps.blockchain.Coin
+import com.tonapps.emoji.Emoji
 import com.tonapps.extensions.MutableEffectFlow
 import com.tonapps.extensions.getQueryLong
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.deeplink.DeepLink
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.core.signer.SingerArgs
 import com.tonapps.tonkeeper.core.widget.Widget
+import com.tonapps.tonkeeper.helper.ShortcutHelper
 import com.tonapps.tonkeeper.password.PasscodeRepository
 import com.tonapps.wallet.data.push.GooglePushService
 import com.tonapps.wallet.data.push.PushManager
@@ -25,11 +36,15 @@ import com.tonapps.tonkeeper.ui.screen.picker.list.WalletPickerAdapter
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletViewModel.Companion.getWalletScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeper.ui.screen.wallet.list.WalletAdapter
+import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.WalletRepository
 import com.tonapps.wallet.data.account.WalletSource
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.ScreenCacheSource
+import com.tonapps.wallet.data.core.Theme
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
@@ -52,6 +67,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -97,22 +113,10 @@ class RootViewModel(
     private val _passcodeFlow = MutableStateFlow<Passcode?>(null)
     val passcodeFlow = _passcodeFlow.asStateFlow().filterNotNull()
 
-    val themeId: Int
-        get() {
-            return if (settingsRepository.theme == "dark") {
-                uikit.R.style.Theme_App_Dark
-            } else {
-                uikit.R.style.Theme_App_Blue
-            }
-        }
+    val theme: Theme
+        get() = settingsRepository.theme
 
-    val themeFlow: Flow<Int> = settingsRepository.themeFlow.map {
-        if (it == "dark") {
-            uikit.R.style.Theme_App_Dark
-        } else {
-            uikit.R.style.Theme_App_Blue
-        }
-    }.drop(1)
+    val themeFlow: Flow<Int> = settingsRepository.themeFlow.map { it.resId }.drop(1)
 
     val tonConnectEventsFlow = tonConnectRepository.eventsFlow
 
@@ -124,6 +128,7 @@ class RootViewModel(
 
         walletRepository.walletsFlow.onEach { wallets ->
             if (wallets.isEmpty()) {
+                ShortcutManagerCompat.removeAllDynamicShortcuts(application)
                 _hasWalletFlow.tryEmit(false)
             } else {
                 val wallet = walletRepository.activeWalletFlow.first()
@@ -139,14 +144,59 @@ class RootViewModel(
 
         combine(
             walletRepository.walletsFlow,
-            walletRepository.activeWalletFlow
-        ) { wallets, wallet ->
+            walletRepository.activeWalletFlow,
+            settingsRepository.hiddenBalancesFlow,
+        ) { wallets, wallet, hiddenBalance ->
             val balances = getBalances(wallets)
-            walletPickerAdapter.submitList(WalletPickerAdapter.map(wallets, wallet, balances))
+            walletPickerAdapter.submitList(WalletPickerAdapter.map(wallets, wallet, balances, hiddenBalance))
         }.launchIn(viewModelScope)
 
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.firebaseToken = GooglePushService.requestToken()
+        }
+
+        collectFlow(walletRepository.activeWalletFlow, ::applyAnalyticsKeys)
+
+        combine(walletRepository.activeWalletFlow, walletRepository.walletsFlow, ::initShortcuts).flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
+
+    private suspend fun initShortcuts(
+        currentWallet: WalletEntity,
+        wallets: List<WalletEntity>
+    ) {
+        val context = getApplication<App>()
+        val list = mutableListOf<ShortcutInfoCompat>()
+        if (!currentWallet.testnet) {
+            list.add(ShortcutHelper.shortcutAction(context, Localization.send, R.drawable.ic_send_shortcut, "ton://"))
+        }
+        list.addAll(walletShortcutsFromWallet(currentWallet, wallets))
+        ShortcutManagerCompat.setDynamicShortcuts(context, list)
+    }
+
+    private suspend fun walletShortcutsFromWallet(
+        currentWallet: WalletEntity,
+        wallets: List<WalletEntity>
+    ): List<ShortcutInfoCompat> {
+        val context = getApplication<App>()
+        val list = mutableListOf<ShortcutInfoCompat>()
+        if (1 >= wallets.size) {
+            return list
+        }
+        for (wallet in wallets) {
+            if (wallet == currentWallet) {
+                continue
+            }
+            list.add(ShortcutHelper.shortcutWallet(context, wallet))
+        }
+        return list
+    }
+
+    private fun applyAnalyticsKeys(wallet: WalletEntity) {
+        val crashlytics = Firebase.crashlytics
+        crashlytics.setUserId(wallet.accountId)
+        crashlytics.setCustomKeys {
+            key("testnet", wallet.testnet)
+            key("walletType", wallet.type.name)
         }
     }
 
@@ -251,10 +301,14 @@ class RootViewModel(
 
     private fun resolveDeepLink(uri: Uri, fromQR: Boolean) {
         if (uri.host == "signer") {
-            resolveSignerLink(uri, fromQR)
+            collectFlow(hasWalletFlow.take(1)) {
+                delay(1000)
+                resolveSignerLink(uri, fromQR)
+            }
             return
         }
         walletRepository.activeWalletFlow.take(1).onEach { wallet ->
+            delay(1000)
             resolveOther(uri, wallet)
         }.launchIn(viewModelScope)
     }
@@ -291,9 +345,22 @@ class RootViewModel(
             val account = uri.getQueryParameter("account") ?: return
             val hash = uri.pathSegments.lastOrNull() ?: return
             showTransaction(account, hash)
+        } else if (uri.path?.startsWith("/pick/") == true) {
+            val walletId = uri.pathSegments.lastOrNull()?.toLongOrNull() ?: return
+            viewModelScope.launch { walletRepository.setActiveWallet(walletId) }
+        } else if (uri.path?.startsWith("/swap") == true) {
+            val ft = uri.getQueryParameter("ft") ?: "TON"
+            val tt = uri.getQueryParameter("tt")
+            _eventFlow.tryEmit(RootEvent.Swap(api.config.swapUri, wallet.address, ft, tt))
+        } else if (uri.path?.startsWith("/buy-ton") == true || uri.path == "/exchange" || uri.path == "/exchange/") {
+            _eventFlow.tryEmit(RootEvent.BuyOrSell)
+        } else if (uri.path?.startsWith("/exchange") == true) {
+            val name = uri.pathSegments.lastOrNull() ?: return
+            _eventFlow.tryEmit(RootEvent.BuyOrSellDirect(name))
         } else {
             Log.d("DeepLinkLog", "uri: $uri")
             Log.d("DeepLinkLog", "path segments: ${uri.pathSegments}")
+            Log.d("DeepLinkLog", "path: ${uri.path}")
             toast(Localization.invalid_link)
         }
     }
@@ -347,6 +414,6 @@ class RootViewModel(
             settingsRepository.currency
         }
         val totalBalance = tokenRepository.getTotalBalances(currency, accountId, testnet)
-        return CurrencyFormatter.formatFiat(currency.code, totalBalance)
+        return CurrencyFormatter.formatFiat(currency.code, totalBalance.toFloat())
     }
 }

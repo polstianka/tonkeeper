@@ -3,6 +3,31 @@
     <string name="ton" translatable="false">TON</string>
     <string name="toncoin" translatable="false">Toncoin</string>
 
+    <string name="encrypted_comment">Зашифрованный комментарий</string>
+    <string name="encrypted_comment_description">Комментарий зашифрован отправителем и может быть расшифрован только вами. Пожалуйста, будьте осторожны с контентом и остерегайтесь мошенничества.</string>
+    <string name="decrypted_comment_action">Расшифровать комментарий</string>
+    <string name="comment_decrypted_hint">Будет виден всем.</string>
+    <string name="encrypt_comment">Зашифровать комментарий</string>
+    <string name="comment_encrypted_hint">Будет виден только получателю и вам.</string>
+    <string name="decrypt_comment">Расшифровать</string>
+    <string name="unnamed_collection">Безымянная коллекция</string>
+    <string name="view_details">Подробнее</string>
+
+    <string name="connected_placeholder_title">Подключенные приложения будут отображаться здесь</string>
+    <string name="connected_placeholder_subtitle">Исследуйте приложения и сервисы в браузере Tonkeeper.</string>
+
+    <string name="push_notifications">Уведомления</string>
+    <string name="push_notifications_description">Получайте уведомления о получении TON, токенов и NFT. Уведомления от подключенных приложений.</string>
+
+    <string name="apps">Приложения</string>
+    <string name="apps_notifications_description">Уведомления от подключенных приложений в вашей активности</string>
+
+
+    <string name="refresh">Обновить</string>
+    <string name="mute">Загоушить</string>
+    <string name="disconnect">Отключится</string>
+    <string name="notifications">Оповещения</string>
+    <string name="rate_tonkeeper">Оценить Tonkeeper</string>
     <string name="delete_watch_account_alert">Удалить аккаунт для просмотра?</string>
     <string name="delete">Удалить</string>
     <string name="failed">Ошибка</string>
@@ -105,6 +130,8 @@
     <string name="passcode_enter">Введите пин-код</string>
     <string name="passcode_create">Создать пин-код</string>
     <string name="passcode_re_enter">Введите пин-код ещё раз</string>
+    <string name="passcode_current">Текущий пин-код</string>
+    <string name="passcode_new">Установите новый пин-код</string>
     <string name="cancel">Отмена</string>
     <string name="fee">Комиссия</string>
     <string name="period_24h">24ч</string>
@@ -263,4 +290,49 @@
     <string name="explore">Витрина</string>
     <string name="connected">Подключённые</string>
     <string name="browser_search_placeholder">Введите адрес или начните поиск</string>
+
+    <string name="choose_token">Выберите токен</string>
+    <string name="swap_settings">Настройки</string>
+    <string name="slippage">проскальзывание</string>
+    <string name="slippage_detail">Сумма, на которую цена может измениться в неблагоприятную сторону, прежде чем сделка вернется в исходное состояние</string>
+    <string name="close">закрывать</string>
+    <string name="select">Выбирать</string>
+    <string name="balance_format">Баланс: %f</string>
+    <string name="balance_format_int">Баланс: %d</string>
+
+    <string name="balance">Баланс:</string>
+    <string name="choose">Выбрать</string>
+    <string name="price_impact">Влияние на цену</string>
+    <string name="minimum_received">Минимум получено</string>
+    <string name="liquidity_provider_fee">Комиссия поставщика ликвидности</string>
+    <string name="blockchain_fee">Комиссия блокчейна</string>
+    <string name="route">Маршрут</string>
+    <string name="provider">Поставщик</string>
+    <string name="ston_fi">STON.fi</string>
+    <string name="price_impact_tooltip">Разница между рыночной ценой и расчетной ценой из-за объема сделки.</string>
+    <string name="minimum_received_tooltip">Ваша транзакция будет отменена, если произойдет значительное неблагоприятное изменение цены до ее подтверждения.</string>
+    <string name="provider_fee_tooltip">Часть каждой сделки идет поставщикам ликвидности в качестве протокольного вознаграждения.</string>
+    <string name="custom">Пользовательский</string>
+    <string name="expert_mode">Режим эксперта</string>
+    <string name="expert_mode_description">Позволяет сделки с высоким влиянием на цену. Используйте на свой страх и риск.</string>
+    <string name="expert_mode_error">Включите режим эксперта для проскальзываний выше 50%.</string>
+    <string name="confirm_swap">Подтвердить обмен</string>
+    <string name="swap_sign_failed">Не удалось подписать обмен.</string>
+    <string name="swap_failed">Обмен не выполнен.</string>
+    <string name="swap_success">Обмен успешно завершен.</string>
+    <string name="min_amount">Минимальная сумма: %s</string>
+    <string name="enter_amount">Введите сумму.</string>
+    <string name="select_payment_method">Выберите способ оплаты.</string>
+    <string name="operator">Оператор</string>
+    <string name="you_pay">вы платите</string>
+    <string name="you_get">вы получаете</string>
+    <string name="insufficient_asset_balance">Недостаточно баланса %s</string>
+    <string name="insufficient_ton_balance">Недостаточно баланса. Купите TON</string>
+    <string name="enter_an_amount">Введите сумму</string>
+    <string name="select_token">Выберите токен</string>
+    <string name="best">Лучший</string>
+    <string name="suggested">Рекомендуемый</string>
+    <string name="other">Другой</string>
+    <string name="asset_list_loading_failed">Не удалось загрузить список активов.</string>
+
 </resources>

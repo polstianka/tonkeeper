@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BalanceEntity(
     val token: TokenEntity,
-    val value: Float,
+    val value: Double,
     val walletAddress: String
 ): Parcelable {
 

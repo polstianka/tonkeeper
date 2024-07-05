@@ -3,9 +3,15 @@
     <dimen name="actionSize">32dp</dimen>
     <dimen name="itemHeight">56dp</dimen>
     <dimen name="barHeight">64dp</dimen>
+    <dimen name="inputHeight">48dp</dimen>
+    <dimen name="buttonHeight">48dp</dimen>
+    <dimen name="progressBarSmallHeight">20dp</dimen>
     <dimen name="shadowSize">3dp</dimen>
     <dimen name="tertiaryHeight">36dp</dimen>
     <dimen name="iconSize">28dp</dimen>
+    <dimen name="smallIconSize">20dp</dimen>
+    <dimen name="assetSmallIconSize">29dp</dimen>
+    <dimen name="assetIconSize">44dp</dimen>
 
     <dimen name="gap">12dp</dimen>
 
@@ -17,6 +23,7 @@
 
     <dimen name="offsetExtraExtraSmall">2dp</dimen>
     <dimen name="offsetExtraSmall">4dp</dimen>
+    <dimen name="offsetSmall">8dp</dimen>
     <dimen name="offsetMedium">16dp</dimen>
     <dimen name="offsetLarge">32dp</dimen>
 </resources>

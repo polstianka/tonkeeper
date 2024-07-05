@@ -17,11 +17,23 @@ object Coin {
     fun parseJettonBalance(
         v: String,
         decimals: Int
-    ): Float {
+    ): Double {
         val bigDecimal = safeBigDecimal(v)
         val divisor = BigDecimal.TEN.pow(decimals)
         val result = bigDecimal.divide(divisor, decimals, RoundingMode.DOWN)
-        return result.toFloat()
+        return result.toDouble()
+    }
+
+    fun parseBigInt(
+        v: String,
+        decimals: Int,
+        showShortDecimal : Boolean = true
+    ): BigDecimal {
+        val bigDecimal = safeBigDecimal(v)
+        val divisor = BigDecimal.TEN.pow(decimals)
+        val scale = if(showShortDecimal) 4 else decimals
+        val result = bigDecimal.divide(divisor, scale, RoundingMode.DOWN)
+        return result.stripTrailingZeros()
     }
 
     /*fun parseFloat(
@@ -84,12 +96,27 @@ object Coin {
         return (value * 10.0.pow(decimals)).toLong()
     }
 
+    fun toNanoDouble(
+        value: Double,
+        decimals: Int = TON_DECIMALS
+    ): Long {
+        // old return (value * BASE).toLong()
+        return (value * 10.0.pow(decimals)).toLong()
+    }
+
     fun toCoins(
         value: Long,
         decimals: Int = TON_DECIMALS
     ): Float {
         // old return value / BASE.toFloat()
         return value / 10.0.pow(decimals).toFloat()
+    }
+
+    fun toCoinsDouble(
+        value: Long,
+        decimals: Int = TON_DECIMALS
+    ): Double {
+        return value / 10.0.pow(decimals)
     }
 
 }

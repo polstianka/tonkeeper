@@ -15,7 +15,7 @@ open class BaseItemView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : LinearLayoutCompat(context, attrs, defStyle) {
 
-    var position: ListCell.Position = com.tonapps.uikit.list.ListCell.Position.SINGLE
+    var position: ListCell.Position = ListCell.Position.SINGLE
         set(value) {
             field = value
             background = value.drawable(context)

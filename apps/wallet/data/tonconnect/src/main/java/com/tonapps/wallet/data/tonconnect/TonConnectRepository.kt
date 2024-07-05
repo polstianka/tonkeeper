@@ -72,8 +72,25 @@ class TonConnectRepository(
         }
     }
 
+    fun setPushEnabled(walletId: Long, url: String, enabled: Boolean) {
+        val app = localDataSource.getApp(walletId, url) ?: return
+        if (app.enablePush != enabled) {
+            setPushEnabled(app, enabled)
+        }
+    }
+
+    fun setPushEnabled(app: DAppEntity, enabled: Boolean) {
+        if (app.enablePush != enabled) {
+            val newApp = app.copy(enablePush = enabled)
+            localDataSource.updateApp(newApp)
+            _appsFlow.value = _appsFlow.value?.map {
+                if (it.clientId == app.clientId) newApp else it
+            }
+        }
+    }
+
     fun disconnect(app: DAppEntity) {
-        localDataSource.deleteApp(app.clientId, app.accountId, app.testnet)
+        localDataSource.deleteApp(app.walletId, app.url)
         _appsFlow.value = _appsFlow.value?.filter { app.clientId != it.clientId }
     }
 

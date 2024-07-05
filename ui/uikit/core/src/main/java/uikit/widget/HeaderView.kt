@@ -33,6 +33,7 @@ open class HeaderView @JvmOverloads constructor(
     val closeView: AppCompatImageView
     val actionView: AppCompatImageView
     val titleView: AppCompatTextView
+    val textView: View
 
     private val barHeight = context.getDimensionPixelSize(R.dimen.barHeight)
     private var ignoreSystemOffset = false
@@ -49,7 +50,6 @@ open class HeaderView @JvmOverloads constructor(
     private val subtitleContainerView: View
     private val subtitleView: AppCompatTextView
     private val loaderView: LoaderView
-    private val textView: View
 
     var doOnCloseClick: (() -> Unit)? = null
         set(value) {
@@ -61,12 +61,12 @@ open class HeaderView @JvmOverloads constructor(
             }
         }
 
-    var doOnActionClick: (() -> Unit)? = null
+    var doOnActionClick: ((view: View) -> Unit)? = null
         set(value) {
             field = value
             actionView.setOnClickListener {
                 if (it.alpha != 0f) {
-                    value?.invoke()
+                    value?.invoke(it)
                 }
             }
         }

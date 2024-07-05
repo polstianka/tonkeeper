@@ -25,7 +25,7 @@ import com.squareup.moshi.JsonClass
  * @param body 
  */
 
-
+//
 data class SendRawMessageRequest (
 
     @Json(name = "body")

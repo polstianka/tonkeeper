@@ -78,7 +78,7 @@ private fun Context.getRateColor(diff: String): Int {
 }
 
 fun Context.buildRateString(rate: CharSequence, diff24h: String): SpannableString {
-    if (diff24h.isEmpty() || diff24h == "0") {
+    if (diff24h.isEmpty() || diff24h == "0" || diff24h == "0.00%") {
         return SpannableString(rate)
     }
     val span = SpannableString("$rate $diff24h")

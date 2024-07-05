@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/offsetMedium">
+
+    <uikit.widget.ButtonsLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_arrow_up_28"
+            android:title="@string/send"/>
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/receive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_arrow_down_28"
+            android:title="@string/receive"/>
+
+        <uikit.widget.IconButtonView
+            android:id="@+id/swap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_swap_horizontal_outline_28"
+            android:title="@string/swap"/>
+
+    </uikit.widget.ButtonsLayout>
+
+</FrameLayout>

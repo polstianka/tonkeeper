@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.fragment.country.list.CountryAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.mvi.UiScreen
 import uikit.navigation.Navigation.Companion.navigation
@@ -27,7 +28,7 @@ class CountryScreen: UiScreen<CountryScreenState, CountryScreenEffect, CountrySc
         }
     }
 
-    override val feature: CountryScreenFeature by viewModels()
+    override val feature: CountryScreenFeature by viewModel()
 
     private val request: String by lazy { arguments?.getString(REQUEST_KEY) ?: "" }
     private val adapter = CountryAdapter { selectCountry(it.code) }

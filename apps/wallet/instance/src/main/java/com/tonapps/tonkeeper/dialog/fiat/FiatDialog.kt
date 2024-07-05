@@ -2,13 +2,16 @@ package com.tonapps.tonkeeper.dialog.fiat
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import com.tonapps.tonkeeper.core.fiat.models.FiatSuccessUrlPattern
 import com.tonapps.tonkeeper.dialog.fiat.list.MethodAdapter
 import com.tonapps.tonkeeper.fragment.country.CountryScreen
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
+import com.tonapps.tonkeeper.koin.settingsRepository
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,12 +61,22 @@ class FiatDialog(
 
     override fun show() {
         scope.launch {
-            val items = com.tonapps.tonkeeper.App.fiat.getMethods(com.tonapps.tonkeeper.App.settings.country)
+            val country = context.settingsRepository?.country!!
+            val items = App.fiat.getMethods(country)
             showWithData(items)
         }
     }
 
-    private  fun showWithData(items: List<FiatItem>) {
+    fun openDirect(name: String) {
+        scope.launch {
+            val country = context.settingsRepository?.country!!
+            val items = App.fiat.getData(country) ?: return@launch
+            val method = items.getBuyItemsByMethods(listOf(name)).firstOrNull() ?: return@launch
+            openItem(method)
+        }
+    }
+
+    private fun showWithData(items: List<FiatItem>) {
         super.show()
         adapter.submitList(MethodAdapter.buildMethodItems(items)) {
             fixPeekHeight()

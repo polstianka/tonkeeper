@@ -1,9 +1,13 @@
 package com.tonapps.tonkeeper.ui.screen.main
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.extensions.removeAllFragments
 import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.ui.screen.browser.main.BrowserMainScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -11,6 +15,7 @@ import com.tonapps.tonkeeper.ui.screen.collectibles.CollectiblesScreen
 import com.tonapps.tonkeeper.ui.screen.events.EventsScreen
 import com.tonapps.tonkeeper.ui.screen.picker.PickerScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootEvent
+import com.tonapps.tonkeeper.ui.screen.swapnative.main.SwapNativeScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.WalletScreen
 import com.tonapps.uikit.color.constantBlackColor
 import com.tonapps.uikit.color.drawable
@@ -29,9 +34,9 @@ import uikit.navigation.Navigation.Companion.navigation
 import uikit.utils.RecyclerVerticalScrollListener
 import uikit.widget.BottomTabsView
 
-class MainScreen: BaseFragment(R.layout.fragment_main) {
+class MainScreen : BaseFragment(R.layout.fragment_main) {
 
-    abstract class Child(@LayoutRes layoutId: Int): BaseFragment(layoutId) {
+    abstract class Child(@LayoutRes layoutId: Int) : BaseFragment(layoutId) {
 
         val mainViewModel: MainViewModel by lazy {
             requireParentFragment().getViewModel()
@@ -85,21 +90,18 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
     private val mainViewModel: MainViewModel by viewModel()
     private val rootViewModel: RootViewModel by activityViewModel()
 
-    private val fragmentMap by lazy {
-        mapOf(
-            R.id.wallet to WalletScreen.newInstance(),
-            R.id.activity to EventsScreen.newInstance(),
-            R.id.collectibles to CollectiblesScreen.newInstance(),
-            R.id.browser to BrowserMainScreen.newInstance()
-        )
-    }
 
     private var currentFragment: BaseFragment? = null
 
+    private lateinit var fragments: Map<Int, BaseFragment>
     private lateinit var bottomTabsView: BottomTabsView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        childFragmentManager.removeAllFragments()
+        currentFragment = null
+        fragments = createMapFragments()
+
         bottomTabsView = view.findViewById(R.id.bottom_tabs)
         bottomTabsView.doOnClick = { itemId ->
             setFragment(itemId, false)
@@ -110,7 +112,14 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
             }
         }
         collectFlow(mainViewModel.childBottomScrolled, bottomTabsView::setDivider)
-        collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.OpenTab>().map { mainDeepLinks[it.link] }.filterNotNull(), this::forceSelectTab)
+        collectFlow(
+            rootViewModel.eventFlow.filterIsInstance<RootEvent.OpenTab>()
+                .map { mainDeepLinks[it.link] }.filterNotNull(), this::forceSelectTab
+        )
+        collectFlow(rootViewModel.eventFlow.filterIsInstance<RootEvent.Swap>()) {
+            navigation?.add(SwapNativeScreen.newInstance(it.address, it.from, it.to))
+            // navigation?.add(SwapScreen.newInstance(it.uri, it.address, it.from, it.to))
+        }
         collectFlow(mainViewModel.browserTabEnabled) { enabled ->
             if (enabled) {
                 bottomTabsView.showItem(R.id.browser)
@@ -126,7 +135,7 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
     }
 
     private fun fragmentByItemId(itemId: Int): BaseFragment {
-        return fragmentMap[itemId] ?: throw IllegalArgumentException("Unknown itemId: $itemId")
+        return fragments[itemId] ?: throw IllegalArgumentException("Unknown itemId: $itemId")
     }
 
     fun forceSelectTab(itemId: Int) {
@@ -156,7 +165,7 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
                 newFragment.scrollUp()
             }
         }
-        transaction.commitNowAllowingStateLoss()
+        transaction.commitAllowingStateLoss()
         bottomTabsView.setDivider(false)
 
         currentFragment = newFragment
@@ -175,6 +184,15 @@ class MainScreen: BaseFragment(R.layout.fragment_main) {
             "tonkeeper://browser" to R.id.browser,
             "tonkeeper://collectibles" to R.id.collectibles
         )
+
+        private fun createMapFragments(): Map<Int, BaseFragment> {
+            return mapOf(
+                R.id.wallet to WalletScreen.newInstance(),
+                R.id.activity to EventsScreen.newInstance(),
+                R.id.collectibles to CollectiblesScreen.newInstance(),
+                R.id.browser to BrowserMainScreen.newInstance()
+            )
+        }
 
         fun isSupportedDeepLink(uri: String): Boolean {
             return mainDeepLinks.containsKey(uri)

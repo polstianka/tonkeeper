@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <uikit.widget.StartTextHeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:title="@string/choose_token"
+        app:ignoreSystemOffset="true" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/search_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingBottom="@dimen/offsetMedium"
+            android:paddingHorizontal="@dimen/offsetMedium">
+
+            <uikit.widget.RowLayout
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="44dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:tint="?attr/iconSecondaryColor"
+                    android:src="@drawable/ic_magnifying_glass_16"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/search_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.Body1"
+                    android:textColorHint="?attr/textSecondaryColor"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/search"/>
+
+            </uikit.widget.RowLayout>
+
+        </FrameLayout>
+
+        <uikit.widget.BottomSheetRecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:paddingBottom="@dimen/offsetMedium"/>
+
+        <Button
+            style="@style/Widget.App.Button.Secondary"
+            android:id="@+id/close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginVertical="@dimen/offsetMedium"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"
+            android:text="@string/close"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

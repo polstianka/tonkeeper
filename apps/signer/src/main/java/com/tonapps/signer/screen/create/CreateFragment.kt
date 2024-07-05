@@ -2,6 +2,7 @@ package com.tonapps.signer.screen.create
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.lifecycleScope
@@ -53,6 +54,7 @@ class CreateFragment: BaseFragment(R.layout.fragment_create), BaseFragment.Swipe
         adapter = PagerAdapter(this, createViewModel.pages)
 
         pagerView = view.findViewById(R.id.pager)
+        pagerView.offscreenPageLimit = adapter.itemCount
         pagerView.isUserInputEnabled = false
         pagerView.adapter = adapter
 
@@ -65,7 +67,7 @@ class CreateFragment: BaseFragment(R.layout.fragment_create), BaseFragment.Swipe
     private fun setPage(index: Int) {
         val currentIndex = pagerView.currentItem
         if (currentIndex != index) {
-            pagerView.setCurrentItem(index, true)
+            post { pagerView.setCurrentItem(index, true) }
         }
     }
 }

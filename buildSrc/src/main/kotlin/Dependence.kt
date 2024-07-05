@@ -10,20 +10,21 @@ object Dependence {
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3"
         const val serializationJSON = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
         const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
-        const val io = "org.jetbrains.kotlinx:kotlinx-io-core:0.3.2"
+        const val io = "org.jetbrains.kotlinx:kotlinx-io-core:0.3.3"
     }
 
     object GooglePlay {
         const val cronet = "com.google.android.gms:play-services-cronet:18.0.1"
         const val cronetOkhttp = "com.google.net.cronet:cronet-okhttp:0.1.0"
+        const val review = "com.google.android.play:review-ktx:2.0.1"
     }
 
     object UI {
-        const val material = "com.google.android.material:material:1.11.0"
+        const val material = "com.google.android.material:material:1.12.0"
     }
 
     object Koin {
-        const val core = "io.insert-koin:koin-android:3.5.3"
+        const val core = "io.insert-koin:koin-android:3.5.6"
     }
 
     object ML {
@@ -31,10 +32,13 @@ object Dependence {
     }
 
     object AndroidX {
-        const val core = "androidx.core:core-ktx:1.12.0"
+        const val multidex = "androidx.multidex:multidex:2.0.1"
+
+        const val core = "androidx.core:core-ktx:1.13.1"
+        const val shortcuts = "androidx.core:core-google-shortcuts:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"
-        const val activity = "androidx.activity:activity-ktx:1.8.2"
-        const val fragment = "androidx.fragment:fragment-ktx:1.6.2"
+        const val activity = "androidx.activity:activity-ktx:1.9.0"
+        const val fragment = "androidx.fragment:fragment-ktx:1.7.0"
         const val recyclerView = "androidx.recyclerview:recyclerview:1.3.2"
         const val viewPager2 = "androidx.viewpager2:viewpager2:1.0.0"
         const val security = "androidx.security:security-crypto:1.0.0"
@@ -82,7 +86,7 @@ object Dependence {
     }
 
     object Firebase {
-        const val bom = "com.google.firebase:firebase-bom:32.7.4"
+        const val bom = "com.google.firebase:firebase-bom:33.0.0"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
         const val messaging = "com.google.firebase:firebase-messaging-ktx"

@@ -38,6 +38,7 @@ import io.tonapi.infrastructure.RequestMethod
 import io.tonapi.infrastructure.ResponseType
 import io.tonapi.infrastructure.Success
 import io.tonapi.infrastructure.toMultiValue
+import io.tonapi.models.OperatorBuyRateList
 
 class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient = ApiClient.defaultClient) : ApiClient(basePath, client) {
     companion object {
@@ -210,6 +211,55 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/v2/rates",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getFiatOperatorRates(currencyCode: kotlin.String) : OperatorBuyRateList {
+        val localVarResponse = getFiatOperatorRatesWithHttpInfo(currencyCode = currencyCode)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as OperatorBuyRateList
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getFiatOperatorRatesWithHttpInfo(currencyCode: kotlin.String) : ApiResponse<OperatorBuyRateList?> {
+        val localVariableConfig = getFiatOperatorRatesRequestConfig(currencyCode = currencyCode)
+
+        return request<Unit, OperatorBuyRateList>(
+            localVariableConfig
+        )
+    }
+
+    fun getFiatOperatorRatesRequestConfig(currencyCode: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                put("currency", listOf(currencyCode.toString()))
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/widget/buy/rates",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,

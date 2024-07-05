@@ -2,6 +2,7 @@ package uikit.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
@@ -63,5 +64,9 @@ class SearchInput @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val height = 80.dp
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+    }
+
+    fun setActionVisibility(isActionVisible : Boolean) {
+        actionView.visibility = if(isActionVisible) View.VISIBLE else View.GONE
     }
 }

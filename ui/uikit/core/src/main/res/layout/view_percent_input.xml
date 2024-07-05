@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/percent_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/inputHeight"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/input_field"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="1dp"
+            android:background="@null"
+            android:gravity="center_vertical|start"
+            android:inputType="numberDecimal"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textPrimaryColor"
+            android:textCursorDrawable="@drawable/cursor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/offsetExtraSmall"
+            android:focusable="false"
+            android:gravity="center_vertical|start"
+            android:selectable="false"
+            android:text="%"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</merge>

@@ -47,10 +47,10 @@ class WalletRepository(
     private val extras = Extras(context, api)
 
     private val _walletsFlow = MutableStateFlow<List<WalletEntity>?>(null)
-    val walletsFlow = _walletsFlow.asStateFlow().filterNotNull()
+    val walletsFlow = _walletsFlow.filterNotNull().shareIn(scope, SharingStarted.Eagerly, 1)
 
     private val _activeWalletFlow = MutableStateFlow<WalletEntity?>(null)
-    val activeWalletFlow = _activeWalletFlow.asStateFlow().filterNotNull()
+    val activeWalletFlow = _activeWalletFlow.filterNotNull().shareIn(scope, SharingStarted.Eagerly, 1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val realtimeEventsFlow = activeWalletFlow.flatMapLatest { wallet ->
@@ -180,7 +180,7 @@ class WalletRepository(
         _activeWalletFlow.value = wallets.find { it.id == activeWalletId }
     }
 
-    suspend fun createNewWallet(label: WalletLabel) {
+    suspend fun createNewWallet(label: WalletLabel): WalletEntity {
         val mnemonic = Mnemonic.generate()
         val legacy = legacyManager.addWallet(
             mnemonic = mnemonic,
@@ -193,6 +193,7 @@ class WalletRepository(
         )
 
         updateWallets()
+        return WalletEntity(legacy)
     }
 
     suspend fun addWatchWallet(
@@ -200,7 +201,7 @@ class WalletRepository(
         label: WalletLabel,
         version: WalletVersion,
         source: WalletSource
-    ) {
+    ): WalletEntity {
         val legacy = legacyManager.addWatchWallet(
             publicKey = publicKey,
             name = label.name,
@@ -212,6 +213,7 @@ class WalletRepository(
         )
 
         updateWallets()
+        return WalletEntity(legacy)
     }
 
     suspend fun addWallets(
@@ -222,14 +224,15 @@ class WalletRepository(
         emoji: CharSequence,
         color: Int,
         testnet: Boolean
-    ) {
+    ): List<WalletEntity> {
+        val list = mutableListOf<WalletEntity>()
         for (version in versions) {
             val nameWithVersion = if (versions.size > 1) {
                 "$name ${version.title}"
             } else {
                 name
             }
-            legacyManager.addWallet(
+            val legacy = legacyManager.addWallet(
                 mnemonic = mnemonic,
                 publicKey = publicKey,
                 version = version,
@@ -239,9 +242,11 @@ class WalletRepository(
                 testnet = testnet,
                 source = WalletSource.Default
             )
+            list.add(WalletEntity(legacy))
         }
 
         updateWallets()
+        return list
     }
 
     suspend fun addSignerWallet(
@@ -250,8 +255,8 @@ class WalletRepository(
         emoji: CharSequence,
         color: Int,
         source: WalletSource
-    ) {
-        legacyManager.addWatchWallet(
+    ): WalletEntity {
+        val legacy = legacyManager.addWatchWallet(
             publicKey = publicKey,
             name = name,
             emoji = emoji,
@@ -262,6 +267,7 @@ class WalletRepository(
         )
 
         updateWallets()
+        return WalletEntity(legacy)
     }
 
     suspend fun getMnemonic(id: Long): Array<String> = withContext(Dispatchers.IO) {

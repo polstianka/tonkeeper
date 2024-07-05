@@ -3,10 +3,13 @@ package com.tonapps.tonkeeper.core.signer
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import com.tonapps.blockchain.ton.extensions.hex
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.boc.BagOfCells
 import org.ton.cell.Cell
 import org.ton.crypto.base64
+import org.ton.crypto.hex
 import ton.extensions.base64
 
 object SignerApp {
@@ -38,16 +41,12 @@ object SignerApp {
     }
 
     fun createSignUri(boc: BagOfCells, publicKey: PublicKeyEd25519): Uri {
-        val body = base64(boc.toByteArray())
+        val body = hex(boc.toByteArray())
         return createSignUri(body, publicKey)
     }
 
     fun createSignUri(boc: String, publicKey: PublicKeyEd25519): Uri {
-        val builder = Uri.Builder()
-        builder.scheme("tonsign")
-        builder.authority("")
-        builder.appendQueryParameter("pk", publicKey.base64())
-        builder.appendQueryParameter("body", boc)
-        return builder.build()
+        val url = "tonsign://v1/?network=ton&pk=${publicKey.hex()}&body=$boc"
+        return Uri.parse(url)
     }
 }

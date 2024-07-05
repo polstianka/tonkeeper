@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.core.history
 
+import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.toUserFriendly
 import com.tonapps.extensions.withMinus
@@ -31,15 +32,23 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.collectibles.CollectiblesRepository
+import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.events.EventsRepository
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RatesEntity
+import com.tonapps.wallet.data.settings.SettingsRepository
 import io.tonapi.models.MessageConsequences
 
 // TODO request refactoring
 class HistoryHelper(
     private val ratesRepository: RatesRepository,
     private val collectiblesRepository: CollectiblesRepository,
+    private val settingsRepository: SettingsRepository,
+    private val eventsRepository: EventsRepository
 ) {
+
+    private val currency: WalletCurrency
+        get() = settingsRepository.currency
 
     companion object {
         const val EVENT_LIMIT = 20
@@ -83,9 +92,10 @@ class HistoryHelper(
         wallet: WalletEntity,
         events: List<AccountEvent>,
         removeDate: Boolean = false,
+        hiddenBalances: Boolean = false
     ): List<HistoryItem> {
         val legacy = createWalletLegacy(wallet)
-        return mapping(legacy, events, removeDate)
+        return mapping(legacy, events, removeDate, hiddenBalances)
     }
 
     suspend fun create(
@@ -164,6 +174,7 @@ class HistoryHelper(
         wallet: WalletLegacy,
         events: List<AccountEvent>,
         removeDate: Boolean = false,
+        hiddenBalances: Boolean = false
     ): List<HistoryItem> = withContext(Dispatchers.IO) {
         val items = mutableListOf<HistoryItem>()
 
@@ -174,7 +185,7 @@ class HistoryHelper(
 
             val actions = event.actions
             val fee = Coin.toCoins(event.fee)
-            val currency = App.settings.currency
+            val currency = settingsRepository.currency
 
             val rates = ratesRepository.getRates(currency, TokenEntity.TON.symbol)
             val feeInCurrency = rates.convert(TokenEntity.TON.symbol, fee)
@@ -189,6 +200,7 @@ class HistoryHelper(
                     fee = CurrencyFormatter.format("TON", fee),
                     feeInCurrency = CurrencyFormatter.formatFiat(currency.code, feeInCurrency),
                     lt = event.lt,
+                    hiddenBalance = hiddenBalances
                 ))
             }
 
@@ -205,11 +217,9 @@ class HistoryHelper(
         txId: String,
         wallet: WalletLegacy,
         action: Action,
-        timestamp: Long,
+        timestamp: Long
     ): HistoryItem.Event {
-        val currency = App.settings.currency
 
-        action.status
         val simplePreview = action.simplePreview
         val date = formatDate(timestamp)
 
@@ -303,6 +313,7 @@ class HistoryHelper(
                 addressName = accountAddress?.name,
                 currency = CurrencyFormatter.format(currency.code, inCurrency),
                 failed = action.status == Action.Status.failed,
+                cipherText = action.tonTransfer?.encryptedComment?.cipherText
             )
         } else if (action.tonTransfer != null) {
             val tonTransfer = action.tonTransfer!!
@@ -349,6 +360,7 @@ class HistoryHelper(
                 addressName = accountAddress.name,
                 currency = CurrencyFormatter.formatFiat(currency.code, inCurrency),
                 failed = action.status == Action.Status.failed,
+                cipherText = action.tonTransfer?.encryptedComment?.cipherText
             )
         } else if (action.smartContractExec != null) {
             val smartContractExec = action.smartContractExec!!
@@ -403,10 +415,7 @@ class HistoryHelper(
                 title = simplePreview.name,
                 subtitle = subtitle,
                 value = "NFT",
-                nftImageURL = nftItem?.thumbUri?.toString(),
-                nftTitle = nftItem?.name,
-                nftCollection = nftItem?.description,
-                nftAddress = nftItem?.address,
+                nft = nftItem,
                 tokenCode = "NFT",
                 timestamp = timestamp,
                 date = date,
@@ -557,7 +566,12 @@ class HistoryHelper(
 
             val amount = Coin.toCoins(nftPurchase.amount.value.toLong())
             val value = CurrencyFormatter.format(nftPurchase.amount.tokenName, amount)
-            val nftItem = nftPurchase.nft
+
+            val nftItem = collectiblesRepository.getNft(
+                accountId = wallet.accountId,
+                testnet = wallet.testnet,
+                address = nftPurchase.nft.address
+            )
 
             return HistoryItem.Event(
                 index = index,
@@ -568,10 +582,7 @@ class HistoryHelper(
                 value = value.withMinus,
                 tokenCode = "TON",
                 timestamp = timestamp,
-                nftImageURL = nftItem.imageURL,
-                nftTitle = nftItem.title,
-                nftCollection = nftItem.description,
-                nftAddress = nftItem.address,
+                nft = nftItem,
                 date = date,
                 isOut = false,
                 failed = action.status == Action.Status.failed,

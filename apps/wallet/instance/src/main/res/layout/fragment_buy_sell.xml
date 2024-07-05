@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:icon="@drawable/ic_globe_16"
+        android:title="@string/buy_or_sell"
+        app:ignoreSystemOffset="true" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/offsetMedium">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/offsetMedium"
+                        android:paddingTop="@dimen/offsetMedium">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center">
+
+                            <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                                android:id="@+id/value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48.76dp"
+                                android:layout_marginVertical="@dimen/offsetMedium"
+                                android:background="@null"
+                                android:digits="0123456789.,"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="center_vertical"
+                                android:hint="0"
+                                android:inputType="numberDecimal"
+                                android:singleLine="true"
+                                android:textColor="?attr/textPrimaryColor"
+                                android:textCursorDrawable="@drawable/cursor"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/value_currency"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/ton"
+                                android:textAppearance="@style/TextAppearance.NUM2"
+                                android:textColor="?attr/textSecondaryColor"
+                                app:layout_constraintBottom_toBottomOf="@id/value"
+                                app:layout_constraintStart_toEndOf="@id/value"
+                                app:layout_constraintTop_toTopOf="@id/value" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_island_border"
+                            android:paddingHorizontal="@dimen/offsetMedium"
+                            android:paddingVertical="12dp"
+                            android:textAppearance="@style/TextAppearance.Body1"
+                            android:textColor="?attr/textSecondaryColor" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/min_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:paddingHorizontal="@dimen/offsetMedium"
+                            android:paddingVertical="12dp"
+                            android:textAppearance="@style/TextAppearance.Body3"
+                            android:textColor="?attr/textTertiaryColor" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </FrameLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/payment_methods_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/offsetMedium"
+                    android:orientation="vertical" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <uikit.widget.ProgressButton
+        android:id="@+id/continue_progress_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginVertical="@dimen/offsetMedium"
+        android:text="@string/continue_action"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

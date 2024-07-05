@@ -1,11 +1,13 @@
 package com.tonapps.tonkeeper.fragment.send.confirm
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.api.totalFees
 import com.tonapps.blockchain.Coin
+import com.tonapps.security.hex
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.event.WalletStateUpdateEvent
 import com.tonapps.tonkeeper.extensions.emulate
@@ -23,6 +25,7 @@ import kotlinx.coroutines.launch
 import org.ton.cell.Cell
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.settings.SettingsRepository
 import org.ton.bitstring.BitString
 import org.ton.block.StateInit
 import uikit.mvi.UiFeature
@@ -34,10 +37,11 @@ class ConfirmScreenFeature(
     private val ratesRepository: RatesRepository,
     private val api: API,
     private val historyHelper: HistoryHelper,
+    private val settingsRepository: SettingsRepository,
 ): UiFeature<ConfirmScreenState, ConfirmScreenEffect>(ConfirmScreenState()) {
 
     private val currency: WalletCurrency
-        get() = App.settings.currency
+        get() = settingsRepository.currency
 
     private var lastSeqno = -1
     private var lastUnsignedBody: Cell? = null
@@ -51,6 +55,7 @@ class ConfirmScreenFeature(
                     walletLabel = wallet.label
                 )
             }
+            lastSeqno = getSeqno(wallet)
         }
     }
 
@@ -59,12 +64,19 @@ class ConfirmScreenFeature(
         seqno: Int,
         tx: TransactionData
     ): Cell {
+        val validUntil = getValidUntil(wallet.testnet)
         val stateInit = getStateInitIfNeed(wallet)
         val transfer = tx.buildWalletTransfer(wallet.contract.address, stateInit)
-        return wallet.contract.createTransferUnsignedBody(seqno = seqno, gifts = arrayOf(transfer))
+        return wallet.contract.createTransferUnsignedBody(validUntil, seqno = seqno, gifts = arrayOf(transfer))
+    }
+
+    private suspend fun getValidUntil(testnet: Boolean): Long {
+        val seconds = api.getServerTime(testnet)
+        return seconds + 300L // 5 minutes
     }
 
     fun sendSignature(data: ByteArray) {
+        Log.d("ConfirmScreenFeatureLog", "sendSignature: ${hex(data)}")
         updateUiState {
             it.copy(
                 processActive = true,
@@ -82,11 +94,11 @@ class ConfirmScreenFeature(
                 val signerBody = contract.signedBody(signature, unsignedBody)
                 val b = contract.createTransferMessageCell(wallet.contract.address, lastSeqno, signerBody)
                 if (!wallet.sendToBlockchain(api, b)) {
-                    failedResult()
-                    return@launch
+                    throw Exception("failed to send to blockchain")
                 }
                 successResult()
             } catch (e: Throwable) {
+                Log.e("ConfirmScreenFeatureLog", "failed to send signature", e)
                 failedResult()
             }
         }
@@ -110,7 +122,7 @@ class ConfirmScreenFeature(
     }
 
     private suspend fun getStateInitIfNeed(wallet: WalletLegacy): StateInit? {
-        if (lastSeqno == -1) {
+        if (0 >= lastSeqno) {
             lastSeqno = getSeqno(wallet)
         }
         if (lastSeqno == 0) {
@@ -135,7 +147,8 @@ class ConfirmScreenFeature(
                 }
                 val privateKey = App.walletManager.getPrivateKey(wallet.id)
                 val gift = tx.buildWalletTransfer(wallet.contract.address, getStateInitIfNeed(wallet))
-                wallet.sendToBlockchain(api, privateKey, gift) ?: throw Exception("failed to send to blockchain")
+                val validUntil = getValidUntil(wallet.testnet)
+                wallet.sendToBlockchain(validUntil, api, privateKey, gift) ?: throw Exception("failed to send to blockchain")
 
                 successResult()
             } catch (e: Throwable) {
@@ -206,7 +219,8 @@ class ConfirmScreenFeature(
             try {
                 lastSeqno = getSeqno(wallet)
                 val gift = tx.buildWalletTransfer(wallet.contract.address, getStateInitIfNeed(wallet))
-                val emulate = wallet.emulate(api, gift)
+                val validUntil = getValidUntil(wallet.testnet)
+                val emulate = wallet.emulate(validUntil, api, gift)
                 val feeInTon = emulate.totalFees
                 val actions = historyHelper.mapping(wallet, emulate.event, false)
                 val tokenAddress = tx.tokenAddress
@@ -238,7 +252,7 @@ class ConfirmScreenFeature(
     }
 
     private suspend fun getSeqno(wallet: WalletLegacy): Int {
-        if (lastSeqno == 0) {
+        if (0 >= lastSeqno) {
             lastSeqno = wallet.getSeqno(api)
         }
         return lastSeqno

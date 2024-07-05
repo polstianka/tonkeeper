@@ -1,6 +1,7 @@
 package com.tonapps.signer.screen.sign
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.ton.contract.BaseWalletContract
@@ -8,6 +9,7 @@ import com.tonapps.blockchain.ton.extensions.EmptyPrivateKeyEd25519
 import com.tonapps.blockchain.ton.extensions.hex
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.security.base64
+import com.tonapps.security.hex
 import com.tonapps.signer.core.repository.KeyRepository
 import com.tonapps.signer.password.Password
 import com.tonapps.signer.screen.sign.list.SignItem
@@ -48,9 +50,7 @@ class SignViewModel(
     private val vault: SignerVault,
 ): ViewModel() {
 
-    val keyEntity = repository.getKey(id)
-        .filterNotNull()
-        .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+    val keyEntity = repository.getKey(id).filterNotNull()
 
     private val _actionsFlow = MutableStateFlow<List<SignItem>?>(null)
     val actionsFlow = _actionsFlow.asStateFlow().filterNotNull()
@@ -72,12 +72,12 @@ class SignViewModel(
     fun sign(context: Context) = Password.authenticate(context).safeArea {
         vault.getPrivateKey(it, id)
     }.map {
-        org.ton.crypto.base64(sign(it))
+        sign(it)
     }.flowOn(Dispatchers.IO).take(1)
 
     fun openEmulate() = keyEntity.map {
         val contract = BaseWalletContract.create(it.publicKey, v)
-        val cell = contract.createTransferMessageCell(contract.address, EmptyPrivateKeyEd25519, 0, unsignedBody)
+        val cell = contract.createTransferMessageCell(contract.address, EmptyPrivateKeyEd25519, 1, unsignedBody)
         cell.hex()
     }.flowOn(Dispatchers.IO).take(1)
 
@@ -145,6 +145,14 @@ class SignViewModel(
             )
         } catch (e: Throwable) {
             return SignItem.Unknown(position)
+        }
+    }
+
+    private fun parseSwap(opCode: Int, cell: Cell?): com.tonapps.blockchain.ton.tlb.SwapTransfer? {
+        return if (opCode == 0x25938561) {
+            cell?.parse { loadTlb(com.tonapps.blockchain.ton.tlb.SwapTransfer.tlbCodec()) }
+        } else {
+            null
         }
     }
 

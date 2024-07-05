@@ -7,12 +7,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import com.tonapps.tonkeeper.core.widget.balance.WidgetBalanceProvider
 import com.tonapps.tonkeeper.popup.ActionSheet
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.tonkeeper.ui.screen.settings.currency.CurrencyScreen
 import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageScreen
 import com.tonapps.tonkeeper.ui.screen.name.edit.EditNameScreen
+import com.tonapps.tonkeeper.ui.screen.notifications.NotificationsScreen
 import com.tonapps.tonkeeper.ui.screen.settings.legal.LegalScreen
 import com.tonapps.tonkeeper.ui.screen.settings.main.list.Adapter
 import com.tonapps.tonkeeper.ui.screen.settings.main.list.Item
@@ -62,7 +64,20 @@ class SettingsScreen: BaseListFragment(), BaseFragment.SwipeBack {
             is Item.Logout -> signOut()
             is Item.SearchEngine -> searchPicker(item)
             is Item.DeleteWatchAccount -> deleteWatchAccount()
+            is Item.Rate -> openRate()
+            is Item.Notifications -> navigation?.add(NotificationsScreen.newInstance())
+            is Item.FAQ -> navigation?.openURL(item.url, true)
             else -> return
+        }
+    }
+
+    private fun openRate() {
+        val context = requireContext()
+        val packageName = context.packageName.replace(".debug", "")
+        val uri = "market://details?id=$packageName"
+        val intent = Intent(Intent.ACTION_VIEW, uri.toUri())
+        if (intent.resolveActivity(context.packageManager) != null) {
+            startActivity(intent)
         }
     }
 

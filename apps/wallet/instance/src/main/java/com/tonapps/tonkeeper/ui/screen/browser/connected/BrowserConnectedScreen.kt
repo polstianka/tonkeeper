@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.ui.screen.browser.connected.list.Adapter
+import com.tonapps.tonkeeper.ui.screen.browser.connected.list.Item
 import com.tonapps.tonkeeper.ui.screen.browser.main.BrowserMainViewModel
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
@@ -34,6 +35,7 @@ class BrowserConnectedScreen: BaseFragment(R.layout.fragment_browser_connected) 
     }
 
     private lateinit var listView: RecyclerView
+    private lateinit var placeholderView: View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +46,20 @@ class BrowserConnectedScreen: BaseFragment(R.layout.fragment_browser_connected) 
             override fun supportsPredictiveItemAnimations(): Boolean = false
         }
 
-        collectFlow(connectedViewModel.uiItemsFlow, adapter::submitList)
+        placeholderView = view.findViewById(R.id.placeholder)
+
+        collectFlow(connectedViewModel.uiItemsFlow, ::setList)
+    }
+
+    private fun setList(items: List<Item>) {
+        if (items.isEmpty()) {
+            listView.visibility = View.GONE
+            placeholderView.visibility = View.VISIBLE
+        } else {
+            listView.visibility = View.VISIBLE
+            placeholderView.visibility = View.GONE
+            adapter.submitList(items)
+        }
     }
 
     private fun deleteAppConfirm(app: DAppEntity) {

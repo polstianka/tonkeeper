@@ -19,7 +19,7 @@
     <uikit.widget.TextHeaderView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="@string/add_key"
+        android:title="@string/add_key_dialog"
         android:description="@string/add_key_subtitle"
         android:layout_marginHorizontal="@dimen/offsetLarge"/>
 

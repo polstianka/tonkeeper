@@ -12,7 +12,23 @@ sealed class RootAction {
         val returnResult: ReturnResultEntity
     ): RootAction()
 
-    data class ResponseBoc(val boc: String): RootAction()
+    data class ResponseSignature(val signature: ByteArray): RootAction() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ResponseSignature
+
+            return signature.contentEquals(other.signature)
+        }
+
+        override fun hashCode(): Int {
+            return signature.contentHashCode()
+        }
+
+    }
 
     data class ResponseKey(val publicKey: PublicKeyEd25519, val name: String): RootAction()
+
+    data object UpdateApp: RootAction()
 }

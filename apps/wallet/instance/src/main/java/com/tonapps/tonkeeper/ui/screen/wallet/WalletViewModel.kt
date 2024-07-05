@@ -79,7 +79,16 @@ class WalletViewModel(
             if (items.isNullOrEmpty()) {
                 _uiItemsFlow.value = listOf(Item.Skeleton(true))
             } else {
-                _uiItemsFlow.value = items
+                _uiItemsFlow.value = items.map {
+                    if (it !is Item.Token) {
+                        it
+                    } else if (it.isTon) {
+                        it.copy(iconUri = TokenEntity.TON_ICON_URI)
+                    } else {
+                        it
+
+                    }
+                }
             }
         }.launchIn(viewModelScope)
 
@@ -137,9 +146,9 @@ class WalletViewModel(
         ) { tokens, status ->
             val (fiatBalance, uiItems) = buildUiItems(tokens.currency, tokens.wallet.testnet, tokens.list)
             val balanceFormat = if (tokens.wallet.testnet) {
-                CurrencyFormatter.formatFiat("TON", fiatBalance)
+                CurrencyFormatter.formatFiat("TON", fiatBalance.toFloat())
             } else {
-                CurrencyFormatter.formatFiat(tokens.currency.code, fiatBalance)
+                CurrencyFormatter.formatFiat(tokens.currency.code, fiatBalance.toFloat())
             }
 
             val actualStatus = if (tokens.isOnline) {
@@ -211,8 +220,8 @@ class WalletViewModel(
         currency: WalletCurrency,
         testnet: Boolean,
         tokens: List<AccountTokenEntity>,
-    ): Pair<Float, List<Item.Token>> {
-        var fiatBalance = 0f
+    ): Pair<Double, List<Item.Token>> {
+        var fiatBalance = 0.0
         if (testnet) {
             fiatBalance = tokens.first().balance.value
         }
@@ -278,14 +287,14 @@ class WalletViewModel(
     }
 
     private fun setCached(wallet: WalletEntity, items: List<Item>) {
-        screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, items)
+        screenCacheSource.set(CACHE_NAME, wallet.id, items)
     }
 
     companion object {
         private const val CACHE_NAME = "wallet"
 
         fun ScreenCacheSource.getWalletScreen(wallet: WalletEntity): List<Item>? {
-            val items: List<Item> = get(CACHE_NAME, wallet.accountId, wallet.testnet) { parcel ->
+            val items: List<Item> = get(CACHE_NAME, wallet.id) { parcel ->
                 Item.createFromParcel(parcel)
             }.map {
                 if (it is Item.Balance) {

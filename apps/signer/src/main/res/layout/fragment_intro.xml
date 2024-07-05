@@ -15,23 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="@dimen/offsetMedium">
+        android:layout_margin="@dimen/offsetLarge">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <uikit.widget.TextHeaderView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.H2"
-            android:textColor="?attr/textPrimaryColor"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/intro_subtitle"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.Body1"
-            android:textColor="?attr/textSecondaryColor"/>
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:title="@string/app_name"
+            android:description="@string/intro_subtitle"/>
 
         <Button
             style="@style/Widget.App.Button"

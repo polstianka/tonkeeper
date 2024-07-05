@@ -114,6 +114,15 @@ object CurrencyFormatter {
 
     fun format(
         currency: String = "",
+        value: Double,
+    ): CharSequence {
+        val floatValue = value.toFloat()
+        val decimals = decimalCount(floatValue)
+        return format(currency, floatValue, decimals)
+    }
+
+    fun format(
+        currency: String = "",
         value: BigInteger
     ): CharSequence {
         var bigDecimal = value.toBigDecimal().stripTrailingZeros()
@@ -222,16 +231,9 @@ object CurrencyFormatter {
     }
 
     private fun removeTrailingZeros(value: String): String {
-        if (true) {
-            return value
-        }
         if (!value.contains(monetaryDecimalSeparator)) {
             return value
         }
-        val fixed = value.replace(Regex("${monetaryDecimalSeparator}?0+$"), "")
-        if (fixed.endsWith(monetaryDecimalSeparator)) {
-            return fixed.removeSuffix(monetaryDecimalSeparator)
-        }
-        return fixed
+        return value.removeSuffix("0").removeSuffix(monetaryDecimalSeparator)
     }
 }

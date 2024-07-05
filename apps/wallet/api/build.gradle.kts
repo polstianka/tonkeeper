@@ -32,4 +32,7 @@ dependencies {
     implementation(Dependence.Squareup.sse)
     implementation(Dependence.Squareup.moshi)
     implementation(Dependence.Squareup.moshiAdapters)
+
+    //
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

@@ -11,8 +11,8 @@ import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.doOnLayout
-import com.tonapps.tonkeeper.api.chart.ChartEntity
 import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.wallet.api.entity.ChartEntity
 import uikit.extensions.dp
 import uikit.extensions.withAlpha
 

@@ -134,7 +134,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val address: String,
         val symbol: String,
         val name: String,
-        val balance: Float,
+        val balance: Double,
         val balanceFormat: CharSequence,
         val fiat: Float,
         val fiatFormat: CharSequence,
@@ -145,13 +145,15 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val hiddenBalance: Boolean
     ): Item(TYPE_TOKEN) {
 
+        val isTon = symbol == "TON"
+
         constructor(parcel: Parcel) : this(
             parcel.readEnum(ListCell.Position::class.java)!!,
             parcel.readParcelableCompat()!!,
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
-            parcel.readFloat(),
+            parcel.readDouble(),
             parcel.readCharSequenceCompat()!!,
             parcel.readFloat(),
             parcel.readCharSequenceCompat()!!,
@@ -168,7 +170,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeString(address)
             dest.writeString(symbol)
             dest.writeString(name)
-            dest.writeFloat(balance)
+            dest.writeDouble(balance)
             dest.writeCharSequenceCompat(balanceFormat)
             dest.writeFloat(fiat)
             dest.writeCharSequenceCompat(fiatFormat)

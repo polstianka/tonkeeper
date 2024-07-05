@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Wallet.SplashScreen" parent="Theme.SplashScreen">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="windowSplashScreenBackground">#10161F</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_splash</item>
+        <item name="windowSplashScreenAnimationDuration">1</item>
+        <item name="postSplashScreenTheme">@style/Theme.App.Blue</item>
+        <item name="android:windowSplashScreenBehavior" tools:targetApi="33">icon_preferred</item>
+    </style>
+
+</resources>

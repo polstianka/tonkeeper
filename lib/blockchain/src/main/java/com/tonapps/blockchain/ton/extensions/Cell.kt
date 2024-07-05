@@ -5,14 +5,14 @@ import org.ton.bitstring.BitString
 import org.ton.boc.BagOfCells
 import org.ton.cell.Cell
 import org.ton.cell.CellSlice
-import org.ton.crypto.base64
 import org.ton.crypto.hex
 
 fun String.toBoc(): BagOfCells {
     return try {
-        BagOfCells(base64())
-    } catch (e: Throwable) {
         BagOfCells(hex(this))
+
+    } catch (e: Throwable) {
+        BagOfCells(base64())
     }
 }
 

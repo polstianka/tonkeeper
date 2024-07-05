@@ -77,7 +77,6 @@ class PinInputView @JvmOverloads constructor(
 
     fun removeLastNumber(update: Boolean = true) {
         if (currentCount == 0 || numbers.isEmpty()) {
-            Log.d("PinInputView", "removeLastNumber")
             return
         }
 
@@ -138,6 +137,11 @@ class PinInputView @JvmOverloads constructor(
                 removeLastNumber(false)
             }, ((animationDuration / 2) * index) + animationDuration)
         }
+    }
+
+    fun clear() {
+        numbers.clear()
+        setCount(0)
     }
 
     fun setSuccess() {

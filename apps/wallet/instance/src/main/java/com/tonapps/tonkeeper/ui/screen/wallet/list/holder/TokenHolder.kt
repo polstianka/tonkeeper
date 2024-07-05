@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.tonkeeper.extensions.buildRateString
-import com.tonapps.tonkeeper.fragment.jetton.JettonScreen
+import com.tonapps.tonkeeper.ui.screen.token.TokenScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.accentOrangeColor
@@ -26,7 +26,7 @@ class TokenHolder(parent: ViewGroup): Holder<Item.Token>(parent, R.layout.view_c
     override fun onBind(item: Item.Token) {
         itemView.background = item.position.drawable(context)
         itemView.setOnClickListener {
-            context.navigation?.add(JettonScreen.newInstance(item.address, item.name, item.symbol))
+            context.navigation?.add(TokenScreen.newInstance(item.address, item.name, item.symbol))
         }
         iconView.setImageURI(item.iconUri, this)
         titleView.text = item.symbol
