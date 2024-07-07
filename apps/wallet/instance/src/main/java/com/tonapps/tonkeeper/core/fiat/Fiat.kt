@@ -1,10 +1,10 @@
 package com.tonapps.tonkeeper.core.fiat
 
 import android.app.Application
-import com.tonapps.tonkeeper.core.fiat.models.FiatData
-import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import com.tonapps.tonkeeper.api.internal.repositories.FiatMethodsRepository
 import com.tonapps.tonkeeper.api.internal.repositories.KeysRepository
+import com.tonapps.tonkeeper.core.fiat.models.FiatData
+import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import core.keyvalue.KeyValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -74,11 +74,19 @@ class Fiat(
         fiatMethodsRepository.get(countryCode)
     }
 
-    suspend fun getMethods(
+    suspend fun getBuyMethods(
         countryCode: String
     ): List<FiatItem> {
         val data = getData(countryCode) ?: return emptyList()
         val layout = data.layoutByCountry(countryCode)
         return data.getBuyItemsByMethods(layout.methods)
+    }
+
+    suspend fun getSellMethods(
+        countryCode: String
+    ): List<FiatItem> {
+        val data = getData(countryCode) ?: return emptyList()
+        val layout = data.layoutByCountry(countryCode)
+        return data.getSellItemsByMethods(layout.methods)
     }
 }

@@ -4,11 +4,9 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.contract.WalletV4R2Contract
@@ -66,16 +64,18 @@ class InitViewModel(
     private val settingsRepository: SettingsRepository,
     private val api: API,
     savedStateHandle: SavedStateHandle
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
-    private val passcodeAfterSeed = false // type == InitArgs.Type.Import || type == InitArgs.Type.Testnet
+    private val passcodeAfterSeed =
+        false // type == InitArgs.Type.Import || type == InitArgs.Type.Testnet
     private val savedState = InitModelState(savedStateHandle)
     private val testnet: Boolean = type == InitArgs.Type.Testnet
 
     private val _uiTopOffset = MutableStateFlow(0)
     val uiTopOffset = _uiTopOffset.asStateFlow()
 
-    private val _eventFlow = MutableSharedFlow<InitEvent>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _eventFlow =
+        MutableSharedFlow<InitEvent>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val eventFlow = _eventFlow.asSharedFlow().filterNotNull()
 
     private val _watchAccountResolveFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
@@ -109,7 +109,7 @@ class InitViewModel(
     init {
         if (passcodeAfterSeed) {
             _eventFlow.tryEmit(InitEvent.Step.ImportWords)
-        } else  if (!passcodeRepository.hasPinCode) {
+        } else if (!passcodeRepository.hasPinCode) {
             _eventFlow.tryEmit(InitEvent.Step.CreatePasscode)
         } else {
             startWalletFlow()
@@ -187,20 +187,22 @@ class InitViewModel(
 
         if (accounts.count { it.walletVersion == WalletVersion.V4R2 } == 0) {
             val contract = WalletV4R2Contract(publicKey = publicKey)
-            accounts.add(0, AccountDetailsEntity(
-                query = "",
-                preview = AccountEntity(
-                    address = contract.address.toWalletAddress(testnet),
-                    accountId = contract.address.toAccountId(),
-                    name = null,
-                    iconUri = null,
-                    isWallet = true,
-                    isScam = false,
-                ),
-                active = true,
-                walletVersion = WalletVersion.V4R2,
-                balance = 0
-            ))
+            accounts.add(
+                0, AccountDetailsEntity(
+                    query = "",
+                    preview = AccountEntity(
+                        address = contract.address.toWalletAddress(testnet),
+                        accountId = contract.address.toAccountId(),
+                        name = null,
+                        iconUri = null,
+                        isWallet = true,
+                        isScam = false,
+                    ),
+                    active = true,
+                    walletVersion = WalletVersion.V4R2,
+                    balance = 0
+                )
+            )
         }
 
         val deferredTokens = mutableListOf<Deferred<List<AccountTokenEntity>>>()
@@ -210,7 +212,12 @@ class InitViewModel(
 
         val deferredCollectibles = mutableListOf<Deferred<List<NftEntity>>>()
         for (account in accounts) {
-            deferredCollectibles.add(async { collectiblesRepository.getRemoteNftItems(account.address, testnet) })
+            deferredCollectibles.add(async {
+                collectiblesRepository.getRemoteNftItems(
+                    account.address,
+                    testnet
+                )
+            })
         }
 
         val items = mutableListOf<AccountItem>()
@@ -279,7 +286,7 @@ class InitViewModel(
     }
 
     fun getLabel(): WalletLabel {
-        return savedState.label ?: WalletLabel("Wallet","\uD83D\uDE00", WalletColor.all.first())
+        return savedState.label ?: WalletLabel("Wallet", "\uD83D\uDE00", WalletColor.all.first())
     }
 
     fun setLabelName(name: String) {
@@ -352,7 +359,12 @@ class InitViewModel(
         val label = getLabel()
         val publicKey = getPublicKey(account.address)
 
-        walletRepository.addWatchWallet(publicKey, label, account.walletVersion, WalletSource.Default)
+        walletRepository.addWatchWallet(
+            publicKey,
+            label,
+            account.walletVersion,
+            WalletSource.Default
+        )
     }
 
     private suspend fun importWallet() {
@@ -363,15 +375,30 @@ class InitViewModel(
         val privateKey = PrivateKeyEd25519(seed)
         val publicKey = privateKey.publicKey()
 
-        walletRepository.addWallets(mnemonic, publicKey, versions, label.name, label.emoji, label.color, testnet)
+        walletRepository.addWallets(
+            mnemonic,
+            publicKey,
+            versions,
+            label.name,
+            label.emoji,
+            label.color,
+            testnet
+        )
     }
 
     private suspend fun signerWallet() {
         val label = getLabel()
         val publicKey = savedState.publicKey ?: throw IllegalStateException("Public key is not set")
-        val walletSource = savedState.walletSource ?: throw IllegalStateException("Wallet source is not set")
+        val walletSource =
+            savedState.walletSource ?: throw IllegalStateException("Wallet source is not set")
 
-        walletRepository.addSignerWallet(publicKey, label.name, label.emoji, label.color, walletSource)
+        walletRepository.addSignerWallet(
+            publicKey,
+            label.name,
+            label.emoji,
+            label.color,
+            walletSource
+        )
     }
 
     private fun getPublicKey(

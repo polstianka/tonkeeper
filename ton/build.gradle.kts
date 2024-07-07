@@ -23,6 +23,7 @@ android {
 
 dependencies {
     api(project(Dependence.Lib.blockchain))
+    implementation(project(Dependence.Lib.security))
     implementation(Dependence.AndroidX.security)
 
     implementation(project(Dependence.Module.core))

@@ -68,7 +68,7 @@
                 android:id="@+id/swap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_swap_horizontal_outline_28"
+                android:icon="@drawable/ic_swap_vertical_outline_28"
                 android:title="@string/swap"
                 android:tint="?attr/backgroundContentColor"/>
 

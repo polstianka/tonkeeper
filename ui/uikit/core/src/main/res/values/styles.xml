@@ -75,7 +75,9 @@
 
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/use_light_system_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">
+            @bool/use_light_system_bars
+        </item>
 
     </style>
 
@@ -107,5 +109,10 @@
         <item name="android:paddingEnd">12dp</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Widget.AppCompat.ActionButton.Radio">
+        <item name="colorControlNormal">?attr/buttonTertiaryBackgroundColor</item>
+        <item name="colorAccent">?attr/buttonPrimaryBackgroundColor</item>
     </style>
 </resources>

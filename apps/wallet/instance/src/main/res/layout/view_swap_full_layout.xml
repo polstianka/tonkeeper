@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <include
+        android:id="@+id/send_layout"
+        layout="@layout/view_swap_send_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/receive_layout"
+        layout="@layout/view_swap_receive_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/send_layout"
+        app:layout_constraintTop_toBottomOf="@id/send_layout" />
+
+    <ImageButton
+        android:id="@+id/swap_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/offsetLarge"
+        android:background="@drawable/bg_oval_button_tertiary"
+        android:padding="12dp"
+        android:src="@drawable/ic_swap_vertical_outline_28"
+        android:translationY="-22dp"
+        app:layout_constraintEnd_toEndOf="@id/send_layout"
+        app:layout_constraintTop_toBottomOf="@id/send_layout" />
+
+    <Button
+        android:id="@+id/enter_button"
+        style="@style/Widget.App.Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:text="@string/enter_amount"
+        android:textAppearance="@style/TextAppearance.Label1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cancel_button"
+        app:layout_constraintTop_toBottomOf="@id/receive_layout" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        style="@style/Widget.App.Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:layout_marginTop="@dimen/offsetLarge"
+        android:text="@string/cancel"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/enter_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/receive_layout" />
+
+    <uikit.widget.LoaderView
+        android:id="@+id/loading_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/enter_button"
+        app:layout_constraintEnd_toEndOf="@id/enter_button"
+        app:layout_constraintStart_toStartOf="@id/enter_button"
+        app:layout_constraintTop_toTopOf="@id/enter_button" />
+
+</merge>

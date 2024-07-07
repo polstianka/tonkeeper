@@ -1,18 +1,12 @@
 package uikit.extensions
 
 import android.animation.ValueAnimator
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Outline
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.HapticFeedbackConstants
-import android.view.PixelCopy
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
@@ -22,26 +16,18 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
+import androidx.annotation.Px
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateMargins
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.NestedScrollView.OnScrollChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -139,6 +125,41 @@ fun View.round(radius: Int) {
         }
         clipToOutline = true
     }
+}
+
+fun View.circle() {
+    outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val rect = Rect(0, 0, view.width, view.height)
+            outline.setRoundRect(rect, rect.width() / 2f)
+        }
+    }
+    clipToOutline = true
+}
+
+fun View.cutRightBottom(@Px radius: Float, @Px offset: Float) {
+    outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val path = Path()
+            val width = view.width
+            val height = view.height
+            path.addRect(
+                0f,
+                0f,
+                width.toFloat(),
+                height.toFloat(),
+                Path.Direction.CW
+            )
+            path.addCircle(
+                width - offset,
+                height - offset,
+                radius,
+                Path.Direction.CCW
+            )
+            outline.setConvexPath(path)
+        }
+    }
+    clipToOutline = true
 }
 
 fun View.getDrawable(@DrawableRes resId: Int): Drawable {
@@ -244,11 +265,13 @@ fun View.reject() {
     hapticReject()
 }
 
-inline fun View.doKeyboardAnimation(crossinline block: (
-    offset: Int,
-    progress: Float,
-    isShowing: Boolean
-) -> Unit) {
+inline fun View.doKeyboardAnimation(
+    crossinline block: (
+        offset: Int,
+        progress: Float,
+        isShowing: Boolean
+    ) -> Unit
+) {
     val animationCallback = object : KeyboardAnimationCallback(this) {
         override fun onKeyboardOffsetChanged(offset: Int, progress: Float, isShowing: Boolean) {
             block(offset, progress, isShowing)

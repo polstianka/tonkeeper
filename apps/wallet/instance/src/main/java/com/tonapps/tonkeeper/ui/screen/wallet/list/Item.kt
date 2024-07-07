@@ -142,7 +142,8 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val rateDiff24h: String,
         val verified: Boolean,
         val testnet: Boolean,
-        val hiddenBalance: Boolean
+        val hiddenBalance: Boolean,
+        val staked: Boolean,
     ): Item(TYPE_TOKEN) {
 
         constructor(parcel: Parcel) : this(
@@ -159,7 +160,8 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             parcel.readString()!!,
             parcel.readBooleanCompat(),
             parcel.readBooleanCompat(),
-            parcel.readBooleanCompat()
+            parcel.readBooleanCompat(),
+            parcel.readBooleanCompat(),
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
@@ -177,6 +179,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeBooleanCompat(verified)
             dest.writeBooleanCompat(testnet)
             dest.writeBooleanCompat(hiddenBalance)
+            dest.writeBooleanCompat(staked)
         }
 
         companion object CREATOR : Parcelable.Creator<Token> {

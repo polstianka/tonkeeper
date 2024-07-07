@@ -1,12 +1,11 @@
 package com.tonapps.wallet.api
 
 import android.content.Context
+import android.net.Uri
 import android.util.ArrayMap
-import android.util.Log
 import com.tonapps.blockchain.Coin
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValid
-import com.tonapps.extensions.ifPunycodeToUnicode
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.unicodeToPunycode
 import com.tonapps.network.SSEvent
@@ -17,8 +16,11 @@ import com.tonapps.network.post
 import com.tonapps.network.postJSON
 import com.tonapps.network.sse
 import com.tonapps.wallet.api.entity.AccountDetailsEntity
+import com.tonapps.wallet.api.entity.AssetEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
+import com.tonapps.wallet.api.entity.StakePoolsEntity
+import com.tonapps.wallet.api.entity.SwapDetailsEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
@@ -43,6 +45,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
+import java.math.BigDecimal
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -78,6 +81,100 @@ class API(
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
     fun rates() = provider.rates.get(false)
+
+    fun stake(testnet: Boolean) = provider.staking.get(testnet)
+
+    fun stonfi(testnet: Boolean) = provider.stonfi.get(testnet)
+
+    fun getStakingPools(walletAddress: String, testnet: Boolean): StakePoolsEntity {
+        return stake(testnet).getStakingPools(walletAddress, false).let {
+            StakePoolsEntity(
+                pools = it.pools.map {
+                    StakePoolsEntity.PoolInfo(
+                        address = it.address,
+                        name = it.name,
+                        totalAmount = it.totalAmount,
+                        implementation = StakePoolsEntity.PoolImplementationType.find(it.implementation.value),
+                        apy = it.apy,
+                        minStake = it.minStake,
+                        cycleStart = it.cycleStart,
+                        cycleEnd = it.cycleEnd,
+                        verified = it.verified,
+                        currentNominators = it.currentNominators,
+                        maxNominators = it.maxNominators,
+                        nominatorsStake = it.nominatorsStake,
+                        validatorStake = it.validatorStake,
+                        liquidJettonMaster = it.liquidJettonMaster,
+                        cycleLength = it.cycleLength
+                    )
+                },
+                implementations = it.implementations.entries.associate {
+                    it.key to StakePoolsEntity.PoolImplementation(
+                        name = it.value.name,
+                        description = it.value.description,
+                        url = it.value.url,
+                        socials = it.value.socials
+                    )
+                },
+            )
+        }
+    }
+
+    fun getWalletAssets(walletAddress: String, testnet: Boolean): List<AssetEntity> {
+        val entityList = mutableListOf<AssetEntity>()
+        val assetList = stonfi(testnet).getWalletAssets(walletAddress).assetList
+        for (asset in assetList) {
+            if (asset.blacklisted || asset.community || asset.deprecated) {
+                continue
+            }
+            entityList.add(
+                AssetEntity(
+                    token = TokenEntity(
+                        address = asset.contractAddress,
+                        name = asset.displayName,
+                        symbol = asset.symbol,
+                        imageUri = Uri.parse(asset.imageUrl.orEmpty()),
+                        decimals = asset.decimals,
+                        verification = TokenEntity.Verification.whitelist
+                    ),
+                    value = BigDecimal(asset.balance ?: "0").movePointLeft(asset.decimals)
+                        .toFloat(),
+                    walletAddress = asset.walletAddress.orEmpty(),
+                    usdPrice = asset.dexPriceUsd?.toFloatOrNull() ?: 0f,
+                    kind = asset.kind
+                )
+            )
+        }
+        return entityList
+    }
+
+    fun simulateSwap(
+        offerAddress: String,
+        askAddress: String,
+        units: String,
+        tolerance: String,
+        testnet: Boolean,
+        reverse: Boolean
+    ): SwapDetailsEntity {
+        val response =
+            stonfi(testnet).simulateSwap(offerAddress, askAddress, units, tolerance, reverse)
+
+        return SwapDetailsEntity(
+            offerUnits = response.offerUnits,
+            askUnits = response.askUnits,
+            priceImpact = response.priceImpact,
+            minReceived = response.minAskUnits,
+            routerAddress = response.routerAddress,
+            poolAddress = response.poolAddress,
+            providerFeeUnits = response.feeUnits,
+            feeAddress = response.feeAddress,
+            swapRate = response.swapRate
+        )
+    }
+
+    fun getJettonAddress(ownerAddress: String, jettonAddress: String, testnet: Boolean): String {
+        return stonfi(testnet).getJettonAddress(ownerAddress, jettonAddress).address
+    }
 
     fun getEvents(
         accountId: String,
@@ -182,7 +279,8 @@ class API(
             config.tonapiMainnetHost
         }
         // val mempool = okHttpClient.sse("$endpoint/v2/sse/mempool?accounts=${accountId}")
-        val tx = tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
+        val tx =
+            tonAPIHttpClient.sse("$endpoint/v2/sse/accounts/transactions?accounts=${accountId}")
         // return merge(mempool, tx)
         return tx
     }
@@ -387,7 +485,7 @@ class API(
 
         private fun baseOkHttpClientBuilder(): OkHttpClient.Builder {
             return OkHttpClient().newBuilder()
-                .retryOnConnectionFailure(false)
+                .retryOnConnectionFailure(true)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)

@@ -20,6 +20,7 @@ object Dependence {
 
     object UI {
         const val material = "com.google.android.material:material:1.11.0"
+        const val flexLayout = "com.google.android.flexbox:flexbox:3.0.0"
     }
 
     object Koin {
@@ -130,6 +131,8 @@ object Dependence {
             const val tonconnect = ":apps:wallet:data:tonconnect"
             const val push = ":apps:wallet:data:push"
             const val browser = ":apps:wallet:data:browser"
+            const val swap = ":apps:wallet:data:swap"
+            const val stake = ":apps:wallet:data:stake"
         }
     }
 }

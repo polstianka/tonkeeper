@@ -69,6 +69,8 @@ dependencies {
     implementation(project(Dependence.Wallet.Data.tonconnect))
     implementation(project(Dependence.Wallet.Data.push))
     implementation(project(Dependence.Wallet.Data.browser))
+    implementation(project(Dependence.Wallet.Data.swap))
+    implementation(project(Dependence.Wallet.Data.stake))
 
     implementation(project(Dependence.UIKit.core))
 
@@ -85,6 +87,7 @@ dependencies {
     implementation(Dependence.guava)
 
     implementation(Dependence.UI.material)
+    implementation(Dependence.UI.flexLayout)
 
     implementation(Dependence.Squareup.moshi)
     implementation(Dependence.Squareup.moshiAdapters)

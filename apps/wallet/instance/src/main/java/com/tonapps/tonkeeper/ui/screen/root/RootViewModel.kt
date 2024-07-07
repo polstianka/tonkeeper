@@ -16,8 +16,6 @@ import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.core.signer.SingerArgs
 import com.tonapps.tonkeeper.core.widget.Widget
 import com.tonapps.tonkeeper.password.PasscodeRepository
-import com.tonapps.wallet.data.push.GooglePushService
-import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.tonkeeper.sign.SignManager
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.main.MainScreen
@@ -31,7 +29,9 @@ import com.tonapps.wallet.data.account.WalletSource
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
+import com.tonapps.wallet.data.push.GooglePushService
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.swap.WalletAssetsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
@@ -43,14 +43,12 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -58,14 +56,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import uikit.extensions.collectFlow
 import uikit.navigation.Navigation.Companion.navigation
 
 class RootViewModel(
@@ -80,8 +77,9 @@ class RootViewModel(
     private val screenCacheSource: ScreenCacheSource,
     private val walletAdapter: WalletAdapter,
     private val walletPickerAdapter: WalletPickerAdapter,
-    private val tokenRepository: TokenRepository
-): AndroidViewModel(application) {
+    private val tokenRepository: TokenRepository,
+    private val walletAssetsRepository: WalletAssetsRepository,
+) : AndroidViewModel(application) {
 
     data class Passcode(
         val show: Boolean,
@@ -91,7 +89,8 @@ class RootViewModel(
     private val _hasWalletFlow = MutableEffectFlow<Boolean?>()
     val hasWalletFlow = _hasWalletFlow.asSharedFlow().filterNotNull()
 
-    private val _eventFlow = MutableSharedFlow<RootEvent>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _eventFlow =
+        MutableSharedFlow<RootEvent>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val eventFlow = _eventFlow.asSharedFlow().filterNotNull()
 
     private val _passcodeFlow = MutableStateFlow<Passcode?>(null)
@@ -148,6 +147,9 @@ class RootViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.firebaseToken = GooglePushService.requestToken()
         }
+        viewModelScope.launch(Dispatchers.IO) {
+            walletAssetsRepository.getRemote()
+        }
     }
 
     private suspend fun submitWalletList(items: List<Item>) = withContext(Dispatchers.Main) {
@@ -184,7 +186,8 @@ class RootViewModel(
         context: Context,
         request: SignRequestEntity
     ): String {
-        val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
+        val wallet =
+            walletRepository.activeWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
         return requestSign(context, wallet, request)
     }
 
@@ -213,7 +216,9 @@ class RootViewModel(
         url: String,
         json: JSONObject
     ): String? {
-        val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: throw IllegalStateException("No active wallet")
+        val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: throw IllegalStateException(
+            "No active wallet"
+        )
         val app = tonConnectRepository.getApp(url, wallet) ?: throw IllegalStateException("No app")
         val event = DAppEventEntity(wallet.copy(), app.copy(), json)
         if (event.method != "sendTransaction") {
@@ -274,19 +279,22 @@ class RootViewModel(
     }
 
     private fun resolveOther(_uri: Uri, wallet: WalletEntity) {
-        val url = _uri.toString().replace("ton://", "https://app.tonkeeper.com/").replace("tonkeeper://", "https://app.tonkeeper.com/")
+        val url = _uri.toString().replace("ton://", "https://app.tonkeeper.com/")
+            .replace("tonkeeper://", "https://app.tonkeeper.com/")
         val uri = Uri.parse(url)
         if (DeepLink.isTonConnectUri(uri)) {
             resolveTonConnect(uri, wallet)
         } else if (MainScreen.isSupportedDeepLink(url) || MainScreen.isSupportedDeepLink(_uri.toString())) {
             _eventFlow.tryEmit(RootEvent.OpenTab(_uri.toString()))
         } else if (uri.path?.startsWith("/transfer/") == true) {
-            _eventFlow.tryEmit(RootEvent.Transfer(
-                address = uri.pathSegments.last(),
-                amount = uri.getQueryLong("amount")?.let { Coin.toCoins(it) },
-                text = uri.getQueryParameter("text"),
-                jettonAddress = uri.getQueryParameter("jetton"),
-            ))
+            _eventFlow.tryEmit(
+                RootEvent.Transfer(
+                    address = uri.pathSegments.last(),
+                    amount = uri.getQueryLong("amount")?.let { Coin.toCoins(it) },
+                    text = uri.getQueryParameter("text"),
+                    jettonAddress = uri.getQueryParameter("jetton"),
+                )
+            )
         } else if (uri.path?.startsWith("/action/") == true) {
             val account = uri.getQueryParameter("account") ?: return
             val hash = uri.pathSegments.lastOrNull() ?: return
@@ -301,8 +309,10 @@ class RootViewModel(
     private fun showTransaction(accountId: String, hash: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val wallet = walletRepository.getWallet(accountId) ?: return@launch
-            val event = api.getTransactionEvents(wallet.accountId, wallet.testnet, hash) ?: return@launch
-            val item = historyHelper.mapping(wallet, event).find { it is HistoryItem.Event } as? HistoryItem.Event ?: return@launch
+            val event =
+                api.getTransactionEvents(wallet.accountId, wallet.testnet, hash) ?: return@launch
+            val item = historyHelper.mapping(wallet, event)
+                .find { it is HistoryItem.Event } as? HistoryItem.Event ?: return@launch
             _eventFlow.tryEmit(RootEvent.Transaction(item))
         }
     }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/offsetMedium"
+    android:gravity="center">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/history"
+        style="@style/TextAppearance.Label2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_selected_tab"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingVertical="8dp"
+        android:text="@string/history"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/forecast"
+        style="@style/TextAppearance.Label2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_selected_tab"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:paddingVertical="8dp"
+        android:text="@string/forecast"
+        android:textColor="?attr/textPrimaryColor" />
+
+</uikit.widget.RowLayout>

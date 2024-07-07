@@ -1,22 +1,15 @@
 package uikit.widget
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
-import android.view.animation.PathInterpolator
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateMargins
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import uikit.R
@@ -90,7 +83,7 @@ class ModalView @JvmOverloads constructor(
         bottomSheetView.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
             setPeekHeight(v.measuredHeight)
         }
-        bottomSheetView.setOnClickListener {  }
+        bottomSheetView.setOnClickListener { }
 
         coordinatorView = findViewById(R.id.modal_coordinator)
 
@@ -118,7 +111,9 @@ class ModalView @JvmOverloads constructor(
         applyTopInsets(statusInsets.top + context.getDimensionPixelSize(R.dimen.offsetMedium))
 
         val navigationInsets = compatInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-        applyBottomInsets(navigationInsets.bottom)
+        val keyboardInsets = compatInsets.getInsets(WindowInsetsCompat.Type.ime())
+        applyBottomInsets(keyboardInsets.bottom + navigationInsets.bottom)
+
         return super.onApplyWindowInsets(insets)
     }
 
@@ -143,7 +138,6 @@ class ModalView @JvmOverloads constructor(
     }
 
     fun hide(force: Boolean) {
-        Log.d("ModalViewLog", "hide!")
         if (force) {
             behavior.isHideable = true
         }

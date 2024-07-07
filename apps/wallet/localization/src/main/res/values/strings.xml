@@ -42,6 +42,7 @@
     <string name="unsubscribed">Unsubscribed</string>
     <string name="subscribed">Subscribed</string>
     <string name="received">Received</string>
+    <string name="forecast">Forecast</string>
 
     <string name="continue_action">Continue</string>
     <string name="get_started">Get started</string>
@@ -155,12 +156,49 @@
     <string name="receive">Receive</string>
     <string name="log_out">Log out</string>
     <string name="amount">Amount</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="choose_token">Choose Token</string>
+    <string name="suggested">Suggested</string>
+    <string name="other">Other</string>
+    <string name="price_impact">Price impact</string>
+    <string name="min_received">Minimum received</string>
+    <string name="liquidity_provider_fee">Liquidity provider fee</string>
+    <string name="blockchain_fee">Blockchain fee</string>
+    <string name="route">Route</string>
+    <string name="provider">Provider</string>
+    <string name="insufficient_balance_buy">Insufficient Balance. Buy %s</string>
+    <string name="confirm_swap">Confirm swap</string>
+
+    <string name="options">Options</string>
+    <string name="liquid_staking">Liquid Staking</string>
+    <string name="pool_details_disclaimer">Staking is based on smart contracts by third parties. Tonkeeper is not responsible for staking experience.</string>
+    <string name="links">Links</string>
+    <string name="apy" translatable="false">APY</string>
+    <string name="max_apy" translatable="false">MAX APY</string>
+    <string name="min_deposit">Minimal deposit</string>
+    <string name="deposit">Deposit</string>
+    <string name="apy_percent_placeholder" translatable="false">APY ≈ %1$s\%%</string>
+    <string name="apy_short_percent_placeholder" translatable="false">≈ %1$s\%%</string>
+    <string name="fee_placeholder" translatable="false">≈ %1$s</string>
+    <string name="community">Community</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="staked_jetton_description">When you stake TON in a Tonstakers pool, you receive a token called tsTON that represents your share in the pool. As the pool accumulates profits, your tsTON represents larger amount of TON.</string>
+    <string name="unstake_disclaimer_placeholder">Unstake request will be processed after the end of the validation cycle in %1$s</string>
+
+    <string name="slippage">Slippage</string>
+    <string name="slippage_description">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="expert_mode">Expert Mode</string>
+    <string name="expert_mode_description">Allows high price impact trades. Use at your own risk.</string>
 
     <string name="recipient">Recipient</string>
     <string name="recipient_address">Recipient address</string>
 
+    <string name="slide_to_confirm">Slide to confirm</string>
+
     <string name="sender">Sender</string>
     <string name="sender_address">Sender address</string>
+    <string name="operator">Operator</string>
+    <string name="credit_card">Credit Card</string>
 
     <string name="transaction">Transaction</string>
 
@@ -239,6 +277,7 @@
     <string name="to_address">To: %1$s</string>
     <string name="remaining_balance">Remaining: %1$s</string>
     <string name="wallet_balance">Wallet balance</string>
+    <string name="balance_total">Balance: %1$s</string>
     <string name="rate">Rate</string>
     <string name="widget_updated">Updated at %1$s</string>
     <string name="set_up_wallet">Set up wallet</string>
@@ -256,8 +295,10 @@
     <string name="signer_description">Open Signer » Select the required key » Scan QR code</string>
     <string name="signer_open">Open Signer on this device</string>
     <string name="signer" translatable="false">Signer</string>
+    <string name="choose">Choose</string>
     <string name="choose_wallet_title">Choose wallet</string>
     <string name="choose_wallet_subtitle">Choose wallets you want to add.</string>
+    <string name="minimum_amout_placeholder">Minimum %1$s</string>
 
     <string name="customize">Customize</string>
     <string name="customize_wallet_title">Customize your Wallet</string>

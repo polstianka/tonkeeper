@@ -4,6 +4,7 @@ import android.net.Uri
 import com.tonapps.tonkeeper.api.chart.ChartEntity
 import com.tonapps.tonkeeper.api.chart.ChartPeriod
 import com.tonapps.wallet.data.account.WalletType
+import io.tonapi.models.JettonBalance
 
 sealed class ChartItem(
     type: Int
@@ -16,11 +17,14 @@ sealed class ChartItem(
         const val TYPE_DIVIDER = 3
         const val TYPE_PRICE = 4
         const val TYPE_PERIOD = 5
+        const val TYPE_ACTIONS_STAKED = 6
     }
 
     data class Header(
         val balance: CharSequence,
         val currencyBalance: CharSequence,
+        val iconUrl: String,
+        val staked: Boolean = false
     ): ChartItem(TYPE_HEADER)
 
     data class Actions(
@@ -31,11 +35,21 @@ sealed class ChartItem(
         val disableBuyOrSell: Boolean,
     ): ChartItem(TYPE_ACTIONS)
 
+    data class ActionsStaked(
+        val wallet: String,
+        val jetton: JettonBalance,
+        val walletType: WalletType,
+        val poolAddress: String,
+    ) : ChartItem(TYPE_ACTIONS_STAKED)
+
     data object Period: ChartItem(TYPE_PERIOD)
 
     data class Chart(
         val period: ChartPeriod,
-        val data: List<ChartEntity>
+        val data: List<ChartEntity>,
+        val labels: List<String> = emptyList(),
+        val isStaking: Boolean = false,
+        val minMaxPrice: List<String> = emptyList()
     ): ChartItem(TYPE_CHART)
 
     data class Price(

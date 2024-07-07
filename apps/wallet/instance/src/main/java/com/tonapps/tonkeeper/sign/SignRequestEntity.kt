@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.block.AddrStd
+import org.ton.contract.wallet.WalletTransfer
 import kotlin.time.Duration.Companion.seconds
 
 @Parcelize
@@ -20,7 +21,10 @@ data class SignRequestEntity(
     val from: AddrStd?
         get() = fromValue?.let { AddrStd.parse(it) }
 
-    val transfers = messages.map { it.walletTransfer }
+    var transfers: List<WalletTransfer> = messages.map { it.walletTransfer }
+        get() {
+            return field.ifEmpty { messages.map { it.walletTransfer } }
+        }
 
     constructor(json: JSONObject) : this(
         fromValue = parseFrom(json),

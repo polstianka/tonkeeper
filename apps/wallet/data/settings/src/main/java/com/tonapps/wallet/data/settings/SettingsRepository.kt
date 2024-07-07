@@ -9,9 +9,6 @@ import com.tonapps.wallet.localization.Language
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -33,6 +30,8 @@ class SettingsRepository(
         private const val FIREBASE_TOKEN_KEY = "firebase_token"
         private const val INSTALL_ID_KEY = "install_id"
         private const val SEARCH_ENGINE_KEY = "search_engine"
+        private const val SLIPPAGE_KEY = "slippage_tolerance"
+        private const val IS_EXPERT_KEY = "is_expert"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -143,6 +142,22 @@ class SettingsRepository(
                 prefs.edit().putBoolean(HIDDEN_BALANCES_KEY, value).apply()
                 field = value
                 _hiddenBalancesFlow.tryEmit(value)
+            }
+        }
+
+    var slippage: Float = prefs.getFloat(SLIPPAGE_KEY, 1f)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putFloat(SLIPPAGE_KEY, value).apply()
+                field = value
+            }
+        }
+
+    var expertMode: Boolean = prefs.getBoolean(IS_EXPERT_KEY, false)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putBoolean(IS_EXPERT_KEY, value).apply()
+                field = value
             }
         }
 

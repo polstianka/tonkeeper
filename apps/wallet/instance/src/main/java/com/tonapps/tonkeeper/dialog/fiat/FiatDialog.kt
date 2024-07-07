@@ -1,94 +1,62 @@
 package com.tonapps.tonkeeper.dialog.fiat
 
-import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.core.fiat.models.FiatItem
 import com.tonapps.tonkeeper.core.fiat.models.FiatSuccessUrlPattern
 import com.tonapps.tonkeeper.dialog.fiat.list.MethodAdapter
 import com.tonapps.tonkeeper.fragment.country.CountryScreen
 import com.tonapps.tonkeeper.fragment.fiat.web.FiatWebFragment
-import com.tonapps.tonkeeper.ui.screen.root.RootActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import uikit.base.BaseSheetDialog
-import uikit.extensions.activity
+import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.list.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import uikit.base.BaseFragment
+import uikit.extensions.collectFlow
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.HeaderView
 
-class FiatDialog(
-    context: Context,
-    private val scope: CoroutineScope
-): BaseSheetDialog(context) {
-
-    companion object {
-        const val FIAT_DIALOG_REQUEST = "fiat_dialog_request"
-
-        fun open(context: Context) {
-            val rootActivity = context.activity as? RootActivity ?: return
-            rootActivity.fiatDialog.show()
-        }
-    }
+class FiatDialog : BaseFragment(R.layout.dialog_fiat), BaseFragment.BottomSheet {
 
     private val confirmationDialog: ConfirmationDialog by lazy {
-        ConfirmationDialog(context)
+        ConfirmationDialog(requireContext())
     }
 
     private val adapter = MethodAdapter {
-        openItem(it.body)
+        fiatViewModel.openItem(it.body)
     }
 
-    private val headerView: HeaderView
-    private val listView: RecyclerView
+    private val fiatViewModel: FiatViewModel by viewModel()
 
-    init {
-        setContentView(R.layout.dialog_fiat)
-        hideHeader()
+    private lateinit var headerView: HeaderView
+    private lateinit var listView: RecyclerView
 
-        headerView = findViewById(R.id.header)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        headerView = view.findViewById(R.id.header)
         headerView.setBackgroundColor(Color.TRANSPARENT)
         headerView.doOnCloseClick = { pickCountry() }
-        headerView.doOnActionClick = { dismiss() }
+        headerView.doOnActionClick = { finish() }
 
-        listView = findViewById(R.id.list)!!
+        listView = view.findViewById(R.id.list)
         listView.adapter = adapter
-        listView.layoutManager = com.tonapps.uikit.list.LinearLayoutManager(context)
-    }
+        listView.layoutManager = LinearLayoutManager(requireContext())
 
-    override fun show() {
-        scope.launch {
-            val items = com.tonapps.tonkeeper.App.fiat.getMethods(com.tonapps.tonkeeper.App.settings.country)
-            showWithData(items)
+        collectFlow(fiatViewModel.items) {
+            showWithData(it.methods)
         }
-    }
 
-    private  fun showWithData(items: List<FiatItem>) {
-        super.show()
-        adapter.submitList(MethodAdapter.buildMethodItems(items)) {
-            fixPeekHeight()
-        }
-    }
-
-    private fun openItem(item: FiatItem) {
-        scope.launch {
-            if (isShowConfirmation(item.id)) {
-                showConfirmDialog(item)
-            } else {
-                openUrl(item.actionButton.url, item.successUrlPattern)
+        collectFlow(fiatViewModel.events) {
+            when (it) {
+                is Action.ConfirmationDialog -> showConfirmDialog(it.item)
+                is Action.OpenUrl -> openUrl(it.url, it.pattern)
             }
         }
     }
 
-    private suspend fun isShowConfirmation(
-        id: String
-    ): Boolean {
-        return com.tonapps.tonkeeper.App.fiat.isShowConfirmation(id)
-    }
-
-    private fun disableShowConfirmation(id: String) {
-        scope.launch {
-            com.tonapps.tonkeeper.App.fiat.disableShowConfirmation(id)
+    private fun showWithData(items: List<FiatItem>) {
+        adapter.submitList(MethodAdapter.buildMethodItems(items)) {
+            //fixPeekHeight()
         }
     }
 
@@ -96,7 +64,7 @@ class FiatDialog(
         confirmationDialog.show(item) { disableConfirm ->
             openUrl(item.actionButton.url, item.successUrlPattern)
             if (disableConfirm) {
-                disableShowConfirmation(item.id)
+                fiatViewModel.disableShowConfirmation(item)
             }
         }
     }
@@ -105,12 +73,19 @@ class FiatDialog(
         url: String,
         pattern: FiatSuccessUrlPattern?
     ) {
-        dismiss()
+        finish()
         navigation?.add(FiatWebFragment.newInstance(url, pattern))
     }
 
     private fun pickCountry() {
-        dismiss()
+        finish()
         navigation?.add(CountryScreen.newInstance(FIAT_DIALOG_REQUEST))
+    }
+
+
+    companion object {
+        const val FIAT_DIALOG_REQUEST = "fiat_dialog_request"
+
+        fun newInstance(): FiatDialog = FiatDialog()
     }
 }

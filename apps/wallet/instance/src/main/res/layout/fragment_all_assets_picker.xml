@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.ModalHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_token" />
+
+    <uikit.widget.SearchInput
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:hint="@string/search" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/suggested"
+        style="@style/TextAppearance.Label1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginVertical="@dimen/offsetMedium"
+        android:text="@string/suggested"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <uikit.widget.RowLayout
+        android:id="@+id/suggested_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/other"
+        style="@style/TextAppearance.Label1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginVertical="@dimen/offsetMedium"
+        android:text="@string/other"
+        android:textColor="?attr/textPrimaryColor"
+        android:visibility="gone" />
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:minHeight="78dp"
+        android:overScrollMode="never"
+        android:visibility="gone" />
+
+    <uikit.widget.SkeletonLayout
+        android:id="@+id/skeleton"
+        android:layout_width="match_parent"
+        android:layout_height="78dp"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:background="@drawable/bg_content" />
+
+</uikit.widget.ColumnLayout>

@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.ui.screen.swap
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -31,7 +30,7 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         webView.jsBridge = StonfiBridge2(
             address = args.address,
             close = ::finish,
-            sendTransaction = ::sing
+            sendTransaction = ::sign
         )
     }
 
@@ -45,7 +44,7 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
         return builder.build()
     }
 
-    private suspend fun sing(
+    private suspend fun sign(
         request: SignRequestEntity
     ): String {
         return rootViewModel.requestSign(requireContext(), request)
@@ -63,8 +62,8 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
             address: String,
             fromToken: String,
             toToken: String? = null
-        ): SwapScreen {
-            val fragment = SwapScreen()
+        ): SwapScreen2 {
+            val fragment = SwapScreen2()
             fragment.arguments = SwapArgs(uri, address, fromToken, toToken).toBundle()
             return fragment
         }

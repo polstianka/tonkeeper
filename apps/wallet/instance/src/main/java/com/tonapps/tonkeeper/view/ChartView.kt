@@ -13,8 +13,10 @@ import android.view.View
 import androidx.core.view.doOnLayout
 import com.tonapps.tonkeeper.api.chart.ChartEntity
 import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.accentGreenColor
 import uikit.extensions.dp
 import uikit.extensions.withAlpha
+
 
 class ChartView @JvmOverloads constructor(
     context: Context,
@@ -24,36 +26,83 @@ class ChartView @JvmOverloads constructor(
 
     private var data = listOf(ChartEntity(0, 0f))
     private var square = false
+    private var labels = listOf<String>()
+    private var minMaxPrice = listOf<String>()
+    private var isStaking = false
+    private var accentColor = context.accentBlueColor
 
-    fun setData(data: List<ChartEntity>, square: Boolean) {
+    private val labelCoordinates = mutableListOf<Pair<Float, Float>>()
+    private val priceCoordinates = mutableListOf<Pair<Float, Float>>()
+
+    private val labelTextHeight = 40f
+    private val priceTextHeight = 50f
+
+    fun setData(
+        data: List<ChartEntity>,
+        square: Boolean,
+        labels: List<String>,
+        isStaking: Boolean,
+        minMaxPrice: List<String>
+    ) {
         this.data = data
         this.square = square
+        this.labels = labels
+        this.isStaking = isStaking
+        this.minMaxPrice = minMaxPrice
+        accentColor = if (isStaking) context.accentGreenColor else context.accentBlueColor
         doOnLayout {
             buildPath()
             invalidate()
         }
     }
 
-    private val accentColor = context.accentBlueColor
-
     private val path = Path()
+    private var verticalPaths = emptyList<Path>()
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         strokeWidth = 2f.dp
         style = Paint.Style.STROKE
     }
 
     private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         style = Paint.Style.FILL
+    }
+
+    private val verticalLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        strokeWidth = 1f.dp
+        style = Paint.Style.STROKE
+        alpha = 137
+    }
+
+    private val labelTextPaint = Paint().apply {
+        color = Color.GRAY
+        textSize = labelTextHeight
+    }
+
+    private val priceTextPaint = Paint().apply {
+        color = Color.GRAY
+        textSize = priceTextHeight
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        linePaint.color = accentColor
+        gradientPaint.color = accentColor
+        verticalLinePaint.color = accentColor
+
         val lineWidthPart = linePaint.strokeWidth / 2f
         canvas.translate(-lineWidthPart, lineWidthPart)
         canvas.drawPath(path, linePaint)
+        verticalPaths.forEach {
+            canvas.drawPath(it, verticalLinePaint)
+        }
+        labelCoordinates.forEachIndexed { index, it ->
+            canvas.drawText(labels[index], it.first, it.second, labelTextPaint)
+        }
+        priceCoordinates.forEachIndexed { index, it ->
+            canvas.drawText(minMaxPrice[index], it.first, it.second, priceTextPaint)
+        }
         canvas.drawPath(path, gradientPaint)
     }
 
@@ -79,6 +128,12 @@ class ChartView @JvmOverloads constructor(
             PointF(x, y)
         }.toMutableList()
 
+        if (isStaking) {
+            buildVerticalPaths(points, viewHeight)
+            priceCoordinates.add(points.last().x - priceTextPaint.measureText(minMaxPrice.first()) - 16.dp to viewHeight - labelTextHeight - 4.dp - priceTextHeight)
+            priceCoordinates.add(points.last().x - priceTextPaint.measureText(minMaxPrice.last()) - 16.dp to points.last().y + priceTextHeight)
+        }
+
         if (square) {
             buildSquarePath(points, viewHeight)
         } else {
@@ -89,6 +144,26 @@ class ChartView @JvmOverloads constructor(
             0f, 0f, 0f, viewHeight,
             accentColor.withAlpha(.3f), Color.TRANSPARENT, Shader.TileMode.CLAMP
         )
+    }
+
+    private fun buildVerticalPaths(points: MutableList<PointF>, viewHeight: Float) {
+        verticalPaths = points.mapIndexed { index, pointF ->
+            if (index % 3 == 0) {
+
+                labelCoordinates.add(pointF.x + 2.dp to viewHeight - labelTextHeight)
+
+                val verticalPath = Path()
+                verticalPath.moveTo(pointF.x - linePaint.strokeWidth, pointF.y)
+                verticalPath.lineTo(
+                    pointF.x - linePaint.strokeWidth,
+                    viewHeight - (linePaint.strokeWidth * 2)
+                )
+                verticalPath.close()
+                verticalPath
+            } else {
+                Path()
+            }
+        }
     }
 
     private fun buildDefaultPath(points: MutableList<PointF>, viewHeight: Float) {
@@ -102,7 +177,10 @@ class ChartView @JvmOverloads constructor(
         }
 
         path.lineTo(lastPoint.x + (linePaint.strokeWidth * 2f), lastPoint.y)
-        path.lineTo(lastPoint.x + (linePaint.strokeWidth * 2f), viewHeight + (linePaint.strokeWidth * 2))
+        path.lineTo(
+            lastPoint.x + (linePaint.strokeWidth * 2f),
+            viewHeight + (linePaint.strokeWidth * 2)
+        )
         path.lineTo(0f, viewHeight + (linePaint.strokeWidth * 2))
         path.close()
     }
@@ -124,7 +202,10 @@ class ChartView @JvmOverloads constructor(
         }
 
         path.lineTo(lastPoint.x + (linePaint.strokeWidth * 2f), lastPoint.y)
-        path.lineTo(lastPoint.x + (linePaint.strokeWidth * 2f), viewHeight + (linePaint.strokeWidth * 2))
+        path.lineTo(
+            lastPoint.x + (linePaint.strokeWidth * 2f),
+            viewHeight + (linePaint.strokeWidth * 2)
+        )
         path.lineTo(0f, viewHeight + (linePaint.strokeWidth * 2))
         path.close()
     }
