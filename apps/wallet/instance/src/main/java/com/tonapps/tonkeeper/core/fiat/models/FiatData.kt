@@ -28,16 +28,25 @@ data class FiatData(
     }
 
     fun getBuyItemsByMethods(methods: List<String>): List<FiatItem> {
-        val items = mutableListOf<FiatItem>()
-        buy.forEach { category ->
-            if (category.type == "buy") {
+        return getTypeItemsByMethods("buy", methods)
+    }
+
+
+    fun getSellItemsByMethods(methods: List<String>): List<FiatItem> {
+        return getTypeItemsByMethods("sell", methods)
+    }
+
+    private fun getTypeItemsByMethods(type: String, methods: List<String>): List<FiatItem> {
+        val result = mutableListOf<FiatItem>()
+        categories.forEach { category ->
+            if (category.type == type) {
                 category.items.forEach { item ->
-                    if (methods.contains(item.id)) {
-                        items.add(item)
+                    if (methods.any { item.id.contains(it) }) {
+                        result.add(item)
                     }
                 }
             }
         }
-        return items
+        return result
     }
 }

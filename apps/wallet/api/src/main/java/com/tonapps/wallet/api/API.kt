@@ -26,6 +26,7 @@ import io.tonapi.models.Account
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.AccountEvents
 import io.tonapi.models.EmulateMessageToWalletRequest
+import io.tonapi.models.GetStakingPools200Response
 import io.tonapi.models.MessageConsequences
 import io.tonapi.models.NftItem
 import io.tonapi.models.SendBlockchainMessageRequest
@@ -43,6 +44,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
+import java.math.BigDecimal
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -77,7 +79,18 @@ class API(
 
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
+    fun jettons(testnet: Boolean) = provider.jettons.get(testnet)
+
     fun rates() = provider.rates.get(false)
+
+    fun staking(testnet: Boolean) = provider.staking.get(testnet)
+
+    fun getStakingPools(accountId: String, testnet: Boolean): GetStakingPools200Response {
+        return staking(testnet).getStakingPools(
+            availableFor = accountId,
+            includeUnverified = false
+        )
+    }
 
     fun getEvents(
         accountId: String,
@@ -118,9 +131,9 @@ class API(
     ): List<BalanceEntity> {
         val jettonsBalances = accounts(testnet).getAccountJettonsBalances(
             accountId = accountId,
-            currencies = currency
+            currencies = listOf(currency)
         ).balances
-        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
+        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > BigDecimal.ZERO }
     }
 
     fun resolveAddressOrName(
@@ -149,7 +162,10 @@ class API(
     }
 
     fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates> {
-        return rates().getRates(tokens.joinToString(","), currency).rates
+        return rates().getRates(
+            tokens,
+            listOf(currency)
+        ).rates
     }
 
     fun getNft(address: String, testnet: Boolean): NftItem? {
@@ -385,7 +401,7 @@ class API(
 
         val JSON = Json { prettyPrint = true }
 
-        private fun baseOkHttpClientBuilder(): OkHttpClient.Builder {
+        fun baseOkHttpClientBuilder(): OkHttpClient.Builder {
             return OkHttpClient().newBuilder()
                 .retryOnConnectionFailure(false)
                 .connectTimeout(10, TimeUnit.SECONDS)

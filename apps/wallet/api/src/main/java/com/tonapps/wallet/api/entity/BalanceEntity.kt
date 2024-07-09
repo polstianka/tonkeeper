@@ -7,11 +7,12 @@ import io.tonapi.models.JettonBalance
 import io.tonapi.models.TokenRates
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
 
 @Parcelize
 data class BalanceEntity(
     val token: TokenEntity,
-    val value: Float,
+    val value: BigDecimal,
     val walletAddress: String
 ): Parcelable {
 

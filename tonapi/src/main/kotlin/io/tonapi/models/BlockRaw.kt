@@ -36,7 +36,7 @@ data class BlockRaw (
     val workchain: kotlin.Int,
 
     @Json(name = "shard")
-    val shard: kotlin.Int,
+    val shard: kotlin.String,
 
     @Json(name = "seqno")
     val seqno: kotlin.Int,

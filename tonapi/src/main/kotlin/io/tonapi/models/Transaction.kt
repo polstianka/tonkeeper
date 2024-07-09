@@ -39,6 +39,7 @@ import com.squareup.moshi.JsonClass
  * @param origStatus 
  * @param endStatus 
  * @param totalFees 
+ * @param endBalance 
  * @param transactionType 
  * @param stateUpdateOld 
  * @param stateUpdateNew 
@@ -82,6 +83,9 @@ data class Transaction (
 
     @Json(name = "total_fees")
     val totalFees: kotlin.Long,
+
+    @Json(name = "end_balance")
+    val endBalance: kotlin.Long,
 
     @Json(name = "transaction_type")
     val transactionType: TransactionType,

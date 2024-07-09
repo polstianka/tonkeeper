@@ -27,6 +27,11 @@ class ModalHeader @JvmOverloads constructor(
             field = value
             closeView.setOnClickListener { value?.invoke() }
         }
+    var text: String = ""
+        set(value) {
+            field = value
+            titleView.text = value
+        }
 
     init {
         super.setBackground(drawable)
@@ -36,7 +41,7 @@ class ModalHeader @JvmOverloads constructor(
         closeView = findViewById(R.id.modal_header_close)
 
         context.useAttributes(attrs, R.styleable.ModalHeader) {
-            titleView.text = it.getString(R.styleable.ModalHeader_android_text)
+            text = it.getString(R.styleable.ModalHeader_android_text).toString()
         }
     }
 

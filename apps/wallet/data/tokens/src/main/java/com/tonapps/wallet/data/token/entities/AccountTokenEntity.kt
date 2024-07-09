@@ -6,6 +6,7 @@ import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
 
 @Parcelize
 data class AccountTokenEntity(
@@ -32,11 +33,11 @@ data class AccountTokenEntity(
     val isTon: Boolean
         get() = address == "TON"
 
-    val fiat: Float
-        get() = rate?.fiat ?: 0f
+    val fiat: BigDecimal
+        get() = rate?.fiat ?: BigDecimal.ZERO
 
-    val rateNow: Float
-        get() = rate?.rate ?: 0f
+    val rateNow: BigDecimal
+        get() = rate?.rate ?: BigDecimal.ZERO
 
     val rateDiff24h: String
         get() = rate?.rateDiff24h ?: ""

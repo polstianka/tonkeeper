@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.uikit.color.stateList
 import uikit.R
 import uikit.extensions.createRipple
+import uikit.extensions.selectableItemBackground
 import uikit.extensions.useAttributes
 
 class IconButtonView @JvmOverloads constructor(
@@ -22,7 +23,7 @@ class IconButtonView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_icon_button, this)
-        background = ripple
+        background = context.selectableItemBackground ?: ripple
 
         iconView = findViewById(R.id.icon)
         titleView = findViewById(R.id.title)

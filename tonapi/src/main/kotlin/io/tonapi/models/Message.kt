@@ -103,13 +103,13 @@ data class Message (
     /**
      * 
      *
-     * Values: intMsg,extInMsg,extOutMsg
+     * Values: int_msg,ext_in_msg,ext_out_msg
      */
     @JsonClass(generateAdapter = false)
     enum class MsgType(val value: kotlin.String) {
-        @Json(name = "int_msg") intMsg("int_msg"),
-        @Json(name = "ext_in_msg") extInMsg("ext_in_msg"),
-        @Json(name = "ext_out_msg") extOutMsg("ext_out_msg");
+        @Json(name = "int_msg") int_msg("int_msg"),
+        @Json(name = "ext_in_msg") ext_in_msg("ext_in_msg"),
+        @Json(name = "ext_out_msg") ext_out_msg("ext_out_msg");
     }
 }
 

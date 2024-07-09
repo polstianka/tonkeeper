@@ -15,6 +15,8 @@ val WindowInsetsCompat.bottomBars: Insets
 val WindowInsetsCompat.bottomBarsOffset: Int
     get() = bottomBars.bottom
 
+fun View.applyNavBottomPadding(addition: Float) = applyNavBottomPadding(addition.toInt())
+
 fun View.applyNavBottomPadding(addition: Int = 0) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
         val navInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())

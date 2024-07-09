@@ -1,20 +1,17 @@
 package com.tonapps.tonkeeper.core.history.list.holder
 
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
-import com.facebook.drawee.view.SimpleDraweeView
-import com.tonapps.tonkeeperx.R
 import com.tonapps.tonkeeper.core.history.ActionType
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.iconRes
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.core.history.nameRes
 import com.tonapps.tonkeeper.dialog.TransactionDialog
-import com.tonapps.uikit.color.UIKitColor
+import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.accentGreenColor
 import com.tonapps.uikit.color.iconSecondaryColor
 import com.tonapps.uikit.color.stateList
@@ -45,7 +42,7 @@ class HistoryActionHolder(
     private val warningView = findViewById<AppCompatTextView>(R.id.warning)
 
     private val nftView = findViewById<View>(R.id.nft)
-    private val nftIconView = findViewById<SimpleDraweeView>(R.id.nft_icon)
+    private val nftIconView = findViewById<FrescoView>(R.id.nft_icon)
     private val nftNameView = findViewById<AppCompatTextView>(R.id.nft_name)
     private val nftCollectionView = findViewById<AppCompatTextView>(R.id.nft_collection)
 

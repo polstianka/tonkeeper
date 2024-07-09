@@ -5,21 +5,23 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.tonapps.extensions.readArrayCompat
 import com.tonapps.extensions.readBooleanCompat
-import com.tonapps.extensions.readCharSequenceCompat
 import com.tonapps.extensions.readEnum
 import com.tonapps.extensions.readParcelableCompat
 import com.tonapps.extensions.writeArrayCompat
 import com.tonapps.extensions.writeBooleanCompat
-import com.tonapps.extensions.writeCharSequenceCompat
 import com.tonapps.extensions.writeEnum
+import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.fragment.stake.domain.model.StakedBalance
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
+import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.entities.AppPushEntity
 import com.tonapps.wallet.data.tonconnect.entities.DAppEntity
+import java.math.BigDecimal
 
-sealed class Item(type: Int): BaseListItem(type), Parcelable {
+sealed class Item(type: Int) : BaseListItem(type), Parcelable {
 
     companion object {
         const val TYPE_BALANCE = 0
@@ -28,6 +30,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         const val TYPE_SPACE = 3
         const val TYPE_SKELETON = 4
         const val TYPE_PUSH = 5
+        const val TYPE_STAKED = 6
 
         fun createFromParcel(parcel: Parcel): Item {
             return when (parcel.readInt()) {
@@ -37,6 +40,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
                 TYPE_SPACE -> Space(parcel)
                 TYPE_SKELETON -> Skeleton(parcel)
                 TYPE_PUSH -> Push(parcel)
+                TYPE_STAKED -> StakedItem(parcel)
                 else -> throw IllegalArgumentException("Unknown type")
             }
         }
@@ -68,7 +72,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val walletType: WalletType,
         val status: Status,
         val hiddenBalance: Boolean
-    ): Item(TYPE_BALANCE) {
+    ) : Item(TYPE_BALANCE) {
 
         constructor(parcel: Parcel) : this(
             parcel.readString()!!,
@@ -101,7 +105,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val walletType: WalletType,
         val swapUri: Uri,
         val disableSwap: Boolean
-    ): Item(TYPE_ACTIONS) {
+    ) : Item(TYPE_ACTIONS) {
 
         constructor(parcel: Parcel) : this(
             parcel.readString()!!,
@@ -134,16 +138,19 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val address: String,
         val symbol: String,
         val name: String,
-        val balance: Float,
-        val balanceFormat: CharSequence,
-        val fiat: Float,
-        val fiatFormat: CharSequence,
-        val rate: CharSequence,
+        val balance: BigDecimal,
         val rateDiff24h: String,
         val verified: Boolean,
         val testnet: Boolean,
-        val hiddenBalance: Boolean
-    ): Item(TYPE_TOKEN) {
+        val hiddenBalance: Boolean,
+        val currency: WalletCurrency,
+        val rateNow: BigDecimal
+    ) : Item(TYPE_TOKEN) {
+
+        val fiat = rateNow * balance
+        val balanceFormat = CurrencyFormatter.format(value = balance)
+        val rateFormat = CurrencyFormatter.formatFiat(currency.code, rateNow)
+        val fiatFormat = CurrencyFormatter.formatFiat(currency.code, fiat)
 
         constructor(parcel: Parcel) : this(
             parcel.readEnum(ListCell.Position::class.java)!!,
@@ -151,15 +158,13 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
-            parcel.readFloat(),
-            parcel.readCharSequenceCompat()!!,
-            parcel.readFloat(),
-            parcel.readCharSequenceCompat()!!,
-            parcel.readCharSequenceCompat()!!,
+            parcel.readSerializable()!! as BigDecimal,
             parcel.readString()!!,
             parcel.readBooleanCompat(),
             parcel.readBooleanCompat(),
-            parcel.readBooleanCompat()
+            parcel.readBooleanCompat(),
+            parcel.readParcelableCompat()!!,
+            parcel.readSerializable()!! as BigDecimal
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
@@ -168,15 +173,14 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeString(address)
             dest.writeString(symbol)
             dest.writeString(name)
-            dest.writeFloat(balance)
-            dest.writeCharSequenceCompat(balanceFormat)
-            dest.writeFloat(fiat)
-            dest.writeCharSequenceCompat(fiatFormat)
-            dest.writeCharSequenceCompat(rate)
+            dest.writeSerializable(balance)
+            dest.writeSerializable(fiat)
             dest.writeString(rateDiff24h)
             dest.writeBooleanCompat(verified)
             dest.writeBooleanCompat(testnet)
             dest.writeBooleanCompat(hiddenBalance)
+            dest.writeParcelable(currency, flags)
+            dest.writeSerializable(rateNow)
         }
 
         companion object CREATOR : Parcelable.Creator<Token> {
@@ -188,7 +192,31 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         }
     }
 
-    data class Space(val value: Boolean = true): Item(TYPE_SPACE) {
+    data class StakedItem(
+        val position: ListCell.Position,
+        val balance: StakedBalance,
+    ) : Item(TYPE_STAKED) {
+
+        companion object CREATOR : Parcelable.Creator<StakedItem> {
+            override fun createFromParcel(source: Parcel) = StakedItem(source)
+
+            override fun newArray(size: Int): Array<StakedItem?> {
+                return arrayOfNulls(size)
+            }
+        }
+
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeEnum(position)
+            dest.writeParcelable(balance, flags)
+        }
+
+        constructor(parcel: Parcel) : this(
+            position = parcel.readEnum(ListCell.Position::class.java)!!,
+            balance = parcel.readParcelableCompat()!!,
+        )
+    }
+
+    data class Space(val value: Boolean = true) : Item(TYPE_SPACE) {
 
         constructor(parcel: Parcel) : this(
             parcel.readBooleanCompat()
@@ -207,7 +235,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         }
     }
 
-    data class Skeleton(val value: Boolean = true): Item(TYPE_SKELETON) {
+    data class Skeleton(val value: Boolean = true) : Item(TYPE_SKELETON) {
 
         constructor(parcel: Parcel) : this(
             parcel.readBooleanCompat()
@@ -229,7 +257,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
     data class Push(
         val events: List<AppPushEntity>,
         val apps: List<DAppEntity>
-    ): Item(TYPE_PUSH) {
+    ) : Item(TYPE_PUSH) {
 
         constructor(parcel: Parcel) : this(
             parcel.readArrayCompat(AppPushEntity::class.java)?.toList()!!,

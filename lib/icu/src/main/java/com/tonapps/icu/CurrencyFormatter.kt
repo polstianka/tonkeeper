@@ -1,15 +1,6 @@
 package com.tonapps.icu
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
 import android.util.ArrayMap
-import android.util.Log
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -76,11 +67,11 @@ object CurrencyFormatter {
     val monetarySymbolFirstPosition = format.toPattern().startsWith(CURRENCY_SIGN)
     val monetaryDecimalSeparator = format.decimalFormatSymbols.monetaryDecimalSeparator.toString()
 
-    private fun formatFloat(
-        value: Float,
+    fun format(
+        value: BigDecimal,
         decimals: Int,
     ): String {
-        if (0f >= value) {
+        if (BigDecimal.ZERO >= value) {
             return "0"
         }
         return getFormat(decimals).format(value)
@@ -88,10 +79,10 @@ object CurrencyFormatter {
 
     fun format(
         currency: String = "",
-        value: Float,
+        value: BigDecimal,
         decimals: Int,
     ): CharSequence {
-        val amount = formatFloat(value, decimals)
+        val amount = format(value, decimals)
         return format(currency, amount)
     }
 
@@ -102,14 +93,6 @@ object CurrencyFormatter {
     ): CharSequence {
         val amount = getFormat(decimals).format(value)
         return format(currency, amount)
-    }
-
-    fun format(
-        currency: String = "",
-        value: Float,
-    ): CharSequence {
-        val decimals = decimalCount(value)
-        return format(currency, value, decimals)
     }
 
     fun format(
@@ -140,19 +123,19 @@ object CurrencyFormatter {
 
     fun formatRate(
         currency: String,
-        value: Float
+        value: BigDecimal
     ): CharSequence {
         return format(currency, value, 4)
     }
 
     fun formatFiat(
         currency: String,
-        value: Float
+        value: BigDecimal
     ): CharSequence {
         var decimals = 2
-        if (0.0001f > value) {
+        if (BigDecimal.ONE.movePointLeft(4) > value) {
             decimals = 8
-        } else if (0.01f > value) {
+        } else if (BigDecimal.ONE.movePointLeft(2) > value) {
             decimals = 4
         }
         return format(currency, value, decimals)

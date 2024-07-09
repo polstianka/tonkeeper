@@ -23,6 +23,7 @@ import io.tonapi.models.NftItem
 import io.tonapi.models.PoolImplementationType
 import io.tonapi.models.TokenRates
 import kotlinx.coroutines.delay
+import java.math.BigDecimal
 import kotlin.math.abs
 
 private val nftItemPreviewSizes = arrayOf(
@@ -41,14 +42,14 @@ val AccountEvent.withTON: Boolean
     get() {
         for (action in actions) {
             val type = action.type
-            if (type == Action.Type.tonTransfer ||
-                type == Action.Type.jettonSwap ||
-                type == Action.Type.electionsDepositStake ||
-                type == Action.Type.electionsRecoverStake ||
-                type == Action.Type.subscribe ||
-                type == Action.Type.unSubscribe ||
-                type == Action.Type.depositStake ||
-                type == Action.Type.withdrawStake) {
+            if (type == Action.Type.TonTransfer ||
+                type == Action.Type.JettonSwap ||
+                type == Action.Type.ElectionsDepositStake ||
+                type == Action.Type.ElectionsRecoverStake ||
+                type == Action.Type.Subscribe ||
+                type == Action.Type.UnSubscribe ||
+                type == Action.Type.DepositStake ||
+                type == Action.Type.WithdrawStake) {
                 return true
             }
         }
@@ -170,13 +171,13 @@ fun JettonBalance.getAddress(testnet: Boolean): String {
 val JettonBalance.symbol: String
     get() = jetton.symbol
 
-val JettonBalance.parsedBalance: Float
+val JettonBalance.parsedBalance: BigDecimal
     get() = Coin.parseJettonBalance(balance, jetton.decimals)
 
-val JettonMintAction.parsedAmount: Float
+val JettonMintAction.parsedAmount: BigDecimal
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
-val JettonBurnAction.parsedAmount: Float
+val JettonBurnAction.parsedAmount: BigDecimal
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
 fun NftItem.imageBySize(size: String): ImagePreview? {

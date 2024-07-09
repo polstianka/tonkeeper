@@ -7,6 +7,8 @@ import com.tonapps.wallet.data.rates.entity.RateEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import com.tonapps.wallet.data.rates.source.BlobDataSource
 import io.tonapi.models.TokenRates
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RatesRepository(
     context: Context,
@@ -19,11 +21,14 @@ class RatesRepository(
         return localDataSource.get(currency).filter(tokens)
     }
 
-    fun load(currency: WalletCurrency, token: String) {
+    suspend fun load(currency: WalletCurrency, token: String) {
         load(currency, mutableListOf(token))
     }
 
-    fun load(currency: WalletCurrency, tokens: MutableList<String>) {
+    suspend fun load(
+        currency: WalletCurrency,
+        tokens: MutableList<String>
+    ) = withContext(Dispatchers.IO) {
         if (!tokens.contains("TON")) {
             tokens.add("TON")
         }

@@ -1,18 +1,17 @@
 package com.tonapps.tonkeeper.api.jetton
 
-import android.util.Log
-import com.tonapps.wallet.api.Tonapi
 import com.tonapps.tonkeeper.api.base.AccountKey
 import com.tonapps.tonkeeper.api.base.BaseAccountRepository
 import com.tonapps.tonkeeper.api.base.RepositoryResponse
-import com.tonapps.wallet.api.core.SourceAPI
-import com.tonapps.tonkeeper.api.fromJSON
-import com.tonapps.tonkeeper.api.getAddress
 import com.tonapps.tonkeeper.api.jetton.db.JettonDao
 import com.tonapps.tonkeeper.api.parsedBalance
 import com.tonapps.tonkeeper.api.symbol
+import com.tonapps.wallet.api.Tonapi
+import com.tonapps.wallet.api.core.SourceAPI
 import io.tonapi.apis.AccountsApi
 import io.tonapi.models.JettonBalance
+import org.ton.block.MsgAddressInt
+import java.math.BigDecimal
 
 // TODO need to be refactoring
 class JettonRepository(
@@ -23,7 +22,7 @@ class JettonRepository(
     private companion object {
         private fun List<JettonBalance>.prepare(): List<JettonBalance> {
             return this.filter {
-                it.parsedBalance > 0f
+                it.parsedBalance > BigDecimal.ZERO
             }.sortedBy {
                 it.symbol
             }
@@ -50,9 +49,10 @@ class JettonRepository(
         jettonAddress: String,
         testnet: Boolean,
     ): JettonBalance? {
+        val jettonAddressMAI = MsgAddressInt.parse(jettonAddress)
         val cloud = getFromCloud(accountId, testnet) ?: return null
         return cloud.data.find {
-            it.jetton.address == jettonAddress
+            MsgAddressInt.parse(it.jetton.address) == jettonAddressMAI
         }
     }
 

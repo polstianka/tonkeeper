@@ -44,7 +44,7 @@ data class GetRawMasterchainInfoExt200Response (
     val version: kotlin.Int,
 
     @Json(name = "capabilities")
-    val capabilities: kotlin.Int,
+    val capabilities: kotlin.Long,
 
     @Json(name = "last")
     val last: BlockRaw,

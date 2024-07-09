@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="uikit.widget.ColumnLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/links"
+        android:textAppearance="@style/TextAppearance.H3"
+        android:textColor="?textPrimaryColor" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/view_pool_links_chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp" />
+</merge>

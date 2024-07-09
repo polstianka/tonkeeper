@@ -22,32 +22,32 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * Values: transOrd,transTickTock,transSplitPrepare,transSplitInstall,transMergePrepare,transMergeInstall,transStorage
+ * Values: TransOrd,TransTickTock,TransSplitPrepare,TransSplitInstall,TransMergePrepare,TransMergeInstall,TransStorage
  */
 
 @JsonClass(generateAdapter = false)
 enum class TransactionType(val value: kotlin.String) {
 
     @Json(name = "TransOrd")
-    transOrd("TransOrd"),
+    TransOrd("TransOrd"),
 
     @Json(name = "TransTickTock")
-    transTickTock("TransTickTock"),
+    TransTickTock("TransTickTock"),
 
     @Json(name = "TransSplitPrepare")
-    transSplitPrepare("TransSplitPrepare"),
+    TransSplitPrepare("TransSplitPrepare"),
 
     @Json(name = "TransSplitInstall")
-    transSplitInstall("TransSplitInstall"),
+    TransSplitInstall("TransSplitInstall"),
 
     @Json(name = "TransMergePrepare")
-    transMergePrepare("TransMergePrepare"),
+    TransMergePrepare("TransMergePrepare"),
 
     @Json(name = "TransMergeInstall")
-    transMergeInstall("TransMergeInstall"),
+    TransMergeInstall("TransMergeInstall"),
 
     @Json(name = "TransStorage")
-    transStorage("TransStorage");
+    TransStorage("TransStorage");
 
     /**
      * Override [toString()] to avoid using the enum variable name as the value, and instead use

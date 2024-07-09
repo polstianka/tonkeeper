@@ -34,13 +34,13 @@ import com.squareup.moshi.JsonClass
 data class DecodedMessageExtInMsgDecodedWalletV4 (
 
     @Json(name = "subwallet_id")
-    val subwalletId: kotlin.Int,
+    val subwalletId: kotlin.Long,
 
     @Json(name = "valid_until")
-    val validUntil: kotlin.Int,
+    val validUntil: kotlin.Long,
 
     @Json(name = "seqno")
-    val seqno: kotlin.Int,
+    val seqno: kotlin.Long,
 
     @Json(name = "op")
     val op: kotlin.Int,

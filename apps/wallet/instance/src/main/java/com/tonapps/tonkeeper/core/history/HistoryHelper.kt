@@ -34,6 +34,7 @@ import com.tonapps.wallet.data.collectibles.CollectiblesRepository
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import io.tonapi.models.MessageConsequences
+import java.math.BigDecimal
 
 // TODO request refactoring
 class HistoryHelper(
@@ -51,9 +52,9 @@ class HistoryHelper(
     data class Details(
         val accountId: String,
         val items: List<HistoryItem>,
-        val fee: Float,
+        val fee: BigDecimal,
         val feeFormat: CharSequence,
-        val feeFiat: Float,
+        val feeFiat: BigDecimal,
         val feeFiatFormat: CharSequence
     )
 
@@ -529,7 +530,7 @@ class HistoryHelper(
                 isOut = false,
                 failed = action.status == Action.Status.failed,
             )
-        } else if (action.type == Action.Type.unknown) {
+        } else if (action.type == Action.Type.Unknown) {
             return createUnknown(index, txId, action, date, timestamp, simplePreview)
         } else if (action.withdrawStake != null) {
             val withdrawStake = action.withdrawStake!!

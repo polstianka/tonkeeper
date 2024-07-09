@@ -58,7 +58,7 @@ class FiatDialog(
 
     override fun show() {
         scope.launch {
-            val items = com.tonapps.tonkeeper.App.fiat.getMethods(com.tonapps.tonkeeper.App.settings.country)
+            val items = com.tonapps.tonkeeper.App.fiat.getBuyMethods(com.tonapps.tonkeeper.App.settings.country)
             showWithData(items)
         }
     }

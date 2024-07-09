@@ -23,10 +23,12 @@ import com.squareup.moshi.JsonClass
  * 
  *
  * @param success 
+ * @param resultCode 
  * @param totalActions 
  * @param skippedActions 
  * @param fwdFees 
  * @param totalFees 
+ * @param resultCodeDescription 
  */
 
 
@@ -34,6 +36,9 @@ data class ActionPhase (
 
     @Json(name = "success")
     val success: kotlin.Boolean,
+
+    @Json(name = "result_code")
+    val resultCode: kotlin.Int,
 
     @Json(name = "total_actions")
     val totalActions: kotlin.Int,
@@ -45,7 +50,10 @@ data class ActionPhase (
     val fwdFees: kotlin.Long,
 
     @Json(name = "total_fees")
-    val totalFees: kotlin.Long
+    val totalFees: kotlin.Long,
+
+    @Json(name = "result_code_description")
+    val resultCodeDescription: kotlin.String? = null
 
 )
 

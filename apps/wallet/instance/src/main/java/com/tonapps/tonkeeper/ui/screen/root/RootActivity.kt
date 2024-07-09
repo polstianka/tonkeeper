@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.biometric.BiometricPrompt
 import androidx.core.view.ViewCompat
@@ -34,8 +35,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.dialog.alert.AlertDialog
 import uikit.extensions.collectFlow
 import uikit.navigation.NavigationActivity
+import java.math.BigDecimal
 
-class RootActivity: NavigationActivity() {
+class RootActivity : NavigationActivity() {
 
     private val rootViewModel: RootViewModel by viewModel()
 
@@ -140,12 +142,28 @@ class RootActivity: NavigationActivity() {
     fun event(event: RootEvent) {
         when (event) {
             is RootEvent.Toast -> toast(event.resId)
-            is RootEvent.Singer -> add(InitScreen.newInstance(InitArgs.Type.Signer, event.publicKey, event.name, event.walletSource))
+            is RootEvent.Singer -> add(
+                InitScreen.newInstance(
+                    InitArgs.Type.Signer,
+                    event.publicKey,
+                    event.name,
+                    event.walletSource
+                )
+            )
+
             is RootEvent.TonConnect -> add(TCAuthFragment.newInstance(event.request))
             is RootEvent.Browser -> add(WebFragment.newInstance(event.uri))
-            is RootEvent.Transfer -> add(SendScreen.newInstance(event.address, event.text, event.amount ?: 0f, event.jettonAddress))
+            is RootEvent.Transfer -> add(
+                SendScreen.newInstance(
+                    event.address,
+                    event.text,
+                    event.amount ?: BigDecimal.ZERO,
+                    event.jettonAddress
+                )
+            )
+
             is RootEvent.Transaction -> TransactionDialog.open(this, event.event)
-            else -> { }
+            else -> {}
         }
     }
 

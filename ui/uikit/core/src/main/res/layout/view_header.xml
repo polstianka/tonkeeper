@@ -52,6 +52,7 @@
             
             <uikit.widget.LoaderView
                 android:id="@+id/header_loader"
+                android:visibility="gone"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="@dimen/offsetExtraSmall"

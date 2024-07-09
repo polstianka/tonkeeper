@@ -96,6 +96,7 @@ dependencies {
 
     implementation(project(Dependence.Module.core))
     implementation(project(Dependence.Module.tonApi))
+    implementation(project(Dependence.Module.stonfiApi))
     implementation(project(Dependence.Module.blur))
 
     implementation(project(Dependence.Lib.network))
@@ -130,5 +131,6 @@ dependencies {
     annotationProcessor(Dependence.AndroidX.Room.compiler)
     kapt(Dependence.AndroidX.Room.compiler)
 
-
+    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-svg:2.5.0")
 }

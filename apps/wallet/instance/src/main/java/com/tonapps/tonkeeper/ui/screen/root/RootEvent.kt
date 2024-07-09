@@ -6,6 +6,7 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.data.account.WalletSource
 import com.tonapps.wallet.data.tonconnect.entities.DAppRequestEntity
 import org.ton.api.pub.PublicKeyEd25519
+import java.math.BigDecimal
 
 sealed class RootEvent {
     data class Toast(val resId: Int): RootEvent()
@@ -27,7 +28,7 @@ sealed class RootEvent {
 
     data class Transfer(
         val address: String,
-        val amount: Float?,
+        val amount: BigDecimal?,
         val text: String?,
         val jettonAddress: String?
     ): RootEvent()

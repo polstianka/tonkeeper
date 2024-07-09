@@ -1,9 +1,7 @@
 package com.tonapps.tonkeeper.fragment.send
 
 import android.net.Uri
-import android.util.Log
 import com.tonapps.blockchain.Coin
-import com.tonapps.blockchain.ton.tlb.JettonTransfer
 import com.tonapps.extensions.toByteArray
 import com.tonapps.security.Security
 import com.tonapps.security.hex
@@ -19,7 +17,6 @@ import org.ton.contract.wallet.WalletTransferBuilder
 import ton.SendMode
 import ton.transfer.Transfer
 import java.math.BigInteger
-import java.nio.ByteBuffer
 
 data class TransactionData(
     val address: String? = null,
@@ -78,8 +75,6 @@ data class TransactionData(
 
     val amount: Coins
         get() {
-            /*val value = Coin.bigDecimal(amountRaw, decimals)
-            return Coins.ofNano(value.toLong())*/
             val value = Coin.prepareValue(amountRaw).toFloatOrNull() ?: 0f
             val nano = Coin.toNano(value, decimals)
             return Coins.ofNano(nano)
@@ -88,33 +83,20 @@ data class TransactionData(
     fun buildWalletTransfer(
         responseAddress: MsgAddressInt,
         stateInit: StateInit?,
+        bodyBuilder: TransactionData.() -> Cell? = { buildWalletTransferBody(responseAddress) }
     ): WalletTransfer {
         val builder = WalletTransferBuilder()
         builder.bounceable = bounce
         builder.destination = destination
-        builder.body = buildWalletTransferBody(responseAddress)
+        builder.body = this.bodyBuilder()
         builder.sendMode = sendMode
         builder.coins = coins
         builder.stateInit = stateInit
         return builder.build()
     }
 
-    private fun buildWalletTransferBody(
-        responseAddress: MsgAddressInt,
-    ): Cell? {
-        if (isTon) {
-            return Transfer.text(comment)
-        }
-        return Transfer.jetton(
-            coins = amount,
-            toAddress = MsgAddressInt.parse(address!!),
-            responseAddress = responseAddress,
-            queryId = getWalletQueryId(),
-            body = comment,
-        )
-    }
 
-    private companion object {
+    companion object {
 
         fun getWalletQueryId(): BigInteger {
             try {
@@ -128,4 +110,19 @@ data class TransactionData(
             }
         }
     }
+}
+
+fun TransactionData.buildWalletTransferBody(
+    responseAddress: MsgAddressInt,
+): Cell? {
+    if (isTon) {
+        return Transfer.text(comment)
+    }
+    return Transfer.jetton(
+        coins = amount,
+        toAddress = MsgAddressInt.parse(address!!),
+        responseAddress = responseAddress,
+        queryId = TransactionData.getWalletQueryId(),
+        body = comment,
+    )
 }

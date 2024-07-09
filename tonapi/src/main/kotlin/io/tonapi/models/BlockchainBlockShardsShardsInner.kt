@@ -15,6 +15,7 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.BlockchainBlock
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,13 +24,17 @@ import com.squareup.moshi.JsonClass
  * 
  *
  * @param lastKnownBlockId 
+ * @param lastKnownBlock 
  */
 
 
 data class BlockchainBlockShardsShardsInner (
 
     @Json(name = "last_known_block_id")
-    val lastKnownBlockId: kotlin.String
+    val lastKnownBlockId: kotlin.String,
+
+    @Json(name = "last_known_block")
+    val lastKnownBlock: BlockchainBlock
 
 )
 

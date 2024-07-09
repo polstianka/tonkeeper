@@ -46,7 +46,7 @@ abstract class BaseListHolder<I: BaseListItem>(
 
     }
 
-    fun getString(resId: Int): String = context.getString(resId)
+    fun getString(resId: Int, vararg args: Any): String = context.getString(resId, *args)
 
     @ColorInt
     fun getColor(resId: Int): Int = context.getColor(resId)

@@ -50,7 +50,7 @@ data class ValidatorsSet (
     val list: kotlin.collections.List<ValidatorsSetListInner>,
 
     @Json(name = "total_weight")
-    val totalWeight: kotlin.Long? = null
+    val totalWeight: kotlin.String? = null
 
 )
 

@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -25,6 +26,7 @@ android {
 dependencies {
     implementation(Dependence.Koin.core)
     implementation(project(Dependence.Module.tonApi))
+    implementation(project(Dependence.Module.stonfiApi))
     implementation(project(Dependence.Lib.network))
     implementation(project(Dependence.Lib.blockchain))
     implementation(project(Dependence.Lib.extensions))

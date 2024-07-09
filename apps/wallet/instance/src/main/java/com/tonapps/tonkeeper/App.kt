@@ -10,22 +10,25 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.core.ImageTranscoderType
 import com.facebook.imagepipeline.core.MemoryChunkType
 import com.tonapps.tonkeeper.core.fiat.Fiat
+import com.tonapps.tonkeeper.fragment.stake.di.stakingModule
+import com.tonapps.tonkeeper.fragment.swap.di.swapModule
+import com.tonapps.tonkeeper.fragment.trade.di.ratesDomainModule
 import com.tonapps.tonkeeper.koin.koinModel
 import com.tonapps.wallet.api.apiModule
 import com.tonapps.wallet.data.account.accountModule
-import com.tonapps.wallet.data.rates.ratesModule
-import com.tonapps.wallet.data.settings.SettingsRepository
-import com.tonapps.wallet.data.token.tokenModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.browser.browserModule
 import com.tonapps.wallet.data.collectibles.collectiblesModule
 import com.tonapps.wallet.data.core.dataModule
 import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
+import com.tonapps.wallet.data.rates.ratesDataModule
+import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.data.token.tokenModule
 import com.tonapps.wallet.data.tonconnect.tonConnectModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
+import org.koin.core.context.startKoin
 
 class App: Application(), CameraXConfig.Provider, KoinComponent {
 
@@ -53,7 +56,22 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
+            modules(
+                koinModel,
+                browserModule,
+                pushModule,
+                tonConnectModule,
+                apiModule,
+                accountModule,
+                ratesDataModule,
+                tokenModule,
+                eventsModule,
+                collectiblesModule,
+                ratesDomainModule,
+                stakingModule,
+                dataModule,
+                swapModule
+            )
         }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

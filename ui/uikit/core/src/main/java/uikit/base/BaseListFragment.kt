@@ -13,7 +13,7 @@ import uikit.widget.HeaderView
 
 open class BaseListFragment: BaseFragment(R.layout.fragment_list) {
 
-    private lateinit var headerView: HeaderView
+    protected lateinit var headerView: HeaderView
     private lateinit var listView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -22,6 +22,9 @@ open class BaseListFragment: BaseFragment(R.layout.fragment_list) {
         if (this is SwipeBack) {
             headerView.setIcon(UIKitIcon.ic_chevron_left_16)
             headerView.doOnCloseClick = { finish() }
+        } else if (this is BottomSheet) {
+            headerView.setAction(UIKitIcon.ic_close_16)
+            headerView.doOnActionClick = { finish() }
         }
         listView = view.findViewById(R.id.list)
         listView.applyNavBottomPadding(requireContext().getDimensionPixelSize(R.dimen.cornerMedium))

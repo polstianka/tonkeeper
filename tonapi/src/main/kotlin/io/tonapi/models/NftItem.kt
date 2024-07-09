@@ -36,6 +36,7 @@ import com.squareup.moshi.JsonClass
  * @param sale 
  * @param previews 
  * @param dns 
+ * @param includeCnft 
  */
 
 
@@ -69,7 +70,10 @@ data class NftItem (
     val previews: kotlin.collections.List<ImagePreview>? = null,
 
     @Json(name = "dns")
-    val dns: kotlin.String? = null
+    val dns: kotlin.String? = null,
+
+    @Json(name = "include_cnft")
+    val includeCnft: kotlin.Boolean? = null
 
 ) {
 

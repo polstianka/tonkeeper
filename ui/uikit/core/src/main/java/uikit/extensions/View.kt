@@ -1,19 +1,14 @@
 package uikit.extensions
 
 import android.animation.ValueAnimator
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Outline
-import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.HapticFeedbackConstants
-import android.view.PixelCopy
-import android.view.SurfaceView
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.Window
@@ -22,26 +17,18 @@ import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateMargins
-import androidx.core.widget.NestedScrollView
-import androidx.core.widget.NestedScrollView.OnScrollChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import com.tonapps.uikit.color.backgroundContentColor
 import uikit.insets.KeyboardAnimationCallback
 import kotlin.math.sin
 
@@ -278,4 +265,45 @@ fun View.getViews(): List<View> {
         }
     }
     return result
+}
+
+const val DEFAULT_DELAY = 300L
+fun View.setThrottleClickListener(
+    delay: Long = DEFAULT_DELAY,
+    action: () -> Unit
+) {
+    val listener = ThrottleClickListener(delay, action)
+    setOnClickListener(listener)
+}
+
+private class ThrottleClickListener(
+    private val delayMillis: Long,
+    private val action: () -> Unit
+): OnClickListener {
+
+    private var previousClick = 0L
+    override fun onClick(v: View?) {
+        v ?: return
+        if (!shouldHandle()) return
+        previousClick = now()
+        action()
+    }
+
+
+    private fun shouldHandle(): Boolean = (now() - previousClick) > delayMillis
+
+    private fun now() = System.currentTimeMillis()
+}
+fun View.applySelectableBgContent() {
+    val selectableItemBackgroundDrawable = context.selectableItemBackground
+    val backgroundContentColor = context.backgroundContentColor
+    if (selectableItemBackgroundDrawable == null) {
+        setBackgroundColor(backgroundContentColor)
+    } else {
+        val colorDrawable = ColorDrawable(backgroundContentColor)
+        val array = arrayOf(colorDrawable, selectableItemBackgroundDrawable)
+        val layeredDrawable = LayerDrawable(array)
+        background = layeredDrawable
+    }
+    round(context.cornerMedium)
 }

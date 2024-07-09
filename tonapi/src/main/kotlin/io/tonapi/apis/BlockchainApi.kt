@@ -25,10 +25,11 @@ import io.tonapi.models.BlockchainBlockShards
 import io.tonapi.models.BlockchainBlocks
 import io.tonapi.models.BlockchainConfig
 import io.tonapi.models.BlockchainRawAccount
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.MethodExecutionResult
 import io.tonapi.models.RawBlockchainConfig
 import io.tonapi.models.SendBlockchainMessageRequest
+import io.tonapi.models.ServiceStatus
+import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.Transaction
 import io.tonapi.models.Transactions
 import io.tonapi.models.Validators
@@ -211,12 +212,21 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
     }
 
     /**
+     * enum for parameter sortOrder
+     */
+     enum class SortOrderGetBlockchainAccountTransactions(val value: kotlin.String) {
+         @Json(name = "desc") desc("desc"),
+         @Json(name = "asc") asc("asc")
+     }
+
+    /**
      * 
      * Get account transactions
      * @param accountId account ID
      * @param afterLt omit this parameter to get last transactions (optional)
      * @param beforeLt omit this parameter to get last transactions (optional)
      * @param limit  (optional, default to 100)
+     * @param sortOrder  (optional, default to desc)
      * @return Transactions
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -226,8 +236,8 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getBlockchainAccountTransactions(accountId: kotlin.String, afterLt: kotlin.Long? = null, beforeLt: kotlin.Long? = null, limit: kotlin.Int? = 100) : Transactions {
-        val localVarResponse = getBlockchainAccountTransactionsWithHttpInfo(accountId = accountId, afterLt = afterLt, beforeLt = beforeLt, limit = limit)
+    fun getBlockchainAccountTransactions(accountId: kotlin.String, afterLt: kotlin.Long? = null, beforeLt: kotlin.Long? = null, limit: kotlin.Int? = 100, sortOrder: SortOrderGetBlockchainAccountTransactions? = SortOrderGetBlockchainAccountTransactions.desc) : Transactions {
+        val localVarResponse = getBlockchainAccountTransactionsWithHttpInfo(accountId = accountId, afterLt = afterLt, beforeLt = beforeLt, limit = limit, sortOrder = sortOrder)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as Transactions
@@ -251,14 +261,15 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      * @param afterLt omit this parameter to get last transactions (optional)
      * @param beforeLt omit this parameter to get last transactions (optional)
      * @param limit  (optional, default to 100)
+     * @param sortOrder  (optional, default to desc)
      * @return ApiResponse<Transactions?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getBlockchainAccountTransactionsWithHttpInfo(accountId: kotlin.String, afterLt: kotlin.Long?, beforeLt: kotlin.Long?, limit: kotlin.Int?) : ApiResponse<Transactions?> {
-        val localVariableConfig = getBlockchainAccountTransactionsRequestConfig(accountId = accountId, afterLt = afterLt, beforeLt = beforeLt, limit = limit)
+    fun getBlockchainAccountTransactionsWithHttpInfo(accountId: kotlin.String, afterLt: kotlin.Long?, beforeLt: kotlin.Long?, limit: kotlin.Int?, sortOrder: SortOrderGetBlockchainAccountTransactions?) : ApiResponse<Transactions?> {
+        val localVariableConfig = getBlockchainAccountTransactionsRequestConfig(accountId = accountId, afterLt = afterLt, beforeLt = beforeLt, limit = limit, sortOrder = sortOrder)
 
         return request<Unit, Transactions>(
             localVariableConfig
@@ -272,9 +283,10 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      * @param afterLt omit this parameter to get last transactions (optional)
      * @param beforeLt omit this parameter to get last transactions (optional)
      * @param limit  (optional, default to 100)
+     * @param sortOrder  (optional, default to desc)
      * @return RequestConfig
      */
-    fun getBlockchainAccountTransactionsRequestConfig(accountId: kotlin.String, afterLt: kotlin.Long?, beforeLt: kotlin.Long?, limit: kotlin.Int?) : RequestConfig<Unit> {
+    fun getBlockchainAccountTransactionsRequestConfig(accountId: kotlin.String, afterLt: kotlin.Long?, beforeLt: kotlin.Long?, limit: kotlin.Int?, sortOrder: SortOrderGetBlockchainAccountTransactions?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -286,6 +298,9 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
                 }
                 if (limit != null) {
                     put("limit", listOf(limit.toString()))
+                }
+                if (sortOrder != null) {
+                    put("sort_order", listOf(sortOrder.value))
                 }
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1346,6 +1361,74 @@ class BlockchainApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
         return RequestConfig(
             method = RequestMethod.POST,
             path = "/v2/blockchain/message",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * 
+     * Status
+     * @return ServiceStatus
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun status() : ServiceStatus {
+        val localVarResponse = statusWithHttpInfo()
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as ServiceStatus
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * 
+     * Status
+     * @return ApiResponse<ServiceStatus?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun statusWithHttpInfo() : ApiResponse<ServiceStatus?> {
+        val localVariableConfig = statusRequestConfig()
+
+        return request<Unit, ServiceStatus>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation status
+     *
+     * @return RequestConfig
+     */
+    fun statusRequestConfig() : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/v2/status",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,

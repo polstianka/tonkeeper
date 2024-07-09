@@ -6,11 +6,13 @@ import androidx.annotation.StringRes
 import com.tonapps.tonkeeper.fragment.camera.CameraFragment
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.tonkeeper.fragment.send.SendScreen
+import com.tonapps.tonkeeper.fragment.trade.pick_operator.PickOperatorFragment
+import com.tonapps.tonkeeper.fragment.trade.root.presentation.BuySellFragment
 import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.wallet.localization.Localization
-import io.tonapi.models.JettonBalance
 import uikit.extensions.findFragment
 import uikit.navigation.Navigation
+import java.math.BigDecimal
 
 fun Navigation.toast(@StringRes resId: Int) {
     val context = this as? Context ?: return
@@ -38,7 +40,7 @@ fun Navigation.openCamera() {
 fun Navigation.sendCoin(
     address: String? = null,
     text: String? = null,
-    amount: Float = 0f,
+    amount: BigDecimal = BigDecimal.ZERO,
     jettonAddress: String? = null
 ) {
     if (this !is RootActivity) return
@@ -52,4 +54,8 @@ fun Navigation.sendCoin(
     } else {
         add(SendScreen.newInstance(address, text, amount, jettonAddress))
     }
+}
+
+fun Navigation.toBuySell() {
+    add(BuySellFragment.newInstance())
 }

@@ -3,7 +3,6 @@ package com.tonapps.tonkeeper.fragment.send.amount
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
-import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.token.TokenRepository
@@ -13,12 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.mvi.UiFeature
+import java.math.BigDecimal
 
 @Deprecated("Need refactoring")
 class AmountScreenFeature(
     private val tokenRepository: TokenRepository,
     private val ratesRepository: RatesRepository
-): UiFeature<AmountScreenState, AmountScreenEffect>(AmountScreenState()) {
+) : UiFeature<AmountScreenState, AmountScreenEffect>(AmountScreenState()) {
 
     private val currency: WalletCurrency
         get() = App.settings.currency
@@ -29,8 +29,8 @@ class AmountScreenFeature(
     private val currentTokenCode: String
         get() = uiState.value.selectedTokenCode
 
-    val currentBalance: Float
-        get() = currentToken?.balance?.value ?: 0f
+    val currentBalance: BigDecimal
+        get() = currentToken?.balance?.value ?: BigDecimal.ZERO
 
     val decimals: Int
         get() = currentToken?.decimals ?: 9
@@ -78,16 +78,14 @@ class AmountScreenFeature(
         }
     }
 
-    private suspend fun updateValue(newValue: Float) {
-        val wallet = App.walletManager.getWalletInfo() ?: return
-        val accountId = wallet.accountId
+    private suspend fun updateValue(newValue: BigDecimal) {
         val currentTokenAddress = getCurrentTokenAddress()
 
         val rates = ratesRepository.getRates(currency, currentTokenAddress)
         val balanceInCurrency = rates.convert(currentTokenAddress, currentBalance)
 
         val insufficientBalance = newValue > currentBalance
-        val remaining = if (newValue > 0) {
+        val remaining = if (newValue > BigDecimal.ZERO) {
             val value = currentBalance - newValue
             CurrencyFormatter.format(currentTokenCode, value)
         } else {
@@ -99,14 +97,14 @@ class AmountScreenFeature(
                 rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency),
                 insufficientBalance = insufficientBalance,
                 remaining = remaining,
-                canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
+                canContinue = !insufficientBalance && currentBalance > BigDecimal.ZERO && newValue > BigDecimal.ZERO,
                 maxActive = currentBalance == newValue,
                 available = CurrencyFormatter.format(currentTokenCode, currentBalance)
             )
         }
     }
 
-    fun setValue(value: Float) {
+    fun setValue(value: BigDecimal) {
         updateUiState { currentState ->
             currentState.copy(
                 canContinue = false

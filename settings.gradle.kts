@@ -25,6 +25,7 @@ include(":baselineprofile:signer")
 include(":ton")
 include(":core")
 include(":tonapi")
+include(":stonfiapi")
 
 
 include(":ui:shimmer")

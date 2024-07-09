@@ -6,10 +6,11 @@ import io.tonapi.models.JettonBalance
 import com.tonapps.wallet.data.account.legacy.WalletLegacy
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import uikit.mvi.UiState
+import java.math.BigDecimal
 
 data class AmountScreenState(
     val wallet: WalletLegacy? = null,
-    val amount: Float = 0f,
+    val amount: BigDecimal = BigDecimal.ZERO,
     val currency: WalletCurrency = App.settings.currency,
     val available: CharSequence = "",
     val rate: CharSequence = "0 ${App.settings.currency.code}",

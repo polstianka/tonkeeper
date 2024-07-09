@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/view_swap_token_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        app:roundedCornerRadius="14dp"
+        tools:background="#f00" />
+
+    <TextView
+        android:id="@+id/view_swap_token_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?buttonTertiaryForegroundColor"
+        tools:text="ton" />
+</merge>

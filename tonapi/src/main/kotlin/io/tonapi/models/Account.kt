@@ -15,6 +15,7 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.AccountStatus
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -50,7 +51,7 @@ data class Account (
     val lastActivity: kotlin.Long,
 
     @Json(name = "status")
-    val status: kotlin.String,
+    val status: AccountStatus,
 
     @Json(name = "get_methods")
     val getMethods: kotlin.collections.List<kotlin.String>,

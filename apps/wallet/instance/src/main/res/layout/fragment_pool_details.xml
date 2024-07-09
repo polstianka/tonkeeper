@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?backgroundPageColor">
+
+    <uikit.widget.HeaderView
+        android:id="@+id/fragment_pool_details_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:icon="@drawable/ic_chevron_left_16" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <uikit.widget.ColumnLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.tonapps.tonkeeper.fragment.stake.ui.LiquidStakingDetailsView
+                android:id="@+id/fragment_pool_details_liquid_staking_details"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"/>
+
+            <com.tonapps.tonkeeper.fragment.stake.ui.PoolDetailsView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:id="@+id/fragment_pool_details_pool_details"/>
+
+            <com.tonapps.tonkeeper.fragment.stake.ui.PoolLinksView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:id="@+id/fragment_pool_details_links"/>
+
+        </uikit.widget.ColumnLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <FrameLayout
+        android:id="@+id/fragment_pool_details_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <Button
+            android:id="@+id/fragment_pool_details_button"
+            style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_action"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor" />
+    </FrameLayout>
+</uikit.widget.ColumnLayout>

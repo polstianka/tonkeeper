@@ -11,6 +11,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +25,12 @@ import androidx.annotation.DimenRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleableRes
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.tonapps.uikit.color.backgroundHighlightedColor
 import com.tonapps.uikit.color.stateList
 import com.tonapps.uikit.color.textTertiaryColor
+import uikit.R
 
 fun Context.inflate(
     @LayoutRes layoutId: Int,
@@ -74,10 +77,11 @@ val Context.activity: ComponentActivity?
 val Context.window: Window?
     get() = activity?.window
 
-fun Context.useAttributes(
+inline fun Context.useAttributes(
     set: AttributeSet?,
     @StyleableRes attrs: IntArray,
-    block: (TypedArray) -> Unit) {
+    crossinline block: (TypedArray) -> Unit
+) {
     theme.obtainStyledAttributes(set, attrs, 0, 0).apply {
         try {
             block(this)
@@ -99,7 +103,12 @@ fun Context.textWithLabel(text: String, label: CharSequence?): CharSequence {
         return text
     }
     val span = SpannableString("$text $label")
-    span.setSpan(ForegroundColorSpan(textTertiaryColor), text.length, text.length + label.length + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    span.setSpan(
+        ForegroundColorSpan(textTertiaryColor),
+        text.length,
+        text.length + label.length + 1,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
     return span
 }
 
@@ -114,3 +123,21 @@ fun Context.getCurrentFocus(): View? {
 fun Context.getCurrentFocusEditText(): EditText? {
     return getCurrentFocus() as? EditText
 }
+
+val Context.cornerMedium: Int
+    get() = resources.getDimensionPixelSize(R.dimen.cornerMedium)
+
+val Context.selectableItemBackground: Drawable?
+    get() {
+        val typedValue = TypedValue()
+        val isResolved = theme.resolveAttribute(
+            android.R.attr.selectableItemBackground,
+            typedValue,
+            true
+        )
+        return if (isResolved) {
+            ContextCompat.getDrawable(this, typedValue.resourceId)
+        } else {
+            null
+        }
+    }

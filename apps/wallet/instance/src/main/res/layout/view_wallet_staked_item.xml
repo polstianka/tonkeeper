@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.item.BaseItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:isHeightHardcoded="false"
+    android:paddingVertical="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="48dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/view_wallet_staked_item_icon_big"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="start|top"
+            app:roundedCornerRadius="22dp"
+            tools:background="#f00" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/view_wallet_staked_item_icon_small"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="end|bottom"
+            app:roundedCornerRadius="9dp"
+            tools:background="#0f0" />
+    </FrameLayout>
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/staked"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?textPrimaryColor"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="1,000.01"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?textPrimaryColor"
+                android:id="@+id/view_wallet_staked_item_balance_crypto"
+                android:textAlignment="textEnd"/>
+        </uikit.widget.RowLayout>
+
+        <uikit.widget.RowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                tools:text="Tonkeeper Queue #1"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:id="@+id/view_wallet_staked_item_pool_name"
+                android:textColor="?textSecondaryColor"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="$6,010.01"
+                android:textColor="?textSecondaryColor"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:id="@+id/view_wallet_staked_item_balance_fiat"/>
+        </uikit.widget.RowLayout>
+    </uikit.widget.ColumnLayout>
+</uikit.widget.item.BaseItemView>

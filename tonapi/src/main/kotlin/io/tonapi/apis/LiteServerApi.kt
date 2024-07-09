@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
 import io.tonapi.models.GetAllRawShardsInfo200Response
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
+import io.tonapi.models.GetOutMsgQueueSizes200Response
 import io.tonapi.models.GetRawAccountState200Response
 import io.tonapi.models.GetRawBlockProof200Response
 import io.tonapi.models.GetRawBlockchainBlock200Response
@@ -36,6 +36,7 @@ import io.tonapi.models.GetRawTime200Response
 import io.tonapi.models.GetRawTransactions200Response
 import io.tonapi.models.SendRawMessage200Response
 import io.tonapi.models.SendRawMessageRequest
+import io.tonapi.models.StatusDefaultResponse
 
 import com.squareup.moshi.Json
 
@@ -125,6 +126,74 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/v2/liteserver/get_all_shards_info/{block_id}".replace("{"+"block_id"+"}", encodeURIComponent(blockId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * 
+     * Get out msg queue sizes
+     * @return GetOutMsgQueueSizes200Response
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getOutMsgQueueSizes() : GetOutMsgQueueSizes200Response {
+        val localVarResponse = getOutMsgQueueSizesWithHttpInfo()
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as GetOutMsgQueueSizes200Response
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * 
+     * Get out msg queue sizes
+     * @return ApiResponse<GetOutMsgQueueSizes200Response?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getOutMsgQueueSizesWithHttpInfo() : ApiResponse<GetOutMsgQueueSizes200Response?> {
+        val localVariableConfig = getOutMsgQueueSizesRequestConfig()
+
+        return request<Unit, GetOutMsgQueueSizes200Response>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getOutMsgQueueSizes
+     *
+     * @return RequestConfig
+     */
+    fun getOutMsgQueueSizesRequestConfig() : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/v2/liteserver/get_out_msg_queue_sizes",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -608,7 +677,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getRawListBlockTransactions(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String? = null, lt: kotlin.Int? = null) : GetRawListBlockTransactions200Response {
+    fun getRawListBlockTransactions(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String? = null, lt: kotlin.Long? = null) : GetRawListBlockTransactions200Response {
         val localVarResponse = getRawListBlockTransactionsWithHttpInfo(blockId = blockId, mode = mode, count = count, accountId = accountId, lt = lt)
 
         return when (localVarResponse.responseType) {
@@ -640,7 +709,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getRawListBlockTransactionsWithHttpInfo(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String?, lt: kotlin.Int?) : ApiResponse<GetRawListBlockTransactions200Response?> {
+    fun getRawListBlockTransactionsWithHttpInfo(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String?, lt: kotlin.Long?) : ApiResponse<GetRawListBlockTransactions200Response?> {
         val localVariableConfig = getRawListBlockTransactionsRequestConfig(blockId = blockId, mode = mode, count = count, accountId = accountId, lt = lt)
 
         return request<Unit, GetRawListBlockTransactions200Response>(
@@ -658,7 +727,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      * @param lt lt (optional)
      * @return RequestConfig
      */
-    fun getRawListBlockTransactionsRequestConfig(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String?, lt: kotlin.Int?) : RequestConfig<Unit> {
+    fun getRawListBlockTransactionsRequestConfig(blockId: kotlin.String, mode: kotlin.Int, count: kotlin.Int, accountId: kotlin.String?, lt: kotlin.Long?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -913,7 +982,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getRawShardInfo(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Int, exact: kotlin.Boolean) : GetRawShardInfo200Response {
+    fun getRawShardInfo(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Long, exact: kotlin.Boolean) : GetRawShardInfo200Response {
         val localVarResponse = getRawShardInfoWithHttpInfo(blockId = blockId, workchain = workchain, shard = shard, exact = exact)
 
         return when (localVarResponse.responseType) {
@@ -944,7 +1013,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getRawShardInfoWithHttpInfo(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Int, exact: kotlin.Boolean) : ApiResponse<GetRawShardInfo200Response?> {
+    fun getRawShardInfoWithHttpInfo(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Long, exact: kotlin.Boolean) : ApiResponse<GetRawShardInfo200Response?> {
         val localVariableConfig = getRawShardInfoRequestConfig(blockId = blockId, workchain = workchain, shard = shard, exact = exact)
 
         return request<Unit, GetRawShardInfo200Response>(
@@ -961,7 +1030,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      * @param exact exact
      * @return RequestConfig
      */
-    fun getRawShardInfoRequestConfig(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Int, exact: kotlin.Boolean) : RequestConfig<Unit> {
+    fun getRawShardInfoRequestConfig(blockId: kotlin.String, workchain: kotlin.Int, shard: kotlin.Long, exact: kotlin.Boolean) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1066,7 +1135,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getRawTransactions(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Int, hash: kotlin.String) : GetRawTransactions200Response {
+    fun getRawTransactions(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Long, hash: kotlin.String) : GetRawTransactions200Response {
         val localVarResponse = getRawTransactionsWithHttpInfo(accountId = accountId, count = count, lt = lt, hash = hash)
 
         return when (localVarResponse.responseType) {
@@ -1097,7 +1166,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getRawTransactionsWithHttpInfo(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Int, hash: kotlin.String) : ApiResponse<GetRawTransactions200Response?> {
+    fun getRawTransactionsWithHttpInfo(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Long, hash: kotlin.String) : ApiResponse<GetRawTransactions200Response?> {
         val localVariableConfig = getRawTransactionsRequestConfig(accountId = accountId, count = count, lt = lt, hash = hash)
 
         return request<Unit, GetRawTransactions200Response>(
@@ -1114,7 +1183,7 @@ class LiteServerApi(basePath: kotlin.String = defaultBasePath, client: OkHttpCli
      * @param hash hash
      * @return RequestConfig
      */
-    fun getRawTransactionsRequestConfig(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Int, hash: kotlin.String) : RequestConfig<Unit> {
+    fun getRawTransactionsRequestConfig(accountId: kotlin.String, count: kotlin.Int, lt: kotlin.Long, hash: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {

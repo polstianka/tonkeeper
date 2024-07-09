@@ -15,6 +15,7 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.AccountAddress
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,6 +24,7 @@ import com.squareup.moshi.JsonClass
  * 
  *
  * @param address 
+ * @param account 
  * @param isWallet 
  * @param hasMethodPubkey 
  * @param hasMethodSeqno 
@@ -34,6 +36,9 @@ data class WalletDNS (
 
     @Json(name = "address")
     val address: kotlin.String,
+
+    @Json(name = "account")
+    val account: AccountAddress,
 
     @Json(name = "is_wallet")
     val isWallet: kotlin.Boolean,

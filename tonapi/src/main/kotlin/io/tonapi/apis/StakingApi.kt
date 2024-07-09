@@ -20,10 +20,10 @@ import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
 import io.tonapi.models.AccountStaking
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
 import io.tonapi.models.GetStakingPoolHistory200Response
 import io.tonapi.models.GetStakingPoolInfo200Response
 import io.tonapi.models.GetStakingPools200Response
+import io.tonapi.models.StatusDefaultResponse
 
 import com.squareup.moshi.Json
 

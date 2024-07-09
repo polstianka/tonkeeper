@@ -19,7 +19,7 @@ import java.io.IOException
 import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
-import io.tonapi.models.GetBlockchainBlockDefaultResponse
+import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.Trace
 
 import com.squareup.moshi.Json
