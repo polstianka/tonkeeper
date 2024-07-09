@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/input_hint"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/barHeight"
+        android:layout_marginStart="@dimen/offsetMedium"
+        android:gravity="center_vertical"
+        android:transformPivotX="0dp"
+        android:transformPivotY="0dp"
+        android:textAppearance="@style/TextAppearance.Body1"
+        android:textColor="?attr/textSecondaryColor"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/input_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:translationY="6dp"
+            android:minHeight="@dimen/barHeight"
+            android:paddingTop="16dp"
+            android:paddingBottom="22dp"
+            android:maxLines="4"
+            android:maxLength="220"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textPrimaryColor"
+            android:textCursorDrawable="@drawable/cursor"
+            android:gravity="top|start"
+            android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+            android:background="@null"/>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/input_type_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/offsetMedium"
+            android:gravity="end|center"
+            android:transformPivotX="0dp"
+            android:transformPivotY="0dp"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor"/>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/input_options"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/barHeight"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/input_action"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="14dp"
+                android:gravity="center_vertical"
+                android:textColor="?attr/textAccentColor"
+                android:textAppearance="@style/TextAppearance.Label1" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/iconSize"
+                android:layout_height="@dimen/iconSize"
+                android:layout_marginEnd="14dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/input_icon"
+                android:visibility="gone"
+                android:scaleType="centerInside"
+                android:tint="?attr/textAccentColor" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </FrameLayout>
+
+</FrameLayout>

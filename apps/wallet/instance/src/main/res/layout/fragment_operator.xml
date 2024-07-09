@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="top|center"
+        android:layout_height="match_parent">
+        <uikit.widget.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:action="@drawable/ic_close_16"
+            android:title="operation"
+            app:ignoreSystemOffset="true" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:backgroundTint="?attr/backgroundContentColor"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/countryCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="2dp"
+                    android:gravity="start"
+                    android:maxLength="12"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.Label1"
+                    android:textColor="?attr/textPrimaryColor" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="start"
+                    android:maxLength="12"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.Label1"
+                    android:textColor="?attr/textSecondaryColor" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ic_switch"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_switch_16" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <uikit.widget.SimpleRecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginVertical="@dimen/offsetMedium"
+            app:layout_constraintBottom_toTopOf="@+id/closeBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchToken" />
+    </LinearLayout>
+
+
+    <com.tonapps.tonkeeper.ui.screen.swap.view.progressButton.ProgressButton
+        android:id="@+id/progressButton"
+        android:layout_width="match_parent"
+        android:layout_gravity="center|bottom"
+        android:layout_marginVertical="24dp"
+        android:layout_height="wrap_content" />
+
+</FrameLayout>

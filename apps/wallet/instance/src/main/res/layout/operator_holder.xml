@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingHorizontal="@dimen/offsetMedium">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:orientation="horizontal">
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="4dp"
+            app:strokeWidth="0dp">
+
+
+            <uikit.widget.FrescoView
+                android:id="@+id/imgCurrency"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txMarket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="2dp"
+                android:gravity="start"
+                android:maxLength="12"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txPriceResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="2dp"
+                android:gravity="start"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <RadioButton
+        android:id="@+id/stateSelected"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center|end"
+        android:buttonTint="@color/radio_button_color"
+        android:checked="false"
+        android:clickable="false" />
+
+</FrameLayout>

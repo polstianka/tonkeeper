@@ -79,6 +79,11 @@
 
     </style>
 
+    <style name="Widget.AppCompat.Button.Borderless" parent="Base.Widget.App.Button">
+        <item name="android:background">@drawable/bg_button_progress</item>
+        <item name="android:textColor">@color/button_primary_foreground_selector</item>
+    </style>
+
     <style name="Widget.Dialog.NoAnimation">
         <item name="android:windowEnterAnimation">@null</item>
         <item name="android:windowExitAnimation">@null</item>

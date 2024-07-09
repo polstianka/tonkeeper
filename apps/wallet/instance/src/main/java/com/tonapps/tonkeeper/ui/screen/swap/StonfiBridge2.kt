@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.ui.screen.swap
 
-import android.util.Log
 import com.tonapps.tonkeeper.sign.SignRequestEntity
 import org.json.JSONArray
 import org.json.JSONObject
@@ -23,7 +22,6 @@ class StonfiBridge2(
             close()
             return null
         } else if (name == "sendTransaction" && args.length() == 1) {
-            Log.d("DAppScreenLog", "sendTransaction: ${args}")
             val request = SignRequestEntity(args.getJSONObject(0))
             return sendTransaction(request)
         }

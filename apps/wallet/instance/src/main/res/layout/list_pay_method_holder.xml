@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingHorizontal="@dimen/offsetMedium">
+
+
+    <RadioButton
+        android:id="@+id/stateSelected"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center|start"
+        android:buttonTint="@color/radio_button_color"
+        android:checked="false"
+        android:clickable="false" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:layout_marginTop="2dp"
+        android:gravity="start"
+        android:maxLength="12"
+        android:layout_marginStart="48dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor" />
+
+    <ImageView
+        android:id="@+id/imgMethod"
+        android:layout_width="32dp"
+        android:layout_gravity="center|end"
+        android:layout_height="32dp"/>
+
+</FrameLayout>

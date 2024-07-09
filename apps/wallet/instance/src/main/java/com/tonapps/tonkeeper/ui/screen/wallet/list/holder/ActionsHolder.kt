@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
+import com.tonapps.tonkeeper.ui.screen.buyOrSell.BuyOrSellScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
@@ -24,16 +25,20 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
         scanView.setOnClickListener { navigation?.openCamera() }
     }
 
     override fun onBind(item: Item.Actions) {
+
         receiveView.setOnClickListener {
             navigation?.add(QRScreen.newInstance(item.address, item.token, item.walletType))
         }
         swapView.setOnClickListener {
             navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, TokenEntity.TON.address))
+        }
+
+        buyOrSellView.setOnClickListener {
+            navigation?.add(BuyOrSellScreen.newInstance(item.address))
         }
 
         swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
