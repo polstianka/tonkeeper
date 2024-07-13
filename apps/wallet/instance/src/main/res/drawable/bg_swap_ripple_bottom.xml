@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/backgroundHighlightedColor">
+    <item android:id="@android:id/mask">
+        <shape>
+            <solid android:color="?attr/buttonTertiaryBackgroundColor" />
+            <corners android:bottomLeftRadius="16dp" android:bottomRightRadius="16dp" />
+        </shape>
+    </item>
+</ripple>

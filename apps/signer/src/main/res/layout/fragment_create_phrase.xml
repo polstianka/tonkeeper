@@ -20,6 +20,34 @@
                 android:title="@string/enter_recovery_phrase"
                 android:description="@string/enter_recovery_phrase_subtitle"/>
 
+            <uikit.widget.RowLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetLarge"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:paddingVertical="12dp"
+                android:background="@drawable/bg_wrong">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/import_key_wrong"
+                    android:textColor="?attr/accentOrangeColor"
+                    android:textAppearance="@style/TextAppearance.Body3"/>
+
+                <View
+                    android:layout_width="@dimen/offsetMedium"
+                    android:layout_height="1dp"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_exclamationmark_triangle_28"/>
+
+            </uikit.widget.RowLayout>
+
             <uikit.widget.WordFormView
                 android:id="@+id/word_form"
                 android:layout_width="match_parent"

@@ -3,17 +3,48 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="76dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingHorizontal="@dimen/offsetMedium"
+    android:clipChildren="false"
     android:orientation="horizontal">
 
-    <uikit.widget.FrescoView
-        android:id="@+id/icon"
-        fresco:roundAsCircle="true"
+    <FrameLayout
         android:layout_width="44dp"
-        android:layout_height="44dp"
         android:layout_gravity="center"
-        android:background="@drawable/bg_oval"
-        android:backgroundTint="?attr/backgroundContentTintColor"/>
+        android:clipChildren="false"
+        android:layout_height="44dp">
+
+        <uikit.widget.FrescoView
+            android:id="@+id/icon"
+            fresco:roundAsCircle="true"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_oval"
+            android:backgroundTint="?attr/backgroundContentTintColor"/>
+
+        <FrameLayout
+            android:id="@+id/icon2Content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/bg_oval"
+            android:layout_marginLeft="17dp"
+            android:layout_marginTop="17dp"
+            android:layout_gravity="center"
+            android:padding="2dp"
+            android:visibility="gone"
+            android:backgroundTint="?attr/backgroundContentColor"
+            android:layout_height="wrap_content">
+
+            <uikit.widget.FrescoView
+                android:id="@+id/icon2"
+                fresco:roundAsCircle="true"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/bg_oval"
+                android:backgroundTint="?attr/backgroundContentTintColor"/>
+
+        </FrameLayout>
+    </FrameLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -23,13 +54,42 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/textPrimaryColor" />
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                tools:text="USDT"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/ton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:visibility="gone"
+                android:layout_marginHorizontal="8dp"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textSize="10sp"
+                android:paddingVertical="3dp"
+                android:textAllCaps="true"
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="6dp"
+                android:includeFontPadding="false"
+                android:text="@string/best"
+                android:background="@drawable/bg_hint"
+                android:textColor="?textSecondaryColor"
+                tools:text="TON"/>
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/rate"

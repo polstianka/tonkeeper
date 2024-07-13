@@ -1,6 +1,7 @@
 package com.tonapps.signer.screen.sign
 
 import android.os.Bundle
+import android.util.Log
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.hex
 import com.tonapps.blockchain.ton.extensions.parseCell
@@ -21,7 +22,7 @@ data class SignArgs(private val args: Bundle) {
         ) = Bundle().apply {
             putLong(Key.ID, id)
             putString(Key.V, v)
-            putString(Key.BODY, body.base64())
+            putString(Key.BODY, body.hex())
             putParcelable(Key.RETURN, returnResult)
         }
     }

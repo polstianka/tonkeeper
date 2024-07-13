@@ -16,31 +16,42 @@ internal class InternalApi(
     private val okHttpClient: OkHttpClient,
 ) {
 
-    private fun endpoint(path: String): String {
+    private fun endpoint(
+        path: String,
+        testnet: Boolean,
+        platform: String,
+        build: String
+    ): String {
         val builder = Uri.Builder()
         builder.scheme("https")
             .authority("api.tonkeeper.com")
             .appendEncodedPath(path)
             .appendQueryParameter("lang", context.locale.language)
-            .appendQueryParameter("build", context.packageInfo.versionName.removeSuffix("-debug"))
-            .appendQueryParameter("platform", "android_x")
+            .appendQueryParameter("build", build)
+            .appendQueryParameter("platform", platform)
+            .appendQueryParameter("chainName", if (testnet) "testnet" else "mainnet")
         return builder.build().toString()
     }
 
-    private fun request(path: String): JSONObject {
-        val url = endpoint(path)
+    private fun request(
+        path: String,
+        testnet: Boolean,
+        platform: String = "android_x",
+        build: String = context.packageInfo.versionName.removeSuffix("-debug")
+    ): JSONObject {
+        val url = endpoint(path, testnet, platform, build)
         val body = okHttpClient.get(url)
         return JSONObject(body)
     }
 
-    fun getBrowserApps(): JSONObject {
-        val data = request("apps/popular")
+    fun getBrowserApps(testnet: Boolean): JSONObject {
+        val data = request("apps/popular", testnet, "mobile", "4.4.0")
         return data.getJSONObject("data")
     }
 
-    fun downloadConfig(): ConfigEntity? {
+    fun downloadConfig(testnet: Boolean): ConfigEntity? {
         return try {
-            val json = request("keys")
+            val json = request("keys", testnet)
             ConfigEntity(json, context.isDebug)
         } catch (e: Throwable) {
             null

@@ -3,7 +3,6 @@ package uikit.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import uikit.R
 import uikit.extensions.useAttributes
 

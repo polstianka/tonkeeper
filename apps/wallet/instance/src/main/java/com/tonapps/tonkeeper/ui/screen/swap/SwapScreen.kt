@@ -12,6 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.getDimensionPixelSize
+import uikit.widget.HeaderView
 import uikit.widget.webview.bridge.BridgeWebView
 
 class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet {
@@ -20,10 +21,14 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
 
     private val rootViewModel: RootViewModel by activityViewModel()
 
+    private lateinit var headerView: HeaderView
     private lateinit var webView: BridgeWebView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        headerView = view.findViewById(R.id.header)
+        headerView.doOnActionClick = { finish() }
+
         webView = view.findViewById(R.id.web)
         webView.clipToPadding = false
         webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))

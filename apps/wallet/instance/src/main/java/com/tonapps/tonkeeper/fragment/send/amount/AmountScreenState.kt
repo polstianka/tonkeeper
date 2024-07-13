@@ -9,10 +9,10 @@ import uikit.mvi.UiState
 
 data class AmountScreenState(
     val wallet: WalletLegacy? = null,
-    val amount: Float = 0f,
-    val currency: WalletCurrency = App.settings.currency,
+    val amount: Double = 0.0,
+    val currency: WalletCurrency = WalletCurrency.TON,
     val available: CharSequence = "",
-    val rate: CharSequence = "0 ${App.settings.currency.code}",
+    val rate: CharSequence = "0",
     val insufficientBalance: Boolean = false,
     val remaining: CharSequence = "",
     val canContinue: Boolean = false,

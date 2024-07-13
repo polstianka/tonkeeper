@@ -2,8 +2,11 @@ package com.tonapps.tonkeeper.ui.screen.phrase
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import com.tonapps.tonkeeper.extensions.copyToClipboard
 import com.tonapps.tonkeeperx.R
 import uikit.base.BaseFragment
+import uikit.extensions.pinToBottomInsets
 import uikit.widget.HeaderView
 import uikit.widget.PhraseWords
 
@@ -15,6 +18,7 @@ class PhraseScreen: BaseFragment(R.layout.fragment_phrase), BaseFragment.SwipeBa
 
     private lateinit var headerView: HeaderView
     private lateinit var wordsView: PhraseWords
+    private lateinit var copyButton: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,9 +27,15 @@ class PhraseScreen: BaseFragment(R.layout.fragment_phrase), BaseFragment.SwipeBa
 
         wordsView = view.findViewById(R.id.words)
         wordsView.setWords(words)
+
+        copyButton = view.findViewById(R.id.copy)
+        copyButton.pinToBottomInsets()
+        copyButton.setOnClickListener {
+            requireContext().copyToClipboard(words.joinToString(" "))
+        }
     }
 
-    companion object {
+    companion  object {
         private const val ARG_WORDS = "words"
 
         fun newInstance(words: Array<String>): PhraseScreen {

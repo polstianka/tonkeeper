@@ -65,7 +65,6 @@ class EventsScreen: MainScreen.Child(R.layout.fragment_main_events_list) {
                 headerView.setSubtitle(Localization.updating)
             } else {
                 headerView.setSubtitle(null)
-                // getRecyclerView()?.scrollToPosition(0)
             }
         }
         collectFlow(eventsViewModel.uiItemsFlow, ::setItems)

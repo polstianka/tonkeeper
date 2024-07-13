@@ -27,11 +27,27 @@ class Fiat(
     suspend fun replaceUrl(
         url: String,
         address: String,
-        currency: String
+        currency: String,
+        tradeType: String? = null,
+        amountCrypto: String? = null,
+        amountFiat: String? = null,
+        paymentType: String? = null
     ): String {
         var replacedUrl = url.replace("{ADDRESS}", address)
         replacedUrl = replacedUrl.replace("{CUR_FROM}", currency)
         replacedUrl = replacedUrl.replace("{CUR_TO}", "TON")
+        tradeType?.let {
+            replacedUrl = replacedUrl.replace("{TRADE_TYPE}", it)
+        }
+        amountCrypto?.let {
+            replacedUrl = replacedUrl.replace("{AMOUNT_TON}", it)
+        }
+        paymentType?.let {
+            replacedUrl = replacedUrl.replace("{PAYMENT_TYPE}", it)
+        }
+        amountFiat?.let {
+            replacedUrl = replacedUrl.replace("{AMOUNT_FIAT}", it)
+        }
 
         if (replacedUrl.contains("TX_ID")) {
             val mercuryoSecret = keysRepository.getValue("mercuryoSecret") ?: ""

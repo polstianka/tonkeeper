@@ -27,6 +27,14 @@ class PasscodeDataStore(context: Context) {
         keyValue.remove(CODE_KEY)
     }
 
+    suspend fun change(oldCode: String, newCode: String): Boolean {
+        if (compare(oldCode)) {
+            setPinCode(newCode)
+            return true
+        }
+        return false
+    }
+
     suspend fun compare(code: String): Boolean = withContext(Dispatchers.IO) {
         val savedCode = keyValue.getString(CODE_KEY)
         savedCode == code

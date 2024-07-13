@@ -11,25 +11,10 @@
         android:title="@string/theme"
         android:icon="@drawable/ic_chevron_left_16"/>
 
-    <uikit.widget.ColumnLayout
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/offsetMedium">
-
-        <uikit.widget.item.ItemIconView
-            android:id="@+id/theme_blue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Blue"
-            app:position="first"/>
-
-        <uikit.widget.item.ItemIconView
-            android:id="@+id/theme_dark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dark"
-            app:position="last"/>
-
-    </uikit.widget.ColumnLayout>
+        android:padding="@dimen/offsetMedium"/>
 
 </uikit.widget.ColumnLayout>

@@ -1,11 +1,13 @@
 package com.tonapps.tonkeeper.fragment.send.amount
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.App
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import core.QueueScope
@@ -17,11 +19,12 @@ import uikit.mvi.UiFeature
 @Deprecated("Need refactoring")
 class AmountScreenFeature(
     private val tokenRepository: TokenRepository,
-    private val ratesRepository: RatesRepository
+    private val ratesRepository: RatesRepository,
+    private val settingsRepository: SettingsRepository,
 ): UiFeature<AmountScreenState, AmountScreenEffect>(AmountScreenState()) {
 
     private val currency: WalletCurrency
-        get() = App.settings.currency
+        get() = settingsRepository.currency
 
     private val currentToken: AccountTokenEntity?
         get() = uiState.value.selectedToken
@@ -29,13 +32,11 @@ class AmountScreenFeature(
     private val currentTokenCode: String
         get() = uiState.value.selectedTokenCode
 
-    val currentBalance: Float
-        get() = currentToken?.balance?.value ?: 0f
+    val currentBalance: Double
+        get() = currentToken?.balance?.value ?: 0.0
 
     val decimals: Int
         get() = currentToken?.decimals ?: 9
-
-    private val queueScope = QueueScope(Dispatchers.IO)
 
     init {
         viewModelScope.launch {
@@ -78,13 +79,11 @@ class AmountScreenFeature(
         }
     }
 
-    private suspend fun updateValue(newValue: Float) {
-        val wallet = App.walletManager.getWalletInfo() ?: return
-        val accountId = wallet.accountId
+    private suspend fun updateValue(newValue: Double) = withContext(Dispatchers.IO) {
         val currentTokenAddress = getCurrentTokenAddress()
 
         val rates = ratesRepository.getRates(currency, currentTokenAddress)
-        val balanceInCurrency = rates.convert(currentTokenAddress, currentBalance)
+        val balanceInCurrency = rates.convert(currentTokenAddress, newValue)
 
         val insufficientBalance = newValue > currentBalance
         val remaining = if (newValue > 0) {
@@ -94,19 +93,22 @@ class AmountScreenFeature(
             ""
         }
 
+        val rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency)
+        val available = CurrencyFormatter.format(currentTokenCode, currentBalance)
+
         updateUiState { currentState ->
             currentState.copy(
-                rate = CurrencyFormatter.formatFiat(currency.code, balanceInCurrency),
+                rate = rate,
                 insufficientBalance = insufficientBalance,
                 remaining = remaining,
                 canContinue = !insufficientBalance && currentBalance > 0 && newValue > 0,
                 maxActive = currentBalance == newValue,
-                available = CurrencyFormatter.format(currentTokenCode, currentBalance)
+                available = available
             )
         }
     }
 
-    fun setValue(value: Float) {
+    fun setValue(value: Double) {
         updateUiState { currentState ->
             currentState.copy(
                 canContinue = false
@@ -116,10 +118,5 @@ class AmountScreenFeature(
         viewModelScope.launch {
             updateValue(value)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        queueScope.cancel()
     }
 }

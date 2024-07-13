@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper
 
 import android.app.Application
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.camera.camera2.Camera2Config
@@ -11,6 +12,7 @@ import com.facebook.imagepipeline.core.ImageTranscoderType
 import com.facebook.imagepipeline.core.MemoryChunkType
 import com.tonapps.tonkeeper.core.fiat.Fiat
 import com.tonapps.tonkeeper.koin.koinModel
+import com.tonapps.tonkeeper.ui.screen.stake.stakingModule
 import com.tonapps.wallet.api.apiModule
 import com.tonapps.wallet.data.account.accountModule
 import com.tonapps.wallet.data.rates.ratesModule
@@ -21,6 +23,7 @@ import org.koin.core.context.startKoin
 import com.tonapps.wallet.data.account.legacy.WalletManager
 import com.tonapps.wallet.data.browser.browserModule
 import com.tonapps.wallet.data.collectibles.collectiblesModule
+import com.tonapps.wallet.data.core.Theme
 import com.tonapps.wallet.data.core.dataModule
 import com.tonapps.wallet.data.events.eventsModule
 import com.tonapps.wallet.data.push.pushModule
@@ -35,26 +38,26 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
         lateinit var walletManager: WalletManager
 
         lateinit var fiat: Fiat
-
-        @Deprecated("Use injection")
         lateinit var settings: SettingsRepository
-
-        lateinit var db: AppDatabase
         lateinit var instance: App
     }
 
     override fun onCreate() {
         super.onCreate()
+        Theme.add("blue", uikit.R.style.Theme_App_Blue)
+        Theme.add("dark", uikit.R.style.Theme_App_Dark)
+        Theme.add("light", uikit.R.style.Theme_App_Light, true)
+
         instance = this
-        db = AppDatabase.getInstance(this)
         walletManager = WalletManager(this)
         fiat = Fiat(this)
-        settings = SettingsRepository(this)
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
+            modules(koinModel, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule, stakingModule)
         }
+        // sorry, just to simplify merging with new dev code
+        settings = getKoin().get()
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         initFresco()

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
@@ -54,8 +55,16 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
         tokenView.setOnClickListener { selectTokenPopup.show(it) }
 
         valueView = view.findViewById(R.id.value)
-        valueView.doOnTextChanged { _, _, _, _ ->
-            feature.setValue(getValue())
+        valueView.doAfterValueChanged = feature::setValue
+        valueView.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                if (continueButton.isEnabled) {
+                    next()
+                } else {
+                    valueView.focusWithKeyboard()
+                }
+            }
+            true
         }
 
         valueCurrencyView = view.findViewById(R.id.value_currency)
@@ -75,7 +84,9 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
         continueButton = view.findViewById(R.id.continue_action)
         continueButton.setOnClickListener { next() }
 
-        feature.setValue(0f)
+        post {
+            feature.setValue(0.0)
+        }
     }
 
     fun forceSetJetton(address: String?) {
@@ -92,12 +103,6 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
         editable.replace(0, editable.length, text)
     }
 
-    private fun getValue(): Float {
-        val text = Coin.prepareValue(valueView.text.toString())
-        return text.toFloatOrNull() ?: 0f
-        // return valueView.text.toString().toFloatOrNull() ?: 0f
-    }
-
     private fun next() {
         sendFeature.setAmount(valueView.text.toString())
         sendFeature.nextPage()
@@ -106,7 +111,7 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
     private fun setMaxValue() {
         val maxValue = feature.currentBalance
         val text = valueView.text ?: return
-        val format = CurrencyFormatter.format(value = maxValue, decimals = feature.decimals)
+        val format = maxValue.toString() // CurrencyFormatter.format(value = maxValue.toFloat(), decimals = feature.decimals)
         text.replace(0, text.length, format)
     }
 
@@ -116,7 +121,7 @@ class AmountScreen: PagerScreen<AmountScreenState, AmountScreenEffect, AmountScr
 
     override fun newUiState(state: AmountScreenState) {
         rateView.text = state.rate
-        valueView.setMaxLength(state.decimals)
+        valueView.setDecimalCount(state.decimals)
 
         if (1 >= state.tokens.size) {
             tokenView.visibility = View.GONE

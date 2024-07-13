@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import com.tonapps.tonkeeper.dialog.fiat.FiatDialog
 import com.tonapps.tonkeeper.extensions.openCamera
 import com.tonapps.tonkeeper.extensions.sendCoin
+import com.tonapps.tonkeeper.ui.screen.buysell.BuySellScreen
 import com.tonapps.tonkeeper.ui.screen.qr.QRScreen
+import com.tonapps.tonkeeper.ui.screen.stake.StakeScreen
 import com.tonapps.tonkeeper.ui.screen.swap.SwapScreen
+import com.tonapps.tonkeeper.ui.screen.swap.SwapScreenNew
 import com.tonapps.tonkeeper.ui.screen.wallet.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.entity.TokenEntity
@@ -20,12 +23,14 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
     private val buyOrSellView = findViewById<View>(R.id.buy_or_sell)
     private val swapView = findViewById<View>(R.id.swap)
     private val scanView = findViewById<View>(R.id.scan)
+    private val stakeView = findViewById<View>(R.id.stake)
     private val navigation = Navigation.from(context)
 
     init {
         sendView.setOnClickListener { navigation?.sendCoin() }
-        buyOrSellView.setOnClickListener { FiatDialog.open(context) }
+        buyOrSellView.setOnClickListener { navigation?.add(BuySellScreen.newInstance()) }
         scanView.setOnClickListener { navigation?.openCamera() }
+        stakeView.setOnClickListener { navigation?.add(StakeScreen.newInstance()) }
     }
 
     override fun onBind(item: Item.Actions) {
@@ -33,11 +38,12 @@ class ActionsHolder(parent: ViewGroup): Holder<Item.Actions>(parent, R.layout.vi
             navigation?.add(QRScreen.newInstance(item.address, item.token, item.walletType))
         }
         swapView.setOnClickListener {
-            navigation?.add(SwapScreen.newInstance(item.swapUri, item.address, TokenEntity.TON.address))
+            navigation?.add(SwapScreenNew.newInstance())
         }
 
         swapView.isEnabled = item.walletType == WalletType.Default && !item.disableSwap
         sendView.isEnabled = item.walletType != WalletType.Watch
+        stakeView.isEnabled = item.walletType != WalletType.Watch
         scanView.isEnabled = item.walletType != WalletType.Watch
         buyOrSellView.isEnabled = item.walletType != WalletType.Testnet && !item.disableSwap
     }

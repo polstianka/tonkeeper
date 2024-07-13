@@ -68,7 +68,7 @@ class WalletHeaderView @JvmOverloads constructor(
         }
     }
 
-    private val swipeDetector = GestureDetectorCompat(context, swipeGestureListener)
+    private val swipeDetector = GestureDetector(context, swipeGestureListener, handler)
     private val settingsView: View
     private val walletView: View
     private val emojiView: EmojiView

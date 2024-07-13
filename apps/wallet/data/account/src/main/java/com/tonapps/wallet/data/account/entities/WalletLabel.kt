@@ -5,13 +5,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class WalletLabel(
-    val name: String,
+    val accountName: String,
     val emoji: CharSequence,
     val color: Int
 ): Parcelable {
 
     val isEmpty: Boolean
-        get() = name.isBlank() && emoji.isBlank()
+        get() = accountName.isBlank() && emoji.isBlank()
+
+    val name: String
+        get() = accountName.ifBlank { "Wallet" }
 
     val title: CharSequence?
         get() = if (isEmpty) null else String.format("%s %s", emoji, name)

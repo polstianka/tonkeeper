@@ -27,7 +27,7 @@
             app:ignoreSystemOffset="true"
             android:icon="@drawable/ic_chevron_down_16"/>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <uikit.widget.ColumnLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -37,8 +37,13 @@
             <uikit.widget.TextHeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offsetLarge"
                 android:title="@string/scan_qr_code"
                 android:description="@string/scan_qr_code_subtitle"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offsetLarge"/>
 
             <uikit.widget.SquareImageView
                 android:layout_width="match_parent"
@@ -55,7 +60,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_flash"/>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </uikit.widget.ColumnLayout>
 
     </FrameLayout>
 

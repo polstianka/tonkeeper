@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class AccountTokenEntity(
     val balance: BalanceEntity,
     @IgnoredOnParcel
-    var rate: TokenRateEntity? = null
+    var rate: TokenRateEntity? = null,
 ): Parcelable {
 
     val imageUri: Uri

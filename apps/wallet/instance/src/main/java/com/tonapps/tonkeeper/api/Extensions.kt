@@ -170,13 +170,10 @@ fun JettonBalance.getAddress(testnet: Boolean): String {
 val JettonBalance.symbol: String
     get() = jetton.symbol
 
-val JettonBalance.parsedBalance: Float
-    get() = Coin.parseJettonBalance(balance, jetton.decimals)
-
-val JettonMintAction.parsedAmount: Float
+val JettonMintAction.parsedAmount: Double
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
-val JettonBurnAction.parsedAmount: Float
+val JettonBurnAction.parsedAmount: Double
     get() = Coin.parseJettonBalance(amount, jetton.decimals)
 
 fun NftItem.imageBySize(size: String): ImagePreview? {

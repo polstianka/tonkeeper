@@ -61,12 +61,12 @@ open class HeaderView @JvmOverloads constructor(
             }
         }
 
-    var doOnActionClick: (() -> Unit)? = null
+    var doOnActionClick: ((view: View) -> Unit)? = null
         set(value) {
             field = value
             actionView.setOnClickListener {
                 if (it.alpha != 0f) {
-                    value?.invoke()
+                    value?.invoke(it)
                 }
             }
         }

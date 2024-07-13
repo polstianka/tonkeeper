@@ -2,7 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/offsetLarge">
+    android:layout_marginHorizontal="@dimen/offsetMedium"
+    android:layout_marginBottom="@dimen/offsetLarge"
+    android:layout_marginTop="@dimen/offsetMedium">
 
     <uikit.widget.ButtonsLayout
         android:layout_width="wrap_content"

@@ -83,6 +83,12 @@ class CreatePasswordFragment : BaseFragment(R.layout.fragment_create_password) {
             passwordInput.focusWithKeyboard()
         }
 
+        if (isRepeat) {
+            collectFlow(createViewModel.page(PageType.Password)) {
+                passwordInput.clear()
+            }
+        }
+
         collectFlow(createViewModel.uiTopOffset) {
             contentView.setPaddingTop(it)
         }

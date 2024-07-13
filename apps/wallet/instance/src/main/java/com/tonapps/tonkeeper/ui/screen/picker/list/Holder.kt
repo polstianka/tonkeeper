@@ -15,6 +15,7 @@ import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.wallet.localization.Localization
 import com.tonapps.wallet.data.account.WalletType
+import com.tonapps.wallet.data.core.HIDDEN_BALANCE
 import uikit.extensions.drawable
 import uikit.navigation.Navigation
 import uikit.navigation.Navigation.Companion.navigation
@@ -60,7 +61,11 @@ abstract class Holder<I: Item>(
             colorView.backgroundTintList = ColorStateList.valueOf(item.color)
             emojiView.setEmoji(item.emoji)
             nameView.text = item.name
-            balanceView.text = item.balance
+            if (item.hiddenBalance) {
+                balanceView.text = HIDDEN_BALANCE
+            } else {
+                balanceView.text = item.balance
+            }
 
             if (item.selected) {
                 checkView.setImageResource(UIKitIcon.ic_donemark_otline_28)

@@ -22,11 +22,14 @@ data class TokenEntity(
     }
 
     companion object {
+
+        val TON_ICON_URI = Uri.Builder().scheme("res").path(R.drawable.ic_ton_with_bg.toString()).build()
+
         val TON = TokenEntity(
             address = "TON",
             name = "Toncoin",
             symbol = "TON",
-            imageUri = Uri.Builder().scheme("res").path(R.drawable.ic_ton_with_bg.toString()).build(),
+            imageUri = TON_ICON_URI,
             decimals = 9,
             verification = Verification.whitelist
         )
@@ -42,6 +45,9 @@ data class TokenEntity(
 
     val isTon: Boolean
         get() = address == TON.address
+
+    val isStaking: Boolean
+        get() = symbol == "tsTON"
 
     constructor(jetton: JettonPreview) : this(
         address = jetton.address,

@@ -14,6 +14,7 @@ import com.tonapps.tonkeeper.core.history.ActionType
 import com.tonapps.tonkeeper.helper.DateFormat
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
+import com.tonapps.wallet.data.collectibles.entities.NftEntity
 
 sealed class HistoryItem(
     type: Int,
@@ -165,10 +166,7 @@ sealed class HistoryItem(
         val value: CharSequence,
         val value2: CharSequence = "",
         val currency: CharSequence? = null,
-        val nftImageURL: String? = null,
-        val nftTitle: String? = null,
-        val nftCollection: String? = null,
-        val nftAddress: String? = null,
+        val nft: NftEntity? = null,
         val tokenCode: String? = null,
         val date: String = "",
         val pending: Boolean = false,
@@ -180,11 +178,13 @@ sealed class HistoryItem(
         val address: String? = null,
         val addressName: String? = null,
         val lt: Long = 0L,
-        val failed: Boolean
+        val failed: Boolean,
+        val cipherText: String? = null,
+        val hiddenBalance: Boolean = false
     ): HistoryItem(TYPE_ACTION) {
 
         val hasNft: Boolean
-            get() = nftImageURL != null && nftTitle != null && nftCollection != null
+            get() = nft != null
 
         constructor(parcel: Parcel) : this(
             index = parcel.readInt(),
@@ -198,10 +198,7 @@ sealed class HistoryItem(
             value = parcel.readCharSequenceCompat()!!,
             value2 = parcel.readCharSequenceCompat()!!,
             currency = parcel.readCharSequenceCompat(),
-            nftImageURL = parcel.readString(),
-            nftTitle = parcel.readString(),
-            nftCollection = parcel.readString(),
-            nftAddress = parcel.readString(),
+            nft = parcel.readParcelableCompat(),
             tokenCode = parcel.readString(),
             date = parcel.readString()!!,
             pending = parcel.readBooleanCompat(),
@@ -213,7 +210,9 @@ sealed class HistoryItem(
             address = parcel.readString(),
             addressName = parcel.readString(),
             lt = parcel.readLong(),
-            failed = parcel.readBooleanCompat()
+            failed = parcel.readBooleanCompat(),
+            cipherText = parcel.readString(),
+            hiddenBalance = parcel.readBooleanCompat()
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
@@ -228,10 +227,7 @@ sealed class HistoryItem(
             dest.writeCharSequenceCompat(value)
             dest.writeCharSequenceCompat(value2)
             dest.writeCharSequenceCompat(currency)
-            dest.writeString(nftImageURL)
-            dest.writeString(nftTitle)
-            dest.writeString(nftCollection)
-            dest.writeString(nftAddress)
+            dest.writeParcelable(nft, flags)
             dest.writeString(tokenCode)
             dest.writeString(date)
             dest.writeBooleanCompat(pending)
@@ -244,6 +240,8 @@ sealed class HistoryItem(
             dest.writeString(addressName)
             dest.writeLong(lt)
             dest.writeBooleanCompat(failed)
+            dest.writeString(cipherText)
+            dest.writeBooleanCompat(hiddenBalance)
         }
 
         companion object CREATOR : Parcelable.Creator<Event> {

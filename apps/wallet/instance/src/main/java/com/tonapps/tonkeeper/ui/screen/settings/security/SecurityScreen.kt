@@ -6,7 +6,9 @@ import androidx.lifecycle.lifecycleScope
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeper.password.PasscodeBiometric
 import com.tonapps.tonkeeper.ui.screen.phrase.PhraseScreen
+import com.tonapps.tonkeeper.ui.screen.settings.passcode.ChangePasscodeScreen
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -26,6 +28,7 @@ class SecurityScreen: BaseFragment(R.layout.fragment_security), BaseFragment.Swi
     private lateinit var headerView: HeaderView
     private lateinit var biometricView: ItemSwitchView
     private lateinit var lockScreenView: ItemSwitchView
+    private lateinit var changePasscodeView: ItemIconView
     private lateinit var recoveryPhraseView: ItemIconView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,12 +53,30 @@ class SecurityScreen: BaseFragment(R.layout.fragment_security), BaseFragment.Swi
         lockScreenView.checked = securityViewModel.lockScreen
         lockScreenView.doOnCheckedChanged = { securityViewModel.lockScreen = it }
 
+        changePasscodeView = view.findViewById(R.id.change_passcode)
+        changePasscodeView.setOnClickListener { navigation?.add(ChangePasscodeScreen.newInstance()) }
+
         recoveryPhraseView = view.findViewById(R.id.recovery_phrase)
         recoveryPhraseView.setOnClickListener { openRecoveryPhrase() }
 
-        collectFlow(securityViewModel.hasMnemonicFlow) {
-            recoveryPhraseView.visibility = if (it) View.VISIBLE else View.GONE
+        collectFlow(securityViewModel.hasMnemonicFlow) { hasMnemonic ->
+            if (hasMnemonic) {
+                actionsWithPhrase()
+            } else {
+                actionsWithoutPhrase()
+            }
         }
+    }
+
+    private fun actionsWithPhrase() {
+        changePasscodeView.position = ListCell.Position.FIRST
+        recoveryPhraseView.position = ListCell.Position.LAST
+        recoveryPhraseView.visibility = View.VISIBLE
+    }
+
+    private fun actionsWithoutPhrase() {
+        changePasscodeView.position = ListCell.Position.SINGLE
+        recoveryPhraseView.visibility = View.GONE
     }
 
     private fun openRecoveryPhrase() {

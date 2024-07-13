@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/price_impact_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/price_impact"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawablePadding="4dp"
+        android:drawableEnd="@drawable/information_circle_16"
+        android:drawableTint="?attr/iconTertiaryColor"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/price_impact_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/price_impact_text"
+        tools:text="0.001%" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/minimum_received_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/minimum_received"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        android:drawablePadding="4dp"
+        android:drawableEnd="@drawable/information_circle_16"
+        android:drawableTint="?attr/iconTertiaryColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_impact_text" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/minimum_received_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/minimum_received_text"
+        tools:text="6,000.01 USD₮" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/provider_fee_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/provider_fee"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        android:drawablePadding="4dp"
+        android:drawableEnd="@drawable/information_circle_16"
+        android:drawableTint="?attr/iconTertiaryColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/minimum_received_text" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/provider_fee_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/provider_fee_text"
+        tools:text="0.0000001 USD₮" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/blockchain_fee_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/blockchain_fee"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/provider_fee_text" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/blockchain_fee_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/blockchain_fee_text"
+        tools:text="0.11 - 0.17 TON" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/route_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/route"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/blockchain_fee_text" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/route_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/route_text"
+        tools:text="TON » USD₮" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/provider_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/provider"
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/route_text" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/provider_text_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/provider_text"
+        tools:text="STON.fi" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

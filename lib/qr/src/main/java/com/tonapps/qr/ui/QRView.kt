@@ -5,11 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.graphics.withSave
 import androidx.core.view.doOnLayout
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.tonapps.qr.QR
 import com.tonapps.qr.R
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,18 @@ class QRView @JvmOverloads constructor(
 
     private val qrDrawable = QRDrawable(context)
 
+    var animation: Boolean
+        get() = qrDrawable.animation
+        set(value) {
+            qrDrawable.animation = value
+        }
+
+    var errorCorrectionLevel: ErrorCorrectionLevel
+        get() = qrDrawable.errorCorrectionLevel
+        set(value) {
+            qrDrawable.errorCorrectionLevel = value
+        }
+
     private var color: Int
         get() = qrDrawable.color
         set(value) {
@@ -45,7 +59,6 @@ class QRView @JvmOverloads constructor(
     private val size: Int
         get() = width - (paddingLeft + paddingRight)
 
-
     init {
         qrDrawable.callback = this
         context.theme.obtainStyledAttributes(attrs, R.styleable.QRView, 0, 0).apply {
@@ -56,6 +69,15 @@ class QRView @JvmOverloads constructor(
                 recycle()
             }
         }
+    }
+
+
+    fun setCorrectionLevelL() {
+        errorCorrectionLevel = ErrorCorrectionLevel.L
+    }
+
+    fun setContent(uri: Uri) {
+        setContent(uri.toString())
     }
 
     fun setContent(content: String) {

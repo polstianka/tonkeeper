@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/offsetMedium"
+            android:orientation="vertical"
+            android:background="@drawable/bg_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center">
+
+                <com.tonapps.tonkeeper.fragment.send.view.AmountInput
+                    android:id="@+id/value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48.76dp"
+                    android:layout_marginVertical="@dimen/offsetMedium"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:digits="0123456789."
+                    android:inputType="numberDecimal"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:gravity="center_vertical"
+                    android:text="0"
+                    android:hint="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/value_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:textAppearance="@style/TextAppearance.NUM2"
+                    android:textColor="?attr/textSecondaryColor"
+                    app:layout_constraintStart_toEndOf="@id/value"
+                    app:layout_constraintTop_toTopOf="@id/value"
+                    app:layout_constraintBottom_toBottomOf="@id/value"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="@dimen/offsetMedium"
+                android:background="@drawable/bg_island_border"
+                android:drawableEnd="@drawable/swap_vertical_16"
+                android:drawableTint="?iconSecondaryColor"
+                android:drawablePadding="8dp"
+                android:foreground="@drawable/bg_swap_ripple"
+                android:textColor="?attr/textSecondaryColor"
+                android:textAppearance="@style/TextAppearance.Body1" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginVertical="@dimen/offsetMedium"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/max"
+                style="@style/Widget.App.Button.Small.Secondary"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textAllCaps="true"
+                android:text="@string/max"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/available"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:gravity="end"
+                android:textColor="?attr/textSecondaryColor"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <FrameLayout
+            android:id="@+id/unstake_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:padding="@dimen/offsetMedium"
+            android:visibility="visible"
+            android:minHeight="67dp"
+            android:orientation="vertical"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:background="@drawable/bg_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/unstake_hint_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="?attr/textSecondaryColor"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/stake_container"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:background="@drawable/bg_content">
+
+            <com.tonapps.tonkeeper.ui.screen.stake.amount.StakeView
+                android:id="@+id/stake"
+                android:layout_width="match_parent"
+                android:layout_marginTop="-10dp"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/shimmer_stake" />
+        </uikit.widget.SkeletonLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/continue_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        android:enabled="false"
+        android:text="@string/continue_action"/>
+
+</FrameLayout>

@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.view
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -11,6 +12,7 @@ import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.setPaddingHorizontal
 import com.tonapps.uikit.list.ListCell
 import uikit.extensions.drawable
+import uikit.extensions.setRightDrawable
 import uikit.widget.LoaderView
 
 class TransactionDetailView @JvmOverloads constructor(
@@ -19,7 +21,7 @@ class TransactionDetailView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : LinearLayoutCompat(context, attrs, defStyle) {
 
-    var position: ListCell.Position = com.tonapps.uikit.list.ListCell.Position.SINGLE
+    var position: ListCell.Position = ListCell.Position.SINGLE
         set(value) {
             field = value
             background = value.drawable(context)
@@ -63,6 +65,10 @@ class TransactionDetailView @JvmOverloads constructor(
         valueView = findViewById(R.id.value)
         descriptionView = findViewById(R.id.description)
         loaderView = findViewById(R.id.loader)
+    }
+
+    fun setTitleRightDrawable(drawable: Drawable?) {
+        titleView.setRightDrawable(drawable)
     }
 
     fun setLoading() {

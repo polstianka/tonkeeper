@@ -33,7 +33,7 @@ class CollectiblesScreen: MainScreen.Child(R.layout.fragment_main_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         headerView = view.findViewById(R.id.header)
-        headerView.title = getString(Localization.purchases)
+        headerView.title = getString(Localization.collectibles)
         headerView.setColor(requireContext().backgroundTransparentColor)
 
         listView = view.findViewById(R.id.list)

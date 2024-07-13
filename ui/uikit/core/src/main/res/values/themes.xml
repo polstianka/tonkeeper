@@ -25,6 +25,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/use_light_system_bars</item>
 
         <item name="bottomSheetDialogTheme">@style/Widget.BottomSheet</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="Theme.App.Blue" parent="Theme.App.Base">

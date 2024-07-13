@@ -114,11 +114,10 @@ class KeyFragment: BaseFragment(R.layout.fragment_key), BaseFragment.SwipeBack {
     }
 
     private fun setExportByUri(publicKey: PublicKeyEd25519, name: String) {
-        val uri = TKDeepLink.buildLinkUri(publicKey, name)
-        qrView.setContent(uri.toString())
+        qrView.setContent(TKDeepLink.buildLinkUri(publicKey, name, false).toString())
 
         exportTonkeeperView.setOnClickListener {
-            TKDeepLink.openOrInstall(requireContext(), uri)
+            TKDeepLink.openOrInstall(requireContext(), TKDeepLink.buildLinkUri(publicKey, name, true))
         }
 
         exportTonkeeperWebView.setOnClickListener {

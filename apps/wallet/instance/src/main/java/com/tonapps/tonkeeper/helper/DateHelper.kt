@@ -1,6 +1,8 @@
 package com.tonapps.tonkeeper.helper
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
+import com.tonapps.wallet.localization.Localization
 import java.util.Calendar
 
 object DateHelper {
@@ -12,16 +14,22 @@ object DateHelper {
         set(Calendar.MILLISECOND, 0)
     }
 
-    private val dateFormatWeekDay = SimpleDateFormat("EEEE")
-    private val dateFormatMonth = SimpleDateFormat("MMM dd")
+    private val dateFormatMonth = SimpleDateFormat("dd MMM")
     private val dateFormatYear = SimpleDateFormat("yyyy")
 
     private val dateFormatHour = SimpleDateFormat("HH:mm")
     private val dateFormatHourMonth = SimpleDateFormat("dd MMM, HH:mm")
     private val dateFormatHourYear = SimpleDateFormat("MMM dd yyyy, HH:mm")
 
-    fun formatWeekDay(timestamp: Long): String {
-        return dateFormatWeekDay.format(timestamp * 1000)
+    fun formatDate(context: Context, timestamp: Long): String {
+        if (isToday(timestamp)) {
+            return context.getString(Localization.today)
+        } else if (isYesterday(timestamp)) {
+            return context.getString(Localization.yesterday)
+        } else if (isThisYear(timestamp)) {
+            return formatMonth(timestamp)
+        }
+        return formatYear(timestamp)
     }
 
     fun formatMonth(timestamp: Long): String {

@@ -29,3 +29,31 @@ fun SharedPreferences.string(key: String, value: String?) {
         }
     }
 }
+
+fun SharedPreferences.float(key: String): Float {
+    return this.getFloat(key, 0f)
+}
+
+fun SharedPreferences.float(key: String, value: Float?) {
+    edit {
+        if (value == null) {
+            remove(key)
+        } else {
+            putFloat(key, value)
+        }
+    }
+}
+
+fun SharedPreferences.bool(key: String): Boolean {
+    return this.getBoolean(key, false)
+}
+
+fun SharedPreferences.bool(key: String, value: Boolean?) {
+    edit {
+        if (value == null) {
+            remove(key)
+        } else {
+            putBoolean(key, value)
+        }
+    }
+}

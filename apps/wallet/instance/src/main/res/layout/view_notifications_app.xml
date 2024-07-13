@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/offsetMedium">
+
+    <uikit.widget.FrescoView
+        android:id="@+id/icon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_gravity="center"
+        app:roundedCornerRadius="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:singleLine="true"
+        android:textColor="?attr/textPrimaryColor"
+        android:textAppearance="@style/TextAppearance.Label1"/>
+
+    <uikit.widget.SwitchView
+        android:id="@+id/push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</uikit.widget.RowLayout>

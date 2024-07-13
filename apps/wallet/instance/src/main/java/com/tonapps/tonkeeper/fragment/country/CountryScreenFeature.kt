@@ -3,6 +3,8 @@ package com.tonapps.tonkeeper.fragment.country
 import androidx.lifecycle.viewModelScope
 import com.tonapps.tonkeeper.event.ChangeCountryEvent
 import com.tonapps.tonkeeper.extensions.flagEmoji
+import com.tonapps.tonkeeper.koin.settingsRepository
+import com.tonapps.wallet.data.settings.SettingsRepository
 import core.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,7 +12,10 @@ import kotlinx.coroutines.withContext
 import uikit.mvi.UiFeature
 import java.util.Locale
 
-class CountryScreenFeature: UiFeature<CountryScreenState, CountryScreenEffect>(CountryScreenState()) {
+@Deprecated("Need refactoring")
+class CountryScreenFeature(
+    private val settingsRepository: SettingsRepository
+): UiFeature<CountryScreenState, CountryScreenEffect>(CountryScreenState()) {
 
     private companion object {
         private var countries = listOf<Country>()
@@ -37,7 +42,7 @@ class CountryScreenFeature: UiFeature<CountryScreenState, CountryScreenEffect>(C
     }
 
     fun setSelection(code: String) {
-        com.tonapps.tonkeeper.App.settings.country = code
+        settingsRepository.country = code
         EventBus.post(ChangeCountryEvent(code))
 
         updateUiState { currentState ->

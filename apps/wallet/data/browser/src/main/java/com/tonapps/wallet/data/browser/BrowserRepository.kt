@@ -19,9 +19,10 @@ class BrowserRepository(
 
     suspend fun search(
         country: String,
-        query: String
+        query: String,
+        testnet: Boolean,
     ): List<BrowserAppEntity> {
-        val data = load(country) ?: return emptyList()
+        val data = load(country, testnet) ?: return emptyList()
         val all = data.categories.map { it.apps }.flatten()
         return all.filter {
             it.name.contains(query, ignoreCase = true) ||
@@ -30,16 +31,16 @@ class BrowserRepository(
         }.distinctBy { it.url }
     }
 
-    suspend fun load(country: String): BrowserDataEntity? = withContext(Dispatchers.IO) {
-        loadLocal(country) ?: loadRemote(country)
+    suspend fun load(country: String, testnet: Boolean): BrowserDataEntity? = withContext(Dispatchers.IO) {
+        loadLocal(country) ?: loadRemote(country, testnet)
     }
 
     private fun loadLocal(country: String): BrowserDataEntity? {
         return localDataSource.getCache(country)
     }
 
-    fun loadRemote(country: String): BrowserDataEntity? {
-        val data = remoteDataSource.load() ?: return null
+    suspend fun loadRemote(country: String, testnet: Boolean): BrowserDataEntity? {
+        val data = remoteDataSource.load(testnet) ?: return null
         localDataSource.setCache(country, data)
         return data
     }

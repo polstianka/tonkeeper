@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/offsetMedium">
+
+        <uikit.widget.FrescoView
+            android:id="@+id/icon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"
+            app:roundedCornerRadius="10dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="32dp"
+            android:paddingTop="1dp"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.H2"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="24sp"
+            tools:text="Credit card" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="6dp"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/radio"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Credit card" />
+
+        <FrameLayout
+            android:id="@+id/custom"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_content_selectable2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="@string/you_pay"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:cursorColor="?accentBlueColor"
+                android:background="@null"
+                app:hintTextAppearance="@style/TextAppearance.Body3"
+                android:textColorHint="?attr/textSecondaryColor"
+                app:hintTextColor="?attr/textSecondaryColor"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/custom_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:digits="0123456789.,"
+                    android:textSize="16sp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:inputType="numberDecimal"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textColorHint="?attr/textSecondaryColor"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/transparent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/percent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="7dp"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:fontFamily="@font/montserrat"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="16sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/custom2"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_content_selectable2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="@string/you_get"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:cursorColor="?accentBlueColor"
+                android:background="@null"
+                app:hintTextAppearance="@style/TextAppearance.Body3"
+                android:textColorHint="?attr/textSecondaryColor"
+                app:hintTextColor="?attr/textSecondaryColor"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/custom_edit2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:digits="0123456789.,"
+                    android:textSize="16sp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:inputType="numberDecimal"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textColorHint="?attr/textSecondaryColor"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/transparent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/percent2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="7dp"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:fontFamily="@font/montserrat"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="16sp" />
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textSize="14sp"
+            android:textColor="?attr/textTertiaryColor"
+            tools:text="Credit card"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:paddingBottom="@dimen/offsetMedium"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="@style/Widget.App.Button"
+            android:id="@+id/continue_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:layout_gravity="bottom"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor"
+            android:enabled="false"
+            android:text="@string/continue_action"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/provided"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:singleLine="true"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textSize="14sp"
+            android:textColor="?attr/textTertiaryColor"
+            tools:text="Service provided by"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="@dimen/offsetMedium"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:layout_marginTop="1dp"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textSize="14sp"
+            android:textColor="?attr/textTertiaryColor"
+            tools:text="Service provided by"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <FrameLayout
+        android:id="@+id/web_view_container"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <uikit.widget.LoaderView
+            android:id="@+id/loader"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:color="?attr/textPrimaryColor"/>
+
+        <uikit.widget.webview.WebViewFixed
+            android:id="@+id/web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</FrameLayout>

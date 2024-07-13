@@ -52,10 +52,13 @@ class ToastView @JvmOverloads constructor(
         valueAnimator
     }
 
+    private val horizontalOffset = 24.dp
+    private val verticalOffset = context.getDimensionPixelSize(R.dimen.offsetMedium)
+
     init {
         inflate(context, R.layout.view_toast, this)
         setBackgroundResource(R.drawable.bg_content_tint_24)
-        setPadding(context.getDimensionPixelSize(R.dimen.offsetMedium))
+        setPadding(horizontalOffset, verticalOffset, horizontalOffset, verticalOffset)
         visibility = View.GONE
         loaderView = findViewById(R.id.toast_loader)
         textView = findViewById(R.id.toast_text)

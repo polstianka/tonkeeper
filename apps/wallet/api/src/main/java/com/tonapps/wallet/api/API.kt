@@ -18,6 +18,7 @@ import com.tonapps.network.postJSON
 import com.tonapps.network.sse
 import com.tonapps.wallet.api.entity.AccountDetailsEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
+import com.tonapps.wallet.api.entity.ChartEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
@@ -77,6 +78,8 @@ class API(
 
     fun emulation(testnet: Boolean) = provider.emulation.get(testnet)
 
+    fun liteServer(testnet: Boolean) = provider.liteServer.get(testnet)
+
     fun rates() = provider.rates.get(false)
 
     fun getEvents(
@@ -88,18 +91,23 @@ class API(
         return accounts(testnet).getAccountEvents(
             accountId = accountId,
             limit = limit,
-            beforeLt = beforeLt
+            beforeLt = beforeLt,
+            subjectOnly = true
         )
     }
 
-    fun getEvent(
+    fun getTokenEvents(
+        tokenAddress: String,
         accountId: String,
         testnet: Boolean,
-        eventId: String
-    ): AccountEvent {
-        return accounts(testnet).getAccountEvent(
+        beforeLt: Long? = null,
+        limit: Int = 20
+    ): AccountEvents {
+        return accounts(testnet).getAccountJettonHistoryByID(
+            jettonId = tokenAddress,
             accountId = accountId,
-            eventId = eventId
+            limit = limit,
+            beforeLt = beforeLt
         )
     }
 
@@ -108,7 +116,7 @@ class API(
         testnet: Boolean
     ): BalanceEntity {
         val account = accounts(testnet).getAccount(accountId)
-        return BalanceEntity(TokenEntity.TON, Coin.toCoins(account.balance), accountId)
+        return BalanceEntity(TokenEntity.TON, Coin.toCoinsDouble(account.balance), accountId)
     }
 
     fun getJettonsBalances(
@@ -116,11 +124,15 @@ class API(
         testnet: Boolean,
         currency: String
     ): List<BalanceEntity> {
-        val jettonsBalances = accounts(testnet).getAccountJettonsBalances(
-            accountId = accountId,
-            currencies = currency
-        ).balances
-        return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
+        try {
+            val jettonsBalances = accounts(testnet).getAccountJettonsBalances(
+                accountId = accountId,
+                currencies = currency
+            ).balances
+            return jettonsBalances.map { BalanceEntity(it) }.filter { it.value > 0 }
+        } catch (e: Throwable) {
+            return emptyList()
+        }
     }
 
     fun resolveAddressOrName(
@@ -149,7 +161,11 @@ class API(
     }
 
     fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates> {
-        return rates().getRates(tokens.joinToString(","), currency).rates
+        return try {
+            rates().getRates(tokens.joinToString(","), currency).rates
+        } catch (e: Throwable) {
+            mapOf()
+        }
     }
 
     fun getNft(address: String, testnet: Boolean): NftItem? {
@@ -367,8 +383,8 @@ class API(
         }
     }
 
-    fun getBrowserApps(): JSONObject {
-        return internalApi.getBrowserApps()
+    fun getBrowserApps(testnet: Boolean): JSONObject {
+        return internalApi.getBrowserApps(testnet)
     }
 
     fun getTransactionEvents(accountId: String, testnet: Boolean, eventId: String): AccountEvent? {
@@ -376,6 +392,28 @@ class API(
             accounts(testnet).getAccountEvent(accountId, eventId)
         } catch (e: Throwable) {
             null
+        }
+    }
+
+    fun loadChart(
+        token: String,
+        currency: String,
+        startDate: Long,
+        endDate: Long,
+        points: Int
+    ): List<ChartEntity> {
+        val url = "${config.tonapiMainnetHost}/v2/rates/chart?token=$token&currency=$currency&end_date=$endDate&start_date=$startDate&points_count=$points"
+        val array = JSONObject(tonAPIHttpClient.get(url)).getJSONArray("points")
+        return (0 until array.length()).map { index ->
+            ChartEntity(array.getJSONArray(index))
+        }
+    }
+
+    suspend fun getServerTime(testnet: Boolean): Int = withContext(Dispatchers.IO) {
+        try {
+            liteServer(testnet).getRawTime().time
+        } catch (e: Throwable) {
+            0
         }
     }
 

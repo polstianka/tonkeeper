@@ -4,8 +4,26 @@
     <string name="toncoin" translatable="false">Toncoin</string>
     <string name="bitcoin" translatable="false">Bitcoin</string>
 
+    <string name="refresh">Refresh</string>
+    <string name="mute">Mute</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="apps">Apps</string>
+    <string name="apps_notifications_description">Notifications from connected apps in your activity</string>
+    <string name="push_notifications">Push notifications</string>
+    <string name="push_notifications_description">Get notifications when you receive TON, tokens, and NFTs. Notifications from connected apps.</string>
+
+    <string name="faq" translatable="false">FAQ</string>
     <string name="failed">Failed</string>
     <string name="remove_dapp_confirm">Remove %1$s?</string>
+    <string name="rate_tonkeeper">Rate Tonkeeper</string>
+    <string name="encrypted_comment">Encrypted comment</string>
+    <string name="encrypted_comment_description">The comment is encrypted by sender and can only be decrypted by you. Please be careful with the content and beware of scams.</string>
+    <string name="decrypted_comment_action">Decrypt the comment</string>
+    <string name="comment_decrypted_hint">Will be visible to everyone.</string>
+    <string name="encrypt_comment">Encrypt comment</string>
+
+    <string name="comment_encrypted_hint">Will be visible only to recipient and you.</string>
+    <string name="decrypt_comment">Decrypt</string>
 
     <string name="sign_out">Sign out</string>
     <string name="delete_watch_account_alert">Delete watch account?</string>
@@ -107,6 +125,8 @@
     <string name="passcode_enter">Enter passcode</string>
     <string name="passcode_create">Create passcode</string>
     <string name="passcode_re_enter">Re-enter passcode</string>
+    <string name="passcode_current">Enter current passcode</string>
+    <string name="passcode_new">Create new passcode</string>
     <string name="import_wallet">Import wallet</string>
     <string name="import_wallet_subtitle">Choose from the options below.</string>
     <string name="import_wallet_words">Import wallet with a 24 secret recovery words</string>
@@ -120,6 +140,7 @@
     <string name="cancel">Cancel</string>
     <string name="fee">Fee</string>
     <string name="period_24h">24h</string>
+    <string name="notifications">Notifications</string>
     <string name="enable_notification">Enable notification</string>
     <string name="allow_notification">Allow Notifications</string>
     <string name="enable_notification_title">Get instant notifications</string>
@@ -147,6 +168,9 @@
     <string name="security">Security</string>
     <string name="sending_transaction">Sending transaction</string>
     <string name="transaction_confirmed">Transaction confirmed</string>
+
+    <string name="connected_placeholder_title">Connected apps will be shown here</string>
+    <string name="connected_placeholder_subtitle">Explore apps and services in Tonkeeper browser.</string>
 
     <string name="send">Send</string>
     <string name="swap">Swap</string>
@@ -206,6 +230,8 @@
 
     <string name="done">Done</string>
     <string name="error">Error</string>
+    <string name="unnamed_collection">Unnamed collection</string>
+    <string name="view_details">View details</string>
 
     <string name="receive_coin">Receive %1$s</string>
     <string name="receive_coin_description">Send only %1$s and tokens in TON network to this address, or you might lose your funds.</string>
@@ -267,4 +293,50 @@
     <string name="explore">Explore</string>
     <string name="connected">Connected</string>
     <string name="browser_search_placeholder">Enter an address or search the web</string>
+
+    <string name="slide_to_confirm">Slide to Confirm</string>
+    <string name="price_impact">Price impact</string>
+    <string name="minimum_received">Minimum received</string>
+    <string name="provider_fee">Liquidity provider fee</string>
+    <string name="blockchain_fee">Blockchain fee</string>
+    <string name="route">Route</string>
+    <string name="provider">Provider</string>
+    <string name="choose">Choose</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="choose_token">Choose Token</string>
+    <string name="custom">Custom</string>
+    <string name="expert_mode">Expert Mode</string>
+    <string name="suggested">Suggested</string>
+    <string name="other">Other</string>
+    <string name="available_balance2">Balance: %1$s</string>
+    <string name="slippage">Slippage</string>
+    <string name="slippage_hint">The amount the price can change unfavorably before the trade reverts</string>
+    <string name="expert_mode_hint">Allows high price impact trades.\nUse at your own risk.</string>
+    <string name="confirm_swap">Confirm Swap</string>
+    <string name="price_impact_hint">The difference between the market price and estimated price due to trade size.</string>
+    <string name="minimum_received_hint">Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.</string>
+    <string name="provider_fee_hint">A portion of each trade goes to liquidity providers as a protocol incentive.</string>
+    <string name="slippage_high">Price impact is high - reduce the volume</string>
+    <string name="sell">Sell</string>
+    <string name="operator">Operator</string>
+    <string name="minimum_amount">Min. amount: %1$s</string>
+    <string name="rate_for">%1$s for %2$s</string>
+    <string name="best">Best</string>
+    <string name="no_operators">No operators, choose another currency</string>
+    <string name="operation_hint">Instantly %1$s with %2$s</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="crypto">Cryptocurrency</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="you_pay">You pay</string>
+    <string name="you_get">You get</string>
+    <string name="options">Options</string>
+    <string name="apy">APY</string>
+    <string name="minimal_deposit">Minimal deposit</string>
+    <string name="links">Links</string>
+    <string name="stake_hint">Staking is based on smart contracts by third parties.\nTonkeeper is not responsible for staking experience.</string>
+    <string name="deposit">Deposit</string>
+    <string name="provided">Service provided by %1$s</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="staked">Staked</string>
+    <string name="unstake_hint">Unstake request will be processed after the end of the validation cycle in %1$s</string>
 </resources>

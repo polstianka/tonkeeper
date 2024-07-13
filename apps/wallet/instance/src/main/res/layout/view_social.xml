@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="36dp"
+    android:background="@drawable/bg_social"
+    android:foreground="@drawable/bg_swap_ripple"
+    android:gravity="center">
+
+    <uikit.widget.FrescoView
+        android:id="@+id/icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="@dimen/offsetMedium" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="@dimen/offsetMedium"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:textSize="14sp"
+        android:textColor="?attr/textPrimaryColor"
+        tools:text="Community" />
+
+</uikit.widget.RowLayout>

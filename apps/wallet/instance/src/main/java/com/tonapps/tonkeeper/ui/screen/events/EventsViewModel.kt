@@ -19,6 +19,7 @@ import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.events.EventsRepository
 import com.tonapps.wallet.data.push.PushManager
 import com.tonapps.wallet.data.push.entities.AppPushEntity
+import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
 import com.tonapps.wallet.localization.Localization
 import io.tonapi.models.AccountEvent
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
@@ -48,7 +50,8 @@ class EventsViewModel(
     private val tonConnectRepository: TonConnectRepository,
     private val pushManager: PushManager,
     private val historyHelper: HistoryHelper,
-    private val screenCacheSource: ScreenCacheSource
+    private val screenCacheSource: ScreenCacheSource,
+    private val settingsRepository: SettingsRepository
 ): AndroidViewModel(application) {
 
     private val _isUpdatingFlow = MutableStateFlow(false)
@@ -59,9 +62,7 @@ class EventsViewModel(
 
     init {
         collectFlow(walletRepository.activeWalletFlow.map { getCached(it) }.flowOn(Dispatchers.IO)) { items ->
-            if (items.isNullOrEmpty()) {
-                _uiItemsFlow.value = emptyList()
-            } else {
+            if (!items.isNullOrEmpty()) {
                 _uiItemsFlow.value = items
             }
         }
@@ -80,6 +81,20 @@ class EventsViewModel(
         collectFlow(pushManager.dAppPushFlow.filterNotNull()) {
             val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: return@collectFlow
             loadEvents(wallet, true)
+        }
+
+        collectFlow(settingsRepository.hiddenBalancesFlow.drop(1)) {
+            val wallet = walletRepository.activeWalletFlow.firstOrNull() ?: return@collectFlow
+            val uiItems = _uiItemsFlow.value?.map {
+                if (it is HistoryItem.Event) {
+                    it.copy(hiddenBalance = settingsRepository.hiddenBalances)
+                } else {
+                    it
+                }
+            } ?: return@collectFlow
+
+            _uiItemsFlow.value = uiItems.toList()
+            screenCacheSource.set(CACHE_NAME, wallet.id, uiItems)
         }
     }
 
@@ -140,11 +155,6 @@ class EventsViewModel(
             ))
         }
         return items
-    }
-
-
-    private fun getString(resId: Int): String {
-        return application.getString(resId)
     }
 
     private fun foundLastItem(): HistoryItem.Event? {
@@ -210,7 +220,8 @@ class EventsViewModel(
         return historyHelper.mapping(
             wallet = wallet,
             events = events,
-            removeDate = false
+            removeDate = false,
+            hiddenBalances = settingsRepository.hiddenBalances
         )
     }
 
@@ -228,7 +239,7 @@ class EventsViewModel(
 
         for (item in preparedItems) {
             val timestamp = item.timestampForSort
-            val dateFormat = formatDate(timestamp)
+            val dateFormat = DateHelper.formatDate(application, timestamp)
             if (dateFormat != currentDate) {
                 uiItems.add(HistoryItem.Header(dateFormat, item.timestampForSort))
                 currentDate = dateFormat
@@ -238,21 +249,8 @@ class EventsViewModel(
 
         _uiItemsFlow.value = uiItems.toList()
         if (!more) {
-            screenCacheSource.set(CACHE_NAME, wallet.accountId, wallet.testnet, uiItems)
+            screenCacheSource.set(CACHE_NAME, wallet.id, uiItems)
         }
-    }
-
-    private fun formatDate(timestamp: Long): String {
-        if (DateHelper.isToday(timestamp)) {
-            return getString(Localization.today)
-        } else if (DateHelper.isYesterday(timestamp)) {
-            return getString(Localization.yesterday)
-        } else if (DateHelper.isThisMonth(timestamp)) {
-            return DateHelper.formatWeekDay(timestamp)
-        } else if (DateHelper.isThisYear(timestamp)) {
-            return DateHelper.formatMonth(timestamp)
-        }
-        return DateHelper.formatYear(timestamp)
     }
 
     private fun setUpdating(updating: Boolean) {
@@ -268,7 +266,7 @@ class EventsViewModel(
     }
 
     private fun getCached(wallet: WalletEntity): List<HistoryItem>? {
-        val items: List<HistoryItem> = screenCacheSource.get(CACHE_NAME, wallet.accountId, wallet.testnet) {
+        val items: List<HistoryItem> = screenCacheSource.get(CACHE_NAME, wallet.id) {
             HistoryItem.createFromParcel(it)
         }
         if (items.isEmpty()) {

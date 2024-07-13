@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/offsetMedium"
+        android:orientation="vertical">
+        
+        <LinearLayout
+            android:id="@+id/currency_container"
+            android:layout_width="match_parent"
+            android:background="@drawable/bg_content"
+            android:foreground="@drawable/bg_swap_ripple"
+            android:orientation="horizontal"
+            android:layout_height="56dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/currency_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Label1"
+                android:textColor="?attr/textPrimaryColor"
+                android:layout_marginStart="@dimen/offsetMedium"
+                android:textSize="16sp"
+                tools:text="RUB"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/currency_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Body1"
+                android:textColor="?attr/textSecondaryColor"
+                android:layout_marginHorizontal="8dp"
+                android:textSize="16sp"
+                tools:text="RUB"/>
+            
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_marginEnd="@dimen/offsetMedium"
+                android:src="@drawable/chevron_updown"
+                android:layout_gravity="center_vertical"
+                android:tint="?iconTertiaryColor"
+                android:layout_height="24dp"/>
+
+        </LinearLayout>
+
+        <uikit.widget.SimpleRecyclerView
+            android:id="@+id/typeList"
+            android:layout_width="match_parent"
+            android:requiresFadingEdge="vertical"
+            android:layout_marginBottom="80dp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:fadingEdgeLength="8dp"
+            android:layout_height="match_parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/empty"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:text="@string/no_operators"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginTop="@dimen/offsetMedium"
+            android:layout_marginBottom="80dp"
+            android:textSize="16sp" />
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/shimmer_operator" />
+        </uikit.widget.SkeletonLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        style="@style/Widget.App.Button"
+        android:id="@+id/continue_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offsetMedium"
+        android:layout_marginBottom="@dimen/offsetMedium"
+        android:layout_gravity="bottom"
+        android:textAppearance="@style/TextAppearance.Label1"
+        android:textColor="?attr/textPrimaryColor"
+        android:enabled="false"
+        android:text="@string/continue_action"/>
+
+</FrameLayout>

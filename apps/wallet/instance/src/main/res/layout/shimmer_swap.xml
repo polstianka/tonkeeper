@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/offsetMedium"
+    android:paddingHorizontal="@dimen/offsetMedium"
+    android:paddingBottom="36dp"
+    android:layout_marginTop="@dimen/offsetMedium"
+    android:layout_marginBottom="@dimen/offsetExtraSmall"
+    android:orientation="vertical"
+    android:background="@drawable/bg_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:id="@+id/ssend"
+        android:layout_width="40dp"
+        android:background="@drawable/bg_swap"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <View
+        android:id="@+id/stoken"
+        android:layout_width="90dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_swap"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ssend"/>
+
+    <View
+        android:id="@+id/smax"
+        android:layout_width="130dp"
+        android:layout_height="16dp"
+        android:paddingStart="@dimen/offsetMedium"
+        android:paddingBottom="@dimen/offsetExtraSmall"
+        android:background="@drawable/bg_swap"
+        android:gravity="center_vertical"
+        android:textAllCaps="true"
+        android:textColor="?attr/accentBlueColor"
+        android:textAppearance="@style/TextAppearance.Label2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/svalue"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="50dp"
+        android:background="@drawable/bg_swap"
+        app:layout_constraintStart_toEndOf="@id/stoken"
+        app:layout_constraintTop_toBottomOf="@id/smax"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

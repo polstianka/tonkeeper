@@ -63,6 +63,7 @@
             android:id="@+id/show_audit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
             android:text="@string/audit_transaction"
             android:gravity="center"
             android:textColor="?attr/textSecondaryColor"
@@ -105,9 +106,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/tertiaryHeight"
                 android:layout_marginTop="12dp"
-                android:layout_marginStart="@dimen/offsetMedium"
+                android:layout_marginStart="8dp"
                 android:text="@string/copy"
                 app:layout_constraintStart_toEndOf="@+id/emulate"
+                app:layout_constraintTop_toBottomOf="@+id/boc_raw" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/qr"
+                android:layout_width="@dimen/tertiaryHeight"
+                android:layout_height="@dimen/tertiaryHeight"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="8dp"
+                android:scaleType="centerInside"
+                android:background="@drawable/bg_button_tertiary"
+                android:src="@drawable/ic_qr_code_16"
+                app:layout_constraintStart_toEndOf="@+id/copy"
                 app:layout_constraintTop_toBottomOf="@+id/boc_raw" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -117,7 +130,7 @@
         android:id="@+id/action"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemHeight"
-        android:layout_marginTop="@dimen/offsetMedium">
+        android:layout_marginTop="24dp">
 
         <uikit.widget.SlideActionView
             android:id="@+id/slide"

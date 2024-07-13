@@ -39,6 +39,9 @@ abstract class BaseWalletContract(
             return when(v) {
                 "v3r1" -> WalletV3R1Contract(publicKey = publicKey)
                 "v3r2" -> WalletV3R2Contract(publicKey = publicKey)
+                "v4r1" -> WalletV4R1Contract(publicKey = publicKey)
+                "v4r2" -> WalletV4R2Contract(publicKey = publicKey)
+                "v5" -> WalletV5Contract(publicKey = publicKey)
                 else -> WalletV4R2Contract(publicKey = publicKey)
             }
         }
@@ -90,7 +93,7 @@ abstract class BaseWalletContract(
     abstract fun getCode(): Cell
 
     abstract fun createTransferUnsignedBody(
-        validUntil: Long = (Clock.System.now() + 60.seconds).epochSeconds,
+        validUntil: Long,
         seqno: Int,
         vararg gifts: WalletTransfer
     ): Cell

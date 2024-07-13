@@ -3,6 +3,7 @@ package com.tonapps.tonkeeper.fragment.send
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import com.tonapps.wallet.localization.Localization
 import com.tonapps.tonkeeper.api.shortAddress
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
@@ -20,6 +21,8 @@ class SendScreenFeature: UiFeature<SendScreenState, SendScreenEffect>(SendScreen
     private val _transaction = MutableLiveData(TransactionData())
     val transaction: LiveData<TransactionData> = _transaction
 
+    val transactionFlow = _transaction.asFlow()
+
     fun setBounce(bounce: Boolean) {
         _transaction.value = _transaction.value?.copy(bounce = bounce)
     }
@@ -34,6 +37,10 @@ class SendScreenFeature: UiFeature<SendScreenState, SendScreenEffect>(SendScreen
 
     fun setComment(comment: String?) {
         _transaction.value = _transaction.value?.copy(comment = comment)
+    }
+
+    fun toggleEncryptComment() {
+        _transaction.value = _transaction.value?.copy(encryptComment = !_transaction.value?.encryptComment!!)
     }
 
     fun setAmount(amount: String) {

@@ -40,7 +40,7 @@ object Password {
         val dialog = PasswordDialog(context, ::trySend)
         dialog.setOnDismissListener {
             if (isActive) {
-                close(Throwable("User canceled"))
+                close(UserCancelThrowable )
             } else {
                 close()
             }
@@ -48,4 +48,8 @@ object Password {
         dialog.show()
         awaitClose { dialog.destroy() }
     }.flowOn(Dispatchers.Main).take(1)
+
+    object UserCancelThrowable : Throwable("User canceled") {
+        private fun readResolve(): Any = UserCancelThrowable
+    }
 }

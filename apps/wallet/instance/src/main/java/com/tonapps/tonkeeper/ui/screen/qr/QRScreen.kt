@@ -10,7 +10,9 @@ import com.tonapps.tonkeeper.extensions.copyToClipboard
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.accentOrangeColor
+import com.tonapps.uikit.color.accentPurpleColor
 import com.tonapps.uikit.color.backgroundContentTintColor
+import com.tonapps.uikit.color.stateList
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.WalletType
 import com.tonapps.wallet.localization.Localization
@@ -51,6 +53,7 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
         iconView.setImageURI(args.token.imageUri)
 
         addressView = view.findViewById(R.id.address)
+        addressView.setOnClickListener { copy() }
         addressView.text = args.address
 
         walletTypeView = view.findViewById(R.id.wallet_type)
@@ -60,23 +63,18 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
             walletTypeView.visibility = View.VISIBLE
             if (args.walletType == WalletType.Watch) {
                 walletTypeView.setText(Localization.watch_only)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             } else if (args.walletType == WalletType.Testnet) {
                 walletTypeView.setText(Localization.testnet)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             } else if (args.walletType == WalletType.Signer) {
                 walletTypeView.setText(Localization.signer)
+                walletTypeView.backgroundTintList = requireContext().accentPurpleColor.stateList
             }
         }
 
         copyView = view.findViewById(R.id.copy)
-        copyView.setOnClickListener {
-            val color = if (args.walletType == WalletType.Default) {
-                requireContext().backgroundContentTintColor
-            } else {
-                requireContext().accentOrangeColor
-            }
-            navigation?.toast(getString(Localization.copied), color)
-            context?.copyToClipboard(args.address)
-        }
+        copyView.setOnClickListener { copy() }
 
         shareView = view.findViewById(R.id.share)
         shareView.setOnClickListener {
@@ -85,6 +83,16 @@ class QRScreen: BaseFragment(R.layout.fragment_qr), BaseFragment.BottomSheet {
             intent.putExtra(Intent.EXTRA_TEXT, args.address)
             startActivity(Intent.createChooser(intent, getString(Localization.share)))
         }
+    }
+
+    private fun copy() {
+        val color = when (args.walletType) {
+            WalletType.Default -> requireContext().backgroundContentTintColor
+            WalletType.Signer -> requireContext().accentPurpleColor
+            else -> requireContext().accentOrangeColor
+        }
+        navigation?.toast(getString(Localization.copied), color)
+        context?.copyToClipboard(args.address)
     }
 
     companion object {

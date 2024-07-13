@@ -48,6 +48,7 @@ class CameraFragment: BaseFragment(R.layout.fragment_camera), BaseFragment.Botto
     }
 
     private var isFlashAvailable = false
+    private var isReady = false
 
     private val qrAnalyzer = QRImageAnalyzer()
     private val chunks = mutableListOf<String>()
@@ -95,6 +96,9 @@ class CameraFragment: BaseFragment(R.layout.fragment_camera), BaseFragment.Botto
     }
 
     private fun handleBarcode(barcode: Barcode) {
+        if (isReady) {
+            return
+        }
         val data = barcode.rawValue ?: return
 
         if (data.startsWith("${Key.SCHEME}://")) {
@@ -108,12 +112,13 @@ class CameraFragment: BaseFragment(R.layout.fragment_camera), BaseFragment.Botto
 
         val uri = chunks.joinToString("").uriOrNull ?: return
         if (rootViewModel.processDeepLink(uri, false)) {
+            isReady = true
             finishDelay()
         }
     }
 
     private fun finishDelay() {
-        postDelayed(ModalView.animationDuration) {
+        postDelayed(300) {
             finish()
         }
     }

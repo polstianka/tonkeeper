@@ -2,6 +2,7 @@ package uikit.base
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.uikit.icon.UIKitIcon
 import uikit.R
@@ -37,7 +38,20 @@ open class BaseListFragment: BaseFragment(R.layout.fragment_list) {
         listView.adapter = adapter
     }
 
+    fun addItemDecoration(decoration: RecyclerView.ItemDecoration) {
+        listView.addItemDecoration(decoration)
+    }
+
+    fun addScrollListener(listener: RecyclerView.OnScrollListener) {
+        listView.addOnScrollListener(listener)
+    }
+
     fun setTitle(title: String) {
         headerView.title = title
+    }
+
+    fun setActionIcon(@DrawableRes resId: Int, onClick: (view: View) -> Unit) {
+        headerView.setAction(resId)
+        headerView.doOnActionClick = onClick
     }
 }

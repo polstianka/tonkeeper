@@ -9,4 +9,5 @@ object Key {
     const val RETURN = "return"
     const val V = "v"
     const val SCHEME = "tonsign"
+    const val SIGN = "sign"
 }
