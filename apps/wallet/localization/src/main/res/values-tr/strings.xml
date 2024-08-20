@@ -353,4 +353,29 @@
     <string name="sending_error">Gönderim hatası, daha sonra tekrar deneyin</string>
     <string name="spam">Spam</string>
     <string name="later">Daha sonra</string>
+    <string name="battery">Batarya</string>
+    <string name="battery_refill_title">Tonkeeper Batarya</string>
+    <string name="battery_refill_subtitle">Tonkeeper ile takas yapın, token ve NFT gönderin.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="one">%1$s şarj</item>
+        <item quantity="other">%1$s şarj</item>
+    </plurals>
+    <string name="battery_refill_crypto"> %1$s ile Şarj Et</string>
+    <string name="battery_refill_gift">Batarya Hediyesi</string>
+    <string name="battery_refill_gift_subtitle">Arkadaşlarla paylaş</string>
+    <string name="battery_supported_transaction">Desteklenen işlemler</string>
+    <string name="battery_settings">Batarya Ayarları</string>
+    <string name="battery_will_be_paid">Ödenecek: %1$s</string>
+    <string name="battery_nft">NFT transferleri</string>
+    <string name="battery_swap">Tonkeeper ile takas</string>
+    <string name="battery_jetton">token transferleri</string>
+    <string name="battery_swap_single">takas</string>
+    <string name="battery_transfer_single">transfer</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="one">≈ %1$s şarj başına %2$s</item>
+        <item quantity="other">≈ %1$s şarj başına %2$s</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Batarya ile ödenecek</string>
+    <string name="battery_settings_title">Batarya Ayarları</string>
+    <string name="battery_settings_subtitle">Seçilen işlemler Tonkeeper Bataryası ile ödenecektir.</string>
 </resources>
