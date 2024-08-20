@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.battery.list.holder
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.tonkeeper.ui.screen.battery.list.Item
@@ -23,10 +24,15 @@ class SettingsHolder(parent: ViewGroup, private val openSettings: () -> Unit) :
     override fun onBind(item: Item.Settings) {
         itemView.background = ListCell.Position.SINGLE.drawable(context)
         itemView.setOnClickListener { openSettings() }
-        subtitleView.text = context.getString(
-            Localization.battery_will_be_paid,
-            getSupportedTransactionText(item.supportedTransactions)
-        )
+        if (item.supportedTransactions.isEmpty()) {
+            subtitleView.visibility = View.GONE
+        } else {
+            subtitleView.visibility = View.VISIBLE
+            subtitleView.text = context.getString(
+                Localization.battery_will_be_paid,
+                getSupportedTransactionText(item.supportedTransactions)
+            )
+        }
     }
 
     private fun getSupportedTransactionText(supportedTransactions: List<BatterySupportedTransaction>): String {
