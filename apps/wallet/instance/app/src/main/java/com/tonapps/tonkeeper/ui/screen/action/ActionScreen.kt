@@ -1,31 +1,20 @@
 package com.tonapps.tonkeeper.ui.screen.action
 
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.tonapps.extensions.withMinus
-import com.tonapps.extensions.withPlus
-import com.tonapps.icu.CurrencyFormatter.withCustomSymbol
-import com.tonapps.tonkeeper.api.getNameOrAddress
-import com.tonapps.tonkeeper.core.history.ActionType
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.list.HistoryAdapter
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.extensions.getTitle
 import com.tonapps.tonkeeper.ui.base.BaseWalletScreen
-import com.tonapps.tonkeeper.view.TransactionDetailView
 import com.tonapps.tonkeeperx.R
-import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
 import com.tonapps.wallet.localization.Localization
-import io.tonapi.models.Action
-import io.tonapi.models.JettonVerificationType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -69,11 +58,6 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
         actionsView.adapter = adapter
 
         adapter.submitList(args.historyItems)
-
-        val builder = SpannableStringBuilder("≈ ")
-        builder.append(args.feeFormat.withCustomSymbol(requireContext()))
-        builder.append(" · ")
-        builder.append(args.feeFiatFormat.withCustomSymbol(requireContext()))
 
         processView = view.findViewById(R.id.process)
 
@@ -138,27 +122,21 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
             requestKey: String,
             isBattery: Boolean = false,
         ) = newInstance(
-            accountId = details.accountId,
             walletId = walletId,
             request = request,
             historyItems = details.items,
-            feeFormat = details.feeFormat,
-            feeFiatFormat = details.feeFiatFormat,
             requestKey = requestKey,
             isBattery = isBattery,
         )
 
         fun newInstance(
-            accountId: String,
             walletId: String,
             request: SignRequestEntity,
             historyItems: List<HistoryItem>,
-            feeFormat: CharSequence,
-            feeFiatFormat: CharSequence,
             requestKey: String,
             isBattery: Boolean = false,
         ): ActionScreen {
-            val args = ActionArgs(accountId, walletId, request, historyItems, feeFormat, feeFiatFormat, requestKey, isBattery)
+            val args = ActionArgs(walletId, request, historyItems, requestKey, isBattery)
             val screen = ActionScreen()
             screen.setArgs(args)
             return screen
