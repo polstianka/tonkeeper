@@ -210,4 +210,13 @@ sealed class Item(type: Int): BaseListItem(type) {
         position = position,
         secondaryIcon = false
     )
+
+    data class Battery(
+        override val position: ListCell.Position
+    ): Icon(
+        titleRes = Localization.battery,
+        iconRes = UIKitIcon.ic_battery_28,
+        position = position,
+        secondaryIcon = false
+    )
 }

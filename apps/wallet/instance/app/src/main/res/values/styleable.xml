@@ -8,4 +8,12 @@
         <attr name="position"/>
         <attr name="android:title" format="string|reference"/>
     </declare-styleable>
+    <declare-styleable name="BatteryView">
+        <attr name="emptyState"/>
+    </declare-styleable>
+    <attr name="emptyState">
+        <enum name="none" value="0"/>
+        <enum name="secondary" value="1"/>
+        <enum name="accent" value="2"/>
+    </attr>
 </resources>

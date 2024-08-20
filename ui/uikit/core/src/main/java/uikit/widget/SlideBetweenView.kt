@@ -49,6 +49,10 @@ class SlideBetweenView @JvmOverloads constructor(
         }
     }
 
+    fun getCurrentIndex(): Int {
+        return currentIndex
+    }
+
     private companion object {
         private const val ANIMATION_DURATION = 220L
         private val INTERPOLATOR = PathInterpolatorCompat.create(0.4f, 0f, 0.2f, 1f)

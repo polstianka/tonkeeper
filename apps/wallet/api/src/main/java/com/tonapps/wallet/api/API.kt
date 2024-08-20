@@ -17,6 +17,7 @@ import com.tonapps.network.interceptor.AuthorizationInterceptor
 import com.tonapps.network.post
 import com.tonapps.network.postJSON
 import com.tonapps.network.sse
+import com.tonapps.wallet.api.core.SourceAPI
 import com.tonapps.wallet.api.entity.AccountDetailsEntity
 import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ChartEntity
@@ -24,6 +25,7 @@ import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
+import io.batteryapi.apis.BatteryApi
 import io.tonapi.models.Account
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.AccountEvent
@@ -67,6 +69,10 @@ class API(
         )
     }
 
+    private val batteryHttpClient: OkHttpClient by lazy {
+        createBatteryAPIHttpClient(context)
+    }
+
     private val internalApi = InternalApi(context, defaultHttpClient)
     private val configRepository = ConfigRepository(context, scope, internalApi)
 
@@ -86,6 +92,10 @@ class API(
 
     private val provider: Provider by lazy {
         Provider(config.tonapiMainnetHost, config.tonapiTestnetHost, tonAPIHttpClient)
+    }
+
+    private val batteryApi by lazy {
+        SourceAPI(BatteryApi(config.batteryHost, batteryHttpClient), BatteryApi(config.batteryTestnetHost, batteryHttpClient))
     }
 
     fun accounts(testnet: Boolean) = provider.accounts.get(testnet)
@@ -108,11 +118,13 @@ class API(
 
     fun rates() = provider.rates.get(false)
 
+    fun battery(testnet: Boolean) = batteryApi.get(testnet)
+
     suspend fun getAlertNotifications() = withRetry {
         internalApi.getNotifications()
     } ?: emptyList()
 
-    private suspend fun isOkStatus(testnet: Boolean): Boolean {
+    suspend fun isOkStatus(testnet: Boolean): Boolean {
         try {
             val status = withRetry {
                 provider.blockchain.get(testnet).status()
@@ -637,6 +649,14 @@ class API(
             return baseOkHttpClientBuilder()
                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
                 .addInterceptor(AuthorizationInterceptor.bearer(tonApiV2Key, allowDomains))
+                .build()
+        }
+
+        private fun createBatteryAPIHttpClient(
+            context: Context,
+        ): OkHttpClient {
+            return baseOkHttpClientBuilder()
+                 .addInterceptor(AcceptLanguageInterceptor(context.locale))
                 .build()
         }
     }

@@ -34,6 +34,7 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
+import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.Theme
 import com.tonapps.wallet.data.core.WalletCurrency
@@ -239,19 +240,21 @@ class RootViewModel(
 
     suspend fun requestSign(
         context: Context,
-        request: SignRequestEntity
+        request: SignRequestEntity,
+        batteryTxType: BatterySupportedTransaction? = null,
     ): String {
         val wallet = accountRepository.selectedWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
-        return requestSign(context, wallet, request)
+        return requestSign(context, wallet, request, batteryTxType)
     }
 
     suspend fun requestSign(
         context: Context,
         wallet: WalletEntity,
-        request: SignRequestEntity
+        request: SignRequestEntity,
+        batteryTxType: BatterySupportedTransaction? = null,
     ): String {
         val navigation = context.navigation ?: throw Exception("navigation is null")
-        return signManager.action(navigation, wallet, request)
+        return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType)
     }
 
     suspend fun tonconnectBridgeEvent(

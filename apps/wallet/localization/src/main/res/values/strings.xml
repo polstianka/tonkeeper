@@ -407,4 +407,34 @@
     <string name="bluetooth_permissions_alert_title">Bluetooth Permissions</string>
     <string name="bluetooth_permissions_alert_message">Please enable Bluetooth permissions in your settings to use this feature</string>
     <string name="bluetooth_permissions_alert_open_settings">Open Settings</string>
+
+    <string name="battery">Battery</string>
+    <string name="battery_refill_title">Tonkeeper Battery</string>
+    <string name="battery_refill_subtitle">Swap via Tonkeeper, send tokens and NFTs.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="one">%1$s charge</item>
+        <item quantity="few">%1$s charges</item>
+        <item quantity="many">%1$s charges</item>
+        <item quantity="other">%1$s charges</item>
+    </plurals>
+    <string name="battery_refill_crypto">Recharge with %1$s</string>
+    <string name="battery_refill_gift">Battery Gift</string>
+    <string name="battery_refill_gift_subtitle">Share with friends</string>
+    <string name="battery_supported_transaction">Supported transactions</string>
+    <string name="battery_settings">Battery Settings</string>
+    <string name="battery_will_be_paid">Will be paid: %1$s</string>
+    <string name="battery_nft">NFT transfers</string>
+    <string name="battery_swap">swaps via Tonkeeper</string>
+    <string name="battery_jetton">token transfers</string>
+    <string name="battery_swap_single">swap</string>
+    <string name="battery_transfer_single">transfer</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="one">≈ %1$s charge per %2$s</item>
+        <item quantity="few">≈ %1$s charges per %2$s</item>
+        <item quantity="many">≈ %1$s charges per %2$s</item>
+        <item quantity="other">≈ %1$s charges per %2$s</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Will be paid with Battery</string>
+    <string name="battery_settings_title">Battery Settings</string>
+    <string name="battery_settings_subtitle">Selected transactions will be paid by Tonkeeper Battery.</string>
 </resources>

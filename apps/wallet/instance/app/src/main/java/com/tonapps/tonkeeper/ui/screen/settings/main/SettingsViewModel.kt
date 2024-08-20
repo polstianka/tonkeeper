@@ -113,6 +113,9 @@ class SettingsViewModel(
         if (!hasW5) {
             uiItems.add(Item.W5(ListCell.Position.MIDDLE))
         }
+        if (!wallet.isExternal && !api.config.batteryDisabled) {
+            uiItems.add(Item.Battery(ListCell.Position.MIDDLE))
+        }
         uiItems.add(Item.Theme(ListCell.Position.LAST))
 
         uiItems.add(Item.Space)

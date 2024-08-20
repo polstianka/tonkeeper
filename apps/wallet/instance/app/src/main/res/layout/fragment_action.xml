@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="@dimen/offsetMedium">
 
     <FrameLayout
@@ -18,16 +18,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/confirm_action"
-                android:textColor="?attr/textPrimaryColor"
-                android:textAppearance="@style/TextAppearance.H3"/>
+                android:textAppearance="@style/TextAppearance.H3"
+                android:textColor="?attr/textPrimaryColor" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/action_wallet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Body2"
                 android:singleLine="true"
-                android:textColor="?attr/textSecondaryColor"/>
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor" />
 
         </uikit.widget.ColumnLayout>
 
@@ -36,39 +36,18 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center_vertical|end"
+            android:background="@drawable/bg_oval_button_secondary"
+            android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
             android:scaleType="centerInside"
             android:src="@drawable/ic_close_16"
-            android:tint="?attr/buttonSecondaryForegroundColor"
-            android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
-            android:background="@drawable/bg_oval_button_secondary" />
+            android:tint="?attr/buttonSecondaryForegroundColor" />
 
     </FrameLayout>
 
     <uikit.widget.SimpleRecyclerView
         android:id="@+id/actions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|start"
-            android:text="@string/fee"
-            android:textAppearance="@style/TextAppearance.Body2"
-            android:textColor="?attr/textTertiaryColor"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:textAppearance="@style/TextAppearance.Body2"
-            android:textColor="?attr/textTertiaryColor"/>
-    </FrameLayout>
+        android:layout_height="wrap_content" />
 
     <uikit.widget.ProcessTaskView
         android:id="@+id/process"
@@ -76,8 +55,8 @@
         android:layout_height="@dimen/itemHeight"
         android:layout_marginTop="@dimen/offsetMedium"
         android:visibility="gone"
-        app:successLabel="@string/done"
-        app:errorLabel="@string/error"/>
+        app:errorLabel="@string/error"
+        app:successLabel="@string/done" />
 
     <uikit.widget.RowLayout
         android:id="@+id/buttons"
@@ -86,28 +65,28 @@
         android:layout_marginTop="@dimen/offsetMedium">
 
         <Button
-            style="@style/Widget.App.Button.Secondary"
             android:id="@+id/cancel"
+            style="@style/Widget.App.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/cancel"
             android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/buttonSecondaryForegroundColor"
-            android:text="@string/cancel"/>
+            android:textColor="?attr/buttonSecondaryForegroundColor" />
 
         <View
             android:layout_width="@dimen/offsetMedium"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp" />
 
         <Button
-            style="@style/Widget.App.Button"
             android:id="@+id/confirm"
+            style="@style/Widget.App.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/confirm"
             android:textAppearance="@style/TextAppearance.Label1"
-            android:textColor="?attr/buttonPrimaryForegroundColor"
-            android:text="@string/confirm"/>
+            android:textColor="?attr/buttonPrimaryForegroundColor" />
 
     </uikit.widget.RowLayout>
 

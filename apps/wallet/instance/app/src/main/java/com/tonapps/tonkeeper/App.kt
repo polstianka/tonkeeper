@@ -17,6 +17,7 @@ import com.tonapps.wallet.data.token.tokenModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import com.tonapps.wallet.data.backup.backupModule
+import com.tonapps.wallet.data.battery.batteryModule
 import com.tonapps.wallet.data.browser.browserModule
 import com.tonapps.wallet.data.collectibles.collectiblesModule
 import com.tonapps.wallet.data.core.Theme
@@ -47,7 +48,7 @@ class App: Application(), CameraXConfig.Provider, KoinComponent {
 
         startKoin {
             androidContext(this@App)
-            modules(koinModel, purchaseModule, stakingModule, passcodeModule, rnLegacyModule, backupModule, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
+            modules(koinModel, purchaseModule, batteryModule, stakingModule, passcodeModule, rnLegacyModule, backupModule, dataModule, browserModule, pushModule, tonConnectModule, apiModule, accountModule, ratesModule, tokenModule, eventsModule, collectiblesModule)
         }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

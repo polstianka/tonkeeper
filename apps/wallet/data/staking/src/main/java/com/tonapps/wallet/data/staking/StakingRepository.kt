@@ -37,5 +37,4 @@ class StakingRepository(context: Context, api: API) {
         }
         return "${accountId}_testnet_2"
     }
-
 }

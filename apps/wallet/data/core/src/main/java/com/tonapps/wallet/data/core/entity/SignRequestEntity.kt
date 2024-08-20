@@ -20,11 +20,11 @@ data class SignRequestEntity(
     val from: AddrStd?
         get() = fromValue?.let { AddrStd.parse(it) }
 
-    val transfers = messages.map { it.walletTransfer }
+    val transfers = messages.map { it.getWalletTransfer() }
 
     constructor(json: JSONObject) : this(
         fromValue = parseFrom(json),
-        validUntil = json.optLong("_", (Clock.System.now() + 60.seconds).epochSeconds),
+        validUntil = json.optLong("_", (Clock.System.now() + (5 * 60).seconds).epochSeconds),
         messages = parseMessages(json.getJSONArray("messages")),
         network = parseNetwork(json.opt("network"))
     )

@@ -111,10 +111,7 @@ val JettonSwapAction.ton: Long
 fun AccountAddress.getNameOrAddress(testnet: Boolean): String {
     if (!name.isNullOrBlank()) {
         val accountName = name!!.ifPunycodeToUnicode()
-        if (accountName.endsWith(".ton")) {
-            return accountName.short6
-        }
-        return accountName.max12
+        return accountName
     }
     return address.toUserFriendly(
         wallet = isWallet,

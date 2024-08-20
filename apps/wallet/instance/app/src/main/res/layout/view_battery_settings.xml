@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.RowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/offsetMedium">
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/offsetMedium"
+        android:layout_weight="1">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/battery_settings"
+            android:textAppearance="@style/TextAppearance.Label1"
+            android:textColor="?attr/textPrimaryColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offsetExtraExtraSmall"
+            android:text="@string/battery_will_be_paid"
+            android:textAppearance="@style/TextAppearance.Body2"
+            android:textColor="?attr/textSecondaryColor" />
+
+    </uikit.widget.ColumnLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/chevron"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_chevron_right_16"
+        android:tint="?attr/iconTertiaryColor" />
+
+    <uikit.widget.SwitchView
+        android:id="@+id/enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</uikit.widget.RowLayout>

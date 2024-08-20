@@ -26,7 +26,17 @@ data class ConfigEntity(
     val faqUrl: String,
     val aptabaseEndpoint: String,
     val aptabaseAppKey: String,
-    val scamEndpoint: String
+    val scamEndpoint: String,
+    val batteryHost: String,
+    val batteryTestnetHost: String,
+    val batteryBeta: Boolean,
+    val batteryDisabled: Boolean,
+    val batterySendDisabled: Boolean,
+    val batteryMeanFees: String,
+    val batteryMeanPriceNft: String,
+    val batteryMeanPriceSwap: String,
+    val batteryMeanPriceJetton: String,
+    val disableBatteryCryptoRecharge: Boolean,
 ): Parcelable {
 
     val swapUri: Uri
@@ -55,7 +65,17 @@ data class ConfigEntity(
         faqUrl = json.getString("faq_url"),
         aptabaseEndpoint = json.getString("aptabaseEndpoint"),
         aptabaseAppKey = json.getString("aptabaseAppKey"),
-        scamEndpoint = json.optString("scamEndpoint", "https://scam.tonkeeper.com")
+        scamEndpoint = json.optString("scamEndpoint", "https://scam.tonkeeper.com"),
+        batteryHost = json.optString("batteryHost", "https://battery.tonkeeper.com"),
+        batteryTestnetHost = json.optString("batteryTestnetHost", "https://testnet-battery.tonkeeper.com"),
+        batteryBeta = json.optBoolean("battery_beta", true),
+        batteryDisabled = json.optBoolean("disable_battery", false),
+        batterySendDisabled = json.optBoolean("disable_battery_send", false),
+        batteryMeanFees = json.optString("batteryMeanFees", "0.0055"),
+        disableBatteryCryptoRecharge = json.optBoolean("disable_battery_crypto_recharge_module", false),
+        batteryMeanPriceNft = json.optString("batteryMeanPrice_nft", "0.03"),
+        batteryMeanPriceSwap = json.optString("batteryMeanPrice_swap", "0.22"),
+        batteryMeanPriceJetton = json.optString("batteryMeanPrice_jetton", "0.06"),
     ) {
         Log.d("ConfigLog", "ConfigEntity: $json")
     }
@@ -80,6 +100,16 @@ data class ConfigEntity(
         aptabaseEndpoint = "https://anonymous-analytics.tonkeeper.com",
         aptabaseAppKey = "A-SH-4314447490",
         scamEndpoint = "https://scam.tonkeeper.com",
+        batteryHost = "https://battery.tonkeeper.com",
+        batteryTestnetHost = "https://testnet-battery.tonkeeper.com",
+        batteryBeta = true,
+        batteryDisabled = false,
+        batterySendDisabled = false,
+        batteryMeanFees = "0.0055",
+        disableBatteryCryptoRecharge = false,
+        batteryMeanPriceNft = "0.03",
+        batteryMeanPriceSwap = "0.22",
+        batteryMeanPriceJetton = "0.06",
     )
 
     companion object {

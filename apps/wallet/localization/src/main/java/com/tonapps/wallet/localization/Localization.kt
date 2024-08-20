@@ -1,6 +1,7 @@
 package com.tonapps.wallet.localization
 
 typealias Localization = R.string
+typealias Plurals = R.plurals
 
 val SupportedLanguages = listOf(
     Language(),

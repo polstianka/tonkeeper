@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,9 @@ import com.tonapps.icu.CurrencyFormatter.withCustomSymbol
 import com.tonapps.tonkeeper.api.shortAddress
 import com.tonapps.tonkeeper.extensions.copyWithToast
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupScreen
+import com.tonapps.tonkeeper.ui.screen.battery.BatteryScreen
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item
+import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.UIKitColor
 import com.tonapps.uikit.color.accentGreenColor
@@ -29,23 +30,24 @@ import com.tonapps.uikit.color.stateList
 import com.tonapps.uikit.color.textPrimaryColor
 import com.tonapps.uikit.color.textSecondaryColor
 import com.tonapps.wallet.data.account.Wallet
-import com.tonapps.wallet.localization.Localization
 import com.tonapps.wallet.data.core.HIDDEN_BALANCE
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.localization.Localization
 import uikit.HapticHelper
 import uikit.base.BaseDrawable
 import uikit.extensions.dp
+import uikit.extensions.expandTouchArea
 import uikit.extensions.withAlpha
 import uikit.navigation.Navigation
-import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.LoaderView
 
 class BalanceHolder(
     parent: ViewGroup,
     private val settingsRepository: SettingsRepository
-): Holder<Item.Balance>(parent, R.layout.view_wallet_data) {
+) : Holder<Item.Balance>(parent, R.layout.view_wallet_data) {
 
     private val balanceView = itemView.findViewById<AppCompatTextView>(R.id.wallet_balance)
+    private val batteryView = itemView.findViewById<BatteryView>(R.id.wallet_battery)
     private val walletAddressView = itemView.findViewById<AppCompatTextView>(R.id.wallet_address)
     private val walletLoaderView = itemView.findViewById<LoaderView>(R.id.wallet_loader)
     private val walletTypeView = itemView.findViewById<AppCompatTextView>(R.id.wallet_type)
@@ -62,6 +64,10 @@ class BalanceHolder(
         backupIconView.setOnClickListener {
             Navigation.from(context)?.add(BackupScreen.newInstance())
         }
+        batteryView.expandTouchArea(left = 0, top = 10.dp, right = 24.dp, bottom = 10.dp)
+        batteryView.setOnClickListener {
+            Navigation.from(context)?.add(BatteryScreen.newInstance())
+        }
     }
 
     override fun onBind(item: Item.Balance) {
@@ -75,7 +81,8 @@ class BalanceHolder(
             balanceView.background = null
         }
 
-        val requestBackup = (item.walletType == Wallet.Type.Default || item.walletType == Wallet.Type.Lockup) && !item.hasBackup
+        val requestBackup =
+            (item.walletType == Wallet.Type.Default || item.walletType == Wallet.Type.Lockup) && !item.hasBackup
 
         if (requestBackup && item.balanceType == Item.BalanceType.Huge) {
             balanceView.setTextColor(context.accentRedColor)
@@ -88,6 +95,15 @@ class BalanceHolder(
         } else {
             balanceView.setTextColor(context.textPrimaryColor)
             backupIconView.visibility = View.GONE
+        }
+
+
+        if (item.showBattery) {
+            batteryView.visibility = View.VISIBLE
+            batteryView.setBatteryLevel(item.batteryBalance.value.toFloat())
+            batteryView.setEmptyState(item.batteryEmptyState)
+        } else {
+            batteryView.visibility = View.GONE
         }
 
         setWalletType(item.walletType, item.walletVersion)
@@ -170,7 +186,7 @@ class BalanceHolder(
         }
     }
 
-    private class HiddenBalanceDrawable(context: Context): BaseDrawable() {
+    private class HiddenBalanceDrawable(context: Context) : BaseDrawable() {
 
         private val radius = 20f.dp
         private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

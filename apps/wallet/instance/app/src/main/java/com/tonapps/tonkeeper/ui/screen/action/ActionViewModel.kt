@@ -13,6 +13,7 @@ import com.tonapps.tonkeeper.ui.screen.send.main.SendException
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
+import com.tonapps.wallet.data.battery.BatteryRepository
 import com.tonapps.wallet.data.passcode.PasscodeManager
 import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.ton.contract.wallet.WalletTransfer
 
 class ActionViewModel(
     app: Application,
@@ -30,6 +32,7 @@ class ActionViewModel(
     private val accountRepository: AccountRepository,
     private val passcodeManager: PasscodeManager,
     private val api: API,
+    private val batteryRepository: BatteryRepository,
 ) : BaseWalletVM(app) {
 
     private val _walletFlow = MutableStateFlow<WalletEntity?>(null)
@@ -69,9 +72,11 @@ class ActionViewModel(
                 transactions.forEachIndexed { index, transaction ->
                     Log.d("ActionViewModel", "Signing transaction $transaction")
                     val isLast = index == transactions.size - 1
-                    val signedBody = context.signLedgerTransaction(transaction, wallet.id) ?: throw SendException.Cancelled()
+                    val signedBody = context.signLedgerTransaction(transaction, wallet.id)
+                        ?: throw SendException.Cancelled()
                     val contract = wallet.contract
-                    val message = contract.createTransferMessageCell(contract.address, seqno, signedBody)
+                    val message =
+                        contract.createTransferMessageCell(contract.address, seqno, signedBody)
                     boc = message.base64()
                     if (!isLast) {
                         Log.d("ActionViewModel", "Sending transaction to blockchain")
@@ -86,12 +91,19 @@ class ActionViewModel(
                 boc!!
             } else {
                 val secretKey = accountRepository.getPrivateKey(wallet.id)
+                val excessesAddress =
+                    if (args.isBattery) batteryRepository.getConfig(wallet.testnet)
+                        .getExcessesAddress() else null
+
+                val transfers = request.messages.map { it.getWalletTransfer(excessesAddress) }
+
                 val message = accountRepository.createSignedMessage(
                     wallet,
                     seqno,
                     secretKey,
                     request.validUntil,
-                    request.transfers
+                    transfers,
+                    internalMessage = args.isBattery
                 )
                 message.base64()
             }

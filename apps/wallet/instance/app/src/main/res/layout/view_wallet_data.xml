@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/data"
     android:layout_width="match_parent"
     android:layout_height="132dp">
@@ -14,17 +15,26 @@
             android:layout_height="56dp"
             android:layout_gravity="center"
             android:paddingHorizontal="@dimen/offsetMedium">
-            
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/wallet_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center"
                 android:singleLine="true"
                 android:textColor="?attr/textPrimaryColor"
-                android:textSize="44sp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"/>
-            
+                android:textSize="44sp" />
+
+            <com.tonapps.tonkeeper.view.BatteryView
+                android:id="@+id/wallet_battery"
+                android:layout_width="20dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                app:emptyState="accent"
+                android:visibility="gone" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/backup_icon"
                 android:layout_width="24dp"
@@ -41,23 +51,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/wallet_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/offsetExtraExtraSmall"
-                android:textColor="?attr/textSecondaryColor"
-                android:textAppearance="@style/TextAppearance.Body2"
+                android:gravity="center"
                 android:singleLine="true"
-                android:gravity="center"/>
-            
+                android:textAppearance="@style/TextAppearance.Body2"
+                android:textColor="?attr/textSecondaryColor" />
+
             <uikit.widget.LoaderView
                 android:id="@+id/wallet_loader"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_marginHorizontal="@dimen/offsetExtraExtraSmall"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/offsetExtraExtraSmall" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/wallet_type"
@@ -65,12 +76,12 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/offsetExtraExtraSmall"
-                android:paddingHorizontal="@dimen/offsetExtraSmall"
-                android:gravity="center"
                 android:background="@drawable/bg_wallet_type"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/offsetExtraSmall"
                 android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Body4CAPS"
-                android:textColor="?attr/accentOrangeColor"/>
+                android:textColor="?attr/accentOrangeColor" />
         </uikit.widget.RowLayout>
 
     </uikit.widget.ColumnLayout>

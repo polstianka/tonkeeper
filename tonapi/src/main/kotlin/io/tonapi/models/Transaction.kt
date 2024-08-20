@@ -62,7 +62,7 @@ import com.squareup.moshi.JsonClass
 data class Transaction (
 
     @Json(name = "hash")
-    val hash: kotlin.String,
+    val hash: kotlin.String? = null,
 
     @Json(name = "lt")
     val lt: kotlin.Long,
@@ -111,7 +111,7 @@ data class Transaction (
 
     /* hex encoded boc with raw transaction */
     @Json(name = "raw")
-    val raw: kotlin.String,
+    val raw: kotlin.String? = null,
 
     @Json(name = "in_msg")
     val inMsg: Message? = null,

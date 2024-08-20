@@ -10,6 +10,8 @@ import com.tonapps.tonkeeper.ui.screen.action.ActionScreen
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
+import com.tonapps.wallet.data.battery.BatteryRepository
+import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
 import com.tonapps.wallet.data.rates.RatesRepository
@@ -25,7 +27,8 @@ class SignManager(
     private val settingsRepository: SettingsRepository,
     private val accountRepository: AccountRepository,
     private val api: API,
-    private val historyHelper: HistoryHelper
+    private val historyHelper: HistoryHelper,
+    private val batteryRepository: BatteryRepository,
 ) {
 
     suspend fun action(
@@ -33,9 +36,18 @@ class SignManager(
         wallet: WalletEntity,
         request: SignRequestEntity,
         canceller: CancellationSignal = CancellationSignal(),
+        batteryTxType: BatterySupportedTransaction? = null,
     ): String {
         navigation.toastLoading(true)
-        val details = emulate(request, wallet)
+        var isBattery = batteryTxType != null && batteryRepository.isSupportedTransaction(wallet.accountId, batteryTxType)
+        val details: HistoryHelper.Details?
+        if (isBattery) {
+            val result = emulateBattery(request, wallet)
+            details = result.first
+            isBattery = result.second
+        } else {
+            details = emulate(request, wallet)
+        }
         navigation.toastLoading(false)
 
         if (details == null) {
@@ -43,10 +55,13 @@ class SignManager(
             throw IllegalArgumentException("Failed to emulate")
         }
 
-        val boc = getBoc(navigation, wallet, request, details, canceller) ?: throw IllegalArgumentException("Failed boc")
+        val boc = getBoc(navigation, wallet, request, details, canceller, isBattery) ?: throw IllegalArgumentException("Failed boc")
         AnalyticsHelper.trackEvent("send_transaction")
-        if (api.sendToBlockchain(boc, wallet.testnet)) {
+        val success = if (isBattery) batteryRepository.sendToRelayer(wallet, boc) else api.sendToBlockchain(boc, wallet.testnet)
+        if (success) {
             AnalyticsHelper.trackEvent("send_success")
+        } else {
+            throw Exception("Failed to send transaction")
         }
         return boc
     }
@@ -56,7 +71,8 @@ class SignManager(
         wallet: WalletEntity,
         request: SignRequestEntity,
         details: HistoryHelper.Details,
-        canceller: CancellationSignal
+        canceller: CancellationSignal,
+        isBattery: Boolean,
     ) = suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation { canceller.cancel() }
 
@@ -66,7 +82,7 @@ class SignManager(
                 continuation.resume(ActionScreen.parseResult(bundle))
             }
         }
-        navigation.add(ActionScreen.newInstance(details, wallet.id, request, requestKey))
+        navigation.add(ActionScreen.newInstance(details, wallet.id, request, requestKey, isBattery))
     }
 
     private suspend fun emulate(
@@ -82,6 +98,22 @@ class SignManager(
             historyHelper.create(wallet, emulated, rates)
         } catch (e: Throwable) {
             null
+        }
+    }
+
+    private suspend fun emulateBattery(
+        request: SignRequestEntity,
+        wallet: WalletEntity,
+        currency: WalletCurrency = settingsRepository.currency,
+    ): Pair<HistoryHelper.Details?, Boolean> {
+        val rates = ratesRepository.getRates(currency, "TON")
+        val seqno = accountRepository.getSeqno(wallet)
+        val cell = accountRepository.createSignedMessage(wallet, seqno, EmptyPrivateKeyEd25519, request.validUntil, request.transfers, internalMessage = true)
+        return try {
+            val response = batteryRepository.emulate(wallet, cell)
+            Pair(historyHelper.create(wallet, response.consequences, rates, isBattery = true), response.withBattery)
+        } catch (e: Throwable) {
+            Pair(emulate(request, wallet, currency), false)
         }
     }
 }

@@ -23,6 +23,8 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.account.Wallet
+import com.tonapps.wallet.data.battery.BatteryRepository
+import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.collectibles.CollectiblesRepository
 import com.tonapps.wallet.data.collectibles.entities.NftEntity
 import com.tonapps.wallet.data.passcode.PasscodeManager
@@ -77,6 +79,7 @@ class SendViewModel(
     private val ratesRepository: RatesRepository,
     private val passcodeManager: PasscodeManager,
     private val collectiblesRepository: CollectiblesRepository,
+    private val batteryRepository: BatteryRepository,
 ): BaseWalletVM(app) {
 
     private val isNft: Boolean
@@ -100,6 +103,8 @@ class SendViewModel(
     private val userInputFlow = _userInputFlow.asStateFlow()
 
     private var lastTransferEntity: TransferEntity? = null
+
+    private var isBattery = false
 
     val walletTypeFlow = accountRepository.selectedWalletFlow.map { it.type }
 
@@ -142,7 +147,8 @@ class SendViewModel(
 
     val uiInputNftFlow = userInputFlow.map { it.nft }.distinctUntilChanged().filterNotNull()
 
-    val uiRequiredMemoFlow = destinationFlow.map { it as? SendDestination.Account }.map { it?.memoRequired == true }
+    val uiRequiredMemoFlow =
+        destinationFlow.map { it as? SendDestination.Account }.map { it?.memoRequired == true }
 
     val uiExistingTargetFlow = destinationFlow.map { it as? SendDestination.Account }.map { it?.existing == true }
 
@@ -259,8 +265,20 @@ class SendViewModel(
         SendTransaction.Amount(
             value = amount,
             converted = rates.convert(token.address, amount),
-            format = CurrencyFormatter.format(token.symbol, amount, token.decimals, RoundingMode.UP, false),
-            convertedFormat = CurrencyFormatter.format(currency.code, rates.convert(token.address, amount), token.decimals, RoundingMode.UP, false),
+            format = CurrencyFormatter.format(
+                token.symbol,
+                amount,
+                token.decimals,
+                RoundingMode.UP,
+                false
+            ),
+            convertedFormat = CurrencyFormatter.format(
+                currency.code,
+                rates.convert(token.address, amount),
+                token.decimals,
+                RoundingMode.UP,
+                false
+            ),
         )
     }
 
@@ -297,7 +315,8 @@ class SendViewModel(
         builder.setComment(comment, encryptedComment)
         builder.setValidUntil(sendMetadata.validUntil)
         if (isNft) {
-            val amount = getNftTotalAmount(wallet, sendMetadata, transaction.destination.address, comment)
+            val amount =
+                getNftTotalAmount(wallet, sendMetadata, transaction.destination.address, comment)
             builder.setNftAddress(nftAddress)
             builder.setBounceable(true)
             builder.setAmount(amount)
@@ -376,7 +395,7 @@ class SendViewModel(
             return
         }
         _uiEventFlow.tryEmit(SendEvent.Confirm)
-        transferFlow.take(1).map { calculateFee(it) }.map { eventFee(it) }.filterNotNull().onEach {
+        transferFlow.take(1).map { calculateFee(it) }.map { (coins, isBattery) -> eventFee(coins, isBattery) }.filterNotNull().onEach {
             _uiEventFlow.tryEmit(it)
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
@@ -387,21 +406,55 @@ class SendViewModel(
         }.flowOn(Dispatchers.IO).filterNotNull().onEach(::userInputNft).launchIn(viewModelScope)
     }
 
+    private fun shouldAttemptWithRelayer(transfer: TransferEntity): Boolean {
+        if ((transfer.isTon && !transfer.isNft) || transfer.wallet.isExternal) {
+            return false
+        }
+
+        val transactionType =
+            if (transfer.isNft) BatterySupportedTransaction.NFT else BatterySupportedTransaction.JETTON
+
+        return batteryRepository.isSupportedTransaction(transfer.wallet.accountId, transactionType)
+    }
+
     private suspend fun calculateFee(
-        transfer: TransferEntity
-    ): Coins = withContext(Dispatchers.IO) {
+        transfer: TransferEntity,
+        retryWithoutRelayer: Boolean = false,
+    ): Pair<Coins, Boolean> = withContext(Dispatchers.IO) {
         val fakePrivateKey = if (transfer.commentEncrypted) {
             PrivateKeyEd25519()
         } else {
             EmptyPrivateKeyEd25519
         }
-        val message = transfer.toSignedMessage(fakePrivateKey)
-        val fee = api.emulate(message, transfer.wallet.testnet)?.totalFees ?: 0
-        Coins.of(fee)
+        val withRelayer = shouldAttemptWithRelayer(transfer)
+
+        Log.d("SendViewModel", "shouldAttemptWithRelayer: $withRelayer")
+
+        if (withRelayer && !retryWithoutRelayer) {
+            try {
+                val message = transfer.toSignedMessage(fakePrivateKey, true)
+                val response = batteryRepository.emulate(transfer.wallet, message)
+
+                isBattery = response.withBattery
+
+                Pair(Coins.of(response.consequences.totalFees), response.withBattery)
+            } catch (e: Throwable) {
+                Log.e("SendViewModel", "error", e)
+                calculateFee(transfer, true)
+            }
+        } else {
+            val message = transfer.toSignedMessage(fakePrivateKey, false)
+            val fee = api.emulate(message, transfer.wallet.testnet)?.totalFees ?: 0
+
+            isBattery = false
+
+            Pair(Coins.of(fee), false)
+        }
     }
 
     private fun eventFee(
-        coins: Coins
+        coins: Coins,
+        isBattery: Boolean
     ): SendEvent.Fee? {
         return try {
             val code = TokenEntity.TON.symbol
@@ -416,6 +469,7 @@ class SendViewModel(
                     converted,
                     currency.decimals
                 ),
+                isBattery = isBattery,
             )
         } catch (e: Throwable) {
             null
@@ -461,7 +515,8 @@ class SendViewModel(
 
     fun swap() {
         val balance = uiBalanceFlow.value.copy()
-        val amountCurrency = _userInputFlow.updateAndGet { it.copy(amountCurrency = !it.amountCurrency) }.amountCurrency
+        val amountCurrency =
+            _userInputFlow.updateAndGet { it.copy(amountCurrency = !it.amountCurrency) }.amountCurrency
         if (amountCurrency != balance.amountCurrency) {
             _uiInputAmountFlow.tryEmit(balance.converted)
         }
@@ -512,13 +567,13 @@ class SendViewModel(
 
     fun sendSignedMessage(signature: BitString) {
         transferFlow.take(1).map { transfer ->
-            Pair(transfer.transferMessage(signature), transfer.testnet)
+            Pair(transfer.transferMessage(signature), transfer.wallet)
         }.sendTransfer()
     }
 
     fun sendLedgerSignedMessage(body: Cell) {
         transferFlow.take(1).map { transfer ->
-            Pair(transfer.transferMessage(body), transfer.testnet)
+            Pair(transfer.transferMessage(body), transfer.wallet)
         }.sendTransfer()
     }
 
@@ -529,25 +584,28 @@ class SendViewModel(
             if (!wallet.hasPrivateKey) {
                 throw SendException.UnableSendTransaction()
             }
-            val isValidPasscode = passcodeManager.confirmation(context, context.getString(Localization.app_name))
+            val isValidPasscode =
+                passcodeManager.confirmation(context, context.getString(Localization.app_name))
             if (!isValidPasscode) {
                 throw SendException.WrongPasscode()
             }
             val privateKey = accountRepository.getPrivateKey(wallet.id)
-            val boc = transfer.toSignedMessage(privateKey)
-            Pair(boc, wallet.testnet)
+            val excessesAddress = if (isBattery) batteryRepository.getConfig(wallet.testnet).getExcessesAddress() else null
+            val boc = transfer.toSignedMessage(privateKey, isBattery, excessesAddress)
+            Pair(boc, wallet)
         }.sendTransfer()
     }
 
-    private suspend fun sendToBlockchain(message: Cell, testnet: Boolean) {
-        if (!api.sendToBlockchain(message, testnet)) {
+    private suspend fun sendToBlockchain(message: Cell, wallet: WalletEntity) {
+        val success = if (isBattery) batteryRepository.sendToRelayer(wallet, message) else api.sendToBlockchain(message, wallet.testnet)
+        if (!success) {
             throw SendException.FailedToSendTransaction()
         }
     }
 
-    private fun Flow<Pair<Cell, Boolean>>.sendTransfer() {
-        this.map { (boc, testnet) ->
-            sendToBlockchain(boc, testnet)
+    private fun Flow<Pair<Cell, WalletEntity>>.sendTransfer() {
+        this.map { (boc, wallet) ->
+            sendToBlockchain(boc, wallet)
             AnalyticsHelper.trackEvent("send_success")
         }.catch {
             _uiEventFlow.tryEmit(SendEvent.Failed)
