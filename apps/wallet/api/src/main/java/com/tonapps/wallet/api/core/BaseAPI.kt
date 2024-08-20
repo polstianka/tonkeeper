@@ -1,5 +1,6 @@
 package com.tonapps.wallet.api.core
 
+import io.batteryapi.apis.BatteryApi
 import io.tonapi.apis.AccountsApi
 import io.tonapi.apis.BlockchainApi
 import io.tonapi.apis.ConnectApi

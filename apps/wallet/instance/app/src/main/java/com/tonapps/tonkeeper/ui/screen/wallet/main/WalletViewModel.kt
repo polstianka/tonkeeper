@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.icu.Coins
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.core.entities.AssetsEntity
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
@@ -21,6 +22,7 @@ import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.account.Wallet
 import com.tonapps.wallet.data.account.entities.WalletEvent
 import com.tonapps.wallet.data.backup.BackupRepository
+import com.tonapps.wallet.data.battery.BatteryRepository
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.push.PushManager
@@ -61,6 +63,7 @@ class WalletViewModel(
     private val backupRepository: BackupRepository,
     private val stakingRepository: StakingRepository,
     private val ratesRepository: RatesRepository,
+    private val batteryRepository: BatteryRepository,
 ): BaseWalletVM(app) {
 
     private val alertNotificationsFlow = MutableStateFlow<List<NotificationEntity>>(emptyList())
@@ -140,17 +143,43 @@ class WalletViewModel(
                 backups.indexOfFirst { it.walletId == wallet.id } > -1
             }
 
+            val isBatteryViewed = settingsRepository.isBatteryViewed()
+
             val walletCurrency = getCurrency(wallet, currency)
 
             val localAssets = getLocalAssets(walletCurrency, wallet)
+            Log.d("WalletViewLog", "localAssets: $localAssets")
+            val batteryBalance = getBatteryBalance(wallet)
             if (localAssets != null) {
-                _stateMainFlow.value = State.Main(wallet = wallet, assets = localAssets, hasBackup)
+                _stateMainFlow.value = State.Main(
+                    wallet = wallet,
+                    assets = localAssets,
+                    hasBackup = hasBackup,
+                    battery = State.Battery(
+                        balance = batteryBalance,
+                        beta = api.config.batteryBeta,
+                        disabled = api.config.batteryDisabled,
+                        viewed = isBatteryViewed,
+                    ),
+                )
             }
 
             if (isOnline) {
                 val remoteAssets = getRemoteAssets(walletCurrency, wallet)
+                Log.d("WalletViewLog", "remoteAssets: $remoteAssets")
+                val batteryBalance = getBatteryBalance(wallet, true)
                 if (remoteAssets != null) {
-                    _stateMainFlow.value = State.Main(wallet, remoteAssets, hasBackup)
+                    _stateMainFlow.value = State.Main(
+                        wallet,
+                        remoteAssets,
+                        hasBackup = hasBackup,
+                        battery = State.Battery(
+                            balance = batteryBalance,
+                            beta = api.config.batteryBeta,
+                            disabled = api.config.batteryDisabled,
+                            viewed = isBatteryViewed,
+                        ),
+                    )
                     settingsRepository.setWalletLastUpdated(wallet.id)
                     setStatus(Status.Default)
                 }
@@ -178,7 +207,9 @@ class WalletViewModel(
             val isSetupHidden = settingsRepository.isSetupHidden(state.wallet.id)
             val uiSetup: State.Setup? = if (isSetupHidden) null else {
                 State.Setup(
-                    pushEnabled = context.hasPushPermission() && settingsRepository.getPushWallet(state.wallet.id),
+                    pushEnabled = context.hasPushPermission() && settingsRepository.getPushWallet(
+                        state.wallet.id
+                    ),
                     biometryEnabled = settingsRepository.biometric,
                     hasBackup = state.hasBackup,
                     showTelegramChannel = settingsRepository.isTelegramChannel(state.wallet.id)
@@ -234,6 +265,14 @@ class WalletViewModel(
         _statusFlow.tryEmit(status)
     }
 
+    private suspend fun getBatteryBalance(
+        wallet: WalletEntity,
+        ignoreCache: Boolean = false
+    ): Coins = withContext(Dispatchers.IO) {
+        val battery = batteryRepository.getBalance(wallet, ignoreCache)
+        return@withContext battery.balance
+    }
+
     private suspend fun getLocalAssets(
         currency: WalletCurrency,
         wallet: WalletEntity
@@ -285,7 +324,9 @@ class WalletViewModel(
             return null
         }
 
-        val assets = (filteredTokens.map { AssetsEntity.Token(it) } + stakedWithFiat.map { AssetsEntity.Staked(it) }).sortedBy { it.fiat }.reversed()
+        val assets = (filteredTokens.map { AssetsEntity.Token(it) } + stakedWithFiat.map {
+            AssetsEntity.Staked(it)
+        }).sortedBy { it.fiat }.reversed()
 
         return State.Assets(currency, assets.sort(wallet, settingsRepository), fromCache, rates)
     }

@@ -22,6 +22,7 @@ val ActionType.iconRes: Int
         ActionType.JettonBurn -> R.drawable.ic_fire_28
         ActionType.UnSubscribe -> R.drawable.ic_xmark_28
         ActionType.Subscribe -> R.drawable.ic_bell_28
+        ActionType.Fee -> R.drawable.ic_ton_28
     }
 
 
@@ -43,6 +44,7 @@ val ActionType.nameRes: Int
         ActionType.JettonBurn -> Localization.burned
         ActionType.UnSubscribe -> Localization.unsubscribed
         ActionType.Subscribe -> Localization.subscribed
+        ActionType.Fee -> Localization.network_fee
     }
 
 val Action.recipient: AccountAddress?

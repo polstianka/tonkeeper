@@ -18,6 +18,7 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
         private const val LAST_UPDATED_PREFIX = "last_updated_"
         private const val TELEGRAM_CHANNEL_PREFIX = "telegram_channel_"
         private const val SPAM_STATE_TRANSACTION_PREFIX = "spam_state_transaction_"
+        private const val BATTERY_VIEWED_KEY = "battery_viewed"
     }
 
     fun getSpamStateTransaction(
@@ -52,6 +53,14 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
 
     fun isTelegramChannel(walletId: String): Boolean {
         return getBoolean(keyTelegramChannel(walletId), false)
+    }
+
+    fun isBatteryViewed(): Boolean {
+        return getBoolean(BATTERY_VIEWED_KEY, false)
+    }
+
+    fun setBatteryViewed() {
+        putBoolean(BATTERY_VIEWED_KEY, true)
     }
 
     fun setupHide(walletId: String) {

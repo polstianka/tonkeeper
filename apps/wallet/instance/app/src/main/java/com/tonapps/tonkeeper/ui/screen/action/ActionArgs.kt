@@ -13,6 +13,7 @@ data class ActionArgs(
     val feeFormat: CharSequence,
     val feeFiatFormat: CharSequence,
     val resultKey: String,
+    val isBattery: Boolean,
 ): BaseArgs() {
 
     private companion object {
@@ -23,6 +24,7 @@ data class ActionArgs(
         private const val ARG_FEE_FIAT_FORMAT = "fee_fiat_format"
         private const val ARG_RESULT_KEY = "result_key"
         private const val ARG_REQUEST = "request"
+        private const val ARG_IS_BATTERY = "is_battery"
     }
 
     constructor(bundle: Bundle) : this(
@@ -32,7 +34,8 @@ data class ActionArgs(
         historyItems = bundle.getParcelableArrayList(ARG_HISTORY_ITEMS)!!,
         feeFormat = bundle.getCharSequence(ARG_FEE_FORMAT)!!,
         feeFiatFormat = bundle.getCharSequence(ARG_FEE_FIAT_FORMAT)!!,
-        resultKey = bundle.getString(ARG_RESULT_KEY)!!
+        resultKey = bundle.getString(ARG_RESULT_KEY)!!,
+        isBattery = bundle.getBoolean(ARG_IS_BATTERY)
     )
 
     override fun toBundle(): Bundle {
@@ -44,6 +47,7 @@ data class ActionArgs(
         bundle.putCharSequence(ARG_FEE_FORMAT, feeFormat)
         bundle.putCharSequence(ARG_FEE_FIAT_FORMAT, feeFiatFormat)
         bundle.putString(ARG_RESULT_KEY, resultKey)
+        bundle.putBoolean(ARG_IS_BATTERY, isBattery)
         return bundle
     }
 }

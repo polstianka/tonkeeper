@@ -33,7 +33,7 @@ data class StateInit (
     val boc: kotlin.String,
 
     @Json(name = "interfaces")
-    val interfaces: kotlin.collections.List<kotlin.String>
+    val interfaces: kotlin.collections.List<kotlin.String>? = null
 
 )
 

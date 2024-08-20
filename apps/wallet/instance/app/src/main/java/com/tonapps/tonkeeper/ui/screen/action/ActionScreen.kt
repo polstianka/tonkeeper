@@ -2,21 +2,30 @@ package com.tonapps.tonkeeper.ui.screen.action
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.tonapps.extensions.withMinus
+import com.tonapps.extensions.withPlus
 import com.tonapps.icu.CurrencyFormatter.withCustomSymbol
+import com.tonapps.tonkeeper.api.getNameOrAddress
+import com.tonapps.tonkeeper.core.history.ActionType
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.core.history.list.HistoryAdapter
 import com.tonapps.tonkeeper.core.history.list.item.HistoryItem
 import com.tonapps.tonkeeper.extensions.getTitle
 import com.tonapps.tonkeeper.ui.base.BaseWalletScreen
+import com.tonapps.tonkeeper.view.TransactionDetailView
 import com.tonapps.tonkeeperx.R
+import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
 import com.tonapps.wallet.localization.Localization
+import io.tonapi.models.Action
+import io.tonapi.models.JettonVerificationType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -43,7 +52,9 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
     private lateinit var walletView: AppCompatTextView
     private lateinit var closeView: View
     private lateinit var actionsView: SimpleRecyclerView
-    private lateinit var feeView: AppCompatTextView
+    private lateinit var buttonsView: View
+    private lateinit var confirmButton: Button
+    private lateinit var cancelButton: Button
     private lateinit var processView: ProcessTaskView
     private lateinit var slideView: SlideActionView
 
@@ -59,14 +70,10 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
 
         adapter.submitList(args.historyItems)
 
-        feeView = view.findViewById(R.id.fee)
-
         val builder = SpannableStringBuilder("≈ ")
         builder.append(args.feeFormat.withCustomSymbol(requireContext()))
         builder.append(" · ")
         builder.append(args.feeFiatFormat.withCustomSymbol(requireContext()))
-
-        feeView.text = builder
 
         processView = view.findViewById(R.id.process)
 
@@ -128,7 +135,8 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
             details: HistoryHelper.Details,
             walletId: String,
             request: SignRequestEntity,
-            requestKey: String
+            requestKey: String,
+            isBattery: Boolean = false,
         ) = newInstance(
             accountId = details.accountId,
             walletId = walletId,
@@ -136,7 +144,8 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
             historyItems = details.items,
             feeFormat = details.feeFormat,
             feeFiatFormat = details.feeFiatFormat,
-            requestKey = requestKey
+            requestKey = requestKey,
+            isBattery = isBattery,
         )
 
         fun newInstance(
@@ -146,9 +155,10 @@ class ActionScreen: BaseWalletScreen(R.layout.fragment_action), BaseFragment.Mod
             historyItems: List<HistoryItem>,
             feeFormat: CharSequence,
             feeFiatFormat: CharSequence,
-            requestKey: String
+            requestKey: String,
+            isBattery: Boolean = false,
         ): ActionScreen {
-            val args = ActionArgs(accountId, walletId, request, historyItems, feeFormat, feeFiatFormat, requestKey)
+            val args = ActionArgs(accountId, walletId, request, historyItems, feeFormat, feeFiatFormat, requestKey, isBattery)
             val screen = ActionScreen()
             screen.setArgs(args)
             return screen

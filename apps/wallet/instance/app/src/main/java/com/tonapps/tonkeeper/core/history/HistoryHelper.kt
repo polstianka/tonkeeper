@@ -177,15 +177,35 @@ class HistoryHelper(
         wallet: WalletEntity,
         response: MessageConsequences,
         rates: RatesEntity,
+        isBattery: Boolean = false,
     ): Details {
-        val items = mapping(wallet, response.event, true)
+        val items = mapping(wallet, response.event, true, positionExtra = 1).toMutableList()
+
         val fee = Coins.of(response.totalFees)
         val feeFormat = CurrencyFormatter.format("TON", fee)
         val feeFiat = rates.convert("TON", fee)
         val feeFiatFormat = CurrencyFormatter.formatFiat(rates.currency.code, feeFiat)
+
+        items.add(
+            HistoryItem.Event(
+                index = items.lastIndex + 1,
+                position = ListCell.Position.LAST,
+                txId = "fee",
+                iconURL = "",
+                action = ActionType.Fee,
+                title = "",
+                subtitle = if (isBattery) context.getString(Localization.will_be_paid_with_battery) else "",
+                value = feeFormat,
+                date = feeFiatFormat.toString(),
+                isOut = true,
+                failed = false,
+                isScam = false,
+            )
+        )
+
         return Details(
             accountId = wallet.accountId,
-            items = items,
+            items = items.toList(),
             fee = fee,
             feeFormat = feeFormat,
             feeFiat = feeFiat,
@@ -218,9 +238,10 @@ class HistoryHelper(
         wallet: WalletEntity,
         event: AccountEvent,
         removeDate: Boolean = false,
-        hiddenBalances: Boolean = false
+        hiddenBalances: Boolean = false,
+        positionExtra: Int = 0,
     ): List<HistoryItem> {
-        return mapping(wallet, listOf(event), removeDate, hiddenBalances)
+        return mapping(wallet, listOf(event), removeDate, hiddenBalances, positionExtra)
     }
 
     suspend fun getEvent(
@@ -237,7 +258,8 @@ class HistoryHelper(
         wallet: WalletEntity,
         events: List<AccountEvent>,
         removeDate: Boolean = false,
-        hiddenBalances: Boolean = false
+        hiddenBalances: Boolean = false,
+        positionExtra: Int = 0,
     ): List<HistoryItem> = withContext(Dispatchers.IO) {
         val items = mutableListOf<HistoryItem>()
 
@@ -266,7 +288,7 @@ class HistoryHelper(
                 )
                 chunkItems.add(item.copy(
                     pending = pending,
-                    position = ListCell.getPosition(actions.size, actionIndex),
+                    position = ListCell.getPosition(actions.size + positionExtra, actionIndex),
                     fee = CurrencyFormatter.format(TokenEntity.TON.symbol, fee, TokenEntity.TON.decimals),
                     feeInCurrency = CurrencyFormatter.formatFiat(currency.code, feeInCurrency),
                     lt = event.lt,

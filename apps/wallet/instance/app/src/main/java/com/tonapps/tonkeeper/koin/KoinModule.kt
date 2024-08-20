@@ -10,6 +10,7 @@ import com.tonapps.tonkeeper.ui.screen.action.ActionViewModel
 import com.tonapps.tonkeeper.ui.screen.add.imprt.ImportWalletViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.check.BackupCheckViewModel
+import com.tonapps.tonkeeper.ui.screen.battery.BatteryViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.connected.BrowserConnectedViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.explore.BrowserExploreViewModel
@@ -60,7 +61,7 @@ val koinModel = module {
     single(createdAtStart = true) { CoroutineScope(Dispatchers.IO + SupervisorJob()) }
     single { SettingsRepository(get(), get(), get()) }
     single { NetworkMonitor(get(), get()) }
-    single { SignManager(get(), get(), get(), get(), get()) }
+    single { SignManager(get(), get(), get(), get(), get(), get()) }
     single { HistoryHelper(get(), get(), get(), get(), get(), get(), get()) }
 
     factory { (viewModel: com.tonapps.tonkeeper.ui.base.BaseWalletVM) ->
@@ -110,4 +111,8 @@ val koinModel = module {
     viewModel { SendContactsViewModel(androidApplication(), get(), get(), get()) }
     viewModel { NotificationsEnableViewModel(get(), get()) }
     viewModel { ImportWalletViewModel(androidApplication(), get()) }
+    viewModel { BatteryViewModel(androidApplication()) }
+    viewModel { BatterySettingsViewModel(androidApplication(), get(), get(), get(), get()) }
+    viewModel { BatteryRefillViewModel(androidApplication(), get(), get(), get(), get(), get(), get()) }
+    viewModel { parameters -> BatteryRechargeViewModel(androidApplication(), args = parameters.get(), get(), get(), get(), get(), get(), get()) }
 }

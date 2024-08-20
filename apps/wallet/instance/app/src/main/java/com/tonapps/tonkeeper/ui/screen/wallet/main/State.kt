@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.entities.AssetsEntity
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item.BalanceType
+import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.ConfigEntity
@@ -31,6 +32,13 @@ sealed class State {
         Telegram,
         Backup,
     }
+
+    data class Battery(
+        val balance: Coins,
+        val beta: Boolean,
+        val disabled: Boolean,
+        val viewed: Boolean,
+    ): State()
 
     data class Setup(
         val pushEnabled: Boolean,
@@ -78,7 +86,8 @@ sealed class State {
     data class Main(
         val wallet: WalletEntity,
         val assets: Assets,
-        val hasBackup: Boolean
+        val hasBackup: Boolean,
+        val battery: Battery,
     ): State() {
 
         private val totalBalanceFormat: CharSequence
@@ -138,7 +147,10 @@ sealed class State {
                 hiddenBalance = hiddenBalance,
                 hasBackup = hasBackup,
                 balanceType = balanceType,
-                lastUpdatedFormat = lastUpdatedFormat
+                lastUpdatedFormat = lastUpdatedFormat,
+                batteryBalance = battery.balance,
+                showBattery = !battery.disabled && (!battery.beta || !battery.balance.isZero),
+                batteryEmptyState = if (battery.viewed) BatteryView.EmptyState.SECONDARY else BatteryView.EmptyState.ACCENT,
             )
         }
 

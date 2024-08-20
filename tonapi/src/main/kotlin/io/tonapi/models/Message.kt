@@ -78,7 +78,7 @@ data class Message (
     val createdAt: kotlin.Long,
 
     @Json(name = "hash")
-    val hash: kotlin.String,
+    val hash: kotlin.String? = null,
 
     @Json(name = "destination")
     val destination: AccountAddress? = null,

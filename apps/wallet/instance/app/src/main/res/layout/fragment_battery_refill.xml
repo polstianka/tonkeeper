@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.ColumnLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uikit.widget.SimpleRecyclerView
+        android:id="@+id/refill_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="@dimen/barHeight"
+        android:clipToPadding="false" />
+</uikit.widget.ColumnLayout>

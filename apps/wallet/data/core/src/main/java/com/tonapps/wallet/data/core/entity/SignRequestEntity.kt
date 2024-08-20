@@ -21,7 +21,7 @@ data class SignRequestEntity(
     val from: AddrStd?
         get() = fromValue?.let { AddrStd.parse(it) }
 
-    val transfers = messages.map { it.walletTransfer }
+    val transfers = messages.map { it.getWalletTransfer() }
 
     constructor(json: JSONObject) : this(
         fromValue = parseFrom(json),

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uikit.widget.SlideBetweenView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slides"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/fragment_battery_refill" />
+
+    <include layout="@layout/fragment_battery_settings" />
+
+    <uikit.widget.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:action="@drawable/ic_close_16"
+        android:icon="@drawable/ic_chevron_left_16"
+        app:ignoreSystemOffset="true" />
+</uikit.widget.SlideBetweenView>

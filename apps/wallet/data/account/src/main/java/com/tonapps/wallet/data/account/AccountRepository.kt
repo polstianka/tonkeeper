@@ -1,7 +1,6 @@
 package com.tonapps.wallet.data.account
 
 import android.content.Context
-import android.util.Log
 import com.tonapps.blockchain.ton.contract.BaseWalletContract
 import com.tonapps.blockchain.ton.contract.WalletVersion
 import com.tonapps.blockchain.ton.contract.walletVersion
@@ -9,7 +8,6 @@ import com.tonapps.blockchain.ton.extensions.EmptyPrivateKeyEd25519
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.hex
 import com.tonapps.blockchain.ton.extensions.toAccountId
-import com.tonapps.extensions.isMainVersion
 import com.tonapps.ledger.ton.LedgerAccount
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.MessageBodyEntity
@@ -37,14 +35,10 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.parcelize.RawValue
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.ton.api.pk.PrivateKeyEd25519
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
 import org.ton.contract.wallet.WalletTransfer
-import org.ton.mnemonic.Mnemonic
 import java.util.UUID
 
 class AccountRepository(
@@ -427,9 +421,10 @@ class AccountRepository(
         wallet: WalletEntity,
         seqno: Int,
         validUntil: Long,
-        transfers: List<WalletTransfer>
+        transfers: List<WalletTransfer>,
+        internalMessage: Boolean = false,
     ): MessageBodyEntity {
-        val body = wallet.createBody(seqno, validUntil, transfers)
+        val body = wallet.createBody(seqno, validUntil, transfers, internalMessage)
         return MessageBodyEntity(seqno, body, validUntil)
     }
 
@@ -438,9 +433,10 @@ class AccountRepository(
         seqno: Int,
         privateKeyEd25519: PrivateKeyEd25519,
         validUntil: Long,
-        transfers: List<WalletTransfer>
+        transfers: List<WalletTransfer>,
+        internalMessage: Boolean = false,
     ): Cell {
-        val data = messageBody(wallet, seqno, validUntil, transfers)
+        val data = messageBody(wallet, seqno, validUntil, transfers, internalMessage)
         return wallet.sign(privateKeyEd25519, data.seqno, data.body)
     }
 }

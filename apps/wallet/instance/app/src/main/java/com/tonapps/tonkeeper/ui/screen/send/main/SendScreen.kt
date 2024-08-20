@@ -467,6 +467,7 @@ class SendScreen: BaseWalletScreen(R.layout.fragment_send_new), BaseFragment.Bot
         } else {
             reviewRecipientFeeView.value = "≈ ${event.format}".withCustomSymbol(requireContext())
             reviewRecipientFeeView.description = "≈ ${event.convertedFormat}".withCustomSymbol(requireContext())
+            reviewRecipientFeeView.subtitle = if (event.isBattery) getString(Localization.will_be_paid_with_battery) else null
             reviewRecipientFeeView.setDefault()
             confirmButton.isEnabled = true
         }

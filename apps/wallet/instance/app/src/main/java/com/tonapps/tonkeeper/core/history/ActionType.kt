@@ -19,4 +19,5 @@ enum class ActionType {
     JettonBurn,
     UnSubscribe,
     Subscribe,
+    Fee,
 }

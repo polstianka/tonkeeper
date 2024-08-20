@@ -215,6 +215,10 @@ class SettingsRepository(
         _walletPush.tryEmit(Unit)
     }
 
+    fun isBatteryViewed(): Boolean = walletPrefsFolder.isBatteryViewed()
+
+    fun setBatteryViewed() = walletPrefsFolder.setBatteryViewed()
+
     fun isSetupHidden(walletId: String): Boolean = walletPrefsFolder.isSetupHidden(walletId)
 
     fun setupHide(walletId: String) {

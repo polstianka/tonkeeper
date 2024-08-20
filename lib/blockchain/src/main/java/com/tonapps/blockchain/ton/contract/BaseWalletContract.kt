@@ -100,7 +100,7 @@ abstract class BaseWalletContract(
     abstract fun createTransferUnsignedBody(
         validUntil: Long,
         seqno: Int,
-        internalMessage: Boolean = true,
+        internalMessage: Boolean = false,
         queryId: BigInteger? = null,
         vararg gifts: WalletTransfer
     ): Cell

@@ -75,7 +75,8 @@ data class TransferEntity(
         } else if (!commentEncrypted) {
             return MessageData.text(comment).body
         } else {
-            privateKey ?: throw IllegalArgumentException("Private key required for encrypted comment")
+            privateKey
+                ?: throw IllegalArgumentException("Private key required for encrypted comment")
 
             val publicKey = privateKey.publicKey()
             return CommentEncryption.encryptComment(
@@ -88,10 +89,13 @@ data class TransferEntity(
         }
     }
 
-    private fun getWalletTransfer(privateKey: PrivateKeyEd25519?): WalletTransfer {
+    private fun getWalletTransfer(
+        privateKey: PrivateKeyEd25519?,
+        excessesAddress: AddrStd
+    ): WalletTransfer {
         val builder = WalletTransferBuilder()
         builder.bounceable = bounceable
-        builder.body = body(privateKey)
+        builder.body = body(privateKey, excessesAddress)
         builder.sendMode = sendMode
         if (isNft) {
             builder.coins = coins
@@ -107,15 +111,23 @@ data class TransferEntity(
         return builder.build()
     }
 
-    private fun getGifts(privateKey: PrivateKeyEd25519?): Array<WalletTransfer> {
-        return arrayOf(getWalletTransfer(privateKey))
+    private fun getGifts(
+        privateKey: PrivateKeyEd25519?,
+        excessesAddress: AddrStd
+    ): Array<WalletTransfer> {
+        return arrayOf(getWalletTransfer(privateKey, excessesAddress))
     }
 
-    fun getUnsignedBody(privateKey: PrivateKeyEd25519? = null): Cell {
+    fun getUnsignedBody(
+        privateKey: PrivateKeyEd25519? = null,
+        internalMessage: Boolean = false,
+        excessesAddress: AddrStd? = null
+    ): Cell {
         return contract.createTransferUnsignedBody(
             validUntil = validUntil,
             seqno = seqno,
-            gifts = getGifts(privateKey)
+            gifts = getGifts(privateKey, excessesAddress = excessesAddress ?: contract.address),
+            internalMessage = internalMessage ?: false,
         )
     }
 
@@ -185,40 +197,48 @@ data class TransferEntity(
         return contract.createTransferMessageCell(contract.address, seqno, signedBody)
     }
 
-    private fun body(privateKey: PrivateKeyEd25519?): Cell? {
+    private fun body(privateKey: PrivateKeyEd25519?, excessesAddress: AddrStd): Cell? {
         if (isNft) {
-            return nftBody(privateKey)
+            return nftBody(privateKey, excessesAddress)
         } else if (!isTon) {
-            return jettonBody(privateKey)
+            return jettonBody(privateKey, excessesAddress)
         }
         return getCommentForwardPayload(privateKey)
     }
 
-    private fun jettonBody(privateKey: PrivateKeyEd25519?): Cell {
+    private fun jettonBody(privateKey: PrivateKeyEd25519?, excessesAddress: AddrStd): Cell {
         return TonTransferHelper.jetton(
             coins = coins,
             toAddress = destination,
-            responseAddress = contract.address,
+            responseAddress = excessesAddress,
             queryId = queryId,
             body = getCommentForwardPayload(privateKey),
         )
     }
 
-    private fun nftBody(privateKey: PrivateKeyEd25519?): Cell {
+    private fun nftBody(privateKey: PrivateKeyEd25519?, excessesAddress: AddrStd): Cell {
         return TonTransferHelper.nft(
             newOwnerAddress = destination,
-            excessesAddress = contract.address,
+            excessesAddress = excessesAddress,
             queryId = queryId,
             body = getCommentForwardPayload(privateKey),
         )
     }
 
-    fun toSignedMessage(privateKeyEd25519: PrivateKeyEd25519): Cell {
+    fun toSignedMessage(
+        privateKeyEd25519: PrivateKeyEd25519,
+        isBattery: Boolean,
+        excessesAddress: AddrStd? = null
+    ): Cell {
         return contract.createTransferMessageCell(
             address = contract.address,
             privateKey = privateKeyEd25519,
             seqno = seqno,
-            unsignedBody = getUnsignedBody(privateKeyEd25519),
+            unsignedBody = getUnsignedBody(
+                privateKeyEd25519,
+                internalMessage = isBattery,
+                excessesAddress = excessesAddress,
+            ),
         )
     }
 
@@ -264,8 +284,10 @@ data class TransferEntity(
 
         fun build(): TransferEntity {
             val token = token ?: throw IllegalArgumentException("Token is not set")
-            val destination = destination ?: throw IllegalArgumentException("Destination is not set")
-            val destinationPK = destinationPK ?: throw IllegalArgumentException("DestinationPK is not set")
+            val destination =
+                destination ?: throw IllegalArgumentException("Destination is not set")
+            val destinationPK =
+                destinationPK ?: throw IllegalArgumentException("DestinationPK is not set")
             val amount = amount ?: throw IllegalArgumentException("Amount is not set")
             val seqno = seqno ?: throw IllegalArgumentException("Seqno is not set")
             val validUntil = validUntil ?: throw IllegalArgumentException("ValidUntil is not set")

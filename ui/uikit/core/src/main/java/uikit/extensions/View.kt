@@ -185,6 +185,19 @@ fun View.expandTouchArea(extraPadding: Int) {
     }
 }
 
+fun View.expandTouchArea(left: Int, top: Int, right: Int, bottom: Int) {
+    val parent = parent as? View ?: return
+    parent.post {
+        val rect = Rect()
+        getHitRect(rect)
+        rect.top -= top
+        rect.left -= left
+        rect.right += right
+        rect.bottom += bottom
+        parent.touchDelegate = TouchDelegate(rect, this)
+    }
+}
+
 fun TextView.setEndDrawable(drawable: Drawable?) {
     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
 }

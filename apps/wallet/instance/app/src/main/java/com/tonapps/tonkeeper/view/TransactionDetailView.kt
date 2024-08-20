@@ -33,6 +33,7 @@ class TransactionDetailView @JvmOverloads constructor(
         }
 
     private val titleView: AppCompatTextView
+    private val subtitleView: AppCompatTextView
     val valueView: AppCompatTextView
     private val descriptionView: AppCompatTextView
     private val loaderView: LoaderView
@@ -41,6 +42,17 @@ class TransactionDetailView @JvmOverloads constructor(
         get() = titleView.text
         set(value) {
             titleView.text = value
+        }
+
+    var subtitle: CharSequence?
+        get() = subtitleView.text
+        set(value) {
+            if (value.isNullOrEmpty()) {
+                subtitleView.visibility = GONE
+                return
+            }
+            subtitleView.visibility = VISIBLE
+            subtitleView.text = value
         }
 
     var value: CharSequence?
@@ -68,6 +80,7 @@ class TransactionDetailView @JvmOverloads constructor(
         minimumHeight = context.getDimensionPixelSize(uikit.R.dimen.itemHeight)
 
         titleView = findViewById(R.id.title)
+        subtitleView = findViewById(R.id.subtitle)
         valueView = findViewById(R.id.value)
         descriptionView = findViewById(R.id.description)
         loaderView = findViewById(R.id.loader)

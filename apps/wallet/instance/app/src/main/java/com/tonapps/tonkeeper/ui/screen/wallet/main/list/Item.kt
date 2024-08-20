@@ -17,6 +17,7 @@ import com.tonapps.extensions.writeBooleanCompat
 import com.tonapps.extensions.writeCharSequenceCompat
 import com.tonapps.extensions.writeEnum
 import com.tonapps.icu.CurrencyFormatter
+import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.NotificationEntity
@@ -136,6 +137,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val hasBackup: Boolean,
         val balanceType: BalanceType,
         val lastUpdatedFormat: String,
+        val batteryBalance: Coins,
+        val showBattery: Boolean,
+        val batteryEmptyState: BatteryView.EmptyState,
     ): Item(TYPE_BALANCE) {
 
         constructor(parcel: Parcel) : this(
@@ -147,7 +151,10 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             parcel.readBooleanCompat(),
             parcel.readBooleanCompat(),
             parcel.readEnum(BalanceType::class.java)!!,
-            parcel.readString()!!
+            parcel.readString()!!,
+            parcel.readParcelableCompat()!!,
+            parcel.readBooleanCompat(),
+            parcel.readEnum(BatteryView.EmptyState::class.java)!!,
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
@@ -160,6 +167,9 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeBooleanCompat(hasBackup)
             dest.writeEnum(balanceType)
             dest.writeString(lastUpdatedFormat)
+            dest.writeParcelable(batteryBalance, flags)
+            dest.writeBooleanCompat(showBattery)
+            dest.writeEnum(batteryEmptyState)
         }
 
         companion object CREATOR : Parcelable.Creator<Balance> {
@@ -543,5 +553,4 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
             dest.writeInt(settingsType)
         }
     }
-
 }

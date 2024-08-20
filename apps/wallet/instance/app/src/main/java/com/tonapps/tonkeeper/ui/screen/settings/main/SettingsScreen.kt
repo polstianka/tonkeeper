@@ -12,6 +12,7 @@ import com.tonapps.tonkeeper.core.widget.balance.WidgetBalanceProvider
 import com.tonapps.tonkeeper.popup.ActionSheet
 import com.tonapps.tonkeeper.ui.base.BaseListWalletScreen
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupScreen
+import com.tonapps.tonkeeper.ui.screen.battery.BatteryScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootActivity
 import com.tonapps.tonkeeper.ui.screen.settings.currency.CurrencyScreen
 import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageScreen
@@ -68,6 +69,7 @@ class SettingsScreen: BaseListWalletScreen(), BaseFragment.SwipeBack {
             is Item.Contact -> navigation?.openURL(item.url, true)
             is Item.Tester -> navigation?.openURL(item.url, true)
             is Item.W5 -> navigation?.add(W5StoriesScreen.newInstance())
+            is Item.Battery -> navigation?.add(BatteryScreen.newInstance())
             is Item.Logout -> signOut(item.label)
             is Item.SearchEngine -> searchPicker(item)
             is Item.DeleteWatchAccount -> deleteWatchAccount()

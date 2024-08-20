@@ -26,13 +26,44 @@ data class WalletEntity(
 
     companion object {
         const val WORKCHAIN = 0
+
+        val contractFeatures: Map<WalletVersion, Map<WalletContractFeature, Boolean>> = mapOf(
+            WalletVersion.V5R1 to mapOf(
+                WalletContractFeature.GASLESS to true,
+                WalletContractFeature.SIGNED_INTERNALS to true,
+            ),
+            WalletVersion.V5BETA to mapOf(
+                WalletContractFeature.GASLESS to true,
+                WalletContractFeature.SIGNED_INTERNALS to true,
+            ),
+            WalletVersion.V4R2 to mapOf(
+                WalletContractFeature.GASLESS to false,
+                WalletContractFeature.SIGNED_INTERNALS to false,
+            ),
+            WalletVersion.V4R1 to mapOf(
+                WalletContractFeature.GASLESS to false,
+                WalletContractFeature.SIGNED_INTERNALS to false,
+            ),
+            WalletVersion.V3R2 to mapOf(
+                WalletContractFeature.GASLESS to false,
+                WalletContractFeature.SIGNED_INTERNALS to false,
+            ),
+            WalletVersion.V3R1 to mapOf(
+                WalletContractFeature.GASLESS to false,
+                WalletContractFeature.SIGNED_INTERNALS to false,
+            ),
+            WalletVersion.UNKNOWN to mapOf(
+                WalletContractFeature.GASLESS to false,
+                WalletContractFeature.SIGNED_INTERNALS to false,
+            )
+        )
     }
 
     @Parcelize
     data class Ledger(
         val deviceId: String,
         val accountIndex: Int
-    ): Parcelable
+    ) : Parcelable
 
     val contract: BaseWalletContract by lazy {
         val network = if (testnet) TonNetwork.TESTNET.value else TonNetwork.MAINNET.value
@@ -69,15 +100,21 @@ data class WalletEntity(
         return address.toRawAddress().equals(accountId, ignoreCase = true)
     }
 
+    fun isSupportedFeature(feature: WalletContractFeature): Boolean {
+        return contractFeatures[version]?.get(feature) ?: false
+    }
+
     fun createBody(
         seqno: Int,
         validUntil: Long,
-        gifts: List<WalletTransfer>
+        gifts: List<WalletTransfer>,
+        internalMessage: Boolean = false,
     ): Cell {
         return contract.createTransferUnsignedBody(
             validUntil = validUntil,
             seqno = seqno,
-            gifts = gifts.toTypedArray()
+            gifts = gifts.toTypedArray(),
+            internalMessage = internalMessage,
         )
     }
 

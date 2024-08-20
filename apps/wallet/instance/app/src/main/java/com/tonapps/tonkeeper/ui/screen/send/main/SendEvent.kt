@@ -11,6 +11,7 @@ sealed class SendEvent {
     data class Fee(
         val value: Coins,
         val format: CharSequence,
-        val convertedFormat: CharSequence
+        val convertedFormat: CharSequence,
+        val isBattery: Boolean,
     ): SendEvent()
 }
