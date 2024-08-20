@@ -358,4 +358,27 @@
     <string name="spam">垃圾邮件</string>
     <string name="later">之后</string>
     <string name="testers_chat">报告错误（在 Telegram 中聊天）</string>
+    <string name="battery">电池</string>
+    <string name="battery_refill_title">Tonkeeper 电池</string>
+    <string name="battery_refill_subtitle">通过 Tonkeeper 交换，发送代币和 NFT。</string>
+    <plurals name="battery_current_charges">
+        <item quantity="other">%1$s 次充电</item>
+    </plurals>
+    <string name="battery_refill_crypto">使用 %1$s 充值</string>
+    <string name="battery_refill_gift">电池礼物</string>
+    <string name="battery_refill_gift_subtitle">与朋友分享</string>
+    <string name="battery_supported_transaction">支持的交易</string>
+    <string name="battery_settings">电池设置</string>
+    <string name="battery_will_be_paid">将支付：%1$s</string>
+    <string name="battery_nft">NFT 转账</string>
+    <string name="battery_swap">通过 Tonkeeper 交换</string>
+    <string name="battery_jetton">代币转账</string>
+    <string name="battery_swap_single">交换</string>
+    <string name="battery_transfer_single">转账</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="other">≈ 每 %2$s %1$s 次充电</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">将使用电池支付</string>
+    <string name="battery_settings_title">电池设置</string>
+    <string name="battery_settings_subtitle">选定的交易将由 Tonkeeper 电池支付。</string>
 </resources>

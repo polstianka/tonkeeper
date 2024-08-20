@@ -358,4 +358,29 @@
     <string name="spam">Spam</string>
     <string name="later">Keyinchalik</string>
     <string name="testers_chat">Xato haqida xabar berish (Telegramda suhbat)</string>
+    <string name="battery">Batareya</string>
+    <string name="battery_refill_title">Tonkeeper Batareya</string>
+    <string name="battery_refill_subtitle">Tonkeeper orqali almashtirish, tokenlar va NFTlarni yuboring.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="one">%1$s zaryad</item>
+        <item quantity="other">%1$s zaryadlar</item>
+    </plurals>
+    <string name="battery_refill_crypto">%1$s bilan qayta zaryadlang</string>
+    <string name="battery_refill_gift">Batareya Sovg‘asi</string>
+    <string name="battery_refill_gift_subtitle">Do‘stlar bilan ulashing</string>
+    <string name="battery_supported_transaction">Qo‘llab-quvvatlanadigan tranzaktsiyalar</string>
+    <string name="battery_settings">Batareya Sozlamalari</string>
+    <string name="battery_will_be_paid">To‘lanadi: %1$s</string>
+    <string name="battery_nft">NFT o\'tkazmalari</string>
+    <string name="battery_swap">Tonkeeper orqali almashtirish</string>
+    <string name="battery_jetton">token o\'tkazmalari</string>
+    <string name="battery_swap_single">almashtirish</string>
+    <string name="battery_transfer_single">o‘tkazish</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="one">≈ %1$s zaryad %2$s uchun</item>
+        <item quantity="other">≈ %1$s zaryadlar %2$s uchun</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Batareya bilan to‘lanadi</string>
+    <string name="battery_settings_title">Batareya Sozlamalari</string>
+    <string name="battery_settings_subtitle">Tanlangan tranzaktsiyalar Tonkeeper Batareya orqali to‘lanadi.</string>
 </resources>

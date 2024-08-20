@@ -358,4 +358,29 @@
     <string name="spam">Spam</string>
     <string name="later">Más tarde</string>
     <string name="testers_chat">Reportar error (chat en Telegram)</string>
+    <string name="battery">Batería</string>
+    <string name="battery_refill_title">Batería de Tonkeeper</string>
+    <string name="battery_refill_subtitle">Intercambia a través de Tonkeeper, envía tokens y NFTs.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="one">%1$s carga</item>
+        <item quantity="other">%1$s cargas</item>
+    </plurals>
+    <string name="battery_refill_crypto">Recargar con %1$s</string>
+    <string name="battery_refill_gift">Regalo de batería</string>
+    <string name="battery_refill_gift_subtitle">Comparte con amigos</string>
+    <string name="battery_supported_transaction">Transacciones soportadas</string>
+    <string name="battery_settings">Configuración de la batería</string>
+    <string name="battery_will_be_paid">Se pagará: %1$s</string>
+    <string name="battery_nft">Transferencias de NFT</string>
+    <string name="battery_swap">intercambios a través de Tonkeeper</string>
+    <string name="battery_jetton">transferencias de tokens</string>
+    <string name="battery_swap_single">intercambio</string>
+    <string name="battery_transfer_single">transferencia</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="one">≈ %1$s carga por %2$s</item>
+        <item quantity="other">≈ %1$s cargas por %2$s</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Se pagará con la batería</string>
+    <string name="battery_settings_title">Configuración de la batería</string>
+    <string name="battery_settings_subtitle">Las transacciones seleccionadas serán pagadas por la batería de Tonkeeper.</string>
 </resources>

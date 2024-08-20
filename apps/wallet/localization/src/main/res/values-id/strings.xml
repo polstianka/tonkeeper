@@ -358,4 +358,27 @@
     <string name="spam">Spam</string>
     <string name="later">Nanti</string>
     <string name="testers_chat">Laporkan bug (obrolan di Telegram)</string>
+    <string name="battery">Baterai</string>
+    <string name="battery_refill_title">Baterai Tonkeeper</string>
+    <string name="battery_refill_subtitle">Tukar melalui Tonkeeper, kirim token dan NFT.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="other">%1$s pengisian</item>
+    </plurals>
+    <string name="battery_refill_crypto">Isi ulang dengan %1$s</string>
+    <string name="battery_refill_gift">Hadiah Baterai</string>
+    <string name="battery_refill_gift_subtitle">Bagikan dengan teman</string>
+    <string name="battery_supported_transaction">Transaksi yang didukung</string>
+    <string name="battery_settings">Pengaturan Baterai</string>
+    <string name="battery_will_be_paid">Akan dibayar: %1$s</string>
+    <string name="battery_nft">Transfer NFT</string>
+    <string name="battery_swap">penukaran melalui Tonkeeper</string>
+    <string name="battery_jetton">transfer token</string>
+    <string name="battery_swap_single">penukaran</string>
+    <string name="battery_transfer_single">transfer</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="other">≈ %1$s pengisian per %2$s</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Akan dibayar dengan Baterai</string>
+    <string name="battery_settings_title">Pengaturan Baterai</string>
+    <string name="battery_settings_subtitle">Transaksi yang dipilih akan dibayar oleh Baterai Tonkeeper.</string>
 </resources>

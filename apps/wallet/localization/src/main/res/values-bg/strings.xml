@@ -403,4 +403,29 @@
     <string name="biometric_enabled">Биометричните са активирани</string>
     <string name="sending_error">Грешка при изпращане, опитайте отново по-късно</string>
     <string name="testers_chat">Докладване за грешка (чат в Telegram)</string>
+    <string name="battery">Батерия</string>
+    <string name="battery_refill_title">Батерия Tonkeeper</string>
+    <string name="battery_refill_subtitle">Обменяйте чрез Tonkeeper, изпращайте токени.</string>
+    <plurals name="battery_current_charges">
+        <item quantity="one">%1$s заряд</item>
+        <item quantity="other">%1$s заряда</item>
+    </plurals>
+    <string name="battery_refill_crypto">Заредете за %1$s</string>
+    <string name="battery_refill_gift">Батерия като подарък</string>
+    <string name="battery_refill_gift_subtitle">Споделете с приятели</string>
+    <string name="battery_supported_transaction">Поддържани транзакции</string>
+    <string name="battery_settings">Настройки на батерията</string>
+    <string name="battery_will_be_paid">Ще бъде платено: %1$s</string>
+    <string name="battery_nft">изпращане на NFT</string>
+    <string name="battery_swap">обмен чрез Tonkeeper</string>
+    <string name="battery_jetton">изпращане на токени</string>
+    <string name="battery_swap_single">обмен</string>
+    <string name="battery_transfer_single">изпращане</string>
+    <plurals name="battery_charges_per_action">
+        <item quantity="one">≈ %1$s заряд за %2$s</item>
+        <item quantity="other">≈ %1$s заряда за %2$s</item>
+    </plurals>
+    <string name="will_be_paid_with_battery">Ще бъде платено с батерията</string>
+    <string name="battery_settings_title">Настройки на батерията</string>
+    <string name="battery_settings_subtitle">Избраните транзакции ще бъдат платени с батерията Tonkeeper.</string>
 </resources>
