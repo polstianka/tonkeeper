@@ -3,9 +3,10 @@ package com.tonapps.tonkeeper.ui.screen.battery
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.ui.base.BaseWalletScreen
 import com.tonapps.tonkeeper.ui.screen.battery.list.Adapter
 import com.tonapps.tonkeeperx.R
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
@@ -13,12 +14,12 @@ import uikit.extensions.collectFlow
 import uikit.widget.HeaderView
 import uikit.widget.SlideBetweenView
 
-class BatteryScreen : BaseFragment(R.layout.fragment_battery_screen), BaseFragment.BottomSheet {
+class BatteryScreen : BaseWalletScreen(R.layout.fragment_battery_screen), BaseFragment.BottomSheet {
 
-    private val batteryViewModel: BatteryViewModel by viewModel()
+    override val viewModel: BatteryViewModel by viewModel()
 
-    private val refillAdapter = Adapter(::showSettings, ::toggleTransaction)
-    private val settingsAdapter = Adapter(::showSettings, ::toggleTransaction)
+    private val refillAdapter = Adapter(::showSettings)
+    private val settingsAdapter = Adapter(::showSettings)
 
     private lateinit var headerView: HeaderView
     private lateinit var slidesView: SlideBetweenView
@@ -27,8 +28,8 @@ class BatteryScreen : BaseFragment(R.layout.fragment_battery_screen), BaseFragme
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        collectFlow(batteryViewModel.uiItemsFlow, refillAdapter::submitList)
-        collectFlow(batteryViewModel.uiSettingsItemsFlow, settingsAdapter::submitList)
+        collectFlow(viewModel.uiItemsFlow, refillAdapter::submitList)
+        collectFlow(viewModel.uiSettingsItemsFlow, settingsAdapter::submitList)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,10 +70,6 @@ class BatteryScreen : BaseFragment(R.layout.fragment_battery_screen), BaseFragme
     private fun showSettings() {
         headerView.closeView.visibility = View.VISIBLE
         slidesView.next()
-    }
-
-    private fun toggleTransaction(transaction: BatterySupportedTransaction, enabled: Boolean) {
-        batteryViewModel.setSupportedTransaction(transaction, enabled)
     }
 
     companion object {

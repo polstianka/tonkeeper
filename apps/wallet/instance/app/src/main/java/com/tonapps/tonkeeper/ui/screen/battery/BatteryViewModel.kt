@@ -1,27 +1,33 @@
 package com.tonapps.tonkeeper.ui.screen.battery
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonapps.tonkeeper.ui.base.BaseWalletVM
 import com.tonapps.tonkeeper.ui.screen.battery.list.Item
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.AccountRepository
+import com.tonapps.wallet.data.account.entities.WalletEntity
+import com.tonapps.wallet.data.battery.BatteryMapper
 import com.tonapps.wallet.data.battery.BatteryRepository
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
+import com.tonapps.wallet.data.battery.entity.BatteryBalanceEntity
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
+import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
+import uikit.extensions.collectFlow
 
 class BatteryViewModel(
     app: Application,
@@ -29,59 +35,25 @@ class BatteryViewModel(
     private val batteryRepository: BatteryRepository,
     private val tokenRepository: TokenRepository,
     private val settingsRepository: SettingsRepository,
-    api: API,
-) : AndroidViewModel(app) {
+    private val api: API,
+) : BaseWalletVM(app) {
+
     private val _uiItemsFlow = MutableStateFlow<List<Item>?>(null)
     val uiItemsFlow = _uiItemsFlow.asStateFlow().filterNotNull()
 
     private val _uiSettingsItemsFlow = MutableStateFlow<List<Item>?>(null)
     val uiSettingsItemsFlow = _uiSettingsItemsFlow.asStateFlow().filterNotNull()
 
-    private val _configFlow =
-        accountRepository.selectedWalletFlow.map { wallet ->
-            State.Config(wallet, batteryRepository.getConfig(wallet.testnet))
-        }.flowOn(Dispatchers.IO)
-
-    private val _batteryFlow = combine(
-        _configFlow, batteryRepository.balanceFlow
-    ) { configState, _ ->
-        val balance = batteryRepository.getBalance(configState.wallet).balance
-        val charges =
-            BatteryRepository.convertToCharges(balance, api.config.batteryMeanFees)
-        State.Battery(
-            balance = balance.value.toFloat(),
-            charges = charges,
-            isBeta = api.config.batteryBeta,
-        )
-    }.flowOn(Dispatchers.IO)
-
-
-    private val _settingsFlow = MutableStateFlow<State.Settings?>(null)
-    val settingsFlow = _settingsFlow.asStateFlow().filterNotNull()
-
-    private val _rechargeMethodsFlow = _configFlow.map { configState ->
-        val tokens = tokenRepository.getLocal(
-            settingsRepository.currency, configState.wallet.accountId, configState.wallet.testnet
-        )
-        State.RechargeMethods(
-            batteryConfig = configState.batteryConfig,
-            tokens = tokens,
-            disabled = api.config.disableBatteryCryptoRecharge,
-        )
-    }.flowOn(Dispatchers.IO)
+    private val configFlow = accountRepository.selectedWalletFlow.map { wallet ->
+        State.Config(wallet, batteryRepository.getConfig(wallet.testnet))
+    }
 
     init {
-        _configFlow.map { configState ->
-            State.Settings(
-                batteryRepository.getSupportedTransactions(configState.wallet.accountId)
-            )
-        }.onEach {
-            _settingsFlow.tryEmit(it)
-        }.flowOn(Dispatchers.IO).take(1).launchIn(viewModelScope)
+        collectFlow(configFlow.flowOn(Dispatchers.IO)) { config ->
+            val settings = State.Settings(settingsRepository.getBatteryTxEnabled(config.wallet.accountId))
+            val battery = createBattery(config)
+            val rechargeMethods = createRechargeMethods(config)
 
-        combine(
-            _batteryFlow, settingsFlow, _rechargeMethodsFlow
-        ) { battery, settings, rechargeMethods ->
             val uiItems = mutableListOf<Item>()
             uiItems.add(battery.uiItem())
             if (battery.balance > 0) {
@@ -95,16 +67,42 @@ class BatteryViewModel(
                 settings.uiItems(
                     hasBalance = battery.balance > 0,
                     config = api.config,
+                    wallet = config.wallet,
                 )
             )
-        }.launchIn(viewModelScope)
+        }
     }
 
-    fun setSupportedTransaction(transaction: BatterySupportedTransaction, enabled: Boolean) {
-        accountRepository.selectedWalletFlow.onEach { wallet ->
-            val supportedTransactions =
-                batteryRepository.setSupportedTransaction(wallet.accountId, transaction, enabled)
-            _settingsFlow.tryEmit(State.Settings(supportedTransactions))
-        }.take(1).launchIn(viewModelScope)
+    private suspend fun createRechargeMethods(config: State.Config) = State.RechargeMethods(
+        batteryConfig = config.batteryConfig,
+        tokens = getTokens(config.wallet),
+        disabled = api.config.disableBatteryCryptoRecharge,
+    )
+
+    private suspend fun createBattery(config: State.Config): State.Battery {
+        val balance = getBalance(config.wallet).balance
+        val charges = BatteryMapper.convertToCharges(balance, api.config.batteryMeanFees)
+        return State.Battery(
+            balance = balance.value.toFloat(),
+            charges = charges,
+            isBeta = api.config.batteryBeta,
+        )
+    }
+
+    private suspend fun getTokens(wallet: WalletEntity): List<AccountTokenEntity> {
+        return tokenRepository.get(
+            currency = settingsRepository.currency,
+            accountId = wallet.accountId,
+            testnet = wallet.testnet
+        ) ?: emptyList()
+    }
+
+    private suspend fun getBalance(wallet: WalletEntity): BatteryBalanceEntity {
+        val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: return BatteryBalanceEntity.Empty
+        return batteryRepository.getBalance(
+            tonProofToken = tonProofToken,
+            publicKey = wallet.publicKey,
+            testnet = wallet.testnet,
+        )
     }
 }

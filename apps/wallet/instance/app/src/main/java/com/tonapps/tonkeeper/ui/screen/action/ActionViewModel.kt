@@ -91,9 +91,9 @@ class ActionViewModel(
                 boc!!
             } else {
                 val secretKey = accountRepository.getPrivateKey(wallet.id)
-                val excessesAddress =
-                    if (args.isBattery) batteryRepository.getConfig(wallet.testnet)
-                        .getExcessesAddress() else null
+                val excessesAddress = if (args.isBattery) {
+                    batteryRepository.getConfig(wallet.testnet).excessesAddress
+                } else null
 
                 val transfers = request.messages.map { it.getWalletTransfer(excessesAddress) }
 

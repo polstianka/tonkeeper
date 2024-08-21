@@ -91,6 +91,12 @@ abstract class BaseWalletContract(
         SmartContract.address(workchain, stateInit)
     }
 
+    abstract val features: WalletFeature
+
+    fun isSupportedFeature(feature: WalletFeature): Boolean {
+        return features.contains(feature)
+    }
+
     abstract fun getStateCell(): Cell
 
     abstract fun getCode(): Cell

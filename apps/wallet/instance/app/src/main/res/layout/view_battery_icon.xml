@@ -11,9 +11,8 @@
         android:layout_gravity="center">
 
         <com.tonapps.tonkeeper.view.BatteryView
+            style="@style/Battery.VeryBig"
             android:id="@+id/battery_view"
-            android:layout_width="68dp"
-            android:layout_height="114dp"
             android:layout_gravity="center"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="24dp"

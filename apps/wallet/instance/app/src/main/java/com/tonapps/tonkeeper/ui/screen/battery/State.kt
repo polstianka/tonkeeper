@@ -5,10 +5,10 @@ import com.tonapps.tonkeeper.ui.screen.battery.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.data.account.entities.WalletEntity
-import com.tonapps.wallet.data.battery.BatteryRepository
+import com.tonapps.wallet.data.battery.BatteryMapper
 import com.tonapps.wallet.data.battery.entity.BatteryConfigEntity
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.battery.entity.RechargeMethodType
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 
 sealed class State {
@@ -30,48 +30,52 @@ sealed class State {
     }
 
     data class Settings(
-        val supportedTransactions: Map<BatterySupportedTransaction, Boolean>,
+        val supportedTransactions: Array<BatteryTransaction>,
     ) : State() {
+
         fun uiItem(): Item.Settings {
-            val list = supportedTransactions.filter { it.value }.keys.toList()
-            return Item.Settings(list)
+            return Item.Settings(supportedTransactions.toList())
         }
 
         private fun getTransactionMeanPrice(
             config: ConfigEntity,
-            transaction: BatterySupportedTransaction
+            transaction: BatteryTransaction
         ): String {
             return when (transaction) {
-                BatterySupportedTransaction.NFT -> config.batteryMeanPriceNft
-                BatterySupportedTransaction.SWAP -> config.batteryMeanPriceSwap
-                BatterySupportedTransaction.JETTON -> config.batteryMeanPriceJetton
+                BatteryTransaction.NFT -> config.batteryMeanPriceNft
+                BatteryTransaction.SWAP -> config.batteryMeanPriceSwap
+                BatteryTransaction.JETTON -> config.batteryMeanPriceJetton
                 else -> "0"
             }
         }
 
-        fun uiItems(hasBalance: Boolean, config: ConfigEntity): List<Item> {
+        fun uiItems(
+            hasBalance: Boolean,
+            config: ConfigEntity,
+            wallet: WalletEntity,
+        ): List<Item> {
             val items = mutableListOf<Item>()
 
             if (hasBalance) {
                 items.add(Item.SettingsHeader())
             }
 
-            supportedTransactions.onEachIndexed { index, entry ->
-                val meanPrice = getTransactionMeanPrice(config, entry.key)
-                val charges =
-                    BatteryRepository.calculateChargesAmount(meanPrice, config.batteryMeanFees)
-
-                items.add(
-                    Item.SupportedTransaction(
-                        position = ListCell.getPosition(supportedTransactions.keys.size, index),
-                        supportedTransaction = entry.key,
-                        enabled = entry.value,
-                        showToggle = hasBalance,
-                        changes = charges,
-                    )
+            for ((index, type) in BatteryTransaction.entries.withIndex()) {
+                val position = ListCell.getPosition(BatteryTransaction.entries.size, index)
+                val meanPrice = getTransactionMeanPrice(config, type)
+                val charges = BatteryMapper.calculateChargesAmount(meanPrice, config.batteryMeanFees)
+                val enabled = supportedTransactions.contains(type)
+                val item = Item.SupportedTransaction(
+                    wallet = wallet,
+                    position = position,
+                    supportedTransaction = type,
+                    enabled = enabled,
+                    showToggle = hasBalance,
+                    changes = charges,
                 )
-            }
 
+                items.add(item)
+            }
             return items.toList()
         }
     }

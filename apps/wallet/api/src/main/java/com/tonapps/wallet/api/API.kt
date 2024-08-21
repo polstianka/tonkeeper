@@ -3,6 +3,7 @@ package com.tonapps.wallet.api
 import android.content.Context
 import android.util.ArrayMap
 import android.util.Log
+import com.squareup.moshi.JsonAdapter
 import com.tonapps.blockchain.ton.extensions.EmptyPrivateKeyEd25519
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.isValidTonAddress
@@ -26,6 +27,11 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.batteryapi.apis.BatteryApi
+import io.batteryapi.apis.BatteryApi.UnitsGetBalance
+import io.batteryapi.models.Balance
+import io.batteryapi.models.Config
+import io.batteryapi.models.RechargeMethods
+import io.tonapi.infrastructure.Serializer
 import io.tonapi.models.Account
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.AccountEvent
@@ -98,6 +104,10 @@ class API(
         SourceAPI(BatteryApi(config.batteryHost, batteryHttpClient), BatteryApi(config.batteryTestnetHost, batteryHttpClient))
     }
 
+    private val emulationJSONAdapter: JsonAdapter<MessageConsequences> by lazy {
+        Serializer.moshi.adapter(MessageConsequences::class.java)
+    }
+
     fun accounts(testnet: Boolean) = provider.accounts.get(testnet)
 
     fun jettons(testnet: Boolean) = provider.jettons.get(testnet)
@@ -119,6 +129,22 @@ class API(
     fun rates() = provider.rates.get(false)
 
     fun battery(testnet: Boolean) = batteryApi.get(testnet)
+
+    suspend fun getBatteryConfig(testnet: Boolean): Config? {
+        return withRetry { battery(testnet).getConfig() }
+    }
+
+    suspend fun getBatteryRechargeMethods(testnet: Boolean): RechargeMethods? {
+        return withRetry { battery(testnet).getRechargeMethods(false) }
+    }
+
+    suspend fun getBatteryBalance(
+        tonProofToken: String,
+        testnet: Boolean,
+        units: UnitsGetBalance = UnitsGetBalance.ton
+    ): Balance? {
+        return withRetry { battery(testnet).getBalance(tonProofToken, units) }
+    }
 
     suspend fun getAlertNotifications() = withRetry {
         internalApi.getNotifications()
@@ -176,7 +202,6 @@ class API(
         )
         return listOf(accountEvent)
     }
-
 
     fun getTokenEvents(
         tokenAddress: String,
@@ -367,6 +392,36 @@ class API(
         }
     }
 
+    suspend fun emulateWithBattery(
+        tonProofToken: String,
+        cell: Cell,
+        testnet: Boolean
+    ) = emulateWithBattery(tonProofToken, cell.base64(), testnet)
+
+    suspend fun emulateWithBattery(
+        tonProofToken: String,
+        boc: String,
+        testnet: Boolean
+    ): Pair<MessageConsequences, Boolean>? {
+        val host = if (testnet) config.batteryTestnetHost else config.batteryHost
+        val url = "$host/wallet/emulate"
+        val data = "{\"boc\":\"$boc\"}"
+
+        val response = withRetry {
+            tonAPIHttpClient.postJSON(url, data, ArrayMap<String, String>().apply {
+                set("X-TonConnect-Auth", tonProofToken)
+            })
+        } ?: return null
+
+        val supportedByBattery = response.headers["supported-by-battery"] == "true"
+        val allowedByBattery = response.headers["allowed-by-battery"] == "true"
+        val withBattery = supportedByBattery && allowedByBattery
+
+        val string = response.body?.string() ?: return null
+        val consequences = emulationJSONAdapter.fromJson(string) ?: return null
+        return Pair(consequences, withBattery)
+    }
+
     suspend fun emulate(
         boc: String,
         testnet: Boolean,
@@ -392,6 +447,29 @@ class API(
         return emulate(cell.base64(), testnet, address, balance)
     }
 
+    suspend fun sendToBlockchainWithBattery(
+        boc: Cell,
+        tonProofToken: String,
+        testnet: Boolean,
+    ) = sendToBlockchainWithBattery(boc.base64(), tonProofToken, testnet)
+
+    suspend fun sendToBlockchainWithBattery(
+        boc: String,
+        tonProofToken: String,
+        testnet: Boolean,
+    ): Boolean = withContext(Dispatchers.IO) {
+        if (!isOkStatus(testnet)) {
+            return@withContext false
+        }
+
+        val request = io.batteryapi.models.EmulateMessageToWalletRequest(boc)
+
+        withRetry {
+            battery(testnet).sendMessage(tonProofToken, request)
+            true
+        } ?: false
+    }
+
     suspend fun sendToBlockchain(
         boc: String,
         testnet: Boolean
@@ -399,6 +477,7 @@ class API(
         if (!isOkStatus(testnet)) {
             return@withContext false
         }
+
         val request = SendBlockchainMessageRequest(boc)
         withRetry {
             blockchain(testnet).sendBlockchainMessage(request)
@@ -505,9 +584,6 @@ class API(
         json.put("commercial", commercial)
         json.put("silent", silent)
         val data = json.toString().replace("\\/", "/").trim()
-
-        Log.d("TONKeeperLog", "json: $data")
-        Log.d("TONKeeperLog", "token: $token")
 
         return withRetry {
             tonAPIHttpClient.postJSON(url, data, ArrayMap<String, String>().apply {

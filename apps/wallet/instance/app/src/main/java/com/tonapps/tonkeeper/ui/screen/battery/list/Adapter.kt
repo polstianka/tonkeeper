@@ -12,11 +12,10 @@ import com.tonapps.tonkeeper.ui.screen.battery.list.holder.SupportedTransactionH
 import com.tonapps.uikit.list.BaseListAdapter
 import com.tonapps.uikit.list.BaseListHolder
 import com.tonapps.uikit.list.BaseListItem
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
+import com.tonapps.wallet.data.settings.BatteryTransaction
 
 class Adapter(
-    private val openSettings: () -> Unit,
-    private val toggleTransaction: (transaction: BatterySupportedTransaction, enabled: Boolean) -> Unit
+    private val openSettings: () -> Unit
 ): BaseListAdapter() {
 
     override fun createHolder(
@@ -29,7 +28,7 @@ class Adapter(
             Item.TYPE_GIFT -> GiftHolder(parent)
             Item.TYPE_SPACE -> SpaceHolder(parent)
             Item.TYPE_SETTINGS -> SettingsHolder(parent, openSettings)
-            Item.TYPE_SUPPORTED_TRANSACTION -> SupportedTransactionHolder(parent, toggleTransaction)
+            Item.TYPE_SUPPORTED_TRANSACTION -> SupportedTransactionHolder(parent)
             Item.TYPE_SETTINGS_HEADER -> SettingsHeaderHolder(parent)
             else -> throw IllegalArgumentException("Unknown view type: $viewType")
         }

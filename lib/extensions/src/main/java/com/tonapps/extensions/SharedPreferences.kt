@@ -21,6 +21,24 @@ fun SharedPreferences.putByteArray(key: String, value: ByteArray?) {
     }
 }
 
+fun SharedPreferences.getIntArray(key: String): IntArray {
+    val bytes = getByteArray(key) ?: return IntArray(0)
+    return IntArray(bytes.size / 4) { index ->
+        bytes[index * 4].toInt()
+    }
+}
+
+fun SharedPreferences.putIntArray(key: String, value: IntArray) {
+    if (value.isEmpty()) {
+        remove(key)
+    } else {
+        val bytes = ByteArray(value.size * 4) { index ->
+            value[index / 4].toByte()
+        }
+        putByteArray(key, bytes)
+    }
+}
+
 fun SharedPreferences.remove(key: String) {
     edit {
         remove(key)

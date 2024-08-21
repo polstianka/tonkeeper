@@ -3,7 +3,8 @@ package com.tonapps.tonkeeper.ui.screen.battery.list
 import android.net.Uri
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
+import com.tonapps.wallet.data.account.entities.WalletEntity
+import com.tonapps.wallet.data.settings.BatteryTransaction
 
 sealed class Item(type: Int) : BaseListItem(type) {
 
@@ -37,16 +38,21 @@ sealed class Item(type: Int) : BaseListItem(type) {
     class Space : Item(TYPE_SPACE)
 
     data class Settings(
-        val supportedTransactions: List<BatterySupportedTransaction>,
+        val supportedTransactions: List<BatteryTransaction>,
     ) : Item(TYPE_SETTINGS)
 
     data class SupportedTransaction(
+        val wallet: WalletEntity,
         val position: ListCell.Position,
-        val supportedTransaction: BatterySupportedTransaction,
+        val supportedTransaction: BatteryTransaction,
         val enabled: Boolean,
         val changes: Int,
         val showToggle: Boolean
-    ) : Item(TYPE_SUPPORTED_TRANSACTION)
+    ) : Item(TYPE_SUPPORTED_TRANSACTION) {
+
+        val accountId: String
+            get() = wallet.accountId
+    }
 
     class SettingsHeader : Item(TYPE_SETTINGS_HEADER)
 }

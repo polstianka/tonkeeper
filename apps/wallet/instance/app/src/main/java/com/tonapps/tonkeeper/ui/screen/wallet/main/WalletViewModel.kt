@@ -143,8 +143,6 @@ class WalletViewModel(
                 backups.indexOfFirst { it.walletId == wallet.id } > -1
             }
 
-            val isBatteryViewed = settingsRepository.isBatteryViewed()
-
             val walletCurrency = getCurrency(wallet, currency)
 
             val localAssets = getLocalAssets(walletCurrency, wallet)
@@ -159,7 +157,7 @@ class WalletViewModel(
                         balance = batteryBalance,
                         beta = api.config.batteryBeta,
                         disabled = api.config.batteryDisabled,
-                        viewed = isBatteryViewed,
+                        viewed = settingsRepository.batteryViewed,
                     ),
                 )
             }
@@ -177,7 +175,7 @@ class WalletViewModel(
                             balance = batteryBalance,
                             beta = api.config.batteryBeta,
                             disabled = api.config.batteryDisabled,
-                            viewed = isBatteryViewed,
+                            viewed = settingsRepository.batteryViewed,
                         ),
                     )
                     settingsRepository.setWalletLastUpdated(wallet.id)
@@ -269,7 +267,13 @@ class WalletViewModel(
         wallet: WalletEntity,
         ignoreCache: Boolean = false
     ): Coins = withContext(Dispatchers.IO) {
-        val battery = batteryRepository.getBalance(wallet, ignoreCache)
+        val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: return@withContext Coins.ZERO
+        val battery = batteryRepository.getBalance(
+            tonProofToken = tonProofToken,
+            publicKey = wallet.publicKey,
+            testnet = wallet.testnet,
+            ignoreCache = ignoreCache
+        )
         return@withContext battery.balance
     }
 
