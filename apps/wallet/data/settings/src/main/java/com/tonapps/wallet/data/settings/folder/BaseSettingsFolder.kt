@@ -45,7 +45,7 @@ internal abstract class BaseSettingsFolder(
 
     fun getLong(key: String, defValue: Long = 0) = prefs.getLong(key, defValue)
 
-    fun getIntArray(key: String) = prefs.getIntArray(key)
+    fun getIntArray(key: String, def: IntArray? = null) = prefs.getIntArray(key) ?: def
 
     fun putIntArray(key: String, value: IntArray, notify: Boolean = true) {
         prefs.putIntArray(key, value)

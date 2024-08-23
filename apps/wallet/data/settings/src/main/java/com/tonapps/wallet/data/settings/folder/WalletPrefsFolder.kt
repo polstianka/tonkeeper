@@ -25,7 +25,8 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
 
     fun getBatteryTxEnabled(accountId: String): Array<BatteryTransaction> {
         val key = keyBatteryTxEnabled(accountId)
-        return getIntArray(key).map { BatteryTransaction(it) }.toTypedArray()
+        val value = getIntArray(key, BatteryTransaction.entries.toIntArray()) ?: return emptyArray()
+        return value.map { BatteryTransaction(it) }.toTypedArray()
     }
 
     fun setBatteryTxEnabled(accountId: String, types: Array<BatteryTransaction>) {

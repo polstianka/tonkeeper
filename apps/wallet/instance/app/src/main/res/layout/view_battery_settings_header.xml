@@ -1,31 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<uikit.widget.TextHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <uikit.widget.ColumnLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:gravity="center"
-            android:text="@string/battery_settings_title"
-            android:textAppearance="@style/TextAppearance.H2"
-            android:textColor="?attr/textPrimaryColor" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/battery_settings_subtitle"
-            android:textAppearance="@style/TextAppearance.Body1"
-            android:textColor="?attr/textSecondaryColor"
-            android:layout_marginBottom="32dp" />
-
-    </uikit.widget.ColumnLayout>
-
-</FrameLayout>
+    android:layout_height="wrap_content"
+    android:title="@string/battery_settings_title"
+    android:description="@string/battery_settings_subtitle"
+    android:layout_marginBottom="@dimen/offsetLarge"/>

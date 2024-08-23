@@ -1,9 +1,9 @@
-package com.tonapps.tonkeeper.ui.screen.battery.list.holder
+package com.tonapps.tonkeeper.ui.screen.battery.refill.list.holder
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
-import com.tonapps.tonkeeper.ui.screen.battery.list.Item
+import com.tonapps.tonkeeper.ui.screen.battery.refill.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.data.settings.BatteryTransaction
@@ -31,7 +31,7 @@ class SettingsHolder(
         }
     }
 
-    private fun getSupportedTransactionText(supportedTransactions: List<BatteryTransaction>): String {
+    private fun getSupportedTransactionText(supportedTransactions: Array<BatteryTransaction>): String {
         return supportedTransactions.joinToString(", ") {
             context.getString(supportedTransactionMap[it]!!)
         }
@@ -45,4 +45,5 @@ class SettingsHolder(
             BatteryTransaction.JETTON to Localization.battery_jetton,
         )
     }
+
 }
