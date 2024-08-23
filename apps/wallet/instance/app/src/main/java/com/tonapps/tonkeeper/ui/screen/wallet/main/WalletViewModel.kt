@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.Coins
 import com.tonapps.network.NetworkMonitor
+import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.core.entities.AssetsEntity
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
 import com.tonapps.tonkeeper.core.entities.StakedEntity
@@ -64,6 +65,7 @@ class WalletViewModel(
     private val stakingRepository: StakingRepository,
     private val ratesRepository: RatesRepository,
     private val batteryRepository: BatteryRepository,
+    private val billingManager: BillingManager,
 ): BaseWalletVM(app) {
 
     private val alertNotificationsFlow = MutableStateFlow<List<NotificationEntity>>(emptyList())

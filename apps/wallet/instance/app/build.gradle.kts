@@ -98,6 +98,7 @@ dependencies {
     implementation(Dependence.AndroidX.Camera.view)
 
     implementation(Dependence.GooglePlay.review)
+    implementation(Dependence.GooglePlay.billing)
 
     implementation(Dependence.Squareup.okhttp)
     implementation(Dependence.Squareup.sse)

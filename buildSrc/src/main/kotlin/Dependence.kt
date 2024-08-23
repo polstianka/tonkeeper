@@ -5,7 +5,6 @@ object Dependence {
     const val guava = "com.google.guava:guava:33.2.1-android"
     const val zxing = "com.google.zxing:core:3.5.3"
     const val j2objc = "com.google.j2objc:j2objc-annotations:3.0.0"
-    const val gson = "com.google.code.gson:gson:2.8.8"
 
     object Analytics {
         const val aptabase = "com.github.aptabase:aptabase-kotlin:0.0.8"
@@ -23,6 +22,7 @@ object Dependence {
         const val cronet = "com.google.android.gms:play-services-cronet:18.0.1"
         const val cronetOkhttp = "com.google.net.cronet:cronet-okhttp:0.1.0"
         const val review = "com.google.android.play:review-ktx:2.0.1"
+        const val billing = "com.android.billingclient:billing-ktx:7.0.0"
     }
 
     object UI {

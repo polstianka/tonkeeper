@@ -28,7 +28,8 @@ class BatterySettingsViewModel(
     val uiItemsFlow = combine(
         accountRepository.selectedWalletFlow,
         api.configFlow,
-    ) { wallet, config ->
+        accountRepository.realtimeEventsFlow,
+    ) { wallet, config, _ ->
         val batteryBalance = getBatteryBalance(wallet)
         val hasBalance = batteryBalance.balance.isPositive
 
