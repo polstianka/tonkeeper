@@ -51,6 +51,7 @@ class SettingsRepository(
         private const val INSTALL_ID_KEY = "install_id"
         private const val SEARCH_ENGINE_KEY = "search_engine"
         private const val ENCRYPTED_COMMENT_MODAL_KEY = "encrypted_comment_modal"
+        private const val BATTERY_VIEWED_KEY = "battery_viewed"
     }
 
     private val _currencyFlow = MutableEffectFlow<WalletCurrency>()
@@ -198,6 +199,14 @@ class SettingsRepository(
             }
         }
 
+    var batteryViewed: Boolean = prefs.getBoolean(BATTERY_VIEWED_KEY, false)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putBoolean(BATTERY_VIEWED_KEY, value).apply()
+                field = value
+            }
+        }
+
     fun getSpamStateTransaction(walletId: String, id: String) = walletPrefsFolder.getSpamStateTransaction(walletId, id)
 
     fun isSpamTransaction(walletId: String, id: String) = getSpamStateTransaction(walletId, id) == SpamTransactionState.SPAM
@@ -213,10 +222,6 @@ class SettingsRepository(
         rnLegacy.setNotificationsEnabled(walletId, value)
         _walletPush.tryEmit(Unit)
     }
-
-    fun isBatteryViewed(): Boolean = walletPrefsFolder.isBatteryViewed()
-
-    fun setBatteryViewed() = walletPrefsFolder.setBatteryViewed()
 
     fun isSetupHidden(walletId: String): Boolean = walletPrefsFolder.isSetupHidden(walletId)
 
@@ -234,6 +239,31 @@ class SettingsRepository(
 
     fun setLastBackupAt(walletId: String, date: Long) {
         rnLegacy.setSetupLastBackupAt(walletId, date)
+    }
+
+    fun getBatteryTxEnabled(accountId: String) = walletPrefsFolder.getBatteryTxEnabled(accountId)
+
+    fun setBatteryTxEnabled(accountId: String, types: Array<BatteryTransaction>) {
+        walletPrefsFolder.setBatteryTxEnabled(accountId, types)
+    }
+
+    fun batteryEnableTx(
+        accountId: String,
+        type: BatteryTransaction,
+        enable: Boolean
+    ): Array<BatteryTransaction> {
+        val types = getBatteryTxEnabled(accountId).toMutableSet()
+        if (enable && !types.contains(type)) {
+            types.add(type)
+        } else if (!enable && !types.remove(type)) {
+            return types.toTypedArray()
+        }
+        setBatteryTxEnabled(accountId, types.toTypedArray())
+        return types.toTypedArray()
+    }
+
+    fun batteryIsEnabledTx(accountId: String, type: BatteryTransaction): Boolean {
+        return getBatteryTxEnabled(accountId).contains(type)
     }
 
     fun getLocale(): Locale {

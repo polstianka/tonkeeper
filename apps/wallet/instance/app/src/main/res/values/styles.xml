@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Battery">
+        <item name="outerRadius">0dp</item>
+        <item name="innerRadius">0dp</item>
+        <item name="levelRadius">0dp</item>
+        <item name="borderSize">0dp</item>
+        <item name="capSize">0dp</item>
+        <item name="capRadius">0dp</item>
+        <item name="capOffset">0dp</item>
+        <item name="iconSize">0dp</item>
+    </style>
+
+    <style name="Battery.VeryBig">
+        <item name="android:layout_width">68dp</item>
+        <item name="android:layout_height">114dp</item>
+        <item name="outerRadius">16dp</item>
+        <item name="innerRadius">12dp</item>
+        <item name="levelRadius">8dp</item>
+        <item name="borderSize">4dp</item>
+        <item name="capSize">22dp</item>
+        <item name="capRadius">14dp</item>
+        <item name="capOffset">10dp</item>
+        <item name="iconSize">48dp</item>
+    </style>
+
+    <style name="Battery.Big">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="outerRadius">6.5dp</item>
+        <item name="innerRadius">5dp</item>
+        <item name="levelRadius">3.5dp</item>
+        <item name="borderSize">1.5dp</item>
+        <item name="capSize">9dp</item>
+        <item name="capRadius">10dp</item>
+        <item name="capOffset">4dp</item>
+        <item name="iconSize">22dp</item>
+    </style>
+
+    <style name="Battery.Medium">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="outerRadius">5dp</item>
+        <item name="innerRadius">3.5dp</item>
+        <item name="levelRadius">2dp</item>
+        <item name="borderSize">1.5dp</item>
+        <item name="capSize">7dp</item>
+        <item name="capRadius">4dp</item>
+        <item name="capOffset">3dp</item>
+        <item name="iconSize">16dp</item>
+    </style>
+
+    <style name="Battery.Small">
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="outerRadius">3.5dp</item>
+        <item name="innerRadius">2.5dp</item>
+        <item name="levelRadius">1.5dp</item>
+        <item name="borderSize">1dp</item>
+        <item name="capSize">2.5dp</item>
+        <item name="capRadius">3dp</item>
+        <item name="capOffset">2dp</item>
+        <item name="iconSize">12dp</item>
+    </style>
+
+
+</resources>

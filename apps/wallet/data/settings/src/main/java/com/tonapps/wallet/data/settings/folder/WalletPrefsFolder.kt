@@ -3,6 +3,8 @@ package com.tonapps.wallet.data.settings.folder
 import android.content.Context
 import android.os.SystemClock
 import android.util.Log
+import com.tonapps.wallet.data.settings.BatteryTransaction
+import com.tonapps.wallet.data.settings.BatteryTransaction.Companion.toIntArray
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.settings.SpamTransactionState
 import com.tonapps.wallet.data.settings.entities.WalletPrefsEntity
@@ -18,7 +20,18 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
         private const val LAST_UPDATED_PREFIX = "last_updated_"
         private const val TELEGRAM_CHANNEL_PREFIX = "telegram_channel_"
         private const val SPAM_STATE_TRANSACTION_PREFIX = "spam_state_transaction_"
-        private const val BATTERY_VIEWED_KEY = "battery_viewed"
+        private const val BATTERY_TX_ENABLED_PREFIX = "batter_tx_enabled_"
+    }
+
+    fun getBatteryTxEnabled(accountId: String): Array<BatteryTransaction> {
+        val key = keyBatteryTxEnabled(accountId)
+        val value = getIntArray(key, BatteryTransaction.entries.toIntArray()) ?: return emptyArray()
+        return value.map { BatteryTransaction(it) }.toTypedArray()
+    }
+
+    fun setBatteryTxEnabled(accountId: String, types: Array<BatteryTransaction>) {
+        val key = keyBatteryTxEnabled(accountId)
+        putIntArray(key, types.distinct().toIntArray())
     }
 
     fun getSpamStateTransaction(
@@ -53,14 +66,6 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
 
     fun isTelegramChannel(walletId: String): Boolean {
         return getBoolean(keyTelegramChannel(walletId), false)
-    }
-
-    fun isBatteryViewed(): Boolean {
-        return getBoolean(BATTERY_VIEWED_KEY, false)
-    }
-
-    fun setBatteryViewed() {
-        putBoolean(BATTERY_VIEWED_KEY, true)
     }
 
     fun setupHide(walletId: String) {
@@ -101,6 +106,10 @@ internal class WalletPrefsFolder(context: Context, scope: CoroutineScope): BaseS
                 putInt(keySort(walletId), index)
             }
         }
+    }
+
+    private fun keyBatteryTxEnabled(accountId: String): String {
+        return key(BATTERY_TX_ENABLED_PREFIX, accountId)
     }
 
     private fun keySpamStateTransaction(walletId: String, id: String): String {

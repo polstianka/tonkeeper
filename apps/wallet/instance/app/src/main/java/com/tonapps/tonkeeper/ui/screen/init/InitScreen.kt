@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.tonapps.ledger.ton.LedgerConnectData
 import com.tonapps.tonkeeper.ui.base.BaseWalletScreen
 import com.tonapps.tonkeeper.ui.screen.init.list.AccountItem

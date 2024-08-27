@@ -101,7 +101,7 @@ class BalanceHolder(
         if (item.showBattery) {
             batteryView.visibility = View.VISIBLE
             batteryView.setBatteryLevel(item.batteryBalance.value.toFloat())
-            batteryView.setEmptyState(item.batteryEmptyState)
+            batteryView.emptyState = item.batteryEmptyState
         } else {
             batteryView.visibility = View.GONE
         }

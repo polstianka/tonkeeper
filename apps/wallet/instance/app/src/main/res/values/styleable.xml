@@ -8,9 +8,19 @@
         <attr name="position"/>
         <attr name="android:title" format="string|reference"/>
     </declare-styleable>
+
     <declare-styleable name="BatteryView">
         <attr name="emptyState"/>
+        <attr name="outerRadius" format="dimension|reference"/>
+        <attr name="innerRadius" format="dimension|reference"/>
+        <attr name="levelRadius" format="dimension|reference"/>
+        <attr name="borderSize" format="dimension|reference"/>
+        <attr name="capSize" format="dimension|reference"/>
+        <attr name="capRadius" format="dimension|reference"/>
+        <attr name="capOffset" format="dimension|reference"/>
+        <attr name="iconSize" format="dimension|reference"/>
     </declare-styleable>
+
     <attr name="emptyState">
         <enum name="none" value="0"/>
         <enum name="secondary" value="1"/>

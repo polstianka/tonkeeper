@@ -1,11 +1,11 @@
-package com.tonapps.tonkeeper.ui.screen.battery.list.holder
+package com.tonapps.tonkeeper.ui.screen.battery.refill.list.holder
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupScreen
-import com.tonapps.tonkeeper.ui.screen.battery.list.Item
+import com.tonapps.tonkeeper.ui.screen.battery.refill.list.Item
 import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.localization.Localization
 import uikit.extensions.drawable

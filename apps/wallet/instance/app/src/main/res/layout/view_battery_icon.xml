@@ -11,9 +11,8 @@
         android:layout_gravity="center">
 
         <com.tonapps.tonkeeper.view.BatteryView
+            style="@style/Battery.VeryBig"
             android:id="@+id/battery_view"
-            android:layout_width="68dp"
-            android:layout_height="114dp"
             android:layout_gravity="center"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="24dp"
@@ -29,7 +28,7 @@
             android:gravity="center"
             android:paddingHorizontal="@dimen/offsetExtraSmall"
             android:singleLine="true"
-            android:text="Beta"
+            android:text="@string/beta"
             android:textAppearance="@style/TextAppearance.Body4CAPS"
             android:textColor="?attr/accentOrangeColor"
             android:visibility="gone" />
@@ -51,20 +50,6 @@
             android:text="@string/battery_refill_subtitle"
             android:textAppearance="@style/TextAppearance.Body1"
             android:textColor="?attr/textSecondaryColor" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/supported_transaction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/battery_supported_transaction"
-            android:textAppearance="@style/TextAppearance.Body1"
-            android:textColor="?attr/textAccentColor"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="32dp" />
 
     </uikit.widget.ColumnLayout>
 

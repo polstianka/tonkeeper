@@ -42,6 +42,9 @@ data class ConfigEntity(
     val swapUri: Uri
         get() = Uri.parse(stonfiUrl)
 
+    val isBatteryDisabled: Boolean
+        get() = batteryDisabled || batterySendDisabled
+
     constructor(json: JSONObject, debug: Boolean) : this(
         supportLink = json.getString("supportLink"),
         nftExplorer = json.getString("NFTOnExplorerUrl"),
@@ -76,9 +79,7 @@ data class ConfigEntity(
         batteryMeanPriceNft = json.optString("batteryMeanPrice_nft", "0.03"),
         batteryMeanPriceSwap = json.optString("batteryMeanPrice_swap", "0.22"),
         batteryMeanPriceJetton = json.optString("batteryMeanPrice_jetton", "0.06"),
-    ) {
-        Log.d("ConfigLog", "ConfigEntity: $json")
-    }
+    )
 
     constructor() : this(
         supportLink = "mailto:support@tonkeeper.com",

@@ -3,7 +3,6 @@ package com.tonapps.tonkeeper.ui.screen.root
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.AndroidViewModel
@@ -34,13 +33,13 @@ import com.tonapps.tonkeeperx.R
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.Theme
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
 import com.tonapps.wallet.data.passcode.PasscodeManager
 import com.tonapps.wallet.data.purchase.PurchaseRepository
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
@@ -66,7 +65,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.map
@@ -241,7 +239,7 @@ class RootViewModel(
     suspend fun requestSign(
         context: Context,
         request: SignRequestEntity,
-        batteryTxType: BatterySupportedTransaction? = null,
+        batteryTxType: BatteryTransaction? = null,
     ): String {
         val wallet = accountRepository.selectedWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
         return requestSign(context, wallet, request, batteryTxType)
@@ -251,7 +249,7 @@ class RootViewModel(
         context: Context,
         wallet: WalletEntity,
         request: SignRequestEntity,
-        batteryTxType: BatterySupportedTransaction? = null,
+        batteryTxType: BatteryTransaction? = null,
     ): String {
         val navigation = context.navigation ?: throw Exception("navigation is null")
         return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType)

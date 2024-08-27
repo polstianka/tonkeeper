@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
@@ -15,8 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.UIKitColor
+import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.accentOrangeColor
+import com.tonapps.uikit.color.iconSecondaryColor
 import com.tonapps.uikit.color.resolveColor
 import uikit.extensions.dp
+import uikit.extensions.drawable
 import uikit.extensions.useAttributes
 
 class BatteryView @JvmOverloads constructor(
@@ -32,19 +37,18 @@ class BatteryView @JvmOverloads constructor(
 
         companion object {
             fun from(value: Int): EmptyState {
-                return values().firstOrNull { it.value == value } ?: NONE
+                return entries.firstOrNull { it.value == value } ?: NONE
             }
         }
     }
 
     private var isInitialSet = true
     private var batteryLevel = 0f
-    private var emptyState: EmptyState = EmptyState.NONE
 
-    private val dpHeight: Float
-        get() {
-            val density = Resources.getSystem().displayMetrics.density
-            return height.toFloat() / density
+    var emptyState: EmptyState = EmptyState.NONE
+        set(value) {
+            field = value
+            invalidate()
         }
 
     private val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -58,7 +62,8 @@ class BatteryView @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
-    private val iconDrawable: Drawable? = ContextCompat.getDrawable(context, R.drawable.ic_flash_48)
+    private var levelAnimator: ValueAnimator? = null
+    private val iconDrawable = context.drawable(R.drawable.ic_flash_48)
 
     private val outerRect = RectF()
     private val capRect = RectF()
@@ -66,80 +71,18 @@ class BatteryView @JvmOverloads constructor(
     private val levelRect = RectF()
     private val iconRect = RectF()
 
-    private val outerRadius: Float
-        get() = when {
-            dpHeight >= 114 -> 16f.dp
-            dpHeight >= 44 -> 6.5f.dp
-            dpHeight >= 34 -> 5f.dp
-            dpHeight >= 24 -> 3.5f.dp
-            else -> 0f
-        }
-
-    private val innerRadius: Float
-        get() = when {
-            dpHeight >= 114 -> 12f.dp
-            dpHeight >= 44 -> 5f.dp
-            dpHeight >= 34 -> 3.5f.dp
-            dpHeight >= 24 -> 2.5f.dp
-            else -> 0f
-        }
-
-    private val levelRadius: Float
-        get() = when {
-            dpHeight >= 114 -> 8f.dp
-            dpHeight >= 44 -> 3.5f.dp
-            dpHeight >= 34 -> 2f.dp
-            dpHeight >= 24 -> 1.5f.dp
-            else -> 0f
-        }
-
-    private val borderSize: Float
-        get() = when {
-            dpHeight >= 114 -> 4f.dp
-            dpHeight >= 44 -> 1.5f.dp
-            dpHeight >= 34 -> 1.5f.dp
-            dpHeight >= 24 -> 1f.dp
-            else -> 0f
-        }
-
-    private val capSize: Float
-        get() = when {
-            dpHeight >= 114 -> 22f.dp
-            dpHeight >= 44 -> 9f.dp
-            dpHeight >= 34 -> 7f.dp
-            dpHeight >= 24 -> 2.5f.dp
-            else -> 0f
-        }
+    private var outerRadius: Float = 0f
+    private var innerRadius: Float = 0f
+    private var levelRadius: Float = 0f
+    private var borderSize: Float = 0f
+    private var capSize: Float = 0f
 
     private val capLeft: Float
         get() = (width.toFloat() - capSize) / 2
 
-    private val capRadius: Float
-        get() = when {
-            dpHeight >= 114 -> 14f.dp
-            dpHeight >= 44 -> 10f.dp
-            dpHeight >= 34 -> 4f.dp
-            dpHeight >= 24 -> 3f.dp
-            else -> 0f
-        }
-
-    private val capOffset: Float
-        get() = when {
-            dpHeight >= 114 -> 10f.dp
-            dpHeight >= 44 -> 4f.dp
-            dpHeight >= 34 -> 3f.dp
-            dpHeight >= 24 -> 2f.dp
-            else -> 0f
-        }
-
-    private val iconSize: Float
-        get() = when {
-            dpHeight >= 114 -> 48f.dp
-            dpHeight >= 44 -> 22f.dp
-            dpHeight >= 34 -> 16f.dp
-            dpHeight >= 24 -> 12f.dp
-            else -> 0f
-        }
+    private var capRadius: Float = 0f
+    private var capOffset: Float = 0f
+    private var iconSize: Float = 0f
 
     init {
         context.useAttributes(attrs, R.styleable.BatteryView) {
@@ -149,6 +92,15 @@ class BatteryView @JvmOverloads constructor(
                     EmptyState.NONE.value
                 )
             )
+
+            outerRadius = it.getDimension(R.styleable.BatteryView_outerRadius, 0f)
+            innerRadius = it.getDimension(R.styleable.BatteryView_innerRadius, 0f)
+            levelRadius = it.getDimension(R.styleable.BatteryView_levelRadius, 0f)
+            borderSize = it.getDimension(R.styleable.BatteryView_borderSize, 0f)
+            capSize = it.getDimension(R.styleable.BatteryView_capSize, 0f)
+            capRadius = it.getDimension(R.styleable.BatteryView_capRadius, 0f)
+            capOffset = it.getDimension(R.styleable.BatteryView_capOffset, 0f)
+            iconSize = it.getDimension(R.styleable.BatteryView_iconSize, 0f)
         }
     }
 
@@ -186,19 +138,22 @@ class BatteryView @JvmOverloads constructor(
                 innerRect.right - borderSize,
                 innerRect.bottom - borderSize
             )
-            levelPaint.color =
-                if (batteryLevel > MIN_LEVEL) {
-                    context.resolveColor(UIKitColor.accentBlueColor)
-                } else {
-                    context.resolveColor(UIKitColor.accentOrangeColor)
-                }
-            canvas.drawRoundRect(levelRect, levelRadius, levelRadius, levelPaint)
-        } else if (emptyState != EmptyState.NONE && iconDrawable != null) {
-            val color = when (emptyState) {
-                EmptyState.SECONDARY -> context.resolveColor(UIKitColor.iconSecondaryColor)
-                EmptyState.ACCENT -> context.resolveColor(UIKitColor.accentBlueColor)
-                else -> 0
+
+            levelPaint.color = if (batteryLevel > MIN_LEVEL) {
+                context.accentBlueColor
+            } else {
+                context.accentOrangeColor
             }
+
+            canvas.drawRoundRect(levelRect, levelRadius, levelRadius, levelPaint)
+        } else if (emptyState != EmptyState.NONE) {
+
+            val color = when (emptyState) {
+                EmptyState.SECONDARY -> context.iconSecondaryColor
+                EmptyState.ACCENT -> context.accentBlueColor
+                else -> Color.TRANSPARENT
+            }
+
             val left = innerRect.left + (innerRect.width() - iconSize) / 2
             val top = innerRect.top + (innerRect.height() - iconSize) / 2
             iconRect.set(left, top, left + iconSize, top + iconSize)
@@ -210,17 +165,13 @@ class BatteryView @JvmOverloads constructor(
         canvas.restoreToCount(saveCount)
     }
 
-    private var animator: ValueAnimator? = null
-
     // Function to set battery level
     fun setBatteryLevel(level: Float) {
-        if (animator?.isRunning == true) {
-            animator!!.cancel()
-        }
+        levelAnimator?.cancel()
 
         val nextValue = level.coerceIn(0f, 1f)
         
-        if (level.equals(0f) || isInitialSet) {
+        if (level == 0f || isInitialSet) {
             if (isInitialSet) {
                 isInitialSet = false
             }
@@ -229,19 +180,14 @@ class BatteryView @JvmOverloads constructor(
             return
         }
 
-        animator = ValueAnimator.ofFloat(batteryLevel, nextValue).apply {
+        levelAnimator = ValueAnimator.ofFloat(batteryLevel, nextValue).apply {
             duration = 400 // Animation duration in milliseconds
             addUpdateListener { animation ->
                 batteryLevel = animation.animatedValue as Float
                 invalidate() // Trigger a redraw
             }
+            start()
         }
-        animator!!.start()
-    }
-
-    fun setEmptyState(state: EmptyState) {
-        emptyState = state
-        invalidate()
     }
 
     companion object {

@@ -21,6 +21,20 @@ fun SharedPreferences.putByteArray(key: String, value: ByteArray?) {
     }
 }
 
+fun SharedPreferences.getIntArray(key: String): IntArray? {
+    if (!contains(key)) {
+        return null
+    }
+    val value = getString(key, null) ?: return null
+    return value.split(",").mapNotNull { it.toIntOrNull() }.toIntArray()
+}
+
+fun SharedPreferences.putIntArray(key: String, value: IntArray) {
+    edit {
+        putString(key, value.joinToString(","))
+    }
+}
+
 fun SharedPreferences.remove(key: String) {
     edit {
         remove(key)

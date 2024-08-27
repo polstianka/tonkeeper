@@ -24,11 +24,11 @@ import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.account.Wallet
 import com.tonapps.wallet.data.battery.BatteryRepository
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.collectibles.CollectiblesRepository
 import com.tonapps.wallet.data.collectibles.entities.NftEntity
 import com.tonapps.wallet.data.passcode.PasscodeManager
 import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
@@ -63,7 +63,6 @@ import org.ton.bitstring.BitString
 import org.ton.block.AddrStd
 import org.ton.cell.Cell
 import uikit.extensions.collectFlow
-import uikit.extensions.context
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -184,10 +183,10 @@ class SendViewModel(
         ratesTokenFlow,
         uiInputAmountCurrency,
     ) { token, amount, rates, amountCurrency ->
-        val (decimals, balance, currencyCode) = if (amountCurrency) {
-            Triple(currency.decimals, token.fiat, currency.code)
+        val (balance, currencyCode) = if (amountCurrency) {
+            Pair(token.fiat, currency.code)
         } else {
-            Triple(token.decimals, token.balance.value, token.symbol)
+            Pair(token.balance.value, token.symbol)
         }
 
         val remaining = balance - amount
@@ -333,7 +332,6 @@ class SendViewModel(
         if (isNft) {
             loadNft()
         }
-        Log.d("SendViewModelLog", "activity: $activity")
     }
 
     fun initializeTokenAndAmount(tokenAddress: String, amountNano: Long) {
@@ -411,10 +409,13 @@ class SendViewModel(
             return false
         }
 
-        val transactionType =
-            if (transfer.isNft) BatterySupportedTransaction.NFT else BatterySupportedTransaction.JETTON
+        val transactionType = if (transfer.isNft) {
+            BatteryTransaction.NFT
+        } else {
+            BatteryTransaction.JETTON
+        }
 
-        return batteryRepository.isSupportedTransaction(transfer.wallet.accountId, transactionType)
+        return settingsRepository.batteryIsEnabledTx(transfer.wallet.accountId, transactionType)
     }
 
     private suspend fun calculateFee(
@@ -426,18 +427,28 @@ class SendViewModel(
         } else {
             EmptyPrivateKeyEd25519
         }
+        val wallet = transfer.wallet
         val withRelayer = shouldAttemptWithRelayer(transfer)
 
         Log.d("SendViewModel", "shouldAttemptWithRelayer: $withRelayer")
 
         if (withRelayer && !retryWithoutRelayer) {
             try {
+                if (api.config.isBatteryDisabled) {
+                    throw IllegalStateException("Battery is disabled")
+                }
+                val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: throw IllegalStateException("Can't find TonProof token")
+
                 val message = transfer.toSignedMessage(fakePrivateKey, true)
-                val response = batteryRepository.emulate(transfer.wallet, message)
+                val (consequences, withBattery) = batteryRepository.emulate(
+                    tonProofToken = tonProofToken,
+                    publicKey = wallet.publicKey,
+                    testnet = wallet.testnet,
+                    boc = message
+                ) ?: throw IllegalStateException("Failed to emulate battery")
 
-                isBattery = response.withBattery
-
-                Pair(Coins.of(response.consequences.totalFees), response.withBattery)
+                isBattery = withBattery
+                Pair(Coins.of(consequences.totalFees), withBattery)
             } catch (e: Throwable) {
                 Log.e("SendViewModel", "error", e)
                 calculateFee(transfer, true)
@@ -590,14 +601,20 @@ class SendViewModel(
                 throw SendException.WrongPasscode()
             }
             val privateKey = accountRepository.getPrivateKey(wallet.id)
-            val excessesAddress = if (isBattery) batteryRepository.getConfig(wallet.testnet).getExcessesAddress() else null
+            val excessesAddress = if (isBattery) batteryRepository.getConfig(wallet.testnet).excessesAddress else null
             val boc = transfer.toSignedMessage(privateKey, isBattery, excessesAddress)
             Pair(boc, wallet)
         }.sendTransfer()
     }
 
     private suspend fun sendToBlockchain(message: Cell, wallet: WalletEntity) {
-        val success = if (isBattery) batteryRepository.sendToRelayer(wallet, message) else api.sendToBlockchain(message, wallet.testnet)
+        val success = if (isBattery) {
+            val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: throw IllegalStateException("Can't find TonProof token")
+            api.sendToBlockchainWithBattery(message, tonProofToken, wallet.testnet)
+        } else {
+            api.sendToBlockchain(message, wallet.testnet)
+        }
+
         if (!success) {
             throw SendException.FailedToSendTransaction()
         }

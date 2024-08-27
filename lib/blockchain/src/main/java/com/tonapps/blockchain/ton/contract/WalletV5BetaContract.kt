@@ -24,6 +24,8 @@ class WalletV5BetaContract(
     private val subwalletNumber: Int = 0
 ) : BaseWalletContract(workchain, publicKey) {
 
+    override val features: WalletFeature = WalletFeature.GASLESS and WalletFeature.SIGNED_INTERNALS
+
     override fun getWalletVersion() = WalletVersion.V5BETA
 
     override fun getStateCell(): Cell {
