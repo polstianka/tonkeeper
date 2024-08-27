@@ -15,6 +15,8 @@ class LockupContractV1(
     private val allowedDestinations: Boolean
 ): BaseWalletContract(publicKey = publicKey) {
 
+    override val features: WalletFeature = WalletFeature.NONE
+
     override fun getStateCell(): Cell {
         return CellBuilder.createCell {
             storeUInt(0, 32)

@@ -66,8 +66,9 @@ class WalletV5R1Contract(
                 storeInt(id, 31)
             }
         }
-
     }
+
+    override val features: WalletFeature = WalletFeature.GASLESS and WalletFeature.SIGNED_INTERNALS
 
     constructor(publicKey: PublicKeyEd25519, network: TonNetwork) : this(
         publicKey = publicKey,

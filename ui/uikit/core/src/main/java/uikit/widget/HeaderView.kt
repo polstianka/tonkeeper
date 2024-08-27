@@ -74,7 +74,7 @@ open class HeaderView @JvmOverloads constructor(
         }
 
 
-    var title: CharSequence
+    var title: CharSequence?
         get() = titleView.text
         set(value) {
             titleView.text = value

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.util.Log
 import com.tonapps.blockchain.ton.TonNetwork
 import com.tonapps.blockchain.ton.contract.BaseWalletContract
+import com.tonapps.blockchain.ton.contract.WalletFeature
 import com.tonapps.blockchain.ton.contract.WalletVersion
 import com.tonapps.blockchain.ton.extensions.toAccountId
 import com.tonapps.blockchain.ton.extensions.toRawAddress
@@ -26,37 +27,6 @@ data class WalletEntity(
 
     companion object {
         const val WORKCHAIN = 0
-
-        val contractFeatures: Map<WalletVersion, Map<WalletContractFeature, Boolean>> = mapOf(
-            WalletVersion.V5R1 to mapOf(
-                WalletContractFeature.GASLESS to true,
-                WalletContractFeature.SIGNED_INTERNALS to true,
-            ),
-            WalletVersion.V5BETA to mapOf(
-                WalletContractFeature.GASLESS to true,
-                WalletContractFeature.SIGNED_INTERNALS to true,
-            ),
-            WalletVersion.V4R2 to mapOf(
-                WalletContractFeature.GASLESS to false,
-                WalletContractFeature.SIGNED_INTERNALS to false,
-            ),
-            WalletVersion.V4R1 to mapOf(
-                WalletContractFeature.GASLESS to false,
-                WalletContractFeature.SIGNED_INTERNALS to false,
-            ),
-            WalletVersion.V3R2 to mapOf(
-                WalletContractFeature.GASLESS to false,
-                WalletContractFeature.SIGNED_INTERNALS to false,
-            ),
-            WalletVersion.V3R1 to mapOf(
-                WalletContractFeature.GASLESS to false,
-                WalletContractFeature.SIGNED_INTERNALS to false,
-            ),
-            WalletVersion.UNKNOWN to mapOf(
-                WalletContractFeature.GASLESS to false,
-                WalletContractFeature.SIGNED_INTERNALS to false,
-            )
-        )
     }
 
     @Parcelize
@@ -100,8 +70,8 @@ data class WalletEntity(
         return address.toRawAddress().equals(accountId, ignoreCase = true)
     }
 
-    fun isSupportedFeature(feature: WalletContractFeature): Boolean {
-        return contractFeatures[version]?.get(feature) ?: false
+    fun isSupportedFeature(feature: WalletFeature): Boolean {
+        return contract.isSupportedFeature(feature)
     }
 
     fun createBody(

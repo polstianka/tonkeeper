@@ -7,8 +7,8 @@ import com.tonapps.extensions.appVersionName
 import com.tonapps.tonkeeper.core.AnalyticsHelper
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeperx.R
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import uikit.base.BaseFragment
 import uikit.extensions.applyNavBottomPadding
@@ -59,7 +59,7 @@ class SwapScreen: BaseFragment(R.layout.fragment_swap), BaseFragment.BottomSheet
     private suspend fun sing(
         request: SignRequestEntity
     ): String {
-        return rootViewModel.requestSign(requireContext(), request, BatterySupportedTransaction.SWAP)
+        return rootViewModel.requestSign(requireContext(), request, BatteryTransaction.SWAP)
     }
 
     override fun onDestroyView() {

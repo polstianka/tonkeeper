@@ -4,6 +4,7 @@
     <string name="toncoin" translatable="false">Toncoin</string>
     <string name="bitcoin" translatable="false">Bitcoin</string>
     <string name="w5beta" translatable="false">W5 Beta</string>
+    <string name="beta" translatable="false">Beta</string>
     <string name="ok" translatable="false">OK</string>
     <string name="w5" translatable="false">W5</string>
     <string name="w5_wallet">Wallet W5</string>
@@ -427,6 +428,7 @@
     <string name="battery_refill_gift">Battery Gift</string>
     <string name="battery_refill_gift_subtitle">Share with friends</string>
     <string name="battery_supported_transaction">Supported transactions</string>
+    <string name="transactions">Transactions</string>
     <string name="battery_settings">Battery Settings</string>
     <string name="battery_will_be_paid">Will be paid: %1$s</string>
     <string name="battery_nft">NFT transfers</string>

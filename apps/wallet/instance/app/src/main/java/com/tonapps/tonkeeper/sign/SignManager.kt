@@ -12,10 +12,10 @@ import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.battery.BatteryRepository
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.core.entity.SignRequestEntity
 import com.tonapps.wallet.data.rates.RatesRepository
+import com.tonapps.wallet.data.settings.BatteryTransaction
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -37,10 +37,10 @@ class SignManager(
         wallet: WalletEntity,
         request: SignRequestEntity,
         canceller: CancellationSignal = CancellationSignal(),
-        batteryTxType: BatterySupportedTransaction? = null,
+        batteryTxType: BatteryTransaction? = null,
     ): String {
         navigation.toastLoading(true)
-        var isBattery = batteryTxType != null && batteryRepository.isSupportedTransaction(wallet.accountId, batteryTxType)
+        var isBattery = batteryTxType != null && settingsRepository.batteryIsEnabledTx(wallet.accountId, batteryTxType)
         val details: HistoryHelper.Details?
         if (isBattery) {
             val result = emulateBattery(request, wallet)
@@ -58,7 +58,12 @@ class SignManager(
 
         val boc = getBoc(navigation, wallet, request, details, canceller, isBattery) ?: throw IllegalArgumentException("Failed boc")
         AnalyticsHelper.trackEvent("send_transaction")
-        val success = if (isBattery) batteryRepository.sendToRelayer(wallet, boc) else api.sendToBlockchain(boc, wallet.testnet)
+        val success = if (isBattery) {
+            val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: throw IllegalStateException("Can't find TonProof token")
+            api.sendToBlockchainWithBattery(boc, tonProofToken, wallet.testnet)
+        } else {
+            api.sendToBlockchain(boc, wallet.testnet)
+        }
         if (success) {
             AnalyticsHelper.trackEvent("send_success")
         } else {
@@ -120,12 +125,26 @@ class SignManager(
         wallet: WalletEntity,
         currency: WalletCurrency = settingsRepository.currency,
     ): Pair<HistoryHelper.Details?, Boolean> {
-        val rates = ratesRepository.getRates(currency, "TON")
-        val seqno = accountRepository.getSeqno(wallet)
-        val cell = accountRepository.createSignedMessage(wallet, seqno, EmptyPrivateKeyEd25519, request.validUntil, request.transfers, internalMessage = true)
         return try {
-            val response = batteryRepository.emulate(wallet, cell)
-            Pair(historyHelper.create(wallet, response.consequences, rates, isBattery = true), response.withBattery)
+            if (api.config.isBatteryDisabled) {
+                throw IllegalStateException("Battery is disabled")
+            }
+
+            val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: throw IllegalStateException("Can't find TonProof token")
+
+            val rates = ratesRepository.getRates(currency, "TON")
+            val seqno = accountRepository.getSeqno(wallet)
+            val cell = accountRepository.createSignedMessage(wallet, seqno, EmptyPrivateKeyEd25519, request.validUntil, request.transfers, internalMessage = true)
+
+            val (consequences, withBattery) = batteryRepository.emulate(
+                tonProofToken = tonProofToken,
+                publicKey = wallet.publicKey,
+                testnet = wallet.testnet,
+                boc = cell
+            ) ?: throw IllegalStateException("Failed to emulate battery")
+
+            val details = historyHelper.create(wallet, consequences, rates, isBattery = true)
+            Pair(details, withBattery)
         } catch (e: Throwable) {
             Pair(emulate(request, wallet, currency), false)
         }

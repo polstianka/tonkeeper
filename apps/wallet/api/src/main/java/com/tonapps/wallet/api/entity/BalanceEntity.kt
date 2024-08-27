@@ -1,7 +1,6 @@
 package com.tonapps.wallet.api.entity
 
 import android.os.Parcelable
-import android.util.Log
 import com.tonapps.icu.Coins
 import io.tonapi.models.JettonBalance
 import io.tonapi.models.TokenRates

@@ -1,78 +1,74 @@
 package com.tonapps.tonkeeper.ui.screen.battery
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import com.tonapps.tonkeeper.ui.screen.battery.list.Adapter
+import androidx.fragment.app.FragmentManager
+import com.tonapps.tonkeeper.ui.base.BaseWalletScreen
+import com.tonapps.tonkeeper.ui.screen.battery.refill.BatteryRefillScreen
+import com.tonapps.tonkeeper.ui.screen.battery.settings.BatterySettingsScreen
 import com.tonapps.tonkeeperx.R
-import com.tonapps.wallet.data.battery.entity.BatterySupportedTransaction
+import com.tonapps.uikit.icon.UIKitIcon
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
-import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.collectFlow
+import uikit.extensions.commitChildAsSlide
 import uikit.widget.HeaderView
-import uikit.widget.SlideBetweenView
 
-class BatteryScreen : BaseFragment(R.layout.fragment_battery_screen), BaseFragment.BottomSheet {
+class BatteryScreen : BaseWalletScreen(R.layout.fragment_battery), BaseFragment.BottomSheet {
 
-    private val batteryViewModel: BatteryViewModel by viewModel()
+    override val viewModel: BatteryViewModel by viewModel()
 
-    private val refillAdapter = Adapter(::showSettings, ::toggleTransaction)
-    private val settingsAdapter = Adapter(::showSettings, ::toggleTransaction)
+    private val backStackListener = FragmentManager.OnBackStackChangedListener {
+        updateBackVisibility()
+    }
 
     private lateinit var headerView: HeaderView
-    private lateinit var slidesView: SlideBetweenView
-    private lateinit var refillListView: RecyclerView
-    private lateinit var settingsListView: RecyclerView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        collectFlow(batteryViewModel.uiItemsFlow, refillAdapter::submitList)
-        collectFlow(batteryViewModel.uiSettingsItemsFlow, settingsAdapter::submitList)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        slidesView = view.findViewById(R.id.slides)
         headerView = view.findViewById(R.id.header)
-
-        headerView.setBackgroundResource(uikit.R.drawable.bg_page_gradient)
         headerView.doOnActionClick = { finish() }
-        headerView.doOnCloseClick = { showRefill() }
+        headerView.doOnCloseClick = { childFragmentManager.popBackStack() }
+        headerView.setBackgroundResource(uikit.R.drawable.bg_page_gradient)
 
-        headerView.closeView.visibility = View.GONE
+        childFragmentManager.addOnBackStackChangedListener(backStackListener)
+        collectFlow(viewModel.routeFlow.map { route ->
+            when(route) {
+                BatteryRoute.Refill -> BatteryRefillScreen.newInstance()
+                BatteryRoute.Settings -> BatterySettingsScreen.newInstance()
+            }
+        }, ::setChildFragment)
 
-        refillListView = view.findViewById(R.id.refill_list)
-        refillListView.adapter = refillAdapter
-        refillListView.applyNavBottomPadding()
+        collectFlow(viewModel.titleFlow) {
+            headerView.title = it
+        }
+    }
 
-        settingsListView = view.findViewById(R.id.settings_list)
-        settingsListView.adapter = settingsAdapter
-        settingsListView.applyNavBottomPadding()
+    private fun setChildFragment(fragment: BaseFragment) {
+        childFragmentManager.commitChildAsSlide {
+            replace(R.id.fragment_battery_container, fragment, fragment.toString())
+            addToBackStack(fragment.toString())
+        }
+    }
+
+    private fun updateBackVisibility() {
+        val hasBackStack = childFragmentManager.backStackEntryCount > 1
+        headerView.setIcon(if (hasBackStack) UIKitIcon.ic_chevron_left_16 else 0)
     }
 
     override fun onBackPressed(): Boolean {
-        if (slidesView.getCurrentIndex() > 0) {
-            showRefill()
+        if (childFragmentManager.backStackEntryCount > 1) {
+            childFragmentManager.popBackStack()
             return false
         }
-
         return super.onBackPressed()
     }
 
-    private fun showRefill() {
-        headerView.closeView.visibility = View.GONE
-        slidesView.prev()
-    }
-
-    private fun showSettings() {
-        headerView.closeView.visibility = View.VISIBLE
-        slidesView.next()
-    }
-
-    private fun toggleTransaction(transaction: BatterySupportedTransaction, enabled: Boolean) {
-        batteryViewModel.setSupportedTransaction(transaction, enabled)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        childFragmentManager.removeOnBackStackChangedListener(backStackListener)
     }
 
     companion object {

@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.Coins
 import com.tonapps.network.NetworkMonitor
+import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.core.entities.AssetsEntity
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
 import com.tonapps.tonkeeper.core.entities.StakedEntity
@@ -64,6 +65,7 @@ class WalletViewModel(
     private val stakingRepository: StakingRepository,
     private val ratesRepository: RatesRepository,
     private val batteryRepository: BatteryRepository,
+    private val billingManager: BillingManager,
 ): BaseWalletVM(app) {
 
     private val alertNotificationsFlow = MutableStateFlow<List<NotificationEntity>>(emptyList())
@@ -143,8 +145,6 @@ class WalletViewModel(
                 backups.indexOfFirst { it.walletId == wallet.id } > -1
             }
 
-            val isBatteryViewed = settingsRepository.isBatteryViewed()
-
             val walletCurrency = getCurrency(wallet, currency)
 
             val localAssets = getLocalAssets(walletCurrency, wallet)
@@ -159,7 +159,7 @@ class WalletViewModel(
                         balance = batteryBalance,
                         beta = api.config.batteryBeta,
                         disabled = api.config.batteryDisabled,
-                        viewed = isBatteryViewed,
+                        viewed = settingsRepository.batteryViewed,
                     ),
                 )
             }
@@ -177,7 +177,7 @@ class WalletViewModel(
                             balance = batteryBalance,
                             beta = api.config.batteryBeta,
                             disabled = api.config.batteryDisabled,
-                            viewed = isBatteryViewed,
+                            viewed = settingsRepository.batteryViewed,
                         ),
                     )
                     settingsRepository.setWalletLastUpdated(wallet.id)
@@ -269,7 +269,13 @@ class WalletViewModel(
         wallet: WalletEntity,
         ignoreCache: Boolean = false
     ): Coins = withContext(Dispatchers.IO) {
-        val battery = batteryRepository.getBalance(wallet, ignoreCache)
+        val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: return@withContext Coins.ZERO
+        val battery = batteryRepository.getBalance(
+            tonProofToken = tonProofToken,
+            publicKey = wallet.publicKey,
+            testnet = wallet.testnet,
+            ignoreCache = ignoreCache
+        )
         return@withContext battery.balance
     }
 

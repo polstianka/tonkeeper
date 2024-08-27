@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.koin
 
 import com.tonapps.network.NetworkMonitor
+import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.tonkeeper.ui.screen.main.MainViewModel
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -11,6 +12,8 @@ import com.tonapps.tonkeeper.ui.screen.add.imprt.ImportWalletViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.check.BackupCheckViewModel
 import com.tonapps.tonkeeper.ui.screen.battery.BatteryViewModel
+import com.tonapps.tonkeeper.ui.screen.battery.refill.BatteryRefillViewModel
+import com.tonapps.tonkeeper.ui.screen.battery.settings.BatterySettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.connected.BrowserConnectedViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.explore.BrowserExploreViewModel
@@ -54,6 +57,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val koinModel = module {
@@ -63,6 +67,7 @@ val koinModel = module {
     single { NetworkMonitor(get(), get()) }
     single { SignManager(get(), get(), get(), get(), get(), get()) }
     single { HistoryHelper(get(), get(), get(), get(), get(), get(), get()) }
+    singleOf(::BillingManager)
 
     factory { (viewModel: com.tonapps.tonkeeper.ui.base.BaseWalletVM) ->
         // TODO

@@ -5,12 +5,13 @@ import com.tonapps.icu.Coins
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class BatteryEntity(
+data class BatteryBalanceEntity(
     val balance: Coins,
     val reservedBalance: Coins,
 ) : Parcelable {
+
     companion object {
-        val Empty = BatteryEntity(
+        val Empty = BatteryBalanceEntity(
             balance = Coins.ZERO,
             reservedBalance = Coins.ZERO
         )

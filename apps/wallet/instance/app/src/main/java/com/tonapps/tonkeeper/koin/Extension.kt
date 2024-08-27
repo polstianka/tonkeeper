@@ -1,6 +1,9 @@
 package com.tonapps.tonkeeper.koin
 
 import android.content.Context
+import androidx.annotation.MainThread
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.core.history.HistoryHelper
 import com.tonapps.wallet.api.API
@@ -10,6 +13,7 @@ import com.tonapps.wallet.data.passcode.PasscodeManager
 import com.tonapps.wallet.data.rn.RNLegacy
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.tonconnect.TonConnectRepository
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.definition.Definition
@@ -20,6 +24,11 @@ inline fun <reified T: RecyclerView.Adapter<*>> Module.uiAdapter(
     noinline definition: Definition<T>
 ): KoinDefinition<T> {
     return single(definition = definition)
+}
+
+@MainThread
+inline fun <reified T : ViewModel> Fragment.parentFragmentViewModel(): Lazy<T> {
+    return lazy { requireParentFragment().getViewModel() }
 }
 
 val Context.koin: Koin?

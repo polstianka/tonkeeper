@@ -1,6 +1,7 @@
 package com.tonapps.wallet.data.battery.entity
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.ton.block.AddrStd
 
@@ -11,8 +12,9 @@ data class BatteryConfigEntity(
     val rechargeMethods: List<RechargeMethodEntity>,
 ) : Parcelable {
 
-    fun getExcessesAddress(): AddrStd? {
-        return if (excessesAccount != null) AddrStd(excessesAccount) else null
+    @IgnoredOnParcel
+    val excessesAddress: AddrStd? by lazy {
+        excessesAccount?.let { AddrStd(it) }
     }
 
     companion object {
