@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.battery
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletScreen

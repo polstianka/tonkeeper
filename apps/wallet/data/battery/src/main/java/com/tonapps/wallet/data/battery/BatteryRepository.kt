@@ -1,7 +1,9 @@
 package com.tonapps.wallet.data.battery
 
 import android.content.Context
+import androidx.collection.ArrayMap
 import com.tonapps.extensions.MutableEffectFlow
+import com.tonapps.extensions.filterList
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.data.battery.entity.BatteryConfigEntity
 import com.tonapps.wallet.data.battery.entity.BatteryBalanceEntity
@@ -10,7 +12,16 @@ import com.tonapps.wallet.data.battery.source.RemoteDataSource
 import io.tonapi.models.MessageConsequences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import org.ton.api.pub.PublicKeyEd25519
@@ -22,6 +33,9 @@ class BatteryRepository(
 ) {
     private val localDataSource = LocalDataSource(context)
     private val remoteDataSource = RemoteDataSource(api)
+
+    private val _balanceUpdatedFlow = MutableEffectFlow<Unit>()
+    val balanceUpdatedFlow = _balanceUpdatedFlow.asSharedFlow()
 
     suspend fun getConfig(
         testnet: Boolean,
@@ -61,6 +75,7 @@ class BatteryRepository(
     ): BatteryBalanceEntity {
         val balance = remoteDataSource.fetchBalance(tonProofToken, testnet) ?: return BatteryBalanceEntity.Empty
         localDataSource.setBalance(publicKey, testnet, balance)
+        _balanceUpdatedFlow.emit(Unit)
         return balance
     }
 

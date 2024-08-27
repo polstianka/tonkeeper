@@ -16,6 +16,7 @@ import com.tonapps.wallet.data.settings.SettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class BatterySettingsViewModel(
     app: Application,
@@ -27,9 +28,9 @@ class BatterySettingsViewModel(
 
     val uiItemsFlow = combine(
         accountRepository.selectedWalletFlow,
-        api.configFlow,
-        accountRepository.realtimeEventsFlow,
-    ) { wallet, config, _ ->
+        batteryRepository.balanceUpdatedFlow
+    ) { wallet, _ ->
+        val config = api.config
         val batteryBalance = getBatteryBalance(wallet)
         val hasBalance = batteryBalance.balance.isPositive
 

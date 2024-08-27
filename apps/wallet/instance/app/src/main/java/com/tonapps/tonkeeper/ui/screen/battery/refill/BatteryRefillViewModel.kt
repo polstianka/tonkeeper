@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.battery.refill
 
 import android.app.Application
+import android.util.Log
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
@@ -36,16 +37,14 @@ class BatteryRefillViewModel(
 ): BaseWalletVM(app) {
 
     val uiItemsFlow = combine(
-        accountRepository.selectedWalletFlow.take(1),
-        api.configFlow,
+        accountRepository.selectedWalletFlow,
         settingsRepository.walletPrefsChangedFlow,
-        accountRepository.realtimeEventsFlow,
-        billingManager.purchasesFlow,
-    ) { wallet, config, _, _, _ ->
+        batteryRepository.balanceUpdatedFlow,
+    ) { wallet, _, _ ->
         val batteryBalance = getBatteryBalance(wallet)
 
         val uiItems = mutableListOf<Item>()
-        uiItems.add(uiItemBattery(batteryBalance, config))
+        uiItems.add(uiItemBattery(batteryBalance, api.config))
         uiItems.add(Item.Space)
 
         if (batteryBalance.balance.isPositive) {
