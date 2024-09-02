@@ -23,19 +23,28 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.cell.Cell
 
 class BatteryRepository(
     context: Context,
-    private val api: API
+    private val api: API,
+    scope: CoroutineScope,
 ) {
     private val localDataSource = LocalDataSource(context)
     private val remoteDataSource = RemoteDataSource(api)
 
     private val _balanceUpdatedFlow = MutableEffectFlow<Unit>()
     val balanceUpdatedFlow = _balanceUpdatedFlow.asSharedFlow()
+
+    init {
+        _balanceUpdatedFlow.tryEmit(Unit)
+        scope.launch(Dispatchers.IO) {
+            getConfig(false, ignoreCache = true)
+        }
+    }
 
     suspend fun getConfig(
         testnet: Boolean,
@@ -98,6 +107,19 @@ class BatteryRepository(
         }
 
         api.emulateWithBattery(tonProofToken, boc, testnet)
+    }
+
+    suspend fun getAppliedPromo(
+        testnet: Boolean,
+    ): String? = withContext(Dispatchers.IO) {
+        localDataSource.getAppliedPromo(testnet)
+    }
+
+    suspend fun setAppliedPromo(
+        testnet: Boolean,
+        promo: String,
+    ) = withContext(Dispatchers.IO) {
+        localDataSource.setAppliedPromo(testnet, promo)
     }
 
 }

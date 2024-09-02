@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <uikit.widget.ColumnLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_content"
+        android:paddingVertical="44dp">
+
+        <com.tonapps.tonkeeper.ui.component.coin.CoinEditText
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="6dp"
+            android:background="@null"
+            android:digits="0123456789.,"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:gravity="center"
+            android:hint="0"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:textColor="?attr/textPrimaryColor"
+            android:textColorHint="?attr/textSecondaryColor"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textSize="40sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_island_border"
+            android:drawableRight="@drawable/ic_flash_16"
+            android:drawablePadding="4dp"
+            android:drawableTint="?attr/textSecondaryColor"
+            android:paddingVertical="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="12dp"
+            android:textAppearance="@style/TextAppearance.Body1"
+            android:textColor="?attr/textSecondaryColor" />
+
+
+    </uikit.widget.ColumnLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:gravity="end"
+        android:layout_marginTop="12dp"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textSecondaryColor" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

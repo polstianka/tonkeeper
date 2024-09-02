@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.battery.refill.list
 
 import android.net.Uri
+import com.tonapps.tonkeeper.ui.screen.battery.refill.entity.PromoState
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.entity.TokenEntity
@@ -15,6 +16,8 @@ sealed class Item(type: Int) : BaseListItem(type) {
         const val TYPE_RECHARGE_METHOD = 2
         const val TYPE_GIFT = 3
         const val TYPE_SETTINGS = 4
+        const val TYPE_REFUND = 5
+        const val TYPE_PROMO = 6
     }
 
     data class Battery(
@@ -26,7 +29,7 @@ sealed class Item(type: Int) : BaseListItem(type) {
 
     data class RechargeMethod(
         val position: ListCell.Position,
-        val token: TokenEntity
+        val token: AccountTokenEntity
     ) : Item(TYPE_RECHARGE_METHOD) {
 
         val symbol: String
@@ -39,6 +42,27 @@ sealed class Item(type: Int) : BaseListItem(type) {
     data class Gift(
         val position: ListCell.Position,
     ) : Item(TYPE_GIFT)
+
+    data class Refund(
+        val refundUrl: String,
+    ) : Item(TYPE_REFUND)
+
+    data class Promo(
+        val promoState: PromoState,
+    ) : Item(TYPE_PROMO) {
+
+        val appliedPromo: String
+            get() = (promoState as? PromoState.Applied)?.appliedPromo ?: ""
+
+        val isLoading: Boolean
+            get() = promoState is PromoState.Loading
+
+        val isError: Boolean
+            get() = promoState is PromoState.Error
+
+        val initialPromo: String?
+            get() = (promoState as? PromoState.Loading)?.initialPromo
+    }
 
     data class Settings(
         val supportedTransactions: Array<BatteryTransaction>,

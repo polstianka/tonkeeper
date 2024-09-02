@@ -58,12 +58,47 @@ object CurrencyFormatter {
 
     fun formatFiat(
         currency: String,
-        value: Coins,
+        value: BigDecimal,
         customScale: Int = 2,
         roundingMode: RoundingMode = RoundingMode.DOWN,
         replaceSymbol: Boolean = true,
     ): CharSequence {
         return format(currency, value, customScale, roundingMode, replaceSymbol)
+    }
+
+    fun formatFiat(
+        currency: String,
+        value: Coins,
+        customScale: Int = 2,
+        roundingMode: RoundingMode = RoundingMode.DOWN,
+        replaceSymbol: Boolean = true,
+    ) = formatFiat(currency, value.value, customScale, roundingMode, replaceSymbol)
+
+    private fun format(
+        currency: String = "",
+        value: String,
+        replaceSymbol: Boolean,
+    ): CharSequence {
+        val symbol = if (replaceSymbol) symbols[currency] else currency
+        val builder = StringBuilder()
+        if (symbol != null) {
+            if (monetarySymbolFirstPosition && isFiat(currency)) {
+                builder.append(symbol)
+                builder.append(SMALL_SPACE)
+                builder.append(value)
+            } else {
+                builder.append(value)
+                builder.append(SMALL_SPACE)
+                builder.append(symbol)
+            }
+        } else if (currency == "") {
+            builder.append(value)
+        } else {
+            builder.append(value)
+            builder.append(SMALL_SPACE)
+            builder.append(currency)
+        }
+        return builder.toString()
     }
 
     fun CharSequence.withCustomSymbol(context: Context): CharSequence {

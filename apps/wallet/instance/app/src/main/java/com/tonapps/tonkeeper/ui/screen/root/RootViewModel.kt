@@ -248,9 +248,10 @@ class RootViewModel(
         context: Context,
         request: SignRequestEntity,
         batteryTxType: BatteryTransaction? = null,
+        forceRelayer: Boolean = false,
     ): String {
         val wallet = selectedWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
-        return requestSign(context, wallet, request, batteryTxType)
+        return requestSign(context, wallet, request, batteryTxType, forceRelayer)
     }
 
     suspend fun requestSign(
@@ -258,9 +259,10 @@ class RootViewModel(
         wallet: WalletEntity,
         request: SignRequestEntity,
         batteryTxType: BatteryTransaction? = null,
+        forceRelayer: Boolean = false,
     ): String {
         val navigation = context.navigation ?: throw Exception("navigation is null")
-        return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType)
+        return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType, forceRelayer = forceRelayer)
     }
 
     suspend fun tonconnectBridgeEvent(
@@ -385,6 +387,9 @@ class RootViewModel(
             val ft = uri.getQueryParameter("ft") ?: "TON"
             val tt = uri.getQueryParameter("tt")
             _eventFlow.tryEmit(RootEvent.Swap(api.config.swapUri, wallet.address, ft, tt))
+        } else if (path?.startsWith("/battery") == true) {
+            val promocode = uri.getQueryParameter("promocode")
+            _eventFlow.tryEmit(RootEvent.Battery(promocode))
         } else if (path?.startsWith("/buy-ton") == true || uri.path == "/exchange" || uri.path == "/exchange/") {
             _eventFlow.tryEmit(RootEvent.BuyOrSell())
         } else if (path?.startsWith("/exchange") == true) {

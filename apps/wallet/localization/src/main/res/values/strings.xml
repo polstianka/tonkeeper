@@ -442,7 +442,34 @@
         <item quantity="many">≈ %1$s charges per %2$s</item>
         <item quantity="other">≈ %1$s charges per %2$s</item>
     </plurals>
+    <plurals name="battery_nft">
+        <item quantity="one">≈ %1$s NFT transfer</item>
+        <item quantity="few">≈ %1$s NFT transfers</item>
+        <item quantity="many">≈ %1$s NFT transfers</item>
+        <item quantity="other">≈ %1$s NFT transfers</item>
+    </plurals>
+    <plurals name="battery_swap">
+        <item quantity="one">≈ %1$s swap via Tonkeeper</item>
+        <item quantity="few">≈ %1$s swaps via Tonkeeper</item>
+        <item quantity="many">≈ %1$s swaps via Tonkeeper</item>
+        <item quantity="other">≈ %1$s swaps via Tonkeeper</item>
+    </plurals>
+    <plurals name="battery_jetton">
+        <item quantity="one">≈ %1$s token transfer</item>
+        <item quantity="few">≈ %1$s token transfers</item>
+        <item quantity="many">≈ %1$s token transfers</item>
+        <item quantity="other">≈ %1$s token transfers</item>
+    </plurals>
     <string name="will_be_paid_with_battery">Will be paid with Battery</string>
     <string name="battery_settings_title">Battery Settings</string>
     <string name="battery_settings_subtitle">Selected transactions will be paid by Tonkeeper Battery.</string>
+    <string name="battery_recharge_title">Recharge</string>
+    <string name="battery_gift_title">Gift</string>
+    <string name="battery_other_title">Other</string>
+    <string name="battery_other_subtitle">Enter amount manually</string>
+    <string name="battery_max_input_amount">Max input amount is %1$s</string>
+    <string name="battery_please_wait">Battery will charge in a few minutes</string>
+    <string name="battery_refund_title">Charge History</string>
+    <string name="battery_refund_subtitle">Recharges and refunds</string>
+    <string name="promocode_hint">Promo Code</string>
 </resources>

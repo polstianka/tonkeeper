@@ -37,6 +37,10 @@ data class ConfigEntity(
     val batteryMeanPriceSwap: String,
     val batteryMeanPriceJetton: String,
     val disableBatteryCryptoRecharge: Boolean,
+    val batteryReservedAmount: String,
+    val batteryMaxInputAmount: String,
+    val batteryRefundEndpoint: String,
+    val batteryPromoDisabled: Boolean,
 ): Parcelable {
 
     val swapUri: Uri
@@ -79,6 +83,10 @@ data class ConfigEntity(
         batteryMeanPriceNft = json.optString("batteryMeanPrice_nft", "0.03"),
         batteryMeanPriceSwap = json.optString("batteryMeanPrice_swap", "0.22"),
         batteryMeanPriceJetton = json.optString("batteryMeanPrice_jetton", "0.06"),
+        batteryReservedAmount = json.optString("batteryReservedAmount", "0.3"),
+        batteryMaxInputAmount = json.optString("batteryMaxInputAmount", "3"),
+        batteryRefundEndpoint = json.optString("batteryRefundEndpoint", "https://battery-refund-app.vercel.app"),
+        batteryPromoDisabled = json.optBoolean("disable_battery_promo_module", true),
     )
 
     constructor() : this(
@@ -111,6 +119,10 @@ data class ConfigEntity(
         batteryMeanPriceNft = "0.03",
         batteryMeanPriceSwap = "0.22",
         batteryMeanPriceJetton = "0.06",
+        batteryReservedAmount = "0.3",
+        batteryMaxInputAmount = "3",
+        batteryRefundEndpoint = "https://battery-refund-app.vercel.app",
+        batteryPromoDisabled = false,
     )
 
     companion object {

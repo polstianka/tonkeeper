@@ -49,6 +49,15 @@
             android:tint="?attr/iconSecondaryColor"
             android:src="@drawable/ic_xmark_circle_16"/>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/input_donemark"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:tint="?attr/accentGreenColor"
+            android:visibility="gone"
+            android:src="@drawable/ic_donemark_otline_28"/>
+
         <uikit.widget.LoaderView
             android:id="@+id/input_loader"
             android:layout_width="16dp"

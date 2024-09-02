@@ -17,6 +17,7 @@ import androidx.core.graphics.toRect
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.color.UIKitColor
 import com.tonapps.uikit.color.accentBlueColor
+import com.tonapps.uikit.color.accentGreenColor
 import com.tonapps.uikit.color.accentOrangeColor
 import com.tonapps.uikit.color.iconSecondaryColor
 import com.tonapps.uikit.color.resolveColor
@@ -33,7 +34,8 @@ class BatteryView @JvmOverloads constructor(
     enum class EmptyState(val value: Int) {
         NONE(0),
         SECONDARY(1),
-        ACCENT(2);
+        ACCENT(2),
+        ACCENT_GREEN(3);
 
         companion object {
             fun from(value: Int): EmptyState {
@@ -151,6 +153,7 @@ class BatteryView @JvmOverloads constructor(
             val color = when (emptyState) {
                 EmptyState.SECONDARY -> context.iconSecondaryColor
                 EmptyState.ACCENT -> context.accentBlueColor
+                EmptyState.ACCENT_GREEN -> context.accentGreenColor
                 else -> Color.TRANSPARENT
             }
 

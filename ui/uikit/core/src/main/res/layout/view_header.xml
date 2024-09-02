@@ -6,70 +6,84 @@
         android:layout_width="@dimen/actionSize"
         android:layout_height="@dimen/actionSize"
         android:layout_gravity="center"
-        android:tint="?attr/buttonSecondaryForegroundColor"
-        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+        android:alpha="0"
         android:background="@drawable/bg_oval_button_secondary"
+        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
         android:scaleType="centerInside"
-        android:alpha="0"/>
+        android:tint="?attr/buttonSecondaryForegroundColor" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/offsetMedium"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:singleLine="true"
             android:gravity="center"
+            android:singleLine="true"
             android:textAppearance="@style/TextAppearance.H3"
-            android:textColor="?attr/textPrimaryColor"/>
-        
+            android:textColor="?attr/textPrimaryColor" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/subtitle_container"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:paddingHorizontal="@dimen/offsetMedium"
             android:layout_gravity="center"
-            android:orientation="horizontal">
-            
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/offsetMedium"
+            android:visibility="gone">
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/header_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:singleLine="true"
+                android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
+                android:singleLine="true"
                 android:textColor="?attr/textSecondaryColor"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_medium"/>
-            
+                android:textSize="14sp" />
+
             <uikit.widget.LoaderView
                 android:id="@+id/header_loader"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_marginStart="@dimen/offsetExtraSmall"
                 android:layout_gravity="center"
-                android:visibility="gone"/>
-            
+                android:layout_marginStart="@dimen/offsetExtraSmall"
+                android:visibility="gone" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/header_action"
-        android:scaleType="centerInside"
-        android:layout_width="@dimen/actionSize"
-        android:layout_height="@dimen/actionSize"
-        android:layout_gravity="center"
-        android:tint="?attr/buttonSecondaryForegroundColor"
-        android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
-        android:background="@drawable/bg_oval_button_secondary"
-        android:alpha="0"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/header_right_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/header_action"
+            android:layout_width="@dimen/actionSize"
+            android:layout_height="@dimen/actionSize"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:alpha="0"
+            android:background="@drawable/bg_oval_button_secondary"
+            android:backgroundTint="?attr/buttonSecondaryBackgroundColor"
+            android:scaleType="centerInside"
+            android:tint="?attr/buttonSecondaryForegroundColor" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </merge>

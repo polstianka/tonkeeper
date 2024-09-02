@@ -24,6 +24,14 @@
         android:src="@drawable/ic_gift_44"
         android:visibility="gone" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/refund_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_battery_refund_44"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

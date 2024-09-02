@@ -1,6 +1,7 @@
 package com.tonapps.wallet.data.battery
 
 import com.tonapps.icu.Coins
+import com.tonapps.wallet.data.battery.entity.RechargeMethodEntity
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -23,5 +24,11 @@ object BatteryMapper {
 
         return transactionCostBigDecimal.divide(meanFeesBigDecimal, 0, RoundingMode.HALF_UP)
             .toInt()
+    }
+
+    fun calculateCryptoCharges(method: RechargeMethodEntity, meanFees: String, amount: Coins): BigDecimal {
+        val meanFeesBigDecimal = BigDecimal(meanFees)
+        val rateBigDecimal = BigDecimal(method.rate)
+        return rateBigDecimal.divide(meanFeesBigDecimal, 0, RoundingMode.HALF_UP).multiply(amount.value)
     }
 }
