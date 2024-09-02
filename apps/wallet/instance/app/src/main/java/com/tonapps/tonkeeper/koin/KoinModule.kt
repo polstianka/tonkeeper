@@ -11,6 +11,7 @@ import com.tonapps.tonkeeper.ui.screen.action.ActionViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupViewModel
 import com.tonapps.tonkeeper.ui.screen.backup.check.BackupCheckViewModel
 import com.tonapps.tonkeeper.ui.screen.battery.BatteryViewModel
+import com.tonapps.tonkeeper.ui.screen.battery.recharge.BatteryRechargeViewModel
 import com.tonapps.tonkeeper.ui.screen.battery.refill.BatteryRefillViewModel
 import com.tonapps.tonkeeper.ui.screen.battery.settings.BatterySettingsViewModel
 import com.tonapps.tonkeeper.ui.screen.browser.connected.BrowserConnectedViewModel
@@ -115,4 +116,5 @@ val koinModel = module {
     viewModel { BatteryViewModel(androidApplication()) }
     viewModel { BatterySettingsViewModel(androidApplication(), get(), get(), get(), get()) }
     viewModel { BatteryRefillViewModel(androidApplication(), get(), get(), get(), get(), get(), get()) }
+    viewModel { parameters -> BatteryRechargeViewModel(androidApplication(), args = parameters.get(), get(), get(), get(), get(), get(), get()) }
 }

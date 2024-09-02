@@ -2,9 +2,11 @@ package com.tonapps.tonkeeper.ui.screen.battery.refill
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
+import com.tonapps.tonkeeper.ui.screen.battery.refill.entity.PromoState
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.Item
 import com.tonapps.uikit.list.ListCell
 import com.tonapps.wallet.api.API
@@ -22,9 +24,14 @@ import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import uikit.extensions.collectFlow
+import java.net.URLEncoder
 
 class BatteryRefillViewModel(
     app: Application,
@@ -34,18 +41,26 @@ class BatteryRefillViewModel(
     private val tokenRepository: TokenRepository,
     private val settingsRepository: SettingsRepository,
     private val billingManager: BillingManager,
-): BaseWalletVM(app) {
+) : BaseWalletVM(app) {
+
+    private val promoStateFlow = MutableStateFlow<PromoState>(PromoState.Default)
 
     val uiItemsFlow = combine(
         accountRepository.selectedWalletFlow,
+        promoStateFlow,
         settingsRepository.walletPrefsChangedFlow,
         batteryRepository.balanceUpdatedFlow,
-    ) { wallet, _, _ ->
+    ) { wallet, promoState, _, _ ->
         val batteryBalance = getBatteryBalance(wallet)
 
         val uiItems = mutableListOf<Item>()
         uiItems.add(uiItemBattery(batteryBalance, api.config))
         uiItems.add(Item.Space)
+
+        if (!api.config.batteryPromoDisabled) {
+            uiItems.add(Item.Promo(promoState))
+            uiItems.add(Item.Space)
+        }
 
         if (batteryBalance.balance.isPositive) {
             uiItems.add(Item.Settings(settingsRepository.getBatteryTxEnabled(wallet.accountId)))
@@ -56,8 +71,34 @@ class BatteryRefillViewModel(
             uiItems.addAll(uiItemsRechargeMethods(wallet))
         }
 
+        val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: ""
+
+        uiItems.add(Item.Space)
+        uiItems.add(
+            Item.Refund(
+                refundUrl = "${api.config.batteryRefundEndpoint}?token=${
+                    URLEncoder.encode(
+                        tonProofToken,
+                        "UTF-8"
+                    )
+                }&testnet=${wallet.testnet}"
+            )
+        )
+
         uiItems.toList()
     }.flowOn(Dispatchers.IO)
+
+    init {
+        accountRepository.selectedWalletFlow.take(1).map { wallet ->
+            val appliedPromo = batteryRepository.getAppliedPromo(wallet.testnet)
+
+            if (appliedPromo.isNullOrBlank()) {
+                promoStateFlow.tryEmit(PromoState.Default)
+            } else {
+                promoStateFlow.tryEmit(PromoState.Applied(appliedPromo))
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
 
     private fun uiItemBattery(
         balance: BatteryBalanceEntity,
@@ -83,10 +124,12 @@ class BatteryRefillViewModel(
         val uiItems = mutableListOf<Item>()
         for ((index, supportToken) in supportedTokens.withIndex()) {
             val position = ListCell.getPosition(supportedTokens.size + 1, index)
-            uiItems.add(Item.RechargeMethod(
-                position = position,
-                token = supportToken
-            ))
+            uiItems.add(
+                Item.RechargeMethod(
+                    position = position,
+                    token = supportToken
+                )
+            )
         }
         uiItems.add(Item.Gift(position = ListCell.Position.LAST))
         return uiItems.toList()
@@ -101,7 +144,8 @@ class BatteryRefillViewModel(
     private suspend fun getBatteryBalance(
         wallet: WalletEntity
     ): BatteryBalanceEntity {
-        val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: return BatteryBalanceEntity.Empty
+        val tonProofToken =
+            accountRepository.requestTonProofToken(wallet) ?: return BatteryBalanceEntity.Empty
         return batteryRepository.getBalance(
             tonProofToken = tonProofToken,
             publicKey = wallet.publicKey,
@@ -120,7 +164,7 @@ class BatteryRefillViewModel(
     private suspend fun getSupportedTokens(
         wallet: WalletEntity,
         rechargeMethods: List<RechargeMethodEntity>
-    ): List<TokenEntity> {
+    ): List<AccountTokenEntity> {
         val tokens = getTokens(wallet)
         val supportTokenAddress = rechargeMethods.filter { it.supportRecharge }.mapNotNull {
             if (it.type == RechargeMethodType.TON) {
@@ -131,6 +175,21 @@ class BatteryRefillViewModel(
         }
         return tokens.filter { token ->
             supportTokenAddress.contains(token.address)
-        }.map { it.balance.token }
+        }.sortedBy { it.fiat }.reversed()
     }
+
+    fun applyPromo(promo: String) = accountRepository.selectedWalletFlow.take(1).map { wallet ->
+        if (promo.isEmpty()) {
+            promoStateFlow.tryEmit(PromoState.Default)
+            return@map
+        }
+        promoStateFlow.tryEmit(PromoState.Loading)
+        try {
+            api.battery(wallet.testnet).verifyPurchasePromo(promo)
+            batteryRepository.setAppliedPromo(wallet.testnet, promo)
+            promoStateFlow.tryEmit(PromoState.Applied(promo))
+        } catch (_: Exception) {
+            promoStateFlow.tryEmit(PromoState.Error)
+        }
+    }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
 }

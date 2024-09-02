@@ -11,15 +11,16 @@ import uikit.R
 import uikit.extensions.collectFlow
 import uikit.extensions.getDimensionPixelSize
 
-class BatteryRefillScreen: BaseListWalletScreen() {
+class BatteryRefillScreen : BaseListWalletScreen() {
 
     override val viewModel: BatteryRefillViewModel by viewModel()
 
     private val parentViewModel: BatteryViewModel by parentFragmentViewModel()
 
-    private val adapter = Adapter {
-        parentViewModel.routeToSettings()
-    }
+    private val adapter = Adapter(
+        openSettings = { parentViewModel.routeToSettings() },
+        onSubmitPromo = { viewModel.applyPromo(it) }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

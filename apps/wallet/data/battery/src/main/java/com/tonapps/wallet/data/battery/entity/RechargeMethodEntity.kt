@@ -1,8 +1,11 @@
 package com.tonapps.wallet.data.battery.entity
 
 import android.os.Parcelable
+import com.tonapps.icu.Coins
 import io.batteryapi.models.RechargeMethodsMethodsInner
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Parcelize
 data class RechargeMethodEntity(
@@ -38,4 +41,11 @@ data class RechargeMethodEntity(
         jettonMaster = method.jettonMaster,
         minBootstrapValue = method.minBootstrapValue
     )
+
+
+    fun fromTon(amount: BigDecimal): Coins {
+        return Coins.of(amount.divide(rate.toBigDecimal(), decimals, RoundingMode.HALF_UP))
+    }
+
+    fun fromTon(amount: String) = fromTon(amount.toBigDecimal())
 }

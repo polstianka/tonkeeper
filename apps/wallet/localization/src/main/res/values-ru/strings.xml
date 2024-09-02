@@ -424,7 +424,34 @@
         <item quantity="many">≈ %1$s зарядов за %2$s</item>
         <item quantity="other">≈ %1$s зарядов за %2$s</item>
     </plurals>
+    <plurals name="battery_nft">
+        <item quantity="one">≈ %1$s отправка NFT</item>
+        <item quantity="few">≈ %1$s отправки NFT</item>
+        <item quantity="many">≈ %1$s отправок NFT</item>
+        <item quantity="other">≈ %1$s отправок NFT</item>
+    </plurals>
+    <plurals name="battery_swap">
+        <item quantity="one">≈ %1$s обмен через Tonkeeper</item>
+        <item quantity="few">≈ %1$s обмена через Tonkeeper</item>
+        <item quantity="many">≈ %1$s обменов через Tonkeeper</item>
+        <item quantity="other">≈ %1$s обменов через Tonkeeper</item>
+    </plurals>
+    <plurals name="battery_jetton">
+        <item quantity="one">≈ %1$s отправка токенов</item>
+        <item quantity="few">≈ %1$s отправки токенов</item>
+        <item quantity="many">≈ %1$s отправок токенов</item>
+        <item quantity="other">≈ %1$s отправок токенов</item>
+    </plurals>
     <string name="will_be_paid_with_battery">Будет оплачена батарейкой</string>
     <string name="battery_settings_title">Настройки батарейки</string>
     <string name="battery_settings_subtitle">Выбранные транзакции будут оплачены батарейкой Tonkeeper.</string>
+    <string name="battery_recharge_title">Зарядка</string>
+    <string name="battery_gift_title">Подарок</string>
+    <string name="battery_other_title">Другое количество</string>
+    <string name="battery_other_subtitle">Ввести вручную</string>
+    <string name="battery_max_input_amount">Максимальная сумма: %1$s</string>
+    <string name="battery_please_wait">Батарейка зарядится за пару минут</string>
+    <string name="battery_refund_title">История зарядов</string>
+    <string name="battery_refund_subtitle">Пополнения и возврат</string>
+    <string name="promocode_hint">Промокод</string>
 </resources>

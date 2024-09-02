@@ -1,9 +1,9 @@
 package com.tonapps.wallet.data.battery.source
 
 import android.content.Context
+import androidx.core.content.edit
 import com.tonapps.blockchain.ton.extensions.hex
-import com.tonapps.extensions.toByteArray
-import com.tonapps.extensions.toParcel
+import com.tonapps.security.Security
 import com.tonapps.wallet.data.battery.entity.BatteryBalanceEntity
 import com.tonapps.wallet.data.battery.entity.BatteryConfigEntity
 import com.tonapps.wallet.data.core.BlobDataSource
@@ -13,8 +13,15 @@ internal class LocalDataSource(
     context: Context
 ) {
 
+    companion object {
+        private const val NAME = "battery"
+        private const val KEY_ALIAS = "_com_tonapps_battery_master_key_"
+    }
+
     private val balance = BlobDataSource.simple<BatteryBalanceEntity>(context, "battery_balance")
     private val configStore = BlobDataSource.simple<BatteryConfigEntity>(context, "battery_config")
+
+    private val encryptedPrefs = Security.pref(context, KEY_ALIAS, NAME)
 
     fun setConfig(testnet: Boolean, entity: BatteryConfigEntity) {
         configStore.setCache(configCacheKey(testnet), entity)
@@ -39,6 +46,20 @@ internal class LocalDataSource(
     private fun balanceCacheKey(publicKey: PublicKeyEd25519, testnet: Boolean): String {
         val prefix = if (testnet) "testnet" else "mainnet"
         return "$prefix:${publicKey.hex()}"
+    }
+
+    fun getAppliedPromo(testnet: Boolean): String? {
+        return encryptedPrefs.getString(promoKey(testnet), null)
+    }
+
+    fun setAppliedPromo(testnet: Boolean, promo: String) {
+        encryptedPrefs.edit {
+            putString(promoKey(testnet), promo)
+        }
+    }
+
+    private fun promoKey(testnet: Boolean): String {
+        return "promo_${if (testnet) "testnet" else "mainnet"}"
     }
 }
 

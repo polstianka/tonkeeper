@@ -94,6 +94,7 @@ class InputView @JvmOverloads constructor(
     private val iconView: AppCompatImageView
     private val clearView: AppCompatImageView
     private val loaderView: LoaderView
+    private val donemarkView: AppCompatImageView
 
     var activeBorderColor: Int
         get() = inputDrawable.activeBorderColor
@@ -109,6 +110,19 @@ class InputView @JvmOverloads constructor(
                 editText.setCursorColor(context.accentRedColor)
             } else {
                 editText.setCursorColor(context.accentBlueColor)
+            }
+        }
+
+    var success: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                if (value) {
+                    donemarkView.visibility = View.VISIBLE
+                } else {
+                    donemarkView.visibility = View.GONE
+                }
+                updateVisibleClearButton()
             }
         }
 
@@ -223,6 +237,7 @@ class InputView @JvmOverloads constructor(
         iconView = findViewById(R.id.input_icon)
         clearView = findViewById(R.id.input_clear)
         loaderView = findViewById(R.id.input_loader)
+        donemarkView = findViewById(R.id.input_donemark)
 
         clearView.setOnClickListener {
             if (isEnabled) {
@@ -246,7 +261,7 @@ class InputView @JvmOverloads constructor(
     }
 
     private fun updateVisibleClearButton() {
-        if (disableClearButton || loading || !visibleClearView || !isEnabled || !editText.isFocused) {
+        if (disableClearButton || loading || !visibleClearView || !isEnabled || !editText.isFocused || success) {
             clearView.visibility = View.GONE
         } else {
             clearView.visibility = View.VISIBLE

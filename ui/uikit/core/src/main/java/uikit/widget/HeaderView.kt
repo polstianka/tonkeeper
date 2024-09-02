@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
@@ -12,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.WindowInsetsCompat
 import uikit.R
 import uikit.drawable.BarDrawable
@@ -35,6 +37,8 @@ open class HeaderView @JvmOverloads constructor(
     val closeView: AppCompatImageView
     val actionView: AppCompatImageView
     val titleView: AppCompatTextView
+
+    private val rightContentView: LinearLayoutCompat
 
     private val barHeight = context.getDimensionPixelSize(R.dimen.barHeight)
     private var ignoreSystemOffset = false
@@ -93,6 +97,7 @@ open class HeaderView @JvmOverloads constructor(
         subtitleView = findViewById(R.id.header_subtitle)
         loaderView = findViewById(R.id.header_loader)
         textView = findViewById(R.id.header_text)
+        rightContentView = findViewById(R.id.header_right_content)
 
         context.useAttributes(attrs, R.styleable.HeaderView) {
             ignoreSystemOffset = it.getBoolean(R.styleable.HeaderView_ignoreSystemOffset, false)
@@ -139,6 +144,16 @@ open class HeaderView @JvmOverloads constructor(
 
     fun setAction(@DrawableRes resId: Int) {
         setDrawableForView(actionView, resId)
+    }
+
+    fun setRightContent(view: View?) {
+        rightContentView.removeAllViews()
+        if (view != null) {
+            rightContentView.visibility = View.VISIBLE
+            rightContentView.addView(view)
+        } else {
+            rightContentView.visibility = View.GONE
+        }
     }
 
     fun contentMatchParent() {
@@ -189,6 +204,16 @@ open class HeaderView @JvmOverloads constructor(
             }
             subtitleView.text = text
         }
+    }
+
+    fun hideIcon() {
+        closeView.visibility = View.GONE
+    }
+
+    fun setTitleGravity(gravity: Int) {
+        val layoutParams = titleView.layoutParams as LinearLayoutCompat.LayoutParams
+        layoutParams.gravity = gravity
+        titleView.gravity = gravity
     }
 
     fun hideText() {

@@ -37,12 +37,13 @@ class SignManager(
         request: SignRequestEntity,
         canceller: CancellationSignal = CancellationSignal(),
         batteryTxType: BatteryTransaction? = null,
+        forceRelayer: Boolean = false,
     ): String {
         navigation.toastLoading(true)
         var isBattery = batteryTxType != null && settingsRepository.batteryIsEnabledTx(wallet.accountId, batteryTxType)
         val details: HistoryHelper.Details?
-        if (isBattery) {
-            val result = emulateBattery(request, wallet)
+        if (isBattery || forceRelayer) {
+            val result = emulateBattery(request, wallet, forceRelayer = forceRelayer)
             details = result.first
             isBattery = result.second
         } else {
@@ -110,6 +111,7 @@ class SignManager(
         request: SignRequestEntity,
         wallet: WalletEntity,
         currency: WalletCurrency = settingsRepository.currency,
+        forceRelayer: Boolean,
     ): Pair<HistoryHelper.Details?, Boolean> {
         return try {
             if (api.config.isBatteryDisabled) {
@@ -126,7 +128,8 @@ class SignManager(
                 tonProofToken = tonProofToken,
                 publicKey = wallet.publicKey,
                 testnet = wallet.testnet,
-                boc = cell
+                boc = cell,
+                forceRelayer = forceRelayer,
             ) ?: throw IllegalStateException("Failed to emulate battery")
 
             val details = historyHelper.create(wallet, consequences, rates, isBattery = true)

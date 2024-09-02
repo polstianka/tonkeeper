@@ -107,6 +107,8 @@ class WalletViewModel(
         }
     }.map { !it }
 
+    private val _streamFLow = combine(updateWalletSettings, _lastLtFlow) { _, _ -> }
+
     init {
         collectFlow(accountRepository.realtimeEventsFlow) { event ->
             if (event is WalletEvent.Boc) {
@@ -132,7 +134,7 @@ class WalletViewModel(
             settingsRepository.currencyFlow,
             backupRepository.stream,
             networkMonitor.isOnlineFlow,
-            updateWalletSettings,
+            _streamFLow,
         ) { wallet, currency, backups, isOnline, _ ->
             if (isOnline) {
                 setStatus(Status.Updating)

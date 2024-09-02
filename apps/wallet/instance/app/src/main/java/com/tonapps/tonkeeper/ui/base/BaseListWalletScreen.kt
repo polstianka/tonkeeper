@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
@@ -20,7 +19,7 @@ import uikit.widget.SimpleRecyclerView
 abstract class BaseListWalletScreen: BaseWalletScreen(R.layout.fragment_list) {
 
     private lateinit var headerContainer: FrameLayout
-    private lateinit var headerView: HeaderView
+    protected lateinit var headerView: HeaderView
     private lateinit var listView: SimpleRecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

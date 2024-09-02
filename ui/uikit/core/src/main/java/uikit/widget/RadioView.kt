@@ -5,8 +5,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import com.tonapps.uikit.color.backgroundContentTintColor
 import com.tonapps.uikit.color.buttonPrimaryBackgroundColor
+import com.tonapps.uikit.color.iconTertiaryColor
 import uikit.extensions.dp
 
 class RadioView @JvmOverloads constructor(
@@ -27,18 +29,14 @@ class RadioView @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                defaultPaint.color = if (value) {
-                    context.buttonPrimaryBackgroundColor
-                } else {
-                    context.backgroundContentTintColor
-                }
+                updatePaintColors()
                 doOnCheckedChanged?.invoke(value)
                 invalidate()
             }
         }
 
     private val defaultPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = context.backgroundContentTintColor
+        color = context.iconTertiaryColor
         style = Paint.Style.STROKE
         strokeWidth = strokeSize
     }
@@ -53,6 +51,16 @@ class RadioView @JvmOverloads constructor(
 
     fun toggle() {
         checked = !checked
+    }
+
+    private fun updatePaintColors() {
+        defaultPaint.color = if (checked) {
+            context.buttonPrimaryBackgroundColor
+        } else if (!isEnabled) {
+            ColorUtils.setAlphaComponent(context.iconTertiaryColor, 77)
+        } else {
+            context.iconTertiaryColor
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -72,4 +80,10 @@ class RadioView @JvmOverloads constructor(
     }
 
     override fun hasOverlappingRendering() = false
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        updatePaintColors()
+        invalidate()
+    }
 }

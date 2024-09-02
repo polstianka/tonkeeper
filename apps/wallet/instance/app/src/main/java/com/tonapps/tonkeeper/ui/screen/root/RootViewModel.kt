@@ -240,9 +240,10 @@ class RootViewModel(
         context: Context,
         request: SignRequestEntity,
         batteryTxType: BatteryTransaction? = null,
+        forceRelayer: Boolean = false,
     ): String {
         val wallet = accountRepository.selectedWalletFlow.firstOrNull() ?: throw Exception("wallet is null")
-        return requestSign(context, wallet, request, batteryTxType)
+        return requestSign(context, wallet, request, batteryTxType, forceRelayer)
     }
 
     suspend fun requestSign(
@@ -250,9 +251,10 @@ class RootViewModel(
         wallet: WalletEntity,
         request: SignRequestEntity,
         batteryTxType: BatteryTransaction? = null,
+        forceRelayer: Boolean = false,
     ): String {
         val navigation = context.navigation ?: throw Exception("navigation is null")
-        return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType)
+        return signManager.action(navigation, wallet, request, batteryTxType = batteryTxType, forceRelayer = forceRelayer)
     }
 
     suspend fun tonconnectBridgeEvent(
