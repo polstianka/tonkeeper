@@ -29,6 +29,10 @@ class PromoHolder(
         inputView.error = item.isError
         inputView.success = item.appliedPromo.isNotBlank()
 
+        if (item.initialPromo != null) {
+            inputView.text = item.initialPromo!!
+        }
+
         if (inputView.isEmpty && !inputView.isFocused) {
             inputView.text = item.appliedPromo
         }

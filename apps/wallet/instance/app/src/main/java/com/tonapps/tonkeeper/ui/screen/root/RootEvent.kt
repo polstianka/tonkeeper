@@ -52,6 +52,10 @@ sealed class RootEvent {
         val event: HistoryItem.Event
     ): RootEvent()
 
+    data class Battery(
+        val promocode: String?
+    ): RootEvent()
+
     data object OpenBackups: RootEvent()
 
     data object Staking: RootEvent()

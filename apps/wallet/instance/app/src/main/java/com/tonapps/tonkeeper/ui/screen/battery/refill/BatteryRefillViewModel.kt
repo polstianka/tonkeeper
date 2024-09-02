@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.battery.refill
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.billing.BillingManager
@@ -24,6 +23,7 @@ import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
@@ -178,18 +178,23 @@ class BatteryRefillViewModel(
         }.sortedBy { it.fiat }.reversed()
     }
 
-    fun applyPromo(promo: String) = accountRepository.selectedWalletFlow.take(1).map { wallet ->
-        if (promo.isEmpty()) {
-            promoStateFlow.tryEmit(PromoState.Default)
-            return@map
-        }
-        promoStateFlow.tryEmit(PromoState.Loading)
-        try {
-            api.battery(wallet.testnet).verifyPurchasePromo(promo)
-            batteryRepository.setAppliedPromo(wallet.testnet, promo)
-            promoStateFlow.tryEmit(PromoState.Applied(promo))
-        } catch (_: Exception) {
-            promoStateFlow.tryEmit(PromoState.Error)
-        }
-    }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    fun applyPromo(promo: String, isInitial: Boolean = false) =
+        accountRepository.selectedWalletFlow.take(1).map { wallet ->
+            if (promo.isEmpty()) {
+                promoStateFlow.tryEmit(PromoState.Default)
+                return@map
+            }
+            val initialPromo = if (isInitial) promo else null
+            promoStateFlow.tryEmit(PromoState.Loading(initialPromo = initialPromo))
+            try {
+                if (isInitial) {
+                    delay(2000)
+                }
+                api.battery(wallet.testnet).verifyPurchasePromo(promo)
+                batteryRepository.setAppliedPromo(wallet.testnet, promo)
+                promoStateFlow.tryEmit(PromoState.Applied(promo))
+            } catch (_: Exception) {
+                promoStateFlow.tryEmit(PromoState.Error)
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
 }

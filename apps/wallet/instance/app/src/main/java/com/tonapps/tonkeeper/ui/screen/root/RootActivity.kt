@@ -14,6 +14,7 @@ import com.tonapps.tonkeeper.ui.screen.transaction.TransactionScreen
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeper.fragment.tonconnect.auth.TCAuthFragment
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupScreen
+import com.tonapps.tonkeeper.ui.screen.battery.BatteryScreen
 import com.tonapps.tonkeeper.ui.screen.init.InitArgs
 import com.tonapps.tonkeeper.ui.screen.init.InitScreen
 import com.tonapps.tonkeeper.ui.screen.main.MainScreen
@@ -166,6 +167,7 @@ class RootActivity: NavigationActivity() {
             is RootEvent.OpenBackups -> add(BackupScreen.newInstance())
             is RootEvent.Staking -> add(StakingScreen.newInstance())
             is RootEvent.StakingPool -> add(StakeViewerScreen.newInstance(event.poolAddress, ""))
+            is RootEvent.Battery -> add(BatteryScreen.newInstance(event.promocode))
             else -> { }
         }
     }

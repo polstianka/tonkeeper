@@ -59,6 +59,9 @@ sealed class Item(type: Int) : BaseListItem(type) {
 
         val isError: Boolean
             get() = promoState is PromoState.Error
+
+        val initialPromo: String?
+            get() = (promoState as? PromoState.Loading)?.initialPromo
     }
 
     data class Settings(

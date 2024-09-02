@@ -214,20 +214,20 @@ class BatteryRechargeViewModel(
 
     init {
         accountRepository.selectedWalletFlow.take(1).map { wallet ->
-            if (args.token == null) {
-                val batteryConfig = getBatteryConfig(wallet)
-                val supportedTokens = getSupportedTokens(wallet, batteryConfig.rechargeMethods)
-                _tokenFlow.tryEmit(supportedTokens.first())
-            } else {
-                _tokenFlow.tryEmit(args.token)
-            }
-
             val appliedPromo = batteryRepository.getAppliedPromo(wallet.testnet)
 
             if (appliedPromo.isNullOrBlank()) {
                 promoStateFlow.tryEmit(PromoState.Default)
             } else {
                 promoStateFlow.tryEmit(PromoState.Applied(appliedPromo))
+            }
+
+            if (args.token == null) {
+                val batteryConfig = getBatteryConfig(wallet)
+                val supportedTokens = getSupportedTokens(wallet, batteryConfig.rechargeMethods)
+                _tokenFlow.tryEmit(supportedTokens.first())
+            } else {
+                _tokenFlow.tryEmit(args.token)
             }
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
@@ -279,7 +279,10 @@ class BatteryRechargeViewModel(
         val recipientAddress = if (destination is SendDestination.Account) {
             destination.address
         } else null
-        val payload = wallet.contract.createBatteryBody(recipientAddress, appliedPromo = batteryRepository.getAppliedPromo(wallet.testnet))
+        val payload = wallet.contract.createBatteryBody(
+            recipientAddress,
+            appliedPromo = batteryRepository.getAppliedPromo(wallet.testnet)
+        )
         val validUntil = accountRepository.getValidUntil(wallet.testnet)
         val network = when (wallet.testnet) {
             true -> TonNetwork.TESTNET
@@ -451,7 +454,7 @@ class BatteryRechargeViewModel(
             promoStateFlow.tryEmit(PromoState.Default)
             return@map
         }
-        promoStateFlow.tryEmit(PromoState.Loading)
+        promoStateFlow.tryEmit(PromoState.Loading())
         try {
             api.battery(wallet.testnet).verifyPurchasePromo(promo)
             batteryRepository.setAppliedPromo(wallet.testnet, promo)

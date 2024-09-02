@@ -379,6 +379,9 @@ class RootViewModel(
             val ft = uri.getQueryParameter("ft") ?: "TON"
             val tt = uri.getQueryParameter("tt")
             _eventFlow.tryEmit(RootEvent.Swap(api.config.swapUri, wallet.address, ft, tt))
+        } else if (path?.startsWith("/battery") == true) {
+            val promocode = uri.getQueryParameter("promocode")
+            _eventFlow.tryEmit(RootEvent.Battery(promocode))
         } else if (path?.startsWith("/buy-ton") == true || uri.path == "/exchange" || uri.path == "/exchange/") {
             _eventFlow.tryEmit(RootEvent.BuyOrSell())
         } else if (path?.startsWith("/exchange") == true) {
