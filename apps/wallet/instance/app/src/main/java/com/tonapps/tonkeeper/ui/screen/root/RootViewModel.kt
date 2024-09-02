@@ -119,7 +119,6 @@ class RootViewModel(
     val tonConnectEventsFlow = tonConnectRepository.eventsFlow
 
     init {
-        Log.d("RootViewModel", "init")
         combine(
             settingsRepository.biometricFlow.take(1),
             settingsRepository.lockscreenFlow.take(1)

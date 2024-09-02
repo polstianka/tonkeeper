@@ -437,8 +437,6 @@ class SendViewModel(
         val wallet = transfer.wallet
         val withRelayer = shouldAttemptWithRelayer(transfer)
 
-        Log.d("SendViewModel", "shouldAttemptWithRelayer: $withRelayer")
-
         if (withRelayer && !retryWithoutRelayer) {
             try {
                 if (api.config.isBatteryDisabled) {
@@ -457,7 +455,6 @@ class SendViewModel(
                 isBattery = withBattery
                 Pair(Coins.of(consequences.totalFees), withBattery)
             } catch (e: Throwable) {
-                Log.e("SendViewModel", "error", e)
                 calculateFee(transfer, true)
             }
         } else {

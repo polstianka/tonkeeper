@@ -74,33 +74,6 @@ object CurrencyFormatter {
         replaceSymbol: Boolean = true,
     ) = formatFiat(currency, value.value, customScale, roundingMode, replaceSymbol)
 
-    private fun format(
-        currency: String = "",
-        value: String,
-        replaceSymbol: Boolean,
-    ): CharSequence {
-        val symbol = if (replaceSymbol) symbols[currency] else currency
-        val builder = StringBuilder()
-        if (symbol != null) {
-            if (monetarySymbolFirstPosition && isFiat(currency)) {
-                builder.append(symbol)
-                builder.append(SMALL_SPACE)
-                builder.append(value)
-            } else {
-                builder.append(value)
-                builder.append(SMALL_SPACE)
-                builder.append(symbol)
-            }
-        } else if (currency == "") {
-            builder.append(value)
-        } else {
-            builder.append(value)
-            builder.append(SMALL_SPACE)
-            builder.append(currency)
-        }
-        return builder.toString()
-    }
-
     fun CharSequence.withCustomSymbol(context: Context): CharSequence {
         if (true) { // Not now... maybe in future
             return this

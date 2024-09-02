@@ -12,7 +12,7 @@ import com.tonapps.wallet.localization.Localization
 class AmountHolder(
     parent: ViewGroup,
     private val onValueChange: (Double) -> Unit
-): Holder<Item.Amount>(parent, R.layout.fragment_recharge_amount) {
+) : Holder<Item.Amount>(parent, R.layout.fragment_recharge_amount) {
 
     private val amountView = itemView.findViewById<CoinEditText>(R.id.amount)
     private val currencyView = itemView.findViewById<AppCompatTextView>(R.id.currency)
@@ -26,7 +26,11 @@ class AmountHolder(
     }
 
 
-    private fun applyAvailable(formattedRemaining: CharSequence, isInsufficientBalance: Boolean, isLessThanMin: Boolean) {
+    private fun applyAvailable(
+        formattedRemaining: CharSequence,
+        isInsufficientBalance: Boolean,
+        isLessThanMin: Boolean
+    ) {
         if (isInsufficientBalance) {
             availableView.setText(Localization.insufficient_balance)
             availableView.setTextColor(context.accentRedColor)
@@ -34,7 +38,8 @@ class AmountHolder(
             availableView.text = getString(Localization.insufficient_balance)
             availableView.setTextColor(context.textSecondaryColor)
         } else {
-            availableView.text = context.getString(Localization.remaining_balance, formattedRemaining)
+            availableView.text =
+                context.getString(Localization.remaining_balance, formattedRemaining)
             availableView.setTextColor(context.textSecondaryColor)
         }
     }

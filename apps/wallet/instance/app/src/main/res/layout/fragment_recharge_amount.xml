@@ -26,6 +26,7 @@
             android:textColor="?attr/textPrimaryColor"
             android:textColorHint="?attr/textSecondaryColor"
             android:textCursorDrawable="@drawable/cursor"
+            android:imeOptions="actionDone"
             android:textSize="40sp" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -45,8 +45,6 @@ class TokenScreen: BaseListWalletScreen(), BaseFragment.SwipeBack {
         }
     }
 
-    private lateinit var headerView: HeaderView
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val padding = requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium)
@@ -83,8 +81,6 @@ class TokenScreen: BaseListWalletScreen(), BaseFragment.SwipeBack {
         collectFlow(viewModel.tokenFlow, ::applyToken)
         collectFlow(viewModel.uiItemsFlow, tokenAdapter::submitList)
         collectFlow(viewModel.uiHistoryFlow, historyAdapter::submitList)
-
-        headerView = view.findViewById(R.id.header)
     }
 
     private fun applyToken(token: TokenData) {

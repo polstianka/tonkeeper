@@ -82,7 +82,7 @@ val koinModel = module {
     viewModel { MainViewModel(androidApplication(), get(), get()) }
     viewModel { RootViewModel(androidApplication(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PickerViewModel(androidApplication(), get(), get()) }
-    viewModel { WalletViewModel(androidApplication(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { WalletViewModel(androidApplication(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { CurrencyViewModel(androidApplication(), get()) }
     viewModel { SettingsViewModel(androidApplication(), get(), get(), get(), get(), get(), get()) }
     viewModel { EditNameViewModel(androidApplication(), get()) }
@@ -92,7 +92,7 @@ val koinModel = module {
     viewModel { EventsViewModel(androidApplication(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { parameters -> TCAuthViewModel(androidApplication(), request = parameters.get(), get(), get(), get()) }
     viewModel { CollectiblesViewModel(androidApplication(), get(), get(), get(), get()) }
-    viewModel { parameters -> ActionViewModel(androidApplication(), args = parameters.get(), get(), get(), get()) }
+    viewModel { parameters -> ActionViewModel(androidApplication(), args = parameters.get(), get(), get(), get(), get()) }
     viewModel { BrowserExploreViewModel(androidApplication(), get(), get(), get(), get()) }
     viewModel { BrowserConnectedViewModel(androidApplication(), get(), get(), get()) }
     viewModel { BrowserMainViewModel(androidApplication(), get()) }
@@ -104,7 +104,7 @@ val koinModel = module {
     viewModel { BackupViewModel(androidApplication(), get(), get(), get(), get()) }
     viewModel { BackupCheckViewModel(androidApplication(), get(), get()) }
     viewModel { TokensManageViewModel(androidApplication(), get(), get(), get()) }
-    viewModel { parameters -> SendViewModel(androidApplication(), nftAddress = parameters.get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { parameters -> SendViewModel(androidApplication(), nftAddress = parameters.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TokenPickerViewModel(androidApplication(), get(), get(), get()) }
     viewModel { CountryPickerViewModel(androidApplication(), get(), get()) }
     viewModel { parameters -> StakingViewModel(androidApplication(), address = parameters.get(), get(), get(), get(), get(), get(), get(), get()) }

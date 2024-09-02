@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.action
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
