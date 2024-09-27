@@ -486,5 +486,6 @@
     <string name="promocode_hint">Промокод</string>
     <string name="refund">Возврат</string>
     <string name="gasless_switch_label">Оплатить в %1$s</string>
+    <string name="or">или</string>
     <string name="backup_alert_message">Ваш баланс составляет %1$s, и он защищен только фразой восстановления, которую вы еще не записали. Сделайте резервную копию фразы, чтобы избежать потери средств в случае проблем с устройством.</string>
 </resources>

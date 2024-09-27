@@ -511,4 +511,5 @@
     <string name="refund">Refund</string>
     <string name="gasless_switch_label">Tap to pay in %1$s</string>
     <string name="recharge_battery">Recharge Battery</string>
+    <string name="or">or</string>
 </resources>

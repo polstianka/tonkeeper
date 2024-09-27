@@ -9,6 +9,7 @@ import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.tonkeeperx.R
 import com.tonapps.uikit.icon.UIKitIcon
 import com.tonapps.wallet.data.settings.BatteryTransaction
+import com.tonapps.wallet.localization.Localization
 import com.tonapps.wallet.localization.Plurals
 import uikit.extensions.drawable
 import uikit.extensions.setRightDrawable
@@ -66,6 +67,11 @@ class RechargePackHolder(
                 else -> throw IllegalArgumentException("Unsupported transaction type: $transaction")
             }
             builder.append(context.resources.getQuantityString(titleRes, count, count))
+            if (transaction == BatteryTransaction.SWAP) {
+                builder.append(",")
+            } else if (transaction == BatteryTransaction.NFT) {
+                builder.append(" " + context.getString(Localization.or))
+            }
             builder.append("\n")
         }
         return builder.toString()

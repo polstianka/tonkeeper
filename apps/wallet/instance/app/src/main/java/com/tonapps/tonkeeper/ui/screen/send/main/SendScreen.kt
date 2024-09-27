@@ -452,7 +452,7 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
             } else {
                 null
             }
-            if (event.showGaslessToggle) {
+            if (event.showGaslessToggle && !event.isBattery) {
                 reviewRecipientFeeView.subtitleView.setOnClickListener {
                     reviewRecipientFeeView.setLoading()
                     confirmButton.isEnabled = false

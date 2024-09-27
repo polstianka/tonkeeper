@@ -433,4 +433,5 @@
         <item quantity="one">≈ %1$s transferencia de token</item>
         <item quantity="other">≈ %1$s transferencias de tokens</item>
     </plurals>
+    <string name="or">o</string>
 </resources>

@@ -443,4 +443,5 @@
         <item quantity="many">≈ %1$s переказів токена</item>
         <item quantity="other">≈ %1$s переказів токена</item>
     </plurals>
+    <string name="or">або</string>
 </resources>

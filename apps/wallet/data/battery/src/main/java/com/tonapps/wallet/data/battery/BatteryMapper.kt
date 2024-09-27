@@ -26,9 +26,9 @@ object BatteryMapper {
             .toInt()
     }
 
-    fun calculateCryptoCharges(method: RechargeMethodEntity, meanFees: String, amount: Coins): BigDecimal {
+    fun calculateCryptoCharges(method: RechargeMethodEntity, meanFees: String, amount: Coins): Int {
         val meanFeesBigDecimal = BigDecimal(meanFees)
         val rateBigDecimal = BigDecimal(method.rate)
-        return rateBigDecimal.divide(meanFeesBigDecimal, 0, RoundingMode.HALF_UP).multiply(amount.value)
+        return rateBigDecimal.divide(meanFeesBigDecimal, 20, RoundingMode.HALF_UP).multiply(amount.value).setScale(0, RoundingMode.FLOOR).toInt()
     }
 }

@@ -428,4 +428,5 @@
     <plurals name="battery_jetton">
         <item quantity="other">≈ %1$s transfer token</item>
     </plurals>
+    <string name="or">atau</string>
 </resources>

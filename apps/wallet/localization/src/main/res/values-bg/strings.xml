@@ -478,4 +478,5 @@
         <item quantity="one">≈ %1$s трансфер на токен</item>
         <item quantity="other">≈ %1$s трансфера на токен</item>
     </plurals>
+    <string name="or">или</string>
 </resources>

@@ -1,14 +1,12 @@
 package com.tonapps.tonkeeper.ui.screen.battery.recharge
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.ton.TonNetwork
 import com.tonapps.blockchain.ton.TonTransferHelper
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.equalsAddress
 import com.tonapps.blockchain.ton.extensions.toAccountId
-import com.tonapps.blockchain.ton.tlb.JettonTransfer
 import com.tonapps.extensions.MutableEffectFlow
 import com.tonapps.extensions.filterList
 import com.tonapps.extensions.state
@@ -41,34 +39,26 @@ import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.data.token.TokenRepository
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
-import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ton.block.AddrStd
 import uikit.extensions.collectFlow
-import java.math.BigDecimal
 
 class BatteryRechargeViewModel(
     app: Application,
@@ -191,9 +181,17 @@ class BatteryRechargeViewModel(
         }
         val isLessThanMin = amount > Coins.ZERO && amount < minAmount
 
+        val calculateFiatFrom = if (shouldMinusReservedAmount) {
+            batteryReservedAmount
+        } else {
+            Coins.ZERO
+        }
+
         if (customAmount) {
             val charges = BatteryMapper.calculateCryptoCharges(
-                getRechargeMethod(wallet, token), api.config.batteryMeanFees, amount
+                getRechargeMethod(wallet, token),
+                api.config.batteryMeanFees,
+                amount.minus(calculateFiatFrom).coerceAtLeast(Coins.ZERO)
             )
             uiItems.add(Item.Space)
             uiItems.add(
@@ -204,7 +202,7 @@ class BatteryRechargeViewModel(
                     ),
                     isInsufficientBalance = remainingBalance.isNegative,
                     isLessThanMin = isLessThanMin,
-                    formattedCharges = CurrencyFormatter.format(value = charges)
+                    formattedCharges = charges.toString(),
                 )
             )
         }
@@ -255,6 +253,8 @@ class BatteryRechargeViewModel(
             it.address.equalsAddress(token.address)
         }.map { it.first() }.onEach { selectedToken ->
             _tokenFlow.tryEmit(selectedToken)
+            _customAmountFlow.tryEmit(false)
+            _selectedPackTypeFlow.tryEmit(null)
         }.launchIn(viewModelScope)
     }
 
@@ -285,7 +285,12 @@ class BatteryRechargeViewModel(
         val batteryMaxInputAmount = rechargeMethod.fromTon(api.config.batteryMaxInputAmount)
 
         val amount = _selectedPackTypeFlow.value?.let { packType ->
-            rechargeMethod.fromTon(RechargePackEntity.getTonAmount(api.config.batteryMeanFees, packType))
+            rechargeMethod.fromTon(
+                RechargePackEntity.getTonAmount(
+                    api.config.batteryMeanFees,
+                    packType
+                )
+            )
         } ?: Coins.of(_amountFlow.value, token.decimals)
 
         if (amount > batteryMaxInputAmount) {
@@ -334,8 +339,6 @@ class BatteryRechargeViewModel(
             } else {
                 null
             }
-
-            Log.d("BatteryRechargeViewModel", "amount=$amount")
 
             val jettonPayload = TonTransferHelper.jetton(
                 coins = amount.toGrams(),

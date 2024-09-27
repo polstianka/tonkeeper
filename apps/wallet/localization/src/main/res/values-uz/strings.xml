@@ -433,4 +433,5 @@
         <item quantity="one">≈ %1$s ta token uzatish</item>
         <item quantity="other">≈ %1$s ta token uzatish</item>
     </plurals>
+    <string name="or">yoki</string>
 </resources>

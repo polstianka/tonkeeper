@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.send.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.ton.contract.WalletFeature
 import com.tonapps.blockchain.ton.extensions.equalsAddress
@@ -152,7 +151,8 @@ class SendViewModel(
         userInputFlow.map { it.token }.distinctUntilChanged()
     ) { tokens, selectedToken ->
         tokens.find { it.address == selectedToken.address } ?: AccountTokenEntity.EMPTY
-    }.distinctUntilChanged().flowOn(Dispatchers.IO).stateIn(viewModelScope, SharingStarted.Eagerly, AccountTokenEntity.EMPTY)
+    }.distinctUntilChanged().flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, AccountTokenEntity.EMPTY)
 
     private val ratesTokenFlow = selectedTokenFlow.map { token ->
         ratesRepository.getRates(currency, token.address)
@@ -225,12 +225,19 @@ class SendViewModel(
             rates.convertFromFiat(token.address, token.fiat - amount)
         }
 
-        val remainingFormat = CurrencyFormatter.format(token.symbol, remainingToken, 2, RoundingMode.DOWN, false)
+        val remainingFormat =
+            CurrencyFormatter.format(token.symbol, remainingToken, 2, RoundingMode.DOWN, false)
 
         SendAmountState(
             remainingFormat = getString(Localization.remaining_balance, remainingFormat),
             converted = converted.stripTrailingZeros(),
-            convertedFormat = CurrencyFormatter.format(convertedCode, converted, 2, RoundingMode.DOWN, false),
+            convertedFormat = CurrencyFormatter.format(
+                convertedCode,
+                converted,
+                2,
+                RoundingMode.DOWN,
+                false
+            ),
             insufficientBalance = if (remaining.isZero) false else remaining.isNegative,
             currencyCode = if (amountCurrency) currencyCode else "",
             amountCurrency = amountCurrency,
@@ -505,7 +512,8 @@ class SendViewModel(
 
     private fun loadNft() {
         viewModelScope.launch(Dispatchers.IO) {
-            val nft = collectiblesRepository.getNft(wallet.accountId, wallet.testnet, nftAddress) ?: return@launch
+            val nft = collectiblesRepository.getNft(wallet.accountId, wallet.testnet, nftAddress)
+                ?: return@launch
             val pref = settingsRepository.getTokenPrefs(wallet.id, nftAddress)
             userInputNft(nft.with(pref))
         }
@@ -573,7 +581,11 @@ class SendViewModel(
             return calculateFeeDefault(transfer, isSupportsGasless)
         }
 
-        val message = transfer.toSignedMessage(internalMessage = true)
+        val message =
+            transfer.toSignedMessage(
+                internalMessage = true,
+                excessesAddress = excessesAddress
+            )
 
         val (consequences, _) = batteryRepository.emulate(
             tonProofToken = tonProofToken,
@@ -777,10 +789,29 @@ class SendViewModel(
 
     fun sign() = transferFlow.take(1).map { transfer ->
         lastTransferEntity = transfer
+        val excessesAddress = if (sendTransferType is SendTransferType.WithExcessesAddress) {
+            (sendTransferType as SendTransferType.WithExcessesAddress).excessesAddress
+        } else {
+            null
+        }
+        val additionalGifts = if (sendTransferType is SendTransferType.Gasless) {
+            listOf(
+                transfer.gaslessInternalGift(
+                    jettonAmount = Coins.ONE,
+                    batteryAddress = (sendTransferType as SendTransferType.Gasless).excessesAddress
+                )
+            )
+        } else {
+            emptyList()
+        }
         val boc = signUseCase(
             context = context,
             wallet = wallet,
-            unsignedBody = transfer.getUnsignedBody(),
+            unsignedBody = transfer.getUnsignedBody(
+                internalMessage = true,
+                additionalGifts = additionalGifts,
+                excessesAddress = excessesAddress,
+            ),
             seqNo = transfer.seqno,
             ledgerTransaction = transfer.getLedgerTransaction()
         )
@@ -828,7 +859,8 @@ class SendViewModel(
         }
 
         if (tokenCustomPayload == null) {
-            tokenCustomPayload = api.getJettonCustomPayload(wallet.accountId, wallet.testnet, token.address)
+            tokenCustomPayload =
+                api.getJettonCustomPayload(wallet.accountId, wallet.testnet, token.address)
         }
         return tokenCustomPayload ?: TokenEntity.TransferPayload.empty(token.address)
     }

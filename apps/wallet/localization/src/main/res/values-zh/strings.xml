@@ -428,4 +428,5 @@
     <plurals name="battery_jetton">
         <item quantity="other">≈ %1$s 代币转移</item>
     </plurals>
+    <string name="or">或</string>
 </resources>
