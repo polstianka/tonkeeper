@@ -104,6 +104,22 @@ class DAppBridge(
                 window.${windowKey} = {
                     tonconnect: Object.assign(${JSONObject(keys)},{ $funcs },{ listen }),
                 }
+
+                window.tonapi = {
+                    fetch: async (url, options) => {
+                        return new Promise((resolve, reject) => {
+                            options.headers = {
+                                ...options.headers,
+                                'Authorization': 'Bearer ' + ${tonkeeperTonApiToken},
+                                'X-Authorization': options.headers.Authorization,
+                            };
+                            fetch(url, options)
+                                .then((response) => response.json())
+                                .then((data) => resolve(data))
+                                .catch((error) => reject(error));
+                        });
+                    }
+                }
             })();
         """
     }
