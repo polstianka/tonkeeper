@@ -91,6 +91,11 @@ class BillingManager(
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
+    suspend fun consumeProduct(purchase: Purchase) {
+        val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+        billingClient.consumePurchase(params)
+    }
+
     suspend fun restorePurchases() {
         val params = QueryPurchasesParams.newBuilder()
             .setProductType(ProductType.INAPP)
