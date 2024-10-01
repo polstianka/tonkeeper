@@ -329,6 +329,8 @@ class BatteryRefillViewModel(
                 )
                 try {
                     api.battery(wallet.testnet).androidBatteryPurchase(tonProofToken, request)
+                    batteryRepository.getBalance(tonProofToken, wallet.publicKey, wallet.testnet, ignoreCache = true)
+                    context.showToast(Localization.battery_refilled)
                 } catch (e: Exception) {
                     purchaseInProgress.tryEmit(false)
                     context.showToast(Localization.error)

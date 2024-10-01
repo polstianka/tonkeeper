@@ -518,4 +518,5 @@
     <string name="battery_small_pack">Small</string>
     <string name="battery_disclaimer">One charge covers the average transaction fee. Some transactions may cost more.</string>
     <string name="restore_purchases">Restore Purchases</string>
+    <string name="battery_refilled">Battery refilled</string>
 </resources>
