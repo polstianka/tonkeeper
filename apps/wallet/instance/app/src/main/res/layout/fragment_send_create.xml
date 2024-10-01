@@ -158,7 +158,7 @@
 
     </uikit.widget.ColumnLayout>
 
-    <Button
+    <uikit.widget.LoadableButton
         style="@style/Widget.App.Button"
         android:id="@+id/button"
         android:layout_width="match_parent"

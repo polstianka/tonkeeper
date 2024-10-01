@@ -22,12 +22,19 @@ class AmountHolder(
         amountView.doOnValueChange = onValueChange
         amountView.suffix = item.symbol
         currencyView.text = item.formattedCharges
-        applyAvailable(item.formattedRemaining, item.isInsufficientBalance, item.isLessThanMin)
+        applyAvailable(item.formattedRemaining, item.formattedMinAmount, item.isInsufficientBalance, item.isLessThanMin)
         amountView.focus()
+    }
+
+    override fun onUnbind() {
+        super.onUnbind()
+
+        amountView.setValue(0.0)
     }
 
     private fun applyAvailable(
         formattedRemaining: CharSequence,
+        formattedMinAmount: CharSequence,
         isInsufficientBalance: Boolean,
         isLessThanMin: Boolean
     ) {
@@ -35,8 +42,8 @@ class AmountHolder(
             availableView.setText(Localization.insufficient_balance)
             availableView.setTextColor(context.accentRedColor)
         } else if (isLessThanMin) {
-            availableView.text = getString(Localization.insufficient_balance)
-            availableView.setTextColor(context.textSecondaryColor)
+            availableView.text = context.getString(Localization.minimum_amount, formattedMinAmount)
+            availableView.setTextColor(context.accentRedColor)
         } else {
             availableView.text =
                 context.getString(Localization.remaining_balance, formattedRemaining)

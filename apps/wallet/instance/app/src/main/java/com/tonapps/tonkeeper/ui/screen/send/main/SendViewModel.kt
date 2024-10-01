@@ -1,7 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.send.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tonapps.blockchain.ton.contract.WalletFeature
 import com.tonapps.blockchain.ton.extensions.equalsAddress
@@ -23,7 +22,6 @@ import com.tonapps.tonkeeper.ui.screen.send.main.state.SendAmountState
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendDestination
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendTransaction
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendTransferType
-import com.tonapps.tonkeeper.usecase.emulation.EmulationUseCase
 import com.tonapps.tonkeeper.usecase.sign.SignUseCase
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.SendBlockchainState
@@ -91,21 +89,6 @@ class SendViewModel(
     private val transactionManager: TransactionManager,
     private val signUseCase: SignUseCase
 ) : BaseWalletVM(app) {
-
-    private companion object {
-
-        private val ONE_HUNDRED = BigDecimal("100")
-        private val MIN_PERCENTAGE = BigDecimal("99.7")
-
-        private fun isInsufficientBalance(balance: BigDecimal, amount: BigDecimal): Boolean {
-            try {
-                val percentage = amount.divide(balance, 4, RoundingMode.HALF_UP).multiply(ONE_HUNDRED).setScale(2, RoundingMode.HALF_UP)
-                return percentage >= MIN_PERCENTAGE
-            } catch (e: Throwable) {
-                return false
-            }
-        }
-    }
 
     private val isNft: Boolean
         get() = nftAddress.isNotBlank()
@@ -433,21 +416,22 @@ class SendViewModel(
             val tokenBalance = token.balance.value
             val tokenAmount = getTokenAmount()
             val isSendAll = tokenBalance == tokenAmount // || userInputFlow.value.max
+            val withRelayer = sendTransferType is SendTransferType.Gasless || sendTransferType is SendTransferType.Battery
             if (token.isTon) {
                 if (isSendAll) {
                     onContinue()
                 } else {
-                    val tonAmountWithFee = fee + tokenAmount
-                    if (isInsufficientBalance(tokenBalance.value, tonAmountWithFee.value)) {
-                        showInsufficientBalance(tonBalance, tonAmountWithFee)
+                    val totalAmount = fee + tokenAmount
+                    if (!withRelayer && totalAmount.value > tokenBalance.value) {
+                        showInsufficientBalance(tonBalance, totalAmount)
                     } else {
                         onContinue()
                     }
                 }
             } else {
-                val isGasless = sendTransferType is SendTransferType.Gasless
-                if (!isGasless && isInsufficientBalance(tonBalance.value, fee.value)) {
-                    showInsufficientBalance(tonBalance, fee)
+                val totalAmount = fee + TransferEntity.BASE_FORWARD_AMOUNT
+                if (!withRelayer && totalAmount.value > tonBalance.value) {
+                    showInsufficientBalance(tonBalance, totalAmount)
                 } else {
                     onContinue()
                 }
@@ -462,10 +446,11 @@ class SendViewModel(
     }
 
     private suspend fun showInsufficientBalance(balance: Coins, required: Coins) {
+        val batteryBalance = getBatteryBalance()
         _uiEventFlow.tryEmit(SendEvent.InsufficientBalance(
             balance = balance,
             required = required,
-            withRechargeBattery = sendTransferType is SendTransferType.Battery,
+            withRechargeBattery = !api.config.batteryDisabled && batteryBalance.balance.value == BigDecimal.ZERO,
             singleWallet = 1 >= getWalletCount()
         ))
     }
@@ -494,13 +479,6 @@ class SendViewModel(
     }
 
     fun next() {
-        showIfInsufficientBalance {
-            startSendFlow()
-        }
-    }
-
-    private fun startSendFlow() {
-        _uiEventFlow.tryEmit(SendEvent.Confirm)
         combine(
             transferFlow.take(1),
             tokensFlow.take(1)
@@ -508,6 +486,9 @@ class SendViewModel(
             val (coins, isSupportGasless) = calculateFee(transfer)
             eventFee(transfer, tokens, coins, isSupportGasless)
         }.filterNotNull().onEach {
+            showIfInsufficientBalance {
+                _uiEventFlow.tryEmit(SendEvent.Confirm)
+            }
             _uiEventFlow.tryEmit(it)
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
@@ -627,7 +608,7 @@ class SendViewModel(
 
         sendTransferType = SendTransferType.Gasless(
             excessesAddress = excessesAddress,
-            gaslessFee = Coins.of(commission, transfer.token.decimals)
+            gaslessFee = Coins.ofNano(commission, transfer.token.decimals)
         )
 
         return Pair(Coins.ofNano(commission, transfer.token.decimals), true)
@@ -798,7 +779,7 @@ class SendViewModel(
         val additionalGifts = if (sendTransferType is SendTransferType.Gasless) {
             listOf(
                 transfer.gaslessInternalGift(
-                    jettonAmount = Coins.ONE,
+                    jettonAmount = (sendTransferType as SendTransferType.Gasless).gaslessFee,
                     batteryAddress = (sendTransferType as SendTransferType.Gasless).excessesAddress
                 )
             )

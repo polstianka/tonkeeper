@@ -89,7 +89,7 @@ class WalletViewModel(
         }
     }.map { !it }
 
-    private val _streamFlow = combine(updateWalletSettings, _lastLtFlow) { _, lastLt -> lastLt }
+    private val _streamFlow = combine(updateWalletSettings, billingManager.madePurchaseFlow, _lastLtFlow) { _, _, lastLt -> lastLt }
 
     init {
         collectFlow(transactionManager.getEventsFlow(wallet)) { event ->

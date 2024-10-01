@@ -1,11 +1,9 @@
 package com.tonapps.tonkeeper.ui.screen.battery.recharge
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.inflate
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +18,6 @@ import com.tonapps.tonkeeper.ui.base.ScreenContext
 import com.tonapps.tonkeeper.ui.screen.battery.BatteryScreen
 import com.tonapps.tonkeeper.ui.screen.battery.recharge.entity.BatteryRechargeEvent
 import com.tonapps.tonkeeper.ui.screen.battery.recharge.list.Adapter
-import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
 import com.tonapps.tonkeeper.ui.screen.send.contacts.SendContactsScreen
 import com.tonapps.tonkeeper.ui.screen.send.main.SendContact
 import com.tonapps.tonkeeper.ui.screen.token.picker.TokenPickerScreen
@@ -35,15 +32,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import uikit.base.BaseFragment
 import uikit.extensions.collectFlow
 import uikit.extensions.doKeyboardAnimation
 import uikit.extensions.hideKeyboard
-import uikit.extensions.pinToBottomInsets
 import uikit.widget.FrescoView
 import uikit.widget.InputView
 import java.util.UUID
@@ -161,17 +154,19 @@ class BatteryRechargeScreen(wallet: WalletEntity): BaseListWalletScreen<ScreenCo
         finish()
     }
 
-    private fun sing(request: SignRequestEntity) {
+    private fun sign(request: SignRequestEntity) {
         viewModel.sign(request).catch {
             showError(it.bestMessage)
         }.onEach {
-            onSuccess()
+            postDelayed(1000) {
+                onSuccess()
+            }
         }.launchIn(lifecycleScope)
     }
 
     private fun onEvent(event: BatteryRechargeEvent) {
         when (event) {
-            is BatteryRechargeEvent.Sign -> sing(event.request)
+            is BatteryRechargeEvent.Sign -> sign(event.request)
             is BatteryRechargeEvent.Error -> showError()
             is BatteryRechargeEvent.MaxAmountError -> {
                 val message = requireContext().getString(

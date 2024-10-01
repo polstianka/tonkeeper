@@ -58,6 +58,7 @@ import uikit.span.ClickableSpanCompat
 import uikit.widget.FrescoView
 import uikit.widget.HeaderView
 import uikit.widget.InputView
+import uikit.widget.LoadableButton
 import uikit.widget.ProcessTaskView
 import uikit.widget.SlideBetweenView
 import java.util.UUID
@@ -87,7 +88,7 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
     private lateinit var statusView: AppCompatTextView
     private lateinit var maxView: View
     private lateinit var commentInput: InputView
-    private lateinit var button: Button
+    private lateinit var button: LoadableButton
     private lateinit var taskContainerView: View
     private lateinit var addressActionsView: View
     private lateinit var confirmButton: Button
@@ -442,6 +443,8 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
             reviewRecipientFeeView.setLoading()
             reviewRecipientFeeView.subtitleView.isEnabled = false
             confirmButton.isEnabled = false
+            button.isEnabled = false
+            button.isLoading = true
         } else {
             reviewRecipientFeeView.value = "≈ ${event.format}".withCustomSymbol(requireContext())
             reviewRecipientFeeView.description =
@@ -469,6 +472,8 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
             reviewRecipientFeeView.subtitleView.isEnabled = true
             reviewRecipientFeeView.setDefault()
             confirmButton.isEnabled = true
+            button.isEnabled = true
+            button.isLoading = false
         }
     }
 

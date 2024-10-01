@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ton.block.AddrStd
 import uikit.extensions.collectFlow
+import java.math.BigDecimal
 
 class BatteryRechargeViewModel(
     app: Application,
@@ -142,7 +143,7 @@ class BatteryRechargeViewModel(
         val hasEnoughTonBalance = ton.balance.value >= Coins.of(0.1)
         val hasBatteryBalance = batteryBalance.balance > Coins.ZERO
         val rechargeMethod = getRechargeMethod(wallet, token)
-        val shouldMinusReservedAmount = batteryBalance.reservedBalance == Coins.ZERO || args.isGift
+        val shouldMinusReservedAmount = batteryBalance.reservedBalance.value == BigDecimal.ZERO || args.isGift
 
         val batteryReservedAmount = rechargeMethod.fromTon(api.config.batteryReservedAmount)
 
@@ -199,6 +200,9 @@ class BatteryRechargeViewModel(
                     symbol = token.symbol,
                     formattedRemaining = CurrencyFormatter.format(
                         currency = token.symbol, value = remainingBalance
+                    ),
+                    formattedMinAmount = CurrencyFormatter.format(
+                        currency = token.symbol, value = minAmount
                     ),
                     isInsufficientBalance = remainingBalance.isNegative,
                     isLessThanMin = isLessThanMin,

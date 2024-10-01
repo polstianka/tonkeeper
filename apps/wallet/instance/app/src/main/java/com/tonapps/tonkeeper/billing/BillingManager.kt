@@ -5,12 +5,16 @@ import android.content.Context
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.ProductType
 import com.tonapps.extensions.MutableEffectFlow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.shareIn
 
 class BillingManager(
     context: Context,
+    scope: CoroutineScope,
 ) {
 
     private var billingClient: BillingClient
@@ -20,6 +24,9 @@ class BillingManager(
 
     private val _productsFlow = MutableStateFlow<List<ProductDetails>?>(null)
     val productsFlow = _productsFlow.asStateFlow()
+
+    private val _madePurchaseFlow = MutableEffectFlow<Unit>()
+    val madePurchaseFlow = _madePurchaseFlow.shareIn(scope, SharingStarted.Lazily, 1)
 
     private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
@@ -48,6 +55,12 @@ class BillingManager(
                 isInitialized = false
             }
         })
+
+        notifyPurchase()
+    }
+
+    private fun notifyPurchase() {
+        _madePurchaseFlow.tryEmit(Unit)
     }
 
     fun getProducts(
@@ -94,6 +107,7 @@ class BillingManager(
     suspend fun consumeProduct(purchase: Purchase) {
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.consumePurchase(params)
+        notifyPurchase()
     }
 
     suspend fun restorePurchases() {
