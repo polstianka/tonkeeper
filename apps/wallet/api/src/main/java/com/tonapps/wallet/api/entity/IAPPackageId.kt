@@ -7,7 +7,7 @@ enum class IAPPackageId(val id: String) {
 
     companion object {
         fun fromId(id: String): IAPPackageId {
-            return values().find { it.id.equals(id, ignoreCase = true) }
+            return entries.find { it.id.equals(id, ignoreCase = true) }
                 ?: throw IllegalArgumentException("Invalid IAPPackageId id: $id")
         }
     }

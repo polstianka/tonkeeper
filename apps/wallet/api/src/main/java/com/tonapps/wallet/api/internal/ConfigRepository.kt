@@ -3,6 +3,7 @@ package com.tonapps.wallet.api.internal
 import android.content.Context
 import android.util.Log
 import com.tonapps.extensions.file
+import com.tonapps.extensions.state
 import com.tonapps.extensions.toByteArray
 import com.tonapps.extensions.toParcel
 import com.tonapps.wallet.api.entity.ConfigEntity
@@ -23,7 +24,7 @@ internal class ConfigRepository(
     private val configFile = context.cacheDir.file("config")
     private val _stream = MutableStateFlow<ConfigEntity?>(null)
 
-    val stream = _stream.asStateFlow().filterNotNull()
+    val stream = _stream.state(scope).filterNotNull()
 
     var configEntity: ConfigEntity? = null
         private set (value) {

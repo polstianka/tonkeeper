@@ -2,6 +2,7 @@ package com.tonapps.tonkeeper.ui.screen.battery.refill.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.tonapps.tonkeeper.billing.ProductEntity
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.holder.BatteryHolder
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.holder.GiftHolder
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.holder.IAPPackHolder
@@ -18,7 +19,7 @@ import com.tonapps.uikit.list.BaseListItem
 class Adapter(
     private val openSettings: () -> Unit,
     private val onSubmitPromo: (String) -> Unit,
-    private val onPackSelect: (String) -> Unit,
+    private val onPackSelect: (ProductEntity) -> Unit,
     private val onRestorePurchases: () -> Unit,
 ): BaseListAdapter() {
     override fun createHolder(parent: ViewGroup, viewType: Int): BaseListHolder<out BaseListItem> {

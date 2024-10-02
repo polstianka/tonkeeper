@@ -55,7 +55,6 @@ val koinModel = module {
     singleOf(::TonConnectManager)
     singleOf(::PushManager)
 
-
     factoryOf(::SignUseCase)
     factoryOf(::EmulationUseCase)
 

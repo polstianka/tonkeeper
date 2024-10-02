@@ -29,6 +29,18 @@ fun Context.showToast(@StringRes resId: Int) {
     navigation?.toast(resId)
 }
 
+fun Context.loading(loading: Boolean = true) {
+    navigation?.toastLoading(loading)
+}
+
+fun Context.result(isError: Boolean = false) {
+    if (isError) {
+        showToast(Localization.unknown_error)
+    } else {
+        showToast(Localization.done)
+    }
+}
+
 fun Context.copyWithToast(text: String, color: Int = backgroundContentTintColor) {
     navigation?.toast(getString(Localization.copied), color)
     copyToClipboard(text)

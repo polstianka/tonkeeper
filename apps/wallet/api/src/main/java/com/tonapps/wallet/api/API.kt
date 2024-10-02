@@ -12,6 +12,7 @@ import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.equalsAddress
 import com.tonapps.blockchain.ton.extensions.isValidTonAddress
 import com.tonapps.blockchain.ton.extensions.toAccountId
+import com.tonapps.extensions.ErrorForUserException
 import com.tonapps.extensions.bestMessage
 import com.tonapps.extensions.locale
 import com.tonapps.extensions.toUriOrNull
@@ -37,6 +38,8 @@ import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.batteryapi.apis.BatteryApi
 import io.batteryapi.apis.BatteryApi.UnitsGetBalance
+import io.batteryapi.models.AndroidBatteryPurchaseRequest
+import io.batteryapi.models.AndroidBatteryPurchaseRequestPurchasesInner
 import io.batteryapi.models.Balance
 import io.batteryapi.models.Config
 import io.batteryapi.models.RechargeMethods
@@ -112,7 +115,6 @@ class API(
 
     val configFlow: Flow<ConfigEntity>
         get() = configRepository.stream
-
 
     suspend fun tonapiFetch(
         url: String,
@@ -826,6 +828,29 @@ class API(
             throw Exception("Failed creating proof: ${response.code}")
         }
         response.body?.string() ?: throw Exception("Empty response")
+    }
+
+    fun batteryPurchase(
+        tonProofToken: String,
+        testnet: Boolean,
+        productId: String,
+        purchaseToken: String,
+        promo: String?,
+    ) {
+
+        val request = AndroidBatteryPurchaseRequest(listOf(
+            AndroidBatteryPurchaseRequestPurchasesInner(productId, purchaseToken, promo)
+        ))
+
+        val response = withRetry {
+            battery(testnet).androidBatteryPurchase(tonProofToken, request)
+        } ?: throw Exception("Empty response")
+
+        val status = response.purchases.firstOrNull() ?: return
+
+        status.error?.let {
+            ErrorForUserException.of(it.msg)
+        }
     }
 
     companion object {

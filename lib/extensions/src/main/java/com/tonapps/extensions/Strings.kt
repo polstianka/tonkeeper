@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.core.net.toUri
 import com.tonapps.icu.Punycode
+import java.math.BigDecimal
 
 val String.short12: String
     get() {
@@ -102,4 +103,11 @@ fun String.toUriOrNull(): Uri? {
     }
 }
 
+fun String.toBigDecimalSafe(defValue: BigDecimal = BigDecimal.ZERO): BigDecimal {
+    return try {
+        this.toBigDecimal()
+    } catch (e: Throwable) {
+        defValue
+    }
+}
 

@@ -8,7 +8,7 @@ import com.tonapps.wallet.localization.Localization
 sealed class SendBlockchainException(
     @StringRes stringRes: Int,
     cause: Throwable? = null
-): ErrorForUserException(stringRes, cause) {
+): ErrorForUserException(stringRes = stringRes, cause = cause) {
 
     companion object {
 

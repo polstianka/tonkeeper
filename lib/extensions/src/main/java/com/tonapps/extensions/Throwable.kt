@@ -9,12 +9,29 @@ val Throwable.bestMessage: String
 
 fun Throwable.getUserMessage(context: Context): String? {
     return when (this) {
-        is ErrorForUserException -> context.getString(stringRes)
+        is ErrorForUserException -> getMessage(context)
         else -> null
     }
 }
 
 open class ErrorForUserException(
-    @StringRes val stringRes: Int,
+    @StringRes val stringRes: Int = 0,
+    val text: String? = null,
     override val cause: Throwable? = null,
-) : Exception(cause)
+) : Exception(cause) {
+
+    companion object {
+
+        fun of(text: String): ErrorForUserException {
+            return ErrorForUserException(text = text)
+        }
+    }
+
+    fun getMessage(context: Context): String {
+        if (stringRes == 0 && text.isNullOrBlank()) {
+            return cause?.bestMessage ?: "unknown error"
+        }
+        return text ?: context.getString(stringRes)
+    }
+
+}

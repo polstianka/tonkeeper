@@ -70,7 +70,7 @@ class BatteryRechargeViewModel(
     private val tokenRepository: TokenRepository,
     private val settingsRepository: SettingsRepository,
     private val ratesRepository: RatesRepository,
-    private val api: API,
+    private val api: API
 ) : BaseWalletVM(app) {
 
     private val _tokenFlow = MutableStateFlow<AccountTokenEntity?>(null)

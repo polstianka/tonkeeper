@@ -27,7 +27,7 @@ import com.squareup.moshi.JsonClass
  */
 
 
-data class AndroidBatteryPurchaseStatus (
+data class  AndroidBatteryPurchaseStatus (
 
     @Json(name = "purchases")
     val purchases: kotlin.collections.List<AndroidBatteryPurchaseStatusPurchasesInner>

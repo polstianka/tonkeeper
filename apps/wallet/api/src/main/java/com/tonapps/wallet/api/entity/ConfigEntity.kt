@@ -141,6 +141,15 @@ data class ConfigEntity(
         iapPackages = emptyList()
     )
 
+    fun getBatteryRefundUrl(token: String, testnet: Boolean): String {
+        val builder = Uri.parse(batteryRefundEndpoint).buildUpon()
+        builder.appendQueryParameter("token", token)
+        if (testnet) {
+            builder.appendQueryParameter("testnet", "true")
+        }
+        return builder.toString()
+    }
+
     companion object {
         val default = ConfigEntity()
     }

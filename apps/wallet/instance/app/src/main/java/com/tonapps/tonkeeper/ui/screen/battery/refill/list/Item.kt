@@ -1,6 +1,8 @@
 package com.tonapps.tonkeeper.ui.screen.battery.refill.list
 
 import android.net.Uri
+import com.android.billingclient.api.ProductDetails
+import com.tonapps.tonkeeper.billing.ProductEntity
 import com.tonapps.wallet.api.entity.IAPPackageId
 import com.tonapps.tonkeeper.ui.screen.battery.refill.entity.PromoState
 import com.tonapps.uikit.list.BaseListItem
@@ -76,13 +78,18 @@ sealed class Item(type: Int) : BaseListItem(type) {
 
     data class IAPPack(
         val position: ListCell.Position,
-        val packType: IAPPackageId,
-        val productId: String,
-        val isEnabled: Boolean,
+        val product: ProductEntity,
+        // val isEnabled: Boolean,
         val charges: Int,
-        val formattedPrice: CharSequence,
         val transactions: Map<BatteryTransaction, Int>
-    ) : Item(TYPE_IAP)
+    ) : Item(TYPE_IAP) {
+
+        val formattedPrice: CharSequence
+            get() = product.priceFormat
+
+        val packType: IAPPackageId
+            get() = product.packType
+    }
 
     data object RestoreIAP : Item(TYPE_RESTORE_IAP)
 

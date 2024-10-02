@@ -20,14 +20,12 @@ class BatteryRefillScreen(wallet: WalletEntity) : BaseHolderWalletScreen.ChildLi
 
     private val initialPromo: String? by lazy { requireArguments().getString(ARG_PROMO) }
 
-    override val viewModel: BatteryRefillViewModel by walletViewModel {
-        parametersOf(initialPromo)
-    }
+    override val viewModel: BatteryRefillViewModel by walletViewModel()
 
     private val adapter = Adapter(
         openSettings = { primaryViewModel.routeToSettings() },
         onSubmitPromo = { viewModel.applyPromo(it) },
-        onPackSelect = { viewModel.makePurchase(it, requireActivity()) },
+        onPackSelect = { viewModel.makePurchase(requireActivity(), it) },
         onRestorePurchases = { viewModel.restorePurchases() }
     )
 

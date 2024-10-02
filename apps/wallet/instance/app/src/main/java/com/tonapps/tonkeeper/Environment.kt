@@ -5,6 +5,7 @@ import android.os.Build
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.tonapps.tonkeeper.os.AppInstall
+import com.tonapps.tonkeeperx.BuildConfig
 
 class Environment(context: Context) {
 
@@ -17,6 +18,10 @@ class Environment(context: Context) {
     }
 
     val isGooglePlayBillingAvailable: Boolean by lazy {
-        installerSource == AppInstall.Source.GOOGLE_PLAY && isGooglePlayServicesAvailable
+        if (BuildConfig.DEBUG) {
+            true
+        } else {
+            installerSource == AppInstall.Source.GOOGLE_PLAY && isGooglePlayServicesAvailable
+        }
     }
 }

@@ -54,7 +54,6 @@ suspend fun <T> Flow<T>.singleValue(timeout: Duration = 1.seconds): T? {
     return this.take(1).timeout(timeout).firstOrNull()
 }
 
-
 fun <T> Flow<T>.state(
     scope: CoroutineScope,
     context: CoroutineContext = Dispatchers.IO

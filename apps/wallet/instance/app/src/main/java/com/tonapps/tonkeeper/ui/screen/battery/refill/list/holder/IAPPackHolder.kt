@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatTextView
+import com.tonapps.tonkeeper.billing.ProductEntity
 import com.tonapps.wallet.api.entity.IAPPackageId
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.Item
 import com.tonapps.tonkeeper.view.BatteryView
@@ -18,7 +19,7 @@ import uikit.extensions.getDrawable
 
 class IAPPackHolder(
     parent: ViewGroup,
-    private val onPackSelect: (String) -> Unit,
+    private val onPackSelect: (ProductEntity) -> Unit,
 ) : Holder<Item.IAPPack>(parent, R.layout.view_cell_iap_pack) {
 
     private val titleView = itemView.findViewById<AppCompatTextView>(R.id.title)
@@ -31,8 +32,8 @@ class IAPPackHolder(
         itemView.background = item.position.drawable(context)
 
         amountView.text = item.formattedPrice
-        amountView.setOnClickListener { onPackSelect(item.productId) }
-        amountView.isEnabled = item.isEnabled
+        amountView.setOnClickListener { onPackSelect(item.product) }
+        // amountView.isEnabled = item.isEnabled
 
         titleView.text = getPackName(item.packType)
 

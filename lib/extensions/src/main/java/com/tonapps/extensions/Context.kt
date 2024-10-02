@@ -12,8 +12,6 @@ import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.os.LocaleListCompat
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import uikit.extensions.activity
 import java.io.File
 import java.util.Locale
@@ -92,10 +90,3 @@ fun Context.logError(e: Throwable) {
     }
     Log.e("TonkeeperLog", e.message, e)
 }
-
-val Context.hasGMS: Boolean
-    get() {
-        val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this)
-        return resultCode == ConnectionResult.SUCCESS
-    }

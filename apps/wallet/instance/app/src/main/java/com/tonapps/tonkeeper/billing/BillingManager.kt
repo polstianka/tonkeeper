@@ -2,127 +2,78 @@ package com.tonapps.tonkeeper.billing
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingClient.ProductType
+import com.tonapps.extensions.ErrorForUserException
 import com.tonapps.extensions.MutableEffectFlow
+import com.tonapps.wallet.api.entity.IAPPackageEntity
+import com.tonapps.wallet.data.account.entities.WalletEntity
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.withContext
 
-class BillingManager(
-    context: Context,
-    scope: CoroutineScope,
-) {
+class BillingManager(context: Context): PurchasesUpdatedListener {
 
-    private var billingClient: BillingClient
+    private val _purchasesFlow = MutableStateFlow<List<Purchase>?>(null)
+    val purchasesFlow = _purchasesFlow.asStateFlow().filterNotNull()
 
-    private val _purchasesFlow = MutableEffectFlow<List<Purchase>?>()
-    val purchasesFlow = _purchasesFlow.asSharedFlow()
+    private val billingClient = BillingClient.newBuilder(context)
+        .setListener(this)
+        .enablePendingPurchases()
+        .build()
 
-    private val _productsFlow = MutableStateFlow<List<ProductDetails>?>(null)
-    val productsFlow = _productsFlow.asStateFlow()
-
-    private val _madePurchaseFlow = MutableEffectFlow<Unit>()
-    val madePurchaseFlow = _madePurchaseFlow.shareIn(scope, SharingStarted.Lazily, 1)
-
-    private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
-        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            _purchasesFlow.tryEmit(purchases)
-        } else {
-            _purchasesFlow.tryEmit(null)
-        }
-    }
-
-    private var isInitialized = false
-
-    init {
-        billingClient = BillingClient.newBuilder(context)
-            .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
-            .build()
-
-        billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    isInitialized = true
-                }
-            }
-
-            override fun onBillingServiceDisconnected() {
-                isInitialized = false
-            }
-        })
-
-        notifyPurchase()
-    }
-
-    private fun notifyPurchase() {
-        _madePurchaseFlow.tryEmit(Unit)
-    }
-
-    fun getProducts(
-        productIds: List<String>,
-        productType: String = ProductType.INAPP
-    ) {
-        if (!isInitialized || productIds.isEmpty()) {
-            return
-        }
-
-        val productList = productIds.map { productId ->
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(productId)
-                .setProductType(productType)
-                .build()
-        }
-
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(productList)
-            .build()
-
-        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                _productsFlow.value = productDetailsList
-            } else {
-                _productsFlow.value = emptyList()  // In case of an error
-            }
-        }
-    }
-
-    // Method to request a purchase
-    fun requestPurchase(activity: Activity, productDetails: ProductDetails) {
+    suspend fun requestPurchase(
+        activity: Activity,
+        wallet: WalletEntity,
+        productDetails: ProductDetails
+    ) = billingClient.ready { client ->
         val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
             .setProductDetails(productDetails)
             .build()
 
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(productDetailsParams))
+            .setObfuscatedAccountId(wallet.id)
             .build()
 
-        billingClient.launchBillingFlow(activity, billingFlowParams)
+        client.launchBillingFlow(activity, billingFlowParams)
     }
 
-    suspend fun consumeProduct(purchase: Purchase) {
-        val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+    suspend fun consumeProduct(purchaseToken: String) {
+        val params = ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build()
         billingClient.consumePurchase(params)
-        notifyPurchase()
     }
 
-    suspend fun restorePurchases() {
-        val params = QueryPurchasesParams.newBuilder()
-            .setProductType(ProductType.INAPP)
+    suspend fun restorePurchases(): List<PurchaseHistoryRecord> = billingClient.ready { client ->
+        val params = QueryPurchaseHistoryParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
 
-        billingClient.queryPurchasesAsync(params.build()) { billingResult, purchasesList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val pendingPurchases = purchasesList.filter { purchase ->
-                    purchase.purchaseState != Purchase.PurchaseState.PENDING
-                }
-                if (pendingPurchases.isNotEmpty()) {
-                    _purchasesFlow.tryEmit(pendingPurchases)
-                }
-            }
+        val result = client.queryPurchaseHistory(params)
+        if (result.billingResult.isSuccess) {
+            result.purchaseHistoryRecordList ?: emptyList()
+        } else {
+            throw ErrorForUserException.of("Failed to restore purchases: ${result.billingResult.debugMessage}")
         }
+    }
+
+    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+        purchases?.let { _purchasesFlow.tryEmit(it) }
+    }
+
+    suspend fun getProducts(input: List<IAPPackageEntity>): List<ProductEntity> = withContext(Dispatchers.IO) {
+        val products = billingClient.getProducts(input.map { it.productId })
+        val output = mutableListOf<ProductEntity>()
+        for (productDetails in products) {
+            val entity = input.find { it.productId == productDetails.productId } ?: continue
+            output.add(ProductEntity(entity, productDetails))
+        }
+        output.toList()
     }
 }
