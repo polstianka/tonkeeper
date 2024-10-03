@@ -590,9 +590,14 @@ class SendViewModel(
     ): Pair<Coins, Boolean> {
         val message = transfer.toSignedMessage(
             internalMessage = true,
+            jettonAmount = if (transfer.max) {
+                Coins.of(1, transfer.token.decimals)
+            } else {
+                null
+            },
             additionalGifts = listOf(
                 transfer.gaslessInternalGift(
-                    jettonAmount = Coins.ONE,
+                    jettonAmount = Coins.of(1, transfer.token.decimals),
                     batteryAddress = excessesAddress
                 )
             ),
@@ -606,12 +611,20 @@ class SendViewModel(
             testnet = wallet.testnet,
         ) ?: return calculateFeeDefault(transfer, true)
 
+        val gaslessFee = Coins.ofNano(commission, transfer.token.decimals)
+
+        val tokenBalance = selectedTokenFlow.value.balance.value
+
+        if (gaslessFee > tokenBalance) {
+            return calculateFeeDefault(transfer, false)
+        }
+
         sendTransferType = SendTransferType.Gasless(
             excessesAddress = excessesAddress,
-            gaslessFee = Coins.ofNano(commission, transfer.token.decimals)
+            gaslessFee = gaslessFee
         )
 
-        return Pair(Coins.ofNano(commission, transfer.token.decimals), true)
+        return Pair(gaslessFee, true)
     }
 
     private suspend fun calculateFeeDefault(
@@ -803,6 +816,11 @@ class SendViewModel(
                 internalMessage = internalMessage,
                 additionalGifts = additionalGifts,
                 excessesAddress = excessesAddress,
+                jettonAmount = if (transfer.max && sendTransferType is SendTransferType.Gasless) {
+                    transfer.amount - (sendTransferType as SendTransferType.Gasless).gaslessFee
+                } else {
+                    null
+                }
             ),
             seqNo = transfer.seqno,
             ledgerTransaction = transfer.getLedgerTransaction()

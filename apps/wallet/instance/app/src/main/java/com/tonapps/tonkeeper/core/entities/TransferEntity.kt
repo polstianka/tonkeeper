@@ -119,11 +119,12 @@ data class TransferEntity(
 
     private fun getWalletTransfer(
         privateKey: PrivateKeyEd25519?,
-        excessesAddress: AddrStd
+        excessesAddress: AddrStd,
+        jettonAmount: Coins?
     ): WalletTransfer {
         val builder = WalletTransferBuilder()
         builder.bounceable = bounceable
-        builder.body = body(privateKey, excessesAddress)
+        builder.body = body(privateKey, excessesAddress, jettonAmount)
         builder.sendMode = sendMode
         if (isNft) {
             builder.coins = coins
@@ -142,10 +143,11 @@ data class TransferEntity(
     private fun getGifts(
         privateKey: PrivateKeyEd25519?,
         excessesAddress: AddrStd,
-        additionalGifts: List<WalletTransfer>
+        additionalGifts: List<WalletTransfer>,
+        jettonAmount: Coins?
     ): Array<WalletTransfer> {
         val gifts = mutableListOf<WalletTransfer>()
-        gifts.add(getWalletTransfer(privateKey, excessesAddress))
+        gifts.add(getWalletTransfer(privateKey, excessesAddress, jettonAmount))
         gifts.addAll(additionalGifts)
         return gifts.toTypedArray()
     }
@@ -155,6 +157,7 @@ data class TransferEntity(
         internalMessage: Boolean = false,
         excessesAddress: AddrStd? = null,
         additionalGifts: List<WalletTransfer> = emptyList(),
+        jettonAmount: Coins? = null,
     ): Cell {
         return contract.createTransferUnsignedBody(
             validUntil = validUntil,
@@ -162,7 +165,8 @@ data class TransferEntity(
             gifts = getGifts(
                 privateKey = privateKey,
                 excessesAddress = excessesAddress ?: contract.address,
-                additionalGifts = additionalGifts
+                additionalGifts = additionalGifts,
+                jettonAmount = jettonAmount,
             ),
             internalMessage = internalMessage,
         )
@@ -237,21 +241,22 @@ data class TransferEntity(
         return contract.createTransferMessageCell(contract.address, seqno, signedBody)
     }
 
-    private fun body(privateKey: PrivateKeyEd25519?, excessesAddress: AddrStd): Cell? {
+    private fun body(privateKey: PrivateKeyEd25519?, excessesAddress: AddrStd, jettonAmount: Coins?): Cell? {
         if (isNft) {
             return nftBody(privateKey, excessesAddress)
         } else if (!isTon) {
-            return jettonBody(privateKey, excessesAddress)
+            return jettonBody(privateKey, excessesAddress, jettonAmount)
         }
         return getCommentForwardPayload(privateKey)
     }
 
     private fun jettonBody(
         privateKey: PrivateKeyEd25519?,
-        excessesAddress: AddrStd
+        excessesAddress: AddrStd,
+        jettonAmount: Coins?
     ): Cell {
         return TonTransferHelper.jetton(
-            coins = coins,
+            coins = jettonAmount?.toGrams() ?: coins,
             toAddress = destination,
             responseAddress = excessesAddress,
             queryId = queryId,
@@ -271,6 +276,7 @@ data class TransferEntity(
 
     fun toSignedMessage(
         privateKey: PrivateKeyEd25519 = fakePrivateKey,
+        jettonAmount: Coins? = null,
         internalMessage: Boolean,
         excessesAddress: AddrStd? = null,
         additionalGifts: List<WalletTransfer> = emptyList()
@@ -284,6 +290,7 @@ data class TransferEntity(
                 internalMessage = internalMessage,
                 excessesAddress = excessesAddress,
                 additionalGifts = additionalGifts,
+                jettonAmount = jettonAmount,
             ),
         )
     }
