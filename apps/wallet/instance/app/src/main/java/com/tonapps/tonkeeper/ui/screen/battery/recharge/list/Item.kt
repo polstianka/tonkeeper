@@ -37,6 +37,7 @@ sealed class Item(type: Int) : BaseListItem(type) {
 
     data class Amount(
         val symbol: String,
+        val decimals: Int,
         val formattedRemaining: CharSequence,
         val formattedMinAmount: CharSequence,
         val isInsufficientBalance: Boolean,

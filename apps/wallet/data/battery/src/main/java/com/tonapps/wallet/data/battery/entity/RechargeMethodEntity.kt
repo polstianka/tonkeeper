@@ -44,7 +44,7 @@ data class RechargeMethodEntity(
 
 
     fun fromTon(amount: BigDecimal): Coins {
-        return Coins.of(amount.divide(rate.toBigDecimal(), decimals, RoundingMode.HALF_UP))
+        return Coins.of(amount.divide(rate.toBigDecimal(), decimals, RoundingMode.HALF_UP), decimals)
     }
 
     fun fromTon(amount: String) = fromTon(amount.toBigDecimal())

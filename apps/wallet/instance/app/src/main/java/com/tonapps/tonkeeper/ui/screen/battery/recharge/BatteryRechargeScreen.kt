@@ -154,8 +154,8 @@ class BatteryRechargeScreen(wallet: WalletEntity): BaseListWalletScreen<ScreenCo
         finish()
     }
 
-    private fun sign(request: SignRequestEntity) {
-        viewModel.sign(request).catch {
+    private fun sign(request: SignRequestEntity, forceRelayer: Boolean) {
+        viewModel.sign(request, forceRelayer).catch {
             showError(it.bestMessage)
         }.onEach {
             postDelayed(1000) {
@@ -166,7 +166,7 @@ class BatteryRechargeScreen(wallet: WalletEntity): BaseListWalletScreen<ScreenCo
 
     private fun onEvent(event: BatteryRechargeEvent) {
         when (event) {
-            is BatteryRechargeEvent.Sign -> sign(event.request)
+            is BatteryRechargeEvent.Sign -> sign(event.request, event.forceRelayer)
             is BatteryRechargeEvent.Error -> showError()
             is BatteryRechargeEvent.MaxAmountError -> {
                 val message = requireContext().getString(

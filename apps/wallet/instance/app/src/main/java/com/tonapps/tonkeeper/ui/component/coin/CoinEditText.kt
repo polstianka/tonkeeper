@@ -25,6 +25,8 @@ class CoinEditText @JvmOverloads constructor(
 
     private val suffixDrawable = SuffixDrawable(context)
 
+    private lateinit var formattingConfig: CoinFormattingConfig
+
     var doOnValueChange: ((Double) -> Unit)? = null
 
     var suffix: String?
@@ -38,13 +40,20 @@ class CoinEditText @JvmOverloads constructor(
         setMaxLength(24)
         setRightDrawable(suffixDrawable)
         compoundDrawablePadding = 38.dp
-        val formattingConfig = CoinFormattingConfig(decimals = 9)
-        setFormattingTextWatcher(CoinFormattingTextWatcher(formattingConfig))
-        setFormattingInputFilter(CoinFormattingFilter(formattingConfig))
+        setDecimals(9)
         doAfterTextChanged {
             val value = getValue()
             doOnValueChange?.invoke(value)
         }
+    }
+
+    val decimals: Int
+        get() = formattingConfig.decimals
+
+    fun setDecimals(decimals: Int) {
+        formattingConfig = CoinFormattingConfig(decimals = decimals)
+        setFormattingTextWatcher(CoinFormattingTextWatcher(formattingConfig))
+        setFormattingInputFilter(CoinFormattingFilter(formattingConfig))
     }
 
     fun getValue(): Double {

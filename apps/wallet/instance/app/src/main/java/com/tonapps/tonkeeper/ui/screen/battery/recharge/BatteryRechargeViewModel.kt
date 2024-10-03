@@ -79,7 +79,7 @@ class BatteryRechargeViewModel(
     private val promoStateFlow = MutableStateFlow<PromoState>(PromoState.Default)
 
     private val _amountFlow = MutableStateFlow(0.0)
-    private val amountFlow = _amountFlow.map { Coins.of(it) }
+    private val amountFlow = combine(_amountFlow, tokenFlow) { amount, token -> Coins.of(amount, token.decimals) }
 
     private val _addressFlow = MutableStateFlow("")
 
@@ -198,11 +198,13 @@ class BatteryRechargeViewModel(
             uiItems.add(
                 Item.Amount(
                     symbol = token.symbol,
+                    decimals = token.decimals,
                     formattedRemaining = CurrencyFormatter.format(
                         currency = token.symbol, value = remainingBalance
                     ),
                     formattedMinAmount = CurrencyFormatter.format(
-                        currency = token.symbol, value = minAmount
+                        currency = token.symbol, value = minAmount,
+                        customScale = token.decimals,
                     ),
                     isInsufficientBalance = remainingBalance.isNegative,
                     isLessThanMin = isLessThanMin,
@@ -285,6 +287,7 @@ class BatteryRechargeViewModel(
         destinationFlow
     ) { (wallet, token), destination ->
         val rechargeMethod = getRechargeMethod(wallet, token)
+        val batteryBalance = getBatteryBalance(wallet)
         val config = getBatteryConfig(wallet)
         val batteryMaxInputAmount = rechargeMethod.fromTon(api.config.batteryMaxInputAmount)
 
@@ -321,6 +324,15 @@ class BatteryRechargeViewModel(
             false -> TonNetwork.MAINNET
         }
 
+        val forceRelayer = when {
+            token.isTon -> false
+            batteryBalance.balance.value > BigDecimal.ZERO -> true
+            rechargeMethod.minBootstrapValue != null -> {
+                amount.value > rechargeMethod.minBootstrapValue!!.toBigDecimal()
+            }
+            else -> false
+        }
+
         if (token.isTon) {
             val request = SignRequestEntity(
                 fromValue = wallet.contract.address.toAccountId(),
@@ -335,7 +347,7 @@ class BatteryRechargeViewModel(
                 ),
                 network = network,
             )
-            _eventFlow.tryEmit(BatteryRechargeEvent.Sign(request))
+            _eventFlow.tryEmit(BatteryRechargeEvent.Sign(request, forceRelayer))
         } else {
             val queryId = TransferEntity.newWalletQueryId()
             val customPayload = if (token.isCompressed) {
@@ -365,7 +377,7 @@ class BatteryRechargeViewModel(
                 ),
                 network = network,
             )
-            _eventFlow.tryEmit(BatteryRechargeEvent.Sign(request))
+            _eventFlow.tryEmit(BatteryRechargeEvent.Sign(request, forceRelayer))
         }
     }.catch {
         _eventFlow.tryEmit(BatteryRechargeEvent.Error)
@@ -505,8 +517,8 @@ class BatteryRechargeViewModel(
         }
     }
 
-    fun sign(request: SignRequestEntity) = flow {
-        val boc = SendTransactionScreen.run(context, wallet, request, forceRelayer = true)
+    fun sign(request: SignRequestEntity, forceRelayer: Boolean) = flow {
+        val boc = SendTransactionScreen.run(context, wallet, request, forceRelayer = forceRelayer)
         emit(boc)
     }.flowOn(Dispatchers.IO)
 }

@@ -21,6 +21,9 @@ class AmountHolder(
     override fun onBind(item: Item.Amount) {
         amountView.doOnValueChange = onValueChange
         amountView.suffix = item.symbol
+        if (amountView.decimals != item.decimals) {
+            amountView.setDecimals(item.decimals)
+        }
         currencyView.text = item.formattedCharges
         applyAvailable(item.formattedRemaining, item.formattedMinAmount, item.isInsufficientBalance, item.isLessThanMin)
         amountView.focus()
