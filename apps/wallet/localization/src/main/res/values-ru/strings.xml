@@ -527,8 +527,8 @@
     <string name="payment_method_not_found">Способ оплаты недоступен</string>
     <string name="app_not_found">Приложение не найдено</string>
     <string name="insufficient_balance_in_wallet">Недостаточно средств в кошельке</string>
-    <string name="insufficient_balance_fees">Требуется для оплаты комиссии блокчейна: %1$s.\\nВаш баланс: %2$s.</string>
-    <string name="insufficient_balance_default">К оплате: %1$s.\\nВаш баланс: %2$s.</string>
+    <string name="insufficient_balance_fees">Требуется для оплаты комиссии блокчейна: %1$s.\nВаш баланс: %2$s.</string>
+    <string name="insufficient_balance_default">К оплате: %1$s.\nВаш баланс: %2$s.</string>
     <string name="buy_ton">Купить TON</string>
     <string name="recharge_battery">Перезарядка батарейки</string>
 </resources>

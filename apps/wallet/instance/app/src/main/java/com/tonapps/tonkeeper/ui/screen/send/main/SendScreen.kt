@@ -1,6 +1,5 @@
 package com.tonapps.tonkeeper.ui.screen.send.main
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.SpannableString
@@ -11,7 +10,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.extensions.getParcelableCompat
 import com.tonapps.extensions.getUserMessage
 import com.tonapps.extensions.short4
-import com.tonapps.icu.Coins
 import com.tonapps.icu.CurrencyFormatter.withCustomSymbol
 import com.tonapps.tonkeeper.api.shortAddress
 import com.tonapps.tonkeeper.core.AnalyticsHelper
@@ -45,7 +43,6 @@ import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import uikit.base.BaseFragment
-import uikit.dialog.modal.ModalDialog
 import uikit.extensions.collectFlow
 import uikit.extensions.doKeyboardAnimation
 import uikit.extensions.dp
