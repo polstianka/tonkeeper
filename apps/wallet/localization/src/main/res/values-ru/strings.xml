@@ -531,4 +531,5 @@
     <string name="insufficient_balance_default">К оплате: %1$s.\nВаш баланс: %2$s.</string>
     <string name="buy_ton">Купить TON</string>
     <string name="recharge_battery">Перезарядка батарейки</string>
+    <string name="nothing_to_restore">Нечего восстанавливать</string>
 </resources>

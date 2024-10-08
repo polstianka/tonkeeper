@@ -327,8 +327,8 @@ class BatteryRefillViewModel(
                 )
                 try {
                     api.battery(wallet.testnet).androidBatteryPurchase(tonProofToken, request)
-                    billingManager.consumeProduct(purchase)
                     batteryRepository.getBalance(tonProofToken, wallet.publicKey, wallet.testnet, ignoreCache = true)
+                    billingManager.notifyPurchase()
                     context.showToast(Localization.battery_refilled)
                 } catch (e: Exception) {
                     purchaseInProgress.tryEmit(false)
@@ -349,9 +349,14 @@ class BatteryRefillViewModel(
     fun restorePurchases() {
         viewModelScope.launch {
             try {
-                billingManager.restorePurchases()
-                handlePurchase()
+                val pendingPurchases = billingManager.restorePurchases()
+                if (pendingPurchases.isNotEmpty()) {
+                    handlePurchase()
+                } else {
+                    context.showToast(Localization.nothing_to_restore)
+                }
             } catch (_: Exception) {
+                context.showToast(Localization.error)
             }
         }
     }

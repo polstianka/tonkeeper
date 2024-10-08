@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class BillingManager(
     context: Context,
@@ -59,7 +61,7 @@ class BillingManager(
         notifyPurchase()
     }
 
-    private fun notifyPurchase() {
+    fun notifyPurchase() {
         _madePurchaseFlow.tryEmit(Unit)
     }
 
@@ -104,25 +106,28 @@ class BillingManager(
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
-    suspend fun consumeProduct(purchase: Purchase) {
-        val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-        billingClient.consumePurchase(params)
-        notifyPurchase()
-    }
-
-    suspend fun restorePurchases() {
+    suspend fun restorePurchases(): List<Purchase> {
         val params = QueryPurchasesParams.newBuilder()
             .setProductType(ProductType.INAPP)
 
-        billingClient.queryPurchasesAsync(params.build()) { billingResult, purchasesList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val pendingPurchases = purchasesList.filter { purchase ->
-                    purchase.purchaseState != Purchase.PurchaseState.PENDING
-                }
-                if (pendingPurchases.isNotEmpty()) {
-                    _purchasesFlow.tryEmit(pendingPurchases)
+        val purchasesList = suspendCoroutine<List<Purchase>> { continuation ->
+            billingClient.queryPurchasesAsync(params.build()) { billingResult, purchasesList ->
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    continuation.resume(purchasesList)
+                } else {
+                    continuation.resume(emptyList()) // Or handle the error appropriately
                 }
             }
         }
+
+        val pendingPurchases = purchasesList.filter { purchase ->
+            purchase.purchaseState != Purchase.PurchaseState.PENDING
+        }
+
+        if (pendingPurchases.isNotEmpty()) {
+            _purchasesFlow.tryEmit(pendingPurchases)
+        }
+
+        return pendingPurchases
     }
 }
