@@ -328,7 +328,7 @@ class BatteryRechargeViewModel(
             token.isTon -> false
             batteryBalance.balance.value > BigDecimal.ZERO -> true
             rechargeMethod.minBootstrapValue != null -> {
-                amount.value > rechargeMethod.minBootstrapValue!!.toBigDecimal()
+                amount.value >= rechargeMethod.minBootstrapValue!!.toBigDecimal()
             }
             else -> false
         }
