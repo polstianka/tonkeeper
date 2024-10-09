@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.StorageProvider
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param providers 
  */
-
+@Serializable
 
 data class GetStorageProviders200Response (
 
-    @Json(name = "providers")
+    @SerialName(value = "providers")
     val providers: kotlin.collections.List<StorageProvider>
 
 )

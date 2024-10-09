@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param currencyId 
  * @param amount 
  */
-
+@Serializable
 
 data class BlockchainConfig7CurrenciesInner (
 
-    @Json(name = "currency_id")
+    @SerialName(value = "currency_id")
     val currencyId: kotlin.Long,
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String
 
 )

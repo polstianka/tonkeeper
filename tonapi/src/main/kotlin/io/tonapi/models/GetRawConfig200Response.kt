@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockRaw
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,20 +29,20 @@ import com.squareup.moshi.JsonClass
  * @param stateProof 
  * @param configProof 
  */
-
+@Serializable
 
 data class GetRawConfig200Response (
 
-    @Json(name = "mode")
+    @SerialName(value = "mode")
     val mode: kotlin.Int,
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: BlockRaw,
 
-    @Json(name = "state_proof")
+    @SerialName(value = "state_proof")
     val stateProof: kotlin.String,
 
-    @Json(name = "config_proof")
+    @SerialName(value = "config_proof")
     val configProof: kotlin.String
 
 )

@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param msg 
  * @param code 
  */
-
+@Serializable
 
 data class IOSBatteryPurchaseStatusTransactionsInnerError (
 
-    @Json(name = "msg")
+    @SerialName(value = "msg")
     val msg: kotlin.String,
 
-    @Json(name = "code")
+    @SerialName(value = "code")
     val code: IOSBatteryPurchaseStatusTransactionsInnerError.Code
 
 ) {
@@ -42,15 +43,14 @@ data class IOSBatteryPurchaseStatusTransactionsInnerError (
      *
      * Values: invalidMinusBundleMinusId,invalidMinusProductMinusId,userMinusNotMinusFound,purchaseMinusIsMinusAlreadyMinusUsed,temporaryMinusError,unknown
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Code(val value: kotlin.String) {
-        @Json(name = "invalid-bundle-id") invalidMinusBundleMinusId("invalid-bundle-id"),
-        @Json(name = "invalid-product-id") invalidMinusProductMinusId("invalid-product-id"),
-        @Json(name = "user-not-found") userMinusNotMinusFound("user-not-found"),
-        @Json(name = "purchase-is-already-used") purchaseMinusIsMinusAlreadyMinusUsed("purchase-is-already-used"),
-        @Json(name = "temporary-error") temporaryMinusError("temporary-error"),
-        @Json(name = "unknown") unknown("unknown");
+        @SerialName(value = "invalid-bundle-id") invalidMinusBundleMinusId("invalid-bundle-id"),
+        @SerialName(value = "invalid-product-id") invalidMinusProductMinusId("invalid-product-id"),
+        @SerialName(value = "user-not-found") userMinusNotMinusFound("user-not-found"),
+        @SerialName(value = "purchase-is-already-used") purchaseMinusIsMinusAlreadyMinusUsed("purchase-is-already-used"),
+        @SerialName(value = "temporary-error") temporaryMinusError("temporary-error"),
+        @SerialName(value = "unknown") unknown("unknown");
     }
-
 }
 

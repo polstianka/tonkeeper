@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,17 +27,17 @@ import com.squareup.moshi.JsonClass
  * @param softLimit 
  * @param hardLimit 
  */
-
+@Serializable
 
 data class BlockParamLimits (
 
-    @Json(name = "underload")
+    @SerialName(value = "underload")
     val underload: kotlin.Long,
 
-    @Json(name = "soft_limit")
+    @SerialName(value = "soft_limit")
     val softLimit: kotlin.Long,
 
-    @Json(name = "hard_limit")
+    @SerialName(value = "hard_limit")
     val hardLimit: kotlin.Long
 
 )

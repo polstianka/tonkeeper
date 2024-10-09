@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -34,41 +35,41 @@ import com.squareup.moshi.JsonClass
  * @param mediumFlatMult 
  * @param mediumProportionalMult 
  */
-
+@Serializable
 
 data class MisbehaviourPunishmentConfig (
 
-    @Json(name = "default_flat_fine")
+    @SerialName(value = "default_flat_fine")
     val defaultFlatFine: kotlin.Long,
 
-    @Json(name = "default_proportional_fine")
+    @SerialName(value = "default_proportional_fine")
     val defaultProportionalFine: kotlin.Long,
 
-    @Json(name = "severity_flat_mult")
+    @SerialName(value = "severity_flat_mult")
     val severityFlatMult: kotlin.Int,
 
-    @Json(name = "severity_proportional_mult")
+    @SerialName(value = "severity_proportional_mult")
     val severityProportionalMult: kotlin.Int,
 
-    @Json(name = "unpunishable_interval")
+    @SerialName(value = "unpunishable_interval")
     val unpunishableInterval: kotlin.Int,
 
-    @Json(name = "long_interval")
+    @SerialName(value = "long_interval")
     val longInterval: kotlin.Int,
 
-    @Json(name = "long_flat_mult")
+    @SerialName(value = "long_flat_mult")
     val longFlatMult: kotlin.Int,
 
-    @Json(name = "long_proportional_mult")
+    @SerialName(value = "long_proportional_mult")
     val longProportionalMult: kotlin.Int,
 
-    @Json(name = "medium_interval")
+    @SerialName(value = "medium_interval")
     val mediumInterval: kotlin.Int,
 
-    @Json(name = "medium_flat_mult")
+    @SerialName(value = "medium_flat_mult")
     val mediumFlatMult: kotlin.Int,
 
-    @Json(name = "medium_proportional_mult")
+    @SerialName(value = "medium_proportional_mult")
     val mediumProportionalMult: kotlin.Int
 
 )

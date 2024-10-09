@@ -1,0 +1,327 @@
+kotlin version: 2.0.20
+error message: org.jetbrains.kotlin.backend.common.CompilationException: Back-end: Please report this problem https://kotl.in/issue
+/Users/polstianka/StudioProjects/TonkeeperX/tonapi/src/main/kotlin/io/tonapi/models/NftCollection.kt:36:1
+Problem with `@Serializable
+data class NftCollection {
+  constructor(address: String, nextItemIndex: Long, rawCollectionContent: String, approvedBy: List<ApprovedBy>, owner: AccountAddress? = null, metadata: Map<String, Any>? = null, previews: List<ImagePreview>? = null) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  @SerialName(value = "address")
+  val address: String
+    field = address
+    get
+
+  @SerialName(value = "next_item_index")
+  val nextItemIndex: Long
+    field = nextItemIndex
+    get
+
+  @SerialName(value = "raw_collection_content")
+  val rawCollectionContent: String
+    field = rawCollectionContent
+    get
+
+  @SerialName(value = "approved_by")
+  val approvedBy: List<ApprovedBy>
+    field = approvedBy
+    get
+
+  @SerialName(value = "owner")
+  val owner: AccountAddress?
+    field = owner
+    get
+
+  @Contextual
+  @SerialName(value = "metadata")
+  val metadata: Map<String, Any>?
+    field = metadata
+    get
+
+  @SerialName(value = "previews")
+  val previews: List<ImagePreview>?
+    field = previews
+    get
+
+  @Serializable
+  enum class ApprovedBy : Enum<ApprovedBy> {
+    private constructor(value: String) /* primary */ {
+      super/*Enum*/<ApprovedBy>()
+      /* <init>() */
+
+    }
+
+    val value: String
+      field = value
+      get
+
+    @SerialName(value = "getgems")
+    getgems = ApprovedBy(value = "getgems")
+
+    @SerialName(value = "tonkeeper")
+    tonkeeper = ApprovedBy(value = "tonkeeper")
+
+    @SerialName(value = "ton.diamonds")
+    tonPeriodDiamonds = ApprovedBy(value = "ton.diamonds")
+
+    fun values(): Array<ApprovedBy> /* Synthetic body for ENUM_VALUES */
+
+    fun valueOf(value: String): ApprovedBy /* Synthetic body for ENUM_VALUEOF */
+
+    val entries: EnumEntries<ApprovedBy>
+      get(): EnumEntries<ApprovedBy> /* Synthetic body for ENUM_ENTRIES */
+
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      fun serializer(): KSerializer<ApprovedBy>
+
+      /* fake */ override operator fun equals(other: Any?): Boolean
+
+      /* fake */ override fun hashCode(): Int
+
+      /* fake */ override fun toString(): String
+
+    }
+
+    protected /* fake */ override fun clone(): Any
+
+    /* fake */ override operator fun compareTo(other: ApprovedBy): Int
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+    @IntrinsicConstEvaluation
+    /* fake */ override val name: String
+      /* fake */ override get(): String
+
+    /* fake */ override val ordinal: Int
+      /* fake */ override get(): Int
+
+    @RecentlyNonNull
+    /* fake */ override fun getDeclaringClass(): @FlexibleNullability Class<@FlexibleNullability ApprovedBy?>?
+
+    protected_and_package /* fake */ override fun finalize()
+
+  }
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    fun serializer(): KSerializer<NftCollection>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  object $serializer : GeneratedSerializer<NftCollection> {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun serialize(encoder: Encoder, value: NftCollection)
+
+    override fun deserialize(decoder: Decoder): NftCollection
+
+    override val descriptor: SerialDescriptor
+      override get
+
+    override fun childSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override fun typeParametersSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+  }
+
+  operator fun component1(): String {
+    return <this>.#address
+  }
+
+  operator fun component2(): Long {
+    return <this>.#nextItemIndex
+  }
+
+  operator fun component3(): String {
+    return <this>.#rawCollectionContent
+  }
+
+  operator fun component4(): List<ApprovedBy> {
+    return <this>.#approvedBy
+  }
+
+  operator fun component5(): AccountAddress? {
+    return <this>.#owner
+  }
+
+  operator fun component6(): Map<String, Any>? {
+    return <this>.#metadata
+  }
+
+  operator fun component7(): List<ImagePreview>? {
+    return <this>.#previews
+  }
+
+  fun copy(address: String = <this>.#address, nextItemIndex: Long = <this>.#nextItemIndex, rawCollectionContent: String = <this>.#rawCollectionContent, approvedBy: List<ApprovedBy> = <this>.#approvedBy, owner: AccountAddress? = <this>.#owner, metadata: Map<String, Any>? = <this>.#metadata, previews: List<ImagePreview>? = <this>.#previews): NftCollection {
+    return NftCollection(address = address, nextItemIndex = nextItemIndex, rawCollectionContent = rawCollectionContent, approvedBy = approvedBy, owner = owner, metadata = metadata, previews = previews)
+  }
+
+  override fun toString(): String {
+    return "NftCollection(" + "address=" + <this>.#address + ", " + "nextItemIndex=" + <this>.#nextItemIndex + ", " + "rawCollectionContent=" + <this>.#rawCollectionContent + ", " + "approvedBy=" + <this>.#approvedBy + ", " + "owner=" + <this>.#owner + ", " + "metadata=" + <this>.#metadata + ", " + "previews=" + <this>.#previews + ")"
+  }
+
+  override fun hashCode(): Int {
+    var result: Int = <this>.#address.hashCode()
+    result = result.times(other = 31).plus(other = <this>.#nextItemIndex.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#rawCollectionContent.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#approvedBy.hashCode())
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#owner, arg1 = null) -> 0
+      else -> <this>.#owner.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#metadata, arg1 = null) -> 0
+      else -> <this>.#metadata.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#previews, arg1 = null) -> 0
+      else -> <this>.#previews.hashCode()
+    })
+    return result
+  }
+
+  override operator fun equals(other: Any?): Boolean {
+    when {
+      EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+    }
+    when {
+      other !is NftCollection -> return false
+    }
+    val tmp0_other_with_cast: NftCollection = other as NftCollection
+    when {
+      EQEQ(arg0 = <this>.#address, arg1 = tmp0_other_with_cast.#address).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#nextItemIndex, arg1 = tmp0_other_with_cast.#nextItemIndex).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#rawCollectionContent, arg1 = tmp0_other_with_cast.#rawCollectionContent).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#approvedBy, arg1 = tmp0_other_with_cast.#approvedBy).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#owner, arg1 = tmp0_other_with_cast.#owner).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#metadata, arg1 = tmp0_other_with_cast.#metadata).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#previews, arg1 = tmp0_other_with_cast.#previews).not() -> return false
+    }
+    return true
+  }
+
+  @JvmStatic
+  internal fun write$Self(self: NftCollection, output: CompositeEncoder, serialDesc: SerialDescriptor)
+
+  internal constructor(seen0: Int, address: String?, nextItemIndex: Long, rawCollectionContent: String?, approvedBy: List<ApprovedBy>?, owner: AccountAddress?, metadata: Map<String, Any>?, previews: List<ImagePreview>?, serializationConstructorMarker: SerializationConstructorMarker?)
+
+}
+
+`
+Details: kotlinx.serialization compiler plugin internal error: unable to transform declaration, see cause
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:230)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:46)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitClass(IrElementVisitorVoid.kt:44)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrClass.accept(IrClass.kt:72)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.acceptChildren(IrFile.kt:34)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptChildrenVoid(IrVisitors.kt:15)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitElement(SerializationLoweringExtension.kt:42)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitPackageFragment(IrElementVisitorVoid.kt:168)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitPackageFragment(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:184)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:180)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.accept(IrFile.kt:28)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptVoid(IrVisitors.kt:11)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt.runOnFileInOrder(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtension.generate(SerializationLoweringExtension.kt:194)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.applyIrGenerationExtensions(convertToIr.kt:437)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.runActualizationPipeline(convertToIr.kt:246)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.convertToIrAndActualize(convertToIr.kt:130)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize(convertToIr.kt:99)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize$default(convertToIr.kt:72)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertToIrAndActualizeForJvm(jvmCompilerPipeline.kt:196)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertAnalyzedFirToIr(jvmCompilerPipeline.kt:169)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:140)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.IllegalStateException: Serializer for element of type kotlin.Any has not been found
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializerSearchUtilKt.findTypeSerializerOrContext(SerializerSearchUtil.kt:84)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance(BaseIrGenerator.kt:722)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance$instantiate(BaseIrGenerator.kt:555)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance(BaseIrGenerator.kt:598)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.cacheableChildSerializerInstance(BaseIrGenerator.kt:496)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.createCachedChildSerializers(BaseIrGenerator.kt:468)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.<init>(SerializableIrGenerator.kt:59)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator$Companion.generate(SerializableIrGenerator.kt:398)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:146)
+	... 56 more
+
+

@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountAddress
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,24 +30,24 @@ import com.squareup.moshi.JsonClass
  * @param ticker 
  * @param decimals 
  */
-
+@Serializable
 
 data class InscriptionMintAction (
 
-    @Json(name = "recipient")
+    @SerialName(value = "recipient")
     val recipient: AccountAddress,
 
     /* amount in minimal particles */
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String,
 
-    @Json(name = "type")
+    @SerialName(value = "type")
     val type: InscriptionMintAction.Type,
 
-    @Json(name = "ticker")
+    @SerialName(value = "ticker")
     val ticker: kotlin.String,
 
-    @Json(name = "decimals")
+    @SerialName(value = "decimals")
     val decimals: kotlin.Int
 
 ) {
@@ -56,10 +57,10 @@ data class InscriptionMintAction (
      *
      * Values: ton20,gram20
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Type(val value: kotlin.String) {
-        @Json(name = "ton20") ton20("ton20"),
-        @Json(name = "gram20") gram20("gram20");
+        @SerialName(value = "ton20") ton20("ton20"),
+        @SerialName(value = "gram20") gram20("gram20");
     }
 }
 

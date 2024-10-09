@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockchainConfig7CurrenciesInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The volume of each of the additional currencies in circulation.
  *
  * @param currencies 
  */
-
+@Serializable
 
 data class BlockchainConfig7 (
 
-    @Json(name = "currencies")
+    @SerialName(value = "currencies")
     val currencies: kotlin.collections.List<BlockchainConfig7CurrenciesInner>
 
 )

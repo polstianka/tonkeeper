@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param feesCollected 
  * @param credit 
  */
-
+@Serializable
 
 data class CreditPhase (
 
-    @Json(name = "fees_collected")
+    @SerialName(value = "fees_collected")
     val feesCollected: kotlin.Long,
 
-    @Json(name = "credit")
+    @SerialName(value = "credit")
     val credit: kotlin.Long
 
 )

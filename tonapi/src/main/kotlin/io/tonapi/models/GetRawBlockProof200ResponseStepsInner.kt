@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkBack
 import io.tonapi.models.GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForward
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,14 +28,14 @@ import com.squareup.moshi.JsonClass
  * @param liteServerBlockLinkBack 
  * @param liteServerBlockLinkForward 
  */
-
+@Serializable
 
 data class GetRawBlockProof200ResponseStepsInner (
 
-    @Json(name = "lite_server_block_link_back")
+    @SerialName(value = "lite_server_block_link_back")
     val liteServerBlockLinkBack: GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkBack,
 
-    @Json(name = "lite_server_block_link_forward")
+    @SerialName(value = "lite_server_block_link_forward")
     val liteServerBlockLinkForward: GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForward
 
 )

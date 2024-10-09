@@ -16,23 +16,29 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param error 
+ * @param errorKey 
+ * @param errorDetails 
  */
-
+@Serializable
 
 data class GetTonConnectPayloadDefaultResponse (
 
-    @Json(name = "error")
-    val error: kotlin.String
+    @SerialName(value = "error")
+    val error: kotlin.String,
 
-) {
+    @SerialName(value = "error-key")
+    val errorKey: kotlin.String? = null,
 
+    @SerialName(value = "error-details")
+    val errorDetails: kotlin.String? = null
 
-}
+)
 

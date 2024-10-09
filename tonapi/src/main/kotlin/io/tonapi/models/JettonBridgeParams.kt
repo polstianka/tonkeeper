@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.JettonBridgePrices
 import io.tonapi.models.Oracle
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,29 +33,29 @@ import com.squareup.moshi.JsonClass
  * @param externalChainAddress 
  * @param prices 
  */
-
+@Serializable
 
 data class JettonBridgeParams (
 
-    @Json(name = "bridge_address")
+    @SerialName(value = "bridge_address")
     val bridgeAddress: kotlin.String,
 
-    @Json(name = "oracles_address")
+    @SerialName(value = "oracles_address")
     val oraclesAddress: kotlin.String,
 
-    @Json(name = "state_flags")
+    @SerialName(value = "state_flags")
     val stateFlags: kotlin.Int,
 
-    @Json(name = "oracles")
+    @SerialName(value = "oracles")
     val oracles: kotlin.collections.List<Oracle>,
 
-    @Json(name = "burn_bridge_fee")
+    @SerialName(value = "burn_bridge_fee")
     val burnBridgeFee: kotlin.Long? = null,
 
-    @Json(name = "external_chain_address")
+    @SerialName(value = "external_chain_address")
     val externalChainAddress: kotlin.String? = null,
 
-    @Json(name = "prices")
+    @SerialName(value = "prices")
     val prices: JettonBridgePrices? = null
 
 )

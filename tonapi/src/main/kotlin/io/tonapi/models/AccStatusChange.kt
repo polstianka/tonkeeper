@@ -16,25 +16,24 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: unchanged,frozen,deleted
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class AccStatusChange(val value: kotlin.String) {
 
-    @Json(name = "acst_unchanged")
+    @SerialName(value = "acst_unchanged")
     unchanged("acst_unchanged"),
 
-    @Json(name = "acst_frozen")
+    @SerialName(value = "acst_frozen")
     frozen("acst_frozen"),
 
-    @Json(name = "acst_deleted")
+    @SerialName(value = "acst_deleted")
     deleted("acst_deleted");
 
     /**

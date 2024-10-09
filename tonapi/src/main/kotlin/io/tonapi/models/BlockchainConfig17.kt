@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The stake parameters configuration in the TON blockchain.
@@ -27,20 +28,20 @@ import com.squareup.moshi.JsonClass
  * @param minTotalStake 
  * @param maxStakeFactor 
  */
-
+@Serializable
 
 data class BlockchainConfig17 (
 
-    @Json(name = "min_stake")
+    @SerialName(value = "min_stake")
     val minStake: kotlin.String,
 
-    @Json(name = "max_stake")
+    @SerialName(value = "max_stake")
     val maxStake: kotlin.String,
 
-    @Json(name = "min_total_stake")
+    @SerialName(value = "min_total_stake")
     val minTotalStake: kotlin.String,
 
-    @Json(name = "max_stake_factor")
+    @SerialName(value = "max_stake_factor")
     val maxStakeFactor: kotlin.Long
 
 )

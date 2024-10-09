@@ -24,7 +24,8 @@ import io.tonapi.models.GetInscriptionOpTemplate200Response
 import io.tonapi.models.InscriptionBalances
 import io.tonapi.models.StatusDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -318,15 +319,15 @@ class InscriptionsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpC
      * enum for parameter type
      */
      enum class TypeGetInscriptionOpTemplate(val value: kotlin.String) {
-         @Json(name = "ton20") ton20("ton20"),
-         @Json(name = "gram20") gram20("gram20")
+         @SerialName(value = "ton20") ton20("ton20"),
+         @SerialName(value = "gram20") gram20("gram20")
      }
 
     /**
      * enum for parameter operation
      */
      enum class OperationGetInscriptionOpTemplate(val value: kotlin.String) {
-         @Json(name = "transfer") transfer("transfer")
+         @SerialName(value = "transfer") transfer("transfer")
      }
 
     /**

@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.Refund
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,27 +32,27 @@ import com.squareup.moshi.JsonClass
  * @param payload 
  * @param refund 
  */
-
+@Serializable
 
 data class SmartContractAction (
 
-    @Json(name = "executor")
+    @SerialName(value = "executor")
     val executor: AccountAddress,
 
-    @Json(name = "contract")
+    @SerialName(value = "contract")
     val `contract`: AccountAddress,
 
     /* amount in nanotons */
-    @Json(name = "ton_attached")
+    @SerialName(value = "ton_attached")
     val tonAttached: kotlin.Long,
 
-    @Json(name = "operation")
+    @SerialName(value = "operation")
     val operation: kotlin.String,
 
-    @Json(name = "payload")
+    @SerialName(value = "payload")
     val payload: kotlin.String? = null,
 
-    @Json(name = "refund")
+    @SerialName(value = "refund")
     val refund: Refund? = null
 
 )

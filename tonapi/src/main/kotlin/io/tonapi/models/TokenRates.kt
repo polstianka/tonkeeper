@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,20 +28,20 @@ import com.squareup.moshi.JsonClass
  * @param diff7d 
  * @param diff30d 
  */
-
+@Serializable
 
 data class TokenRates (
 
-    @Json(name = "prices")
+    @Contextual @SerialName(value = "prices")
     val prices: kotlin.collections.Map<kotlin.String, java.math.BigDecimal>? = null,
 
-    @Json(name = "diff_24h")
+    @SerialName(value = "diff_24h")
     val diff24h: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
 
-    @Json(name = "diff_7d")
+    @SerialName(value = "diff_7d")
     val diff7d: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
 
-    @Json(name = "diff_30d")
+    @SerialName(value = "diff_30d")
     val diff30d: kotlin.collections.Map<kotlin.String, kotlin.String>? = null
 
 )

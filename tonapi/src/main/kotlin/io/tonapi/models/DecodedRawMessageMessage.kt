@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,20 +28,20 @@ import com.squareup.moshi.JsonClass
  * @param opCode 
  * @param decodedBody 
  */
-
+@Serializable
 
 data class DecodedRawMessageMessage (
 
-    @Json(name = "boc")
+    @SerialName(value = "boc")
     val boc: kotlin.String,
 
-    @Json(name = "decoded_op_name")
+    @SerialName(value = "decoded_op_name")
     val decodedOpName: kotlin.String? = null,
 
-    @Json(name = "op_code")
+    @SerialName(value = "op_code")
     val opCode: kotlin.String? = null,
 
-    @Json(name = "decoded_body")
+    @Contextual @SerialName(value = "decoded_body")
     val decodedBody: kotlin.Any? = null
 
 )

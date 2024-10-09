@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,26 +30,26 @@ import com.squareup.moshi.JsonClass
  * @param minterMinTonsForStorage 
  * @param discoverGasConsumption 
  */
-
+@Serializable
 
 data class JettonBridgePrices (
 
-    @Json(name = "bridge_burn_fee")
+    @SerialName(value = "bridge_burn_fee")
     val bridgeBurnFee: kotlin.Long,
 
-    @Json(name = "bridge_mint_fee")
+    @SerialName(value = "bridge_mint_fee")
     val bridgeMintFee: kotlin.Long,
 
-    @Json(name = "wallet_min_tons_for_storage")
+    @SerialName(value = "wallet_min_tons_for_storage")
     val walletMinTonsForStorage: kotlin.Long,
 
-    @Json(name = "wallet_gas_consumption")
+    @SerialName(value = "wallet_gas_consumption")
     val walletGasConsumption: kotlin.Long,
 
-    @Json(name = "minter_min_tons_for_storage")
+    @SerialName(value = "minter_min_tons_for_storage")
     val minterMinTonsForStorage: kotlin.Long,
 
-    @Json(name = "discover_gas_consumption")
+    @SerialName(value = "discover_gas_consumption")
     val discoverGasConsumption: kotlin.Long
 
 )

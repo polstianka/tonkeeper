@@ -27,7 +27,8 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Locale
-import com.squareup.moshi.adapter
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 
 open class ApiClient(val baseUrl: String, val client: OkHttpClient = defaultClient) {
     companion object {
@@ -108,7 +109,7 @@ open class ApiClient(val baseUrl: String, val client: OkHttpClient = defaultClie
                 if (content == null) {
                     EMPTY_REQUEST
                 } else {
-                    Serializer.moshi.adapter(T::class.java).toJson(content)
+                    Serializer.kotlinxSerializationJson.encodeToString(content)
                         .toRequestBody((mediaType ?: JsonMediaType).toMediaTypeOrNull())
                 }
             mediaType == XmlMediaType -> throw UnsupportedOperationException("xml not currently supported.")
@@ -118,7 +119,6 @@ open class ApiClient(val baseUrl: String, val client: OkHttpClient = defaultClie
             else -> throw UnsupportedOperationException("requestBody currently only supports JSON body, byte body and File body.")
         }
 
-    @OptIn(ExperimentalStdlibApi::class)
     protected inline fun <reified T: Any?> responseBody(body: ResponseBody?, mediaType: String? = JsonMediaType): T? {
         if(body == null) {
             return null
@@ -142,7 +142,7 @@ open class ApiClient(val baseUrl: String, val client: OkHttpClient = defaultClie
                 if (bodyContent.isEmpty()) {
                     return null
                 }
-                Serializer.moshi.adapter<T>().fromJson(bodyContent)
+                Serializer.kotlinxSerializationJson.decodeFromString<T>(bodyContent)
             }
             mediaType == OctetMediaType -> body.bytes() as? T
             else ->  throw UnsupportedOperationException("responseBody currently only supports JSON body.")
@@ -246,6 +246,6 @@ open class ApiClient(val baseUrl: String, val client: OkHttpClient = defaultClie
         formatter. It also easily allows to provide a simple way to define a custom date format pattern
         inside a gson/moshi adapter.
         */
-        return Serializer.moshi.adapter(T::class.java).toJson(value).replace("\"", "")
+        return Serializer.kotlinxSerializationJson.encodeToString(value).replace("\"", "")
     }
 }

@@ -1,0 +1,1051 @@
+openapi: 3.0.2
+info:
+  title: Custodial-Battery REST API.
+  version: 0.0.1
+  description: REST API for Custodial Battery which provides gas to different networks to help execute transactions.
+  contact:
+    name: Support
+    email: support@tonkeeper.com
+servers:
+  - url: "https://battery.tonkeeper.com"
+  - url: "https://testnet-battery.tonkeeper.com"
+paths:
+  /tonconnect/payload:
+    get:
+      description: Get a payload for further token receipt
+      operationId: getTonConnectPayload
+      tags:
+        - Connect
+      responses:
+        '200':
+          description: payload
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - payload
+                properties:
+                  payload:
+                    type: string
+                    example: "84jHVNLQmZsAAAAAZB0Zryi2wqVJI-KaKNXOvCijEi46YyYzkaSHyJrMPBMOkVZa"
+        'default':
+          $ref: '#/components/responses/Error'
+  /tonconnect/proof:
+    post:
+      description: Account verification and token issuance
+      operationId: tonConnectProof
+      tags:
+        - Wallet
+      requestBody:
+        $ref: "#/components/requestBodies/TonConnectProof"
+      responses:
+        '200':
+          description: auth token
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+                    example: "NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ3..."
+        'default':
+          $ref: '#/components/responses/Error'
+  /status:
+    get:
+      description: This method returns information about the current status of Battery Service.
+      operationId: getStatus
+      parameters:
+        - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        'default':
+          $ref: '#/components/responses/Error'
+  /config:
+    get:
+      description: This method returns information about Battery Service.
+      operationId: getConfig
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        'default':
+          $ref: '#/components/responses/Error'
+  /balance:
+    get:
+      description: This method returns information about a user's balance.
+      operationId: getBalance
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/balanceUnits'
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        'default':
+          $ref: '#/components/responses/Error'
+  /wallet/emulate:
+    post:
+      description: Emulate sending message to blockchain
+      operationId: emulateMessageToWallet
+      tags:
+        - Emulation
+      parameters:
+        - $ref: '#/components/parameters/i18n'
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/Boc"
+      responses:
+        '200':
+          description: emulated message
+          headers:
+            Allowed-By-Battery:
+              required: true
+              schema:
+                type: boolean
+                example: "true"
+            Supported-By-Battery:
+              required: true
+              schema:
+                type: boolean
+                example: "true"
+            Reject-Reason:
+              schema:
+                type: string
+                example: "message is too large"
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+  /message:
+    post:
+      description: Send message to blockchain
+      operationId: sendMessage
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/Boc"
+      responses:
+        '200':
+          description: "success"
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchase-battery/android:
+    post:
+      description: verify an in-app purchase
+      operationId: androidBatteryPurchase
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/AndroidBatteryPurchase"
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AndroidBatteryPurchaseStatus'
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchase-battery/ios/app-store-notification:
+    post:
+      operationId: appStoreNotification
+      requestBody:
+        $ref: "#/components/requestBodies/appStoreNotification"
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appStoreResponse'
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchase-battery/ios:
+    post:
+      description: verify an in-app purchase
+      operationId: iosBatteryPurchase
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/iOSBatteryPurchase"
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/iOSBatteryPurchaseStatus'
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchase-battery/promo-code:
+    post:
+      description: charge battery with promo code
+      operationId: promoCodeBatteryPurchase
+      parameters:
+        - $ref: '#/components/parameters/i18n'
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/promoCodeBatteryPurchase"
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/promoCodeBatteryPurchaseStatus'
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchase-battery/verify-purchase-promo:
+    get:
+      operationId: verifyPurchasePromo
+      parameters:
+        - name: promo
+          in: query
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        '200':
+          description: "all good"
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+  /recharge-methods:
+    get:
+      description: This method returns on-chain recharge methods.
+      operationId: getRechargeMethods
+      parameters:
+        - name: include_recharge_only
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RechargeMethods'
+        'default':
+          $ref: '#/components/responses/Error'
+  /request-refund:
+    post:
+      operationId: requestRefund
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: "#/components/requestBodies/requestRefund"
+      responses:
+        '200':
+          description: success
+        'default':
+          $ref: '#/components/responses/Error'
+  /purchases:
+    get:
+      description: This method returns a list of purchases made by a specific user.
+      operationId: getPurchases
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/offsetQuery'
+        - name: include_gifts_on_the_way
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purchases'
+        'default':
+          $ref: '#/components/responses/Error'
+  /transactions:
+    get:
+      description: This method returns a list of transactions made by a specific user.
+      operationId: getTransactions
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/offsetQuery'
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transactions'
+        'default':
+          $ref: '#/components/responses/Error'
+  /gasless/estimate-cost/{jetton_master}:
+    post:
+      operationId: estimateGaslessCost
+      parameters:
+        - $ref: '#/components/parameters/jettonMasterParameter'
+        - $ref: '#/components/parameters/optionalToken'
+        - name: wallet_address
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: wallet_public_key
+          in: query
+          schema:
+            type: string
+          required: false
+      requestBody:
+        $ref: "#/components/requestBodies/gaslessEstimateCost"
+      responses:
+        '200':
+          description: TBD
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GaslessEstimation'
+        'default':
+          $ref: '#/components/responses/Error'
+  /restricted/create-custom-refund:
+    post:
+      operationId: createCustomRefund
+      parameters:
+        - $ref: '#/components/parameters/adminToken'
+      requestBody:
+        $ref: "#/components/requestBodies/customRefund"
+      responses:
+        '200':
+          description: "all good"
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+  /restricted/users/{user_id}/reset-balance:
+    post:
+      operationId: resetUserBalance
+      parameters:
+        - $ref: '#/components/parameters/adminToken'
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        $ref: "#/components/requestBodies/resetUserBalance"
+      responses:
+        '200':
+          description: "all good"
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+  /restricted/purchases/{purchase_id}/extend-refund-period:
+    post:
+      operationId: extendRefundPeriod
+      parameters:
+        - $ref: '#/components/parameters/adminToken'
+        - name: purchase_id
+          in: path
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        '200':
+          description: "all good"
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+  /jetton-metadata/{name}.json:
+    get:
+      operationId: getJettonMetadata
+      tags:
+        - Emulation
+      parameters:
+        - name: name
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                example: { }
+        'default':
+          $ref: '#/components/responses/Error'
+components:
+  parameters:
+    token:
+      in: header
+      name: X-TonConnect-Auth
+      schema:
+        type: string
+        example: NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ3...
+      required: true
+    optionalToken:
+      in: header
+      name: X-TonConnect-Auth
+      schema:
+        type: string
+        example: NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ3...
+      required: false
+    adminToken:
+      in: query
+      name: token
+      schema:
+        type: string
+      required: true
+    jettonMasterParameter:
+      in: path
+      name: jetton_master
+      required: true
+      schema:
+        type: string
+    purchaseId:
+      in: query
+      name: id
+      required: true
+      schema:
+        type: integer
+    limitQuery:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 1000
+        maximum: 1000
+    offsetQuery:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+    i18n:
+      in: header
+      name: Accept-Language
+      required: false
+      schema:
+        type: string
+        example: "ru-RU,ru;q=0.5"
+        default: "en"
+    balanceUnits:
+      in: query
+      name: units
+      schema:
+        type: string
+        default: "usd"
+        enum:
+          - usd
+          - ton
+  requestBodies:
+    TonConnectProof:
+      description: "Data that is expected from TON Connect"
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - address
+              - proof
+            properties:
+              address:
+                type: string
+                example: "0:97146a46acc2654y27947f14c4a4b14273e954f78bc017790b41208b0043200b"
+              proof:
+                type: object
+                required:
+                  - timestamp
+                  - domain
+                  - signature
+                  - payload
+                properties:
+                  timestamp:
+                    type: integer
+                    format: int64
+                    example: "1678275313"
+                  domain:
+                    type: object
+                    required:
+                      - value
+                    properties:
+                      length_bytes:
+                        type: integer
+                        format: int32
+                      value:
+                        type: string
+                  signature:
+                    type: string
+                  payload:
+                    type: string
+                    example: "84jHVNLQmZsAAAAAZB0Zryi2wqVJI-KaKNXOvCijEi46YyYzkaSHyJrMPBMOkVZa"
+                  state_init:
+                    type: string
+    Boc:
+      description: bag-of-cells serialized to base64
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - boc
+            properties:
+              boc:
+                type: string
+                example: te6ccgECBQEAARUAAkWIAWTtae+KgtbrX26Bep8JSq8lFLfGOoyGR/xwdjfvpvEaHg
+
+    AndroidBatteryPurchase:
+      description: In-App purchase
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - purchases
+            properties:
+              purchases:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - token
+                    - product_id
+                  properties:
+                    token:
+                      type: string
+                      example: 0:2cf3b5b8c891e517c9addbda1c0386a09ccacbb0e3faf630b51cfc8152325acb
+                    product_id:
+                      type: string
+                      example: 0:2cf3b5b8c891e517c9addbda1c0386a09ccacbb0e3faf630b51cfc8152325acb
+                    promo:
+                      type: string
+                      example: "HAMSTER"
+
+    appStoreNotification:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - signedPayload
+            properties:
+              signedPayload:
+                type: string
+    iOSBatteryPurchase:
+      description: In-App purchase
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - transactions
+            properties:
+              transactions:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                  properties:
+                    id:
+                      type: string
+                    promo:
+                      type: string
+                      example: "HAMSTER"
+    gaslessEstimateCost:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              battery:
+                type: boolean
+                default: true
+              payload:
+                type: string
+
+    resetUserBalance:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - reason
+            properties:
+              reason:
+                type: string
+    customRefund:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - amount
+              - currency
+              - comment
+              - reason
+              - destination
+            properties:
+              relayer_event_id:
+                type: integer
+              amount:
+                type: string
+                example: "10.250"
+              currency:
+                type: string
+              comment:
+                type: string
+              reason:
+                type: string
+              destination:
+                type: string
+
+    requestRefund:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user_purchase_id:
+                type: integer
+                deprecated: true
+                example: 43
+              purchase_id:
+                type: integer
+                example: 43
+    promoCodeBatteryPurchase:
+      description: charge battery with promo code
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - promo_code
+            properties:
+              promo_code:
+                type: string
+                example: "1234567890"
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: error description
+    Status:
+      type: object
+      required:
+        - pending_transactions
+      properties:
+        pending_transactions:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+
+    Config:
+      type: object
+      required:
+        - excess_account
+        - fund_receiver
+        - message_ttl
+      properties:
+        fund_receiver:
+          type: string
+          description: "with zero balance it is possible to transfer some jettons (stablecoins, jusdt, etc) to this address to refill the balance. Such transfers would be paid by Battery Service."
+          example: 0:07331e629e39d006d86a8cc7659c10a97c671f7535dc8b7f251a1a944dda348e
+        excess_account:
+          type: string
+          description: when building a message to transfer an NFT or Jetton, use this address to send excess funds back to Battery Service.
+          example: 0:da6b1b6663a0e4d18cc8574ccd9db5296e367dd9324706f3bbd9eb1cd2caf0bf
+        message_ttl:
+          type: integer
+          description: "ttl for message in seconds"
+          example: 300
+    GaslessEstimation:
+      type: object
+      required:
+        - commission
+      properties:
+        commission:
+          type: string
+    Balance:
+      type: object
+      required:
+        - balance
+        - units
+        - reserved
+      properties:
+        balance:
+          type: string
+          example: "10.250"
+        reserved:
+          type: string
+          example: "0.3"
+          description: "reserved amount in units (TON/USD)"
+        units:
+          type: string
+          example: "usd"
+          enum:
+            - usd
+            - ton
+    RechargeMethods:
+      type: object
+      required:
+        - methods
+      properties:
+        methods:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - symbol
+              - decimals
+              - rate
+              - support_gasless
+              - support_recharge
+            properties:
+              image:
+                type: string
+                example: "https://example.com/image.png"
+              jetton_master:
+                type: string
+              min_bootstrap_value:
+                type: string
+                example: "10.0"
+              type:
+                type: string
+                enum:
+                  - jetton
+                  - ton
+              rate:
+                type: string
+                example: "10.250"
+              symbol:
+                type: string
+                example: "usdt"
+              decimals:
+                type: integer
+                example: 6
+              support_gasless:
+                type: boolean
+                example: true
+              support_recharge:
+                type: boolean
+                example: true
+    Purchases:
+      type: object
+      required:
+        - purchases
+        - total_purchases
+      properties:
+        total_purchases:
+          type: integer
+          example: 1
+        purchases:
+          type: array
+          items:
+            type: object
+            required:
+              - user_purchase_id
+              - purchase_id
+              - type
+              - charges
+              - datetime
+            properties:
+              promo:
+                type: string
+              for_account_id:
+                type: string
+              user_purchase_id:
+                type: integer
+                deprecated: true
+                example: 2
+              purchase_id:
+                type: integer
+                example: 2
+              type:
+                type: string
+                example: "android"
+                enum:
+                  - android
+                  - ios
+                  - promo-code
+                  - crypto
+                  - gift
+                  - on-the-way-gift
+              amount:
+                description: "Amount describes the amount paid by the user for this purchase when we know it. For crypto purchases it is always set."
+                type: string
+                example: "10.250"
+              charges:
+                type: integer
+                example: 1200
+              currency:
+                description: "Currency is set when we know it. For crypto purchases it is always set."
+                type: string
+                example: "USDT"
+              datetime:
+                type: string
+                example: "2006-01-02T15:04:05Z07:00"
+              refund_information:
+                type: object
+                required:
+                  - pending_refund
+                  - fully_refunded
+                  - partially_refunded
+                properties:
+                  fully_refunded:
+                    type: boolean
+                  partially_refunded:
+                    type: boolean
+                  pending_refund:
+                    type: boolean
+                  refunded:
+                    type: object
+                    required:
+                      - amount
+                      - charges
+                    properties:
+                      amount:
+                        type: string
+                        example: "10.250"
+                      charges:
+                        type: integer
+                        example: 1200
+                  refundable:
+                    type: object
+                    required:
+                      - amount
+                      - charges
+                    properties:
+                      amount:
+                        type: string
+                        example: "10.250"
+                      charges:
+                        type: integer
+                        example: 1200
+
+    AndroidBatteryPurchaseStatus:
+      type: object
+      required:
+        - purchases
+      properties:
+        purchases:
+          type: array
+          items:
+            type: object
+            required:
+              - product_id
+              - token
+              - success
+            properties:
+              product_id:
+                type: string
+                example: "1000000790000000"
+              token:
+                type: string
+                example: "1000000790000000"
+              success:
+                type: boolean
+                example: true
+              error:
+                type: object
+                required:
+                  - msg
+                  - code
+                properties:
+                  msg:
+                    type: string
+                    example: "Temporary error. Try again later."
+                  code:
+                    type: string
+                    example: "invalid-product-id"
+                    enum:
+                      - invalid-product-id
+                      - user-not-found
+                      - purchase-is-already-used
+                      - temporary-error
+                      - unknown
+
+    appStoreResponse:
+      type: object
+    iOSBatteryPurchaseStatus:
+      type: object
+      required:
+        - transactions
+      properties:
+        transactions:
+          type: array
+          items:
+            type: object
+            required:
+              - transaction_id
+              - success
+            properties:
+              transaction_id:
+                type: string
+                example: "1000000790000000"
+              success:
+                type: boolean
+                example: true
+              error:
+                type: object
+                required:
+                  - msg
+                  - code
+                properties:
+                  msg:
+                    type: string
+                    example: "Temporary error. Try again later."
+                  code:
+                    type: string
+                    example: "invalid-bundle-id"
+                    enum:
+                      - invalid-bundle-id
+                      - invalid-product-id
+                      - user-not-found
+                      - purchase-is-already-used
+                      - temporary-error
+                      - unknown
+    promoCodeBatteryPurchaseStatus:
+      type: object
+      required:
+        - success
+        - balance_change
+      properties:
+        balance_change:
+          type: string
+          example: "10.250"
+        success:
+          type: boolean
+          example: true
+        error:
+          type: object
+          required:
+            - msg
+            - code
+          properties:
+            msg:
+              type: string
+              example: "Temporary error. Try again later."
+            code:
+              type: string
+              example: "promo-code-not-found"
+              enum:
+                - promo-code-not-found
+                - promo-exceeded-attempts
+                - temporary-error
+    Transactions:
+      type: object
+      required:
+        - transactions
+        - total_transactions
+      properties:
+        total_transactions:
+          type: integer
+          example: 1
+        next_offset:
+          type: integer
+          description: if set, then there are more transactions to be loaded. Use this value as offset parameter in the next request.
+          example: 10
+        transactions:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - paid_amount
+              - status
+              - created_at
+            properties:
+              id:
+                type: string
+              paid_amount:
+                type: string
+                description: represents the amount of money paid by the user for this transaction.
+                example: "10.250"
+              status:
+                type: string
+                example: "10.250"
+                enum:
+                  - pending
+                  - completed
+                  - failed
+              created_at:
+                type: string
+                example: "2006-01-02T15:04:05Z07:00"
+  responses:
+    Error:
+      description: Some error during request processing
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+            properties:
+              error:
+                type: string
+              error-key:
+                type: string
+              error-details:
+                type: string

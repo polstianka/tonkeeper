@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param code 
  */
-
+@Serializable
 
 data class SendRawMessage200Response (
 
-    @Json(name = "code")
+    @SerialName(value = "code")
     val code: kotlin.Int
 
 )

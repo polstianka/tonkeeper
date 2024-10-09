@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.EmulateMessageToWalletRequestParamsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,15 +27,15 @@ import com.squareup.moshi.JsonClass
  * @param boc 
  * @param params additional per account configuration
  */
-
+@Serializable
 
 data class EmulateMessageToWalletRequest (
 
-    @Json(name = "boc")
+    @SerialName(value = "boc")
     val boc: kotlin.String,
 
     /* additional per account configuration */
-    @Json(name = "params")
+    @SerialName(value = "params")
     val params: kotlin.collections.List<EmulateMessageToWalletRequestParamsInner>? = null
 
 )

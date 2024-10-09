@@ -19,8 +19,9 @@ import io.tonapi.models.AccountAddress
 import io.tonapi.models.JettonMetadata
 import io.tonapi.models.JettonVerificationType
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,26 +33,26 @@ import com.squareup.moshi.JsonClass
  * @param holdersCount 
  * @param admin 
  */
-
+@Serializable
 
 data class JettonInfo (
 
-    @Json(name = "mintable")
+    @SerialName(value = "mintable")
     val mintable: kotlin.Boolean,
 
-    @Json(name = "total_supply")
+    @SerialName(value = "total_supply")
     val totalSupply: kotlin.String,
 
-    @Json(name = "metadata")
+    @SerialName(value = "metadata")
     val metadata: JettonMetadata,
 
-    @Json(name = "verification")
+    @Contextual @SerialName(value = "verification")
     val verification: JettonVerificationType,
 
-    @Json(name = "holders_count")
+    @SerialName(value = "holders_count")
     val holdersCount: kotlin.Int,
 
-    @Json(name = "admin")
+    @SerialName(value = "admin")
     val admin: AccountAddress? = null
 
 )

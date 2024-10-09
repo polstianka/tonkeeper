@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.StateInit
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -43,63 +44,63 @@ import com.squareup.moshi.JsonClass
  * @param decodedOpName 
  * @param decodedBody 
  */
-
+@Serializable
 
 data class Message (
 
-    @Json(name = "msg_type")
+    @SerialName(value = "msg_type")
     val msgType: Message.MsgType,
 
-    @Json(name = "created_lt")
+    @SerialName(value = "created_lt")
     val createdLt: kotlin.Long,
 
-    @Json(name = "ihr_disabled")
+    @SerialName(value = "ihr_disabled")
     val ihrDisabled: kotlin.Boolean,
 
-    @Json(name = "bounce")
+    @SerialName(value = "bounce")
     val bounce: kotlin.Boolean,
 
-    @Json(name = "bounced")
+    @SerialName(value = "bounced")
     val bounced: kotlin.Boolean,
 
-    @Json(name = "value")
+    @SerialName(value = "value")
     val `value`: kotlin.Long,
 
-    @Json(name = "fwd_fee")
+    @SerialName(value = "fwd_fee")
     val fwdFee: kotlin.Long,
 
-    @Json(name = "ihr_fee")
+    @SerialName(value = "ihr_fee")
     val ihrFee: kotlin.Long,
 
-    @Json(name = "import_fee")
+    @SerialName(value = "import_fee")
     val importFee: kotlin.Long,
 
-    @Json(name = "created_at")
+    @SerialName(value = "created_at")
     val createdAt: kotlin.Long,
 
-    @Json(name = "hash")
-    val hash: kotlin.String? = null,
+    @SerialName(value = "hash")
+    val hash: kotlin.String,
 
-    @Json(name = "destination")
+    @SerialName(value = "destination")
     val destination: AccountAddress? = null,
 
-    @Json(name = "source")
+    @SerialName(value = "source")
     val source: AccountAddress? = null,
 
-    @Json(name = "op_code")
+    @SerialName(value = "op_code")
     val opCode: kotlin.String? = null,
 
-    @Json(name = "init")
+    @SerialName(value = "init")
     val `init`: StateInit? = null,
 
     /* hex-encoded BoC with raw message body */
-    @Json(name = "raw_body")
+    @SerialName(value = "raw_body")
     val rawBody: kotlin.String? = null,
 
-    @Json(name = "decoded_op_name")
+    @SerialName(value = "decoded_op_name")
     val decodedOpName: kotlin.String? = null,
 
-    @Json(name = "decoded_body")
+    @Contextual @SerialName(value = "decoded_body")
     val decodedBody: kotlin.Any? = null
 
 ) {
@@ -109,11 +110,11 @@ data class Message (
      *
      * Values: intMsg,extInMsg,extOutMsg
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class MsgType(val value: kotlin.String) {
-        @Json(name = "int_msg") intMsg("int_msg"),
-        @Json(name = "ext_in_msg") extInMsg("ext_in_msg"),
-        @Json(name = "ext_out_msg") extOutMsg("ext_out_msg");
+        @SerialName(value = "int_msg") intMsg("int_msg"),
+        @SerialName(value = "ext_in_msg") extInMsg("ext_in_msg"),
+        @SerialName(value = "ext_out_msg") extOutMsg("ext_out_msg");
     }
 }
 

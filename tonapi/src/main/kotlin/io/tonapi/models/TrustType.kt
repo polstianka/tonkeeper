@@ -16,28 +16,27 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: whitelist,graylist,blacklist,none
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class TrustType(val value: kotlin.String) {
 
-    @Json(name = "whitelist")
+    @SerialName(value = "whitelist")
     whitelist("whitelist"),
 
-    @Json(name = "graylist")
+    @SerialName(value = "graylist")
     graylist("graylist"),
 
-    @Json(name = "blacklist")
+    @SerialName(value = "blacklist")
     blacklist("blacklist"),
 
-    @Json(name = "none")
+    @SerialName(value = "none")
     none("none");
 
     /**

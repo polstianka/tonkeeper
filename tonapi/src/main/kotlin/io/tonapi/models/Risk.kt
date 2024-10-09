@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.JettonQuantity
 import io.tonapi.models.NftItem
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * Risk specifies assets that could be lost if a message would be sent to a malicious smart contract. It makes sense to understand the risk BEFORE sending a message to the blockchain.
@@ -29,21 +30,21 @@ import com.squareup.moshi.JsonClass
  * @param jettons 
  * @param nfts 
  */
-
+@Serializable
 
 data class Risk (
 
     /* transfer all the remaining balance of the wallet. */
-    @Json(name = "transfer_all_remaining_balance")
+    @SerialName(value = "transfer_all_remaining_balance")
     val transferAllRemainingBalance: kotlin.Boolean,
 
-    @Json(name = "ton")
+    @SerialName(value = "ton")
     val ton: kotlin.Long,
 
-    @Json(name = "jettons")
+    @SerialName(value = "jettons")
     val jettons: kotlin.collections.List<JettonQuantity>,
 
-    @Json(name = "nfts")
+    @SerialName(value = "nfts")
     val nfts: kotlin.collections.List<NftItem>
 
 )

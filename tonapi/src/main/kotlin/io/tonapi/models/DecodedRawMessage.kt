@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.DecodedRawMessageMessage
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,14 +27,14 @@ import com.squareup.moshi.JsonClass
  * @param message 
  * @param mode 
  */
-
+@Serializable
 
 data class DecodedRawMessage (
 
-    @Json(name = "message")
+    @SerialName(value = "message")
     val message: DecodedRawMessageMessage,
 
-    @Json(name = "mode")
+    @SerialName(value = "mode")
     val mode: kotlin.Int
 
 )

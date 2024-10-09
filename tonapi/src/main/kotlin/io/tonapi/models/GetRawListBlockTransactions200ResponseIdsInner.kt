@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,20 +28,20 @@ import com.squareup.moshi.JsonClass
  * @param lt 
  * @param hash 
  */
-
+@Serializable
 
 data class GetRawListBlockTransactions200ResponseIdsInner (
 
-    @Json(name = "mode")
+    @SerialName(value = "mode")
     val mode: kotlin.Int,
 
-    @Json(name = "account")
+    @SerialName(value = "account")
     val account: kotlin.String? = null,
 
-    @Json(name = "lt")
+    @SerialName(value = "lt")
     val lt: kotlin.Long? = null,
 
-    @Json(name = "hash")
+    @SerialName(value = "hash")
     val hash: kotlin.String? = null
 
 )

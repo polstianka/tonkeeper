@@ -19,8 +19,9 @@ import io.tonapi.models.DecodedMessageExtInMsgDecodedWalletHighloadV2
 import io.tonapi.models.DecodedMessageExtInMsgDecodedWalletV3
 import io.tonapi.models.DecodedMessageExtInMsgDecodedWalletV4
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,17 +30,17 @@ import com.squareup.moshi.JsonClass
  * @param walletV4 
  * @param walletHighloadV2 
  */
-
+@Serializable
 
 data class DecodedMessageExtInMsgDecoded (
 
-    @Json(name = "wallet_v3")
+    @SerialName(value = "wallet_v3")
     val walletV3: DecodedMessageExtInMsgDecodedWalletV3? = null,
 
-    @Json(name = "wallet_v4")
+    @SerialName(value = "wallet_v4")
     val walletV4: DecodedMessageExtInMsgDecodedWalletV4? = null,
 
-    @Json(name = "wallet_highload_v2")
+    @SerialName(value = "wallet_highload_v2")
     val walletHighloadV2: DecodedMessageExtInMsgDecodedWalletHighloadV2? = null
 
 )

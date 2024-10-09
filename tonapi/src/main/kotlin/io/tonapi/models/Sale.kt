@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.Price
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,20 +30,20 @@ import com.squareup.moshi.JsonClass
  * @param price 
  * @param owner 
  */
-
+@Serializable
 
 data class Sale (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "market")
+    @SerialName(value = "market")
     val market: AccountAddress,
 
-    @Json(name = "price")
+    @SerialName(value = "price")
     val price: Price,
 
-    @Json(name = "owner")
+    @SerialName(value = "owner")
     val owner: AccountAddress? = null
 
 )

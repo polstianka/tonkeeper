@@ -17,8 +17,9 @@ package io.batteryapi.models
 
 import io.batteryapi.models.PromoCodeBatteryPurchaseStatusError
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,21 +28,18 @@ import com.squareup.moshi.JsonClass
  * @param success 
  * @param error 
  */
-
+@Serializable
 
 data class PromoCodeBatteryPurchaseStatus (
 
-    @Json(name = "balance_change")
+    @SerialName(value = "balance_change")
     val balanceChange: kotlin.String,
 
-    @Json(name = "success")
+    @SerialName(value = "success")
     val success: kotlin.Boolean,
 
-    @Json(name = "error")
+    @SerialName(value = "error")
     val error: PromoCodeBatteryPurchaseStatusError? = null
 
-) {
-
-
-}
+)
 

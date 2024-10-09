@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,18 +26,15 @@ import com.squareup.moshi.JsonClass
  * @param amount 
  * @param charges 
  */
-
+@Serializable
 
 data class PurchasesPurchasesInnerRefundInformationRefunded (
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String,
 
-    @Json(name = "charges")
+    @SerialName(value = "charges")
     val charges: kotlin.Int
 
-) {
-
-
-}
+)
 

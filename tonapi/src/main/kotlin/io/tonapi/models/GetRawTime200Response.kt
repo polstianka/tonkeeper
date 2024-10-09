@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param time 
  */
-
+@Serializable
 
 data class GetRawTime200Response (
 
-    @Json(name = "time")
+    @SerialName(value = "time")
     val time: kotlin.Int
 
 )

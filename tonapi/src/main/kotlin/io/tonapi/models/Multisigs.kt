@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.Multisig
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param multisigs 
  */
-
+@Serializable
 
 data class Multisigs (
 
-    @Json(name = "multisigs")
+    @SerialName(value = "multisigs")
     val multisigs: kotlin.collections.List<Multisig>
 
 )

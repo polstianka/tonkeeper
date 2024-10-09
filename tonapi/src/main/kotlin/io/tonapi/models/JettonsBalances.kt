@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.JettonBalance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param balances 
  */
-
+@Serializable
 
 data class JettonsBalances (
 
-    @Json(name = "balances")
+    @SerialName(value = "balances")
     val balances: kotlin.collections.List<JettonBalance>
 
 )

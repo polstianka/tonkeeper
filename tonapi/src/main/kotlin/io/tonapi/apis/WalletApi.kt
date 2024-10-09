@@ -20,13 +20,16 @@ import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
 import io.tonapi.models.Accounts
+import io.tonapi.models.EmulateMessageToWalletRequest
 import io.tonapi.models.GetWalletBackup200Response
+import io.tonapi.models.MessageConsequences
 import io.tonapi.models.Seqno
 import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.TonConnectProof200Response
 import io.tonapi.models.TonConnectProofRequest
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -48,6 +51,82 @@ class WalletApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient 
         val defaultBasePath: String by lazy {
             System.getProperties().getProperty(ApiClient.baseUrlKey, "https://tonapi.io")
         }
+    }
+
+    /**
+     * 
+     * Emulate sending message to blockchain
+     * @param emulateMessageToWalletRequest bag-of-cells serialized to base64/hex and additional parameters to configure emulation
+     * @param acceptLanguage  (optional, default to "en")
+     * @return MessageConsequences
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun emulateMessageToWallet(emulateMessageToWalletRequest: EmulateMessageToWalletRequest, acceptLanguage: kotlin.String? = "en") : MessageConsequences {
+        val localVarResponse = emulateMessageToWalletWithHttpInfo(emulateMessageToWalletRequest = emulateMessageToWalletRequest, acceptLanguage = acceptLanguage)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as MessageConsequences
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * 
+     * Emulate sending message to blockchain
+     * @param emulateMessageToWalletRequest bag-of-cells serialized to base64/hex and additional parameters to configure emulation
+     * @param acceptLanguage  (optional, default to "en")
+     * @return ApiResponse<MessageConsequences?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun emulateMessageToWalletWithHttpInfo(emulateMessageToWalletRequest: EmulateMessageToWalletRequest, acceptLanguage: kotlin.String?) : ApiResponse<MessageConsequences?> {
+        val localVariableConfig = emulateMessageToWalletRequestConfig(emulateMessageToWalletRequest = emulateMessageToWalletRequest, acceptLanguage = acceptLanguage)
+
+        return request<EmulateMessageToWalletRequest, MessageConsequences>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation emulateMessageToWallet
+     *
+     * @param emulateMessageToWalletRequest bag-of-cells serialized to base64/hex and additional parameters to configure emulation
+     * @param acceptLanguage  (optional, default to "en")
+     * @return RequestConfig
+     */
+    fun emulateMessageToWalletRequestConfig(emulateMessageToWalletRequest: EmulateMessageToWalletRequest, acceptLanguage: kotlin.String?) : RequestConfig<EmulateMessageToWalletRequest> {
+        val localVariableBody = emulateMessageToWalletRequest
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        acceptLanguage?.apply { localVariableHeaders["Accept-Language"] = this.toString() }
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.POST,
+            path = "/v2/wallet/emulate",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
     }
 
     /**

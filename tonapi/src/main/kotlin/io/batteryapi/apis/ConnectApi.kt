@@ -22,7 +22,8 @@ import okhttp3.HttpUrl
 import io.batteryapi.models.GetTonConnectPayload200Response
 import io.batteryapi.models.GetTonConnectPayloadDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.batteryapi.infrastructure.ApiClient
 import io.batteryapi.infrastructure.ApiResponse

@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockchainBlock
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param blocks 
  */
-
+@Serializable
 
 data class BlockchainBlocks (
 
-    @Json(name = "blocks")
+    @SerialName(value = "blocks")
     val blocks: kotlin.collections.List<BlockchainBlock>
 
 )

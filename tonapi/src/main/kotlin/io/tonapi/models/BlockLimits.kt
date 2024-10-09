@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockParamLimits
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,17 +28,17 @@ import com.squareup.moshi.JsonClass
  * @param gas 
  * @param ltDelta 
  */
-
+@Serializable
 
 data class BlockLimits (
 
-    @Json(name = "bytes")
+    @SerialName(value = "bytes")
     val bytes: BlockParamLimits,
 
-    @Json(name = "gas")
+    @SerialName(value = "gas")
     val gas: BlockParamLimits,
 
-    @Json(name = "lt_delta")
+    @SerialName(value = "lt_delta")
     val ltDelta: BlockParamLimits
 
 )

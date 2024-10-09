@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,32 +32,32 @@ import com.squareup.moshi.JsonClass
  * @param parent 
  * @param masterRef 
  */
-
+@Serializable
 
 data class ReducedBlock (
 
-    @Json(name = "workchain_id")
+    @SerialName(value = "workchain_id")
     val workchainId: kotlin.Int,
 
-    @Json(name = "shard")
+    @SerialName(value = "shard")
     val shard: kotlin.String,
 
-    @Json(name = "seqno")
+    @SerialName(value = "seqno")
     val seqno: kotlin.Int,
 
-    @Json(name = "tx_quantity")
+    @SerialName(value = "tx_quantity")
     val txQuantity: kotlin.Int,
 
-    @Json(name = "utime")
+    @SerialName(value = "utime")
     val utime: kotlin.Long,
 
-    @Json(name = "shards_blocks")
+    @SerialName(value = "shards_blocks")
     val shardsBlocks: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "parent")
+    @SerialName(value = "parent")
     val parent: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "master_ref")
+    @SerialName(value = "master_ref")
     val masterRef: kotlin.String? = null
 
 )

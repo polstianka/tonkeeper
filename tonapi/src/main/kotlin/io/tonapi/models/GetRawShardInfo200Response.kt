@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockRaw
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,20 +29,20 @@ import com.squareup.moshi.JsonClass
  * @param shardProof 
  * @param shardDescr 
  */
-
+@Serializable
 
 data class GetRawShardInfo200Response (
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: BlockRaw,
 
-    @Json(name = "shardblk")
+    @SerialName(value = "shardblk")
     val shardblk: BlockRaw,
 
-    @Json(name = "shard_proof")
+    @SerialName(value = "shard_proof")
     val shardProof: kotlin.String,
 
-    @Json(name = "shard_descr")
+    @SerialName(value = "shard_descr")
     val shardDescr: kotlin.String
 
 )

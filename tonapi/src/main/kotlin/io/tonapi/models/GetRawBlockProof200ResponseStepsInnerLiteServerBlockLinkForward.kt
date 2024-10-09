@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.BlockRaw
 import io.tonapi.models.GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForwardSignatures
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,26 +32,26 @@ import com.squareup.moshi.JsonClass
  * @param configProof 
  * @param signatures 
  */
-
+@Serializable
 
 data class GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForward (
 
-    @Json(name = "to_key_block")
+    @SerialName(value = "to_key_block")
     val toKeyBlock: kotlin.Boolean,
 
-    @Json(name = "from")
+    @SerialName(value = "from")
     val from: BlockRaw,
 
-    @Json(name = "to")
+    @SerialName(value = "to")
     val to: BlockRaw,
 
-    @Json(name = "dest_proof")
+    @SerialName(value = "dest_proof")
     val destProof: kotlin.String,
 
-    @Json(name = "config_proof")
+    @SerialName(value = "config_proof")
     val configProof: kotlin.String,
 
-    @Json(name = "signatures")
+    @SerialName(value = "signatures")
     val signatures: GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForwardSignatures
 
 )

@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,32 +32,32 @@ import com.squareup.moshi.JsonClass
  * @param bitPrice 
  * @param cellPrice 
  */
-
+@Serializable
 
 data class ConfigProposalSetup (
 
-    @Json(name = "min_tot_rounds")
+    @SerialName(value = "min_tot_rounds")
     val minTotRounds: kotlin.Int,
 
-    @Json(name = "max_tot_rounds")
+    @SerialName(value = "max_tot_rounds")
     val maxTotRounds: kotlin.Int,
 
-    @Json(name = "min_wins")
+    @SerialName(value = "min_wins")
     val minWins: kotlin.Int,
 
-    @Json(name = "max_losses")
+    @SerialName(value = "max_losses")
     val maxLosses: kotlin.Int,
 
-    @Json(name = "min_store_sec")
+    @SerialName(value = "min_store_sec")
     val minStoreSec: kotlin.Long,
 
-    @Json(name = "max_store_sec")
+    @SerialName(value = "max_store_sec")
     val maxStoreSec: kotlin.Long,
 
-    @Json(name = "bit_price")
+    @SerialName(value = "bit_price")
     val bitPrice: kotlin.Long,
 
-    @Json(name = "cell_price")
+    @SerialName(value = "cell_price")
     val cellPrice: kotlin.Long
 
 )

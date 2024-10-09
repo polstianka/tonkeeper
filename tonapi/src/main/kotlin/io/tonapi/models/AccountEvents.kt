@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountEvent
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,14 +27,14 @@ import com.squareup.moshi.JsonClass
  * @param events 
  * @param nextFrom 
  */
-
+@Serializable
 
 data class AccountEvents (
 
-    @Json(name = "events")
+    @SerialName(value = "events")
     val events: kotlin.collections.List<AccountEvent>,
 
-    @Json(name = "next_from")
+    @SerialName(value = "next_from")
     val nextFrom: kotlin.Long
 
 )

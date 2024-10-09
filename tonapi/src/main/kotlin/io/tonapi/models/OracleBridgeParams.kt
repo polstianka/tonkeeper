@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.Oracle
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,20 +29,20 @@ import com.squareup.moshi.JsonClass
  * @param externalChainAddress 
  * @param oracles 
  */
-
+@Serializable
 
 data class OracleBridgeParams (
 
-    @Json(name = "bridge_addr")
+    @SerialName(value = "bridge_addr")
     val bridgeAddr: kotlin.String,
 
-    @Json(name = "oracle_multisig_address")
+    @SerialName(value = "oracle_multisig_address")
     val oracleMultisigAddress: kotlin.String,
 
-    @Json(name = "external_chain_address")
+    @SerialName(value = "external_chain_address")
     val externalChainAddress: kotlin.String,
 
-    @Json(name = "oracles")
+    @SerialName(value = "oracles")
     val oracles: kotlin.collections.List<Oracle>
 
 )

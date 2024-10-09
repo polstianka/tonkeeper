@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountAddress
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * shortly describes what this action is about.
@@ -30,28 +31,28 @@ import com.squareup.moshi.JsonClass
  * @param `value` 
  * @param valueImage a link to an image that depicts this action's asset.
  */
-
+@Serializable
 
 data class ActionSimplePreview (
 
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String,
 
-    @Json(name = "description")
+    @SerialName(value = "description")
     val description: kotlin.String,
 
-    @Json(name = "accounts")
+    @SerialName(value = "accounts")
     val accounts: kotlin.collections.List<AccountAddress>,
 
     /* a link to an image for this particular action. */
-    @Json(name = "action_image")
+    @SerialName(value = "action_image")
     val actionImage: kotlin.String? = null,
 
-    @Json(name = "value")
+    @SerialName(value = "value")
     val `value`: kotlin.String? = null,
 
     /* a link to an image that depicts this action's asset. */
-    @Json(name = "value_image")
+    @SerialName(value = "value_image")
     val valueImage: kotlin.String? = null
 
 )

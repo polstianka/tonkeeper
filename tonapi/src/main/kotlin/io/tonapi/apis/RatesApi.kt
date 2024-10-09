@@ -24,7 +24,8 @@ import io.tonapi.models.GetMarketsRates200Response
 import io.tonapi.models.GetRates200Response
 import io.tonapi.models.StatusDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -216,7 +217,7 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
 
     /**
      * 
-     * Get the token price to the currency
+     * Get the token price in the chosen currency for display only. Don’t use this for financial transactions.
      * @param tokens accept ton and jetton master addresses, separated by commas
      * @param currencies accept ton and all possible fiat currencies, separated by commas
      * @return GetRates200Response
@@ -248,7 +249,7 @@ class RatesApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient =
 
     /**
      * 
-     * Get the token price to the currency
+     * Get the token price in the chosen currency for display only. Don’t use this for financial transactions.
      * @param tokens accept ton and jetton master addresses, separated by commas
      * @param currencies accept ton and all possible fiat currencies, separated by commas
      * @return ApiResponse<GetRates200Response?>

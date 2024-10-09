@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountAddress
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,30 +32,30 @@ import com.squareup.moshi.JsonClass
  * @param decimals 
  * @param comment 
  */
-
+@Serializable
 
 data class InscriptionTransferAction (
 
-    @Json(name = "sender")
+    @SerialName(value = "sender")
     val sender: AccountAddress,
 
-    @Json(name = "recipient")
+    @SerialName(value = "recipient")
     val recipient: AccountAddress,
 
     /* amount in minimal particles */
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String,
 
-    @Json(name = "type")
+    @SerialName(value = "type")
     val type: InscriptionTransferAction.Type,
 
-    @Json(name = "ticker")
+    @SerialName(value = "ticker")
     val ticker: kotlin.String,
 
-    @Json(name = "decimals")
+    @SerialName(value = "decimals")
     val decimals: kotlin.Int,
 
-    @Json(name = "comment")
+    @SerialName(value = "comment")
     val comment: kotlin.String? = null
 
 ) {
@@ -64,10 +65,10 @@ data class InscriptionTransferAction (
      *
      * Values: ton20,gram20
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Type(val value: kotlin.String) {
-        @Json(name = "ton20") ton20("ton20"),
-        @Json(name = "gram20") gram20("gram20");
+        @SerialName(value = "ton20") ton20("ton20"),
+        @SerialName(value = "gram20") gram20("gram20");
     }
 }
 

@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AddressParse200ResponseBounceable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,23 +30,23 @@ import com.squareup.moshi.JsonClass
  * @param givenType 
  * @param testOnly 
  */
-
+@Serializable
 
 data class AddressParse200Response (
 
-    @Json(name = "raw_form")
+    @SerialName(value = "raw_form")
     val rawForm: kotlin.String,
 
-    @Json(name = "bounceable")
+    @SerialName(value = "bounceable")
     val bounceable: AddressParse200ResponseBounceable,
 
-    @Json(name = "non_bounceable")
+    @SerialName(value = "non_bounceable")
     val nonBounceable: AddressParse200ResponseBounceable,
 
-    @Json(name = "given_type")
+    @SerialName(value = "given_type")
     val givenType: kotlin.String,
 
-    @Json(name = "test_only")
+    @SerialName(value = "test_only")
     val testOnly: kotlin.Boolean
 
 )

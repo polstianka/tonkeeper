@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.TraceID
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param traces 
  */
-
+@Serializable
 
 data class TraceIDs (
 
-    @Json(name = "traces")
+    @SerialName(value = "traces")
     val traces: kotlin.collections.List<TraceID>
 
 )

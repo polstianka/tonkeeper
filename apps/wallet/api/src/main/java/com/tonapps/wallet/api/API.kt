@@ -41,7 +41,6 @@ import io.batteryapi.models.Balance
 import io.batteryapi.models.Config
 import io.batteryapi.models.RechargeMethods
 import io.tonapi.infrastructure.ClientException
-import io.tonapi.infrastructure.Serializer
 import io.tonapi.models.Account
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.AccountEvent
@@ -162,7 +161,7 @@ class API(
     }
 
     private val emulationJSONAdapter: JsonAdapter<MessageConsequences> by lazy {
-        Serializer.moshi.adapter(MessageConsequences::class.java)
+        io.infrastructure.Serializer.moshi.adapter(MessageConsequences::class.java)
     }
 
     fun accounts(testnet: Boolean) = provider.accounts.get(testnet)
@@ -318,7 +317,6 @@ class API(
         testnet: Boolean
     ): BalanceEntity? {
         val account = getAccount(accountId, testnet) ?: return null
-        account.currenciesBalance
         val initializedAccount = account.status != AccountStatus.uninit && account.status != AccountStatus.nonexist
         return BalanceEntity(
             token = TokenEntity.TON,
@@ -363,7 +361,7 @@ class API(
             accounts(testnet).getAccountJettonsBalances(
                 accountId = accountId,
                 currencies = currency?.let { listOf(it) },
-                extensions = extensions,
+                supportedExtensions = extensions,
             ).balances
         } ?: return null
         return jettonsBalances.map { BalanceEntity(it) }.filter { it.value.isPositive }

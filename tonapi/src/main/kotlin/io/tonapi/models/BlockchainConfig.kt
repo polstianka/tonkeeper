@@ -45,8 +45,9 @@ import io.tonapi.models.BlockchainConfig8
 import io.tonapi.models.BlockchainConfig9
 import io.tonapi.models.ValidatorsSet
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -96,146 +97,146 @@ import com.squareup.moshi.JsonClass
  * @param _81 
  * @param _82 
  */
-
+@Serializable
 
 data class BlockchainConfig (
 
     /* config boc in hex format */
-    @Json(name = "raw")
+    @SerialName(value = "raw")
     val raw: kotlin.String,
 
     /* config address */
-    @Json(name = "0")
+    @SerialName(value = "0")
     val _0: kotlin.String,
 
     /* elector address */
-    @Json(name = "1")
+    @SerialName(value = "1")
     val _1: kotlin.String,
 
     /* minter address */
-    @Json(name = "2")
+    @SerialName(value = "2")
     val _2: kotlin.String,
 
     /* dns root address */
-    @Json(name = "4")
+    @SerialName(value = "4")
     val _4: kotlin.String,
 
-    @Json(name = "44")
+    @SerialName(value = "44")
     val _44: BlockchainConfig44,
 
     /* The address of the transaction fee collector. */
-    @Json(name = "3")
+    @SerialName(value = "3")
     val _3: kotlin.String? = null,
 
-    @Json(name = "5")
+    @SerialName(value = "5")
     val _5: BlockchainConfig5? = null,
 
-    @Json(name = "6")
+    @SerialName(value = "6")
     val _6: BlockchainConfig6? = null,
 
-    @Json(name = "7")
+    @SerialName(value = "7")
     val _7: BlockchainConfig7? = null,
 
-    @Json(name = "8")
+    @SerialName(value = "8")
     val _8: BlockchainConfig8? = null,
 
-    @Json(name = "9")
+    @SerialName(value = "9")
     val _9: BlockchainConfig9? = null,
 
-    @Json(name = "10")
+    @SerialName(value = "10")
     val _10: BlockchainConfig10? = null,
 
-    @Json(name = "11")
+    @SerialName(value = "11")
     val _11: BlockchainConfig11? = null,
 
-    @Json(name = "12")
+    @SerialName(value = "12")
     val _12: BlockchainConfig12? = null,
 
-    @Json(name = "13")
+    @SerialName(value = "13")
     val _13: BlockchainConfig13? = null,
 
-    @Json(name = "14")
+    @SerialName(value = "14")
     val _14: BlockchainConfig14? = null,
 
-    @Json(name = "15")
+    @SerialName(value = "15")
     val _15: BlockchainConfig15? = null,
 
-    @Json(name = "16")
+    @SerialName(value = "16")
     val _16: BlockchainConfig16? = null,
 
-    @Json(name = "17")
+    @SerialName(value = "17")
     val _17: BlockchainConfig17? = null,
 
-    @Json(name = "18")
+    @SerialName(value = "18")
     val _18: BlockchainConfig18? = null,
 
-    @Json(name = "20")
+    @SerialName(value = "20")
     val _20: BlockchainConfig20? = null,
 
-    @Json(name = "21")
+    @SerialName(value = "21")
     val _21: BlockchainConfig21? = null,
 
-    @Json(name = "22")
+    @SerialName(value = "22")
     val _22: BlockchainConfig22? = null,
 
-    @Json(name = "23")
+    @SerialName(value = "23")
     val _23: BlockchainConfig23? = null,
 
-    @Json(name = "24")
+    @SerialName(value = "24")
     val _24: BlockchainConfig24? = null,
 
-    @Json(name = "25")
+    @SerialName(value = "25")
     val _25: BlockchainConfig25? = null,
 
-    @Json(name = "28")
+    @SerialName(value = "28")
     val _28: BlockchainConfig28? = null,
 
-    @Json(name = "29")
+    @SerialName(value = "29")
     val _29: BlockchainConfig29? = null,
 
-    @Json(name = "31")
+    @SerialName(value = "31")
     val _31: BlockchainConfig31? = null,
 
-    @Json(name = "32")
+    @SerialName(value = "32")
     val _32: ValidatorsSet? = null,
 
-    @Json(name = "33")
+    @SerialName(value = "33")
     val _33: ValidatorsSet? = null,
 
-    @Json(name = "34")
+    @SerialName(value = "34")
     val _34: ValidatorsSet? = null,
 
-    @Json(name = "35")
+    @SerialName(value = "35")
     val _35: ValidatorsSet? = null,
 
-    @Json(name = "36")
+    @SerialName(value = "36")
     val _36: ValidatorsSet? = null,
 
-    @Json(name = "37")
+    @SerialName(value = "37")
     val _37: ValidatorsSet? = null,
 
-    @Json(name = "40")
+    @SerialName(value = "40")
     val _40: BlockchainConfig40? = null,
 
-    @Json(name = "43")
+    @SerialName(value = "43")
     val _43: BlockchainConfig43? = null,
 
-    @Json(name = "71")
+    @SerialName(value = "71")
     val _71: BlockchainConfig71? = null,
 
-    @Json(name = "72")
+    @SerialName(value = "72")
     val _72: BlockchainConfig71? = null,
 
-    @Json(name = "73")
+    @SerialName(value = "73")
     val _73: BlockchainConfig71? = null,
 
-    @Json(name = "79")
+    @SerialName(value = "79")
     val _79: BlockchainConfig79? = null,
 
-    @Json(name = "81")
+    @SerialName(value = "81")
     val _81: BlockchainConfig79? = null,
 
-    @Json(name = "82")
+    @SerialName(value = "82")
     val _82: BlockchainConfig79? = null
 
 )

@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param comment 
  * @param destination 
  */
-
+@Serializable
 
 data class GetInscriptionOpTemplate200Response (
 
-    @Json(name = "comment")
+    @SerialName(value = "comment")
     val comment: kotlin.String,
 
-    @Json(name = "destination")
+    @SerialName(value = "destination")
     val destination: kotlin.String
 
 )

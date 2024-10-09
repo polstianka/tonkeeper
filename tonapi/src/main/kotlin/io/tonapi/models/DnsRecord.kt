@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.WalletDNS
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,21 +29,21 @@ import com.squareup.moshi.JsonClass
  * @param nextResolver 
  * @param storage tonstorage bag id
  */
-
+@Serializable
 
 data class DnsRecord (
 
-    @Json(name = "sites")
+    @SerialName(value = "sites")
     val sites: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "wallet")
+    @SerialName(value = "wallet")
     val wallet: WalletDNS? = null,
 
-    @Json(name = "next_resolver")
+    @SerialName(value = "next_resolver")
     val nextResolver: kotlin.String? = null,
 
     /* tonstorage bag id */
-    @Json(name = "storage")
+    @SerialName(value = "storage")
     val storage: kotlin.String? = null
 
 )

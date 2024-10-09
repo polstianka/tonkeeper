@@ -16,25 +16,24 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: noState,badState,noGas
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class ComputeSkipReason(val value: kotlin.String) {
 
-    @Json(name = "cskip_no_state")
+    @SerialName(value = "cskip_no_state")
     noState("cskip_no_state"),
 
-    @Json(name = "cskip_bad_state")
+    @SerialName(value = "cskip_bad_state")
     badState("cskip_bad_state"),
 
-    @Json(name = "cskip_no_gas")
+    @SerialName(value = "cskip_no_gas")
     noGas("cskip_no_gas");
 
     /**

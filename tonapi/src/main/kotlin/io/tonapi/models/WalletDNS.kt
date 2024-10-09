@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountAddress
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,26 +31,26 @@ import com.squareup.moshi.JsonClass
  * @param hasMethodSeqno 
  * @param names 
  */
-
+@Serializable
 
 data class WalletDNS (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "account")
+    @SerialName(value = "account")
     val account: AccountAddress,
 
-    @Json(name = "is_wallet")
+    @SerialName(value = "is_wallet")
     val isWallet: kotlin.Boolean,
 
-    @Json(name = "has_method_pubkey")
+    @SerialName(value = "has_method_pubkey")
     val hasMethodPubkey: kotlin.Boolean,
 
-    @Json(name = "has_method_seqno")
+    @SerialName(value = "has_method_seqno")
     val hasMethodSeqno: kotlin.Boolean,
 
-    @Json(name = "names")
+    @SerialName(value = "names")
     val names: kotlin.collections.List<kotlin.String>
 
 )

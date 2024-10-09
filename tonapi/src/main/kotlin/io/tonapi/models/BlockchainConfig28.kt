@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The configuration for the Catchain protocol.
@@ -29,26 +30,26 @@ import com.squareup.moshi.JsonClass
  * @param flags 
  * @param shuffleMcValidators 
  */
-
+@Serializable
 
 data class BlockchainConfig28 (
 
-    @Json(name = "mc_catchain_lifetime")
+    @SerialName(value = "mc_catchain_lifetime")
     val mcCatchainLifetime: kotlin.Long,
 
-    @Json(name = "shard_catchain_lifetime")
+    @SerialName(value = "shard_catchain_lifetime")
     val shardCatchainLifetime: kotlin.Long,
 
-    @Json(name = "shard_validators_lifetime")
+    @SerialName(value = "shard_validators_lifetime")
     val shardValidatorsLifetime: kotlin.Long,
 
-    @Json(name = "shard_validators_num")
+    @SerialName(value = "shard_validators_num")
     val shardValidatorsNum: kotlin.Long,
 
-    @Json(name = "flags")
+    @SerialName(value = "flags")
     val flags: kotlin.Int? = null,
 
-    @Json(name = "shuffle_mc_validators")
+    @SerialName(value = "shuffle_mc_validators")
     val shuffleMcValidators: kotlin.Boolean? = null
 
 )

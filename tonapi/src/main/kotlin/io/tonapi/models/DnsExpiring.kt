@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.DnsExpiringItemsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param items 
  */
-
+@Serializable
 
 data class DnsExpiring (
 
-    @Json(name = "items")
+    @SerialName(value = "items")
     val items: kotlin.collections.List<DnsExpiringItemsInner>
 
 )

@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountStakingInfo
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param pools 
  */
-
+@Serializable
 
 data class AccountStaking (
 
-    @Json(name = "pools")
+    @SerialName(value = "pools")
     val pools: kotlin.collections.List<AccountStakingInfo>
 
 )

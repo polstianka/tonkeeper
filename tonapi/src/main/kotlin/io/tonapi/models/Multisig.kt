@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.MultisigOrder
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,26 +31,26 @@ import com.squareup.moshi.JsonClass
  * @param proposers 
  * @param orders 
  */
-
+@Serializable
 
 data class Multisig (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "seqno")
+    @SerialName(value = "seqno")
     val seqno: kotlin.Long,
 
-    @Json(name = "threshold")
+    @SerialName(value = "threshold")
     val threshold: kotlin.Int,
 
-    @Json(name = "signers")
+    @SerialName(value = "signers")
     val signers: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "proposers")
+    @SerialName(value = "proposers")
     val proposers: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "orders")
+    @SerialName(value = "orders")
     val orders: kotlin.collections.List<MultisigOrder>
 
 )

@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param seqno 
  */
-
+@Serializable
 
 data class Seqno (
 
-    @Json(name = "seqno")
+    @SerialName(value = "seqno")
     val seqno: kotlin.Int
 
 )

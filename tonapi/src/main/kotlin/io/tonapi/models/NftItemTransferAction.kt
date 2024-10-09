@@ -19,8 +19,9 @@ import io.tonapi.models.AccountAddress
 import io.tonapi.models.EncryptedComment
 import io.tonapi.models.Refund
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -33,30 +34,30 @@ import com.squareup.moshi.JsonClass
  * @param payload raw hex encoded payload
  * @param refund 
  */
-
+@Serializable
 
 data class NftItemTransferAction (
 
-    @Json(name = "nft")
+    @SerialName(value = "nft")
     val nft: kotlin.String,
 
-    @Json(name = "sender")
+    @SerialName(value = "sender")
     val sender: AccountAddress? = null,
 
-    @Json(name = "recipient")
+    @SerialName(value = "recipient")
     val recipient: AccountAddress? = null,
 
-    @Json(name = "comment")
+    @SerialName(value = "comment")
     val comment: kotlin.String? = null,
 
-    @Json(name = "encrypted_comment")
+    @SerialName(value = "encrypted_comment")
     val encryptedComment: EncryptedComment? = null,
 
     /* raw hex encoded payload */
-    @Json(name = "payload")
+    @SerialName(value = "payload")
     val payload: kotlin.String? = null,
 
-    @Json(name = "refund")
+    @SerialName(value = "refund")
     val refund: Refund? = null
 
 )

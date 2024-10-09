@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,18 +27,18 @@ import com.squareup.moshi.JsonClass
  * @param reserved reserved amount in units (TON/USD)
  * @param units 
  */
-
+@Serializable
 
 data class Balance (
 
-    @Json(name = "balance")
+    @SerialName(value = "balance")
     val balance: kotlin.String,
 
     /* reserved amount in units (TON/USD) */
-    @Json(name = "reserved")
+    @SerialName(value = "reserved")
     val reserved: kotlin.String,
 
-    @Json(name = "units")
+    @SerialName(value = "units")
     val units: Balance.Units
 
 ) {
@@ -47,11 +48,10 @@ data class Balance (
      *
      * Values: usd,ton
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Units(val value: kotlin.String) {
-        @Json(name = "usd") usd("usd"),
-        @Json(name = "ton") ton("ton");
+        @SerialName(value = "usd") usd("usd"),
+        @SerialName(value = "ton") ton("ton");
     }
-
 }
 

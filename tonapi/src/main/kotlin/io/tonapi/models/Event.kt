@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.Action
 import io.tonapi.models.ValueFlow
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,31 +33,31 @@ import com.squareup.moshi.JsonClass
  * @param lt 
  * @param inProgress Event is not finished yet. Transactions still happening
  */
-
+@Serializable
 
 data class Event (
 
-    @Json(name = "event_id")
+    @SerialName(value = "event_id")
     val eventId: kotlin.String,
 
-    @Json(name = "timestamp")
+    @SerialName(value = "timestamp")
     val timestamp: kotlin.Long,
 
-    @Json(name = "actions")
+    @SerialName(value = "actions")
     val actions: kotlin.collections.List<Action>,
 
-    @Json(name = "value_flow")
+    @SerialName(value = "value_flow")
     val valueFlow: kotlin.collections.List<ValueFlow>,
 
     /* scam */
-    @Json(name = "is_scam")
+    @SerialName(value = "is_scam")
     val isScam: kotlin.Boolean,
 
-    @Json(name = "lt")
+    @SerialName(value = "lt")
     val lt: kotlin.Long,
 
     /* Event is not finished yet. Transactions still happening */
-    @Json(name = "in_progress")
+    @SerialName(value = "in_progress")
     val inProgress: kotlin.Boolean
 
 )

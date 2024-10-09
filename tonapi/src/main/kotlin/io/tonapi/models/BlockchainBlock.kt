@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockValueFlow
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -54,98 +55,98 @@ import com.squareup.moshi.JsonClass
  * @param genSoftwareCapabilities 
  * @param masterRef 
  */
-
+@Serializable
 
 data class BlockchainBlock (
 
-    @Json(name = "tx_quantity")
+    @SerialName(value = "tx_quantity")
     val txQuantity: kotlin.Int,
 
-    @Json(name = "value_flow")
+    @SerialName(value = "value_flow")
     val valueFlow: BlockValueFlow,
 
-    @Json(name = "workchain_id")
+    @SerialName(value = "workchain_id")
     val workchainId: kotlin.Int,
 
-    @Json(name = "shard")
+    @SerialName(value = "shard")
     val shard: kotlin.String,
 
-    @Json(name = "seqno")
+    @SerialName(value = "seqno")
     val seqno: kotlin.Int,
 
-    @Json(name = "root_hash")
+    @SerialName(value = "root_hash")
     val rootHash: kotlin.String,
 
-    @Json(name = "file_hash")
+    @SerialName(value = "file_hash")
     val fileHash: kotlin.String,
 
-    @Json(name = "global_id")
+    @SerialName(value = "global_id")
     val globalId: kotlin.Int,
 
-    @Json(name = "version")
+    @SerialName(value = "version")
     val version: kotlin.Int,
 
-    @Json(name = "after_merge")
+    @SerialName(value = "after_merge")
     val afterMerge: kotlin.Boolean,
 
-    @Json(name = "before_split")
+    @SerialName(value = "before_split")
     val beforeSplit: kotlin.Boolean,
 
-    @Json(name = "after_split")
+    @SerialName(value = "after_split")
     val afterSplit: kotlin.Boolean,
 
-    @Json(name = "want_split")
+    @SerialName(value = "want_split")
     val wantSplit: kotlin.Boolean,
 
-    @Json(name = "want_merge")
+    @SerialName(value = "want_merge")
     val wantMerge: kotlin.Boolean,
 
-    @Json(name = "key_block")
+    @SerialName(value = "key_block")
     val keyBlock: kotlin.Boolean,
 
-    @Json(name = "gen_utime")
+    @SerialName(value = "gen_utime")
     val genUtime: kotlin.Long,
 
-    @Json(name = "start_lt")
+    @SerialName(value = "start_lt")
     val startLt: kotlin.Long,
 
-    @Json(name = "end_lt")
+    @SerialName(value = "end_lt")
     val endLt: kotlin.Long,
 
-    @Json(name = "vert_seqno")
+    @SerialName(value = "vert_seqno")
     val vertSeqno: kotlin.Int,
 
-    @Json(name = "gen_catchain_seqno")
+    @SerialName(value = "gen_catchain_seqno")
     val genCatchainSeqno: kotlin.Int,
 
-    @Json(name = "min_ref_mc_seqno")
+    @SerialName(value = "min_ref_mc_seqno")
     val minRefMcSeqno: kotlin.Int,
 
-    @Json(name = "prev_key_block_seqno")
+    @SerialName(value = "prev_key_block_seqno")
     val prevKeyBlockSeqno: kotlin.Int,
 
-    @Json(name = "prev_refs")
+    @SerialName(value = "prev_refs")
     val prevRefs: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "in_msg_descr_length")
+    @SerialName(value = "in_msg_descr_length")
     val inMsgDescrLength: kotlin.Long,
 
-    @Json(name = "out_msg_descr_length")
+    @SerialName(value = "out_msg_descr_length")
     val outMsgDescrLength: kotlin.Long,
 
-    @Json(name = "rand_seed")
+    @SerialName(value = "rand_seed")
     val randSeed: kotlin.String,
 
-    @Json(name = "created_by")
+    @SerialName(value = "created_by")
     val createdBy: kotlin.String,
 
-    @Json(name = "gen_software_version")
+    @SerialName(value = "gen_software_version")
     val genSoftwareVersion: kotlin.Int? = null,
 
-    @Json(name = "gen_software_capabilities")
+    @SerialName(value = "gen_software_capabilities")
     val genSoftwareCapabilities: kotlin.Long? = null,
 
-    @Json(name = "master_ref")
+    @SerialName(value = "master_ref")
     val masterRef: kotlin.String? = null
 
 )

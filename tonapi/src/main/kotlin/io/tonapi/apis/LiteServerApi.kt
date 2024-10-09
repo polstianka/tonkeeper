@@ -38,7 +38,8 @@ import io.tonapi.models.SendRawMessage200Response
 import io.tonapi.models.SendRawMessageRequest
 import io.tonapi.models.StatusDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse

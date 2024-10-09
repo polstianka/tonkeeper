@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param id 
  * @param utime 
  */
-
+@Serializable
 
 data class TraceID (
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: kotlin.String,
 
-    @Json(name = "utime")
+    @SerialName(value = "utime")
     val utime: kotlin.Long
 
 )

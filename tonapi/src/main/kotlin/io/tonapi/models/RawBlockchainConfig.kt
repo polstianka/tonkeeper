@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param config 
  */
-
+@Serializable
 
 data class RawBlockchainConfig (
 
-    @Json(name = "config")
+    @Contextual @SerialName(value = "config")
     val config: kotlin.collections.Map<kotlin.String, kotlin.Any>
 
 )

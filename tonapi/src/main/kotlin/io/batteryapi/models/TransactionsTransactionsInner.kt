@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,21 +28,21 @@ import com.squareup.moshi.JsonClass
  * @param status 
  * @param createdAt 
  */
-
+@Serializable
 
 data class TransactionsTransactionsInner (
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: kotlin.String,
 
     /* represents the amount of money paid by the user for this transaction. */
-    @Json(name = "paid_amount")
+    @SerialName(value = "paid_amount")
     val paidAmount: kotlin.String,
 
-    @Json(name = "status")
+    @SerialName(value = "status")
     val status: TransactionsTransactionsInner.Status,
 
-    @Json(name = "created_at")
+    @SerialName(value = "created_at")
     val createdAt: kotlin.String
 
 ) {
@@ -51,12 +52,11 @@ data class TransactionsTransactionsInner (
      *
      * Values: pending,completed,failed
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Status(val value: kotlin.String) {
-        @Json(name = "pending") pending("pending"),
-        @Json(name = "completed") completed("completed"),
-        @Json(name = "failed") failed("failed");
+        @SerialName(value = "pending") pending("pending"),
+        @SerialName(value = "completed") completed("completed"),
+        @SerialName(value = "failed") failed("failed");
     }
-
 }
 

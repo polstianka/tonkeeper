@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The reward in nanoTons for block creation in the TON blockchain.
@@ -27,20 +28,20 @@ import com.squareup.moshi.JsonClass
  * @param electionsEndBefore 
  * @param stakeHeldFor 
  */
-
+@Serializable
 
 data class BlockchainConfig15 (
 
-    @Json(name = "validators_elected_for")
+    @SerialName(value = "validators_elected_for")
     val validatorsElectedFor: kotlin.Long,
 
-    @Json(name = "elections_start_before")
+    @SerialName(value = "elections_start_before")
     val electionsStartBefore: kotlin.Long,
 
-    @Json(name = "elections_end_before")
+    @SerialName(value = "elections_end_before")
     val electionsEndBefore: kotlin.Long,
 
-    @Json(name = "stake_held_for")
+    @SerialName(value = "stake_held_for")
     val stakeHeldFor: kotlin.Long
 
 )

@@ -21,8 +21,9 @@ import io.tonapi.models.NftItemCollection
 import io.tonapi.models.Sale
 import io.tonapi.models.TrustType
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -40,44 +41,44 @@ import com.squareup.moshi.JsonClass
  * @param dns 
  * @param includeCnft 
  */
-
+@Serializable
 
 data class NftItem (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "index")
+    @SerialName(value = "index")
     val index: kotlin.Long,
 
-    @Json(name = "verified")
+    @SerialName(value = "verified")
     val verified: kotlin.Boolean,
 
-    @Json(name = "metadata")
-    val metadata: kotlin.collections.Map<kotlin.String, kotlin.Any>,
+    @Contextual @SerialName(value = "metadata")
+    val metadata: kotlin.collections.Map<kotlin.String, kotlin.String>,
 
-    @Json(name = "approved_by")
+    @SerialName(value = "approved_by")
     val approvedBy: kotlin.collections.List<NftItem.ApprovedBy>,
 
-    @Json(name = "trust")
-    val trust: String,
+    @Contextual @SerialName(value = "trust")
+    val trust: TrustType,
 
-    @Json(name = "owner")
+    @SerialName(value = "owner")
     val owner: AccountAddress? = null,
 
-    @Json(name = "collection")
+    @SerialName(value = "collection")
     val collection: NftItemCollection? = null,
 
-    @Json(name = "sale")
+    @SerialName(value = "sale")
     val sale: Sale? = null,
 
-    @Json(name = "previews")
+    @SerialName(value = "previews")
     val previews: kotlin.collections.List<ImagePreview>? = null,
 
-    @Json(name = "dns")
+    @SerialName(value = "dns")
     val dns: kotlin.String? = null,
 
-    @Json(name = "include_cnft")
+    @SerialName(value = "include_cnft")
     val includeCnft: kotlin.Boolean? = null
 
 ) {
@@ -87,11 +88,11 @@ data class NftItem (
      *
      * Values: getgems,tonkeeper,tonPeriodDiamonds
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class ApprovedBy(val value: kotlin.String) {
-        @Json(name = "getgems") getgems("getgems"),
-        @Json(name = "tonkeeper") tonkeeper("tonkeeper"),
-        @Json(name = "ton.diamonds") tonPeriodDiamonds("ton.diamonds");
+        @SerialName(value = "getgems") getgems("getgems"),
+        @SerialName(value = "tonkeeper") tonkeeper("tonkeeper"),
+        @SerialName(value = "ton.diamonds") tonPeriodDiamonds("ton.diamonds");
     }
 }
 

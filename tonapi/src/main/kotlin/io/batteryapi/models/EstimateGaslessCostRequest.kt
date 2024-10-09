@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,18 +26,15 @@ import com.squareup.moshi.JsonClass
  * @param payload 
  * @param battery 
  */
-
+@Serializable
 
 data class EstimateGaslessCostRequest (
 
-    @Json(name = "payload")
+    @SerialName(value = "payload")
     val payload: kotlin.String,
 
-    @Json(name = "battery")
+    @SerialName(value = "battery")
     val battery: kotlin.Boolean? = true
 
-) {
-
-
-}
+)
 

@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccStatusChange
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,17 +28,17 @@ import com.squareup.moshi.JsonClass
  * @param statusChange 
  * @param feesDue 
  */
-
+@Serializable
 
 data class StoragePhase (
 
-    @Json(name = "fees_collected")
+    @SerialName(value = "fees_collected")
     val feesCollected: kotlin.Long,
 
-    @Json(name = "status_change")
+    @Contextual @SerialName(value = "status_change")
     val statusChange: AccStatusChange,
 
-    @Json(name = "fees_due")
+    @SerialName(value = "fees_due")
     val feesDue: kotlin.Long? = null
 
 )

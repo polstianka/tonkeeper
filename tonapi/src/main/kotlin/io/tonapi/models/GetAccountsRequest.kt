@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param accountIds 
  */
-
+@Serializable
 
 data class GetAccountsRequest (
 
-    @Json(name = "account_ids")
+    @SerialName(value = "account_ids")
     val accountIds: kotlin.collections.List<kotlin.String>
 
 )

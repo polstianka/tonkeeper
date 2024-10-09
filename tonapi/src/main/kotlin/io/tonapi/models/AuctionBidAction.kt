@@ -19,8 +19,9 @@ import io.tonapi.models.AccountAddress
 import io.tonapi.models.NftItem
 import io.tonapi.models.Price
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,23 +32,23 @@ import com.squareup.moshi.JsonClass
  * @param auction 
  * @param nft 
  */
-
+@Serializable
 
 data class AuctionBidAction (
 
-    @Json(name = "auction_type")
-    val auctionType: String,
+    @SerialName(value = "auction_type")
+    val auctionType: AuctionBidAction.AuctionType,
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: Price,
 
-    @Json(name = "bidder")
+    @SerialName(value = "bidder")
     val bidder: AccountAddress,
 
-    @Json(name = "auction")
+    @SerialName(value = "auction")
     val auction: AccountAddress,
 
-    @Json(name = "nft")
+    @SerialName(value = "nft")
     val nft: NftItem? = null
 
 ) {
@@ -57,12 +58,12 @@ data class AuctionBidAction (
      *
      * Values: dNSPeriodTon,dNSPeriodTg,nUMBERPeriodTg,getgems
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class AuctionType(val value: kotlin.String) {
-        @Json(name = "DNS.ton") dNSPeriodTon("DNS.ton"),
-        @Json(name = "DNS.tg") dNSPeriodTg("DNS.tg"),
-        @Json(name = "NUMBER.tg") nUMBERPeriodTg("NUMBER.tg"),
-        @Json(name = "getgems") getgems("getgems");
+        @SerialName(value = "DNS.ton") dNSPeriodTon("DNS.ton"),
+        @SerialName(value = "DNS.tg") dNSPeriodTg("DNS.tg"),
+        @SerialName(value = "NUMBER.tg") nUMBERPeriodTg("NUMBER.tg"),
+        @SerialName(value = "getgems") getgems("getgems");
     }
 }
 

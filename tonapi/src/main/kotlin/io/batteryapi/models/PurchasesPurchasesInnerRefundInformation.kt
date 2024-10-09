@@ -17,8 +17,9 @@ package io.batteryapi.models
 
 import io.batteryapi.models.PurchasesPurchasesInnerRefundInformationRefunded
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,27 +30,24 @@ import com.squareup.moshi.JsonClass
  * @param refunded 
  * @param refundable 
  */
-
+@Serializable
 
 data class PurchasesPurchasesInnerRefundInformation (
 
-    @Json(name = "fully_refunded")
+    @SerialName(value = "fully_refunded")
     val fullyRefunded: kotlin.Boolean,
 
-    @Json(name = "partially_refunded")
+    @SerialName(value = "partially_refunded")
     val partiallyRefunded: kotlin.Boolean,
 
-    @Json(name = "pending_refund")
+    @SerialName(value = "pending_refund")
     val pendingRefund: kotlin.Boolean,
 
-    @Json(name = "refunded")
+    @SerialName(value = "refunded")
     val refunded: PurchasesPurchasesInnerRefundInformationRefunded? = null,
 
-    @Json(name = "refundable")
+    @SerialName(value = "refundable")
     val refundable: PurchasesPurchasesInnerRefundInformationRefunded? = null
 
-) {
-
-
-}
+)
 

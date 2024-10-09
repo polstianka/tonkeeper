@@ -1,9 +1,9 @@
 package com.tonapps.wallet.api
 
 import android.os.SystemClock
-import io.tonapi.infrastructure.Serializer
+import io.infrastructure.Serializer
 import com.squareup.moshi.adapter
-import io.tonapi.infrastructure.ClientException
+import io.infrastructure.ClientException
 import android.util.Log
 import com.tonapps.network.OkHttpError
 import kotlinx.coroutines.delay
@@ -14,12 +14,12 @@ inline fun <reified T> toJSON(obj: T?): String {
     if (obj == null) {
         return ""
     }
-    return Serializer.moshi.adapter<T>().toJson(obj)
+    return io.infrastructure.Serializer.moshi.adapter<T>().toJson(obj)
 }
 
 @OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> fromJSON(json: String): T {
-    return Serializer.moshi.adapter<T>().fromJson(json)!!
+    return io.infrastructure.Serializer.moshi.adapter<T>().fromJson(json)!!
 }
 
 fun <R> withRetry(

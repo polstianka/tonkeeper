@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * List of critical TON parameters, the change of which significantly affects the network, so more voting rounds are held.
  *
  * @param criticalParams 
  */
-
+@Serializable
 
 data class BlockchainConfig10 (
 
-    @Json(name = "critical_params")
+    @SerialName(value = "critical_params")
     val criticalParams: kotlin.collections.List<kotlin.Int>
 
 )

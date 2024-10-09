@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.AccountStatus
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -37,49 +38,49 @@ import com.squareup.moshi.JsonClass
  * @param memoRequired 
  * @param isSuspended 
  */
-
+@Serializable
 
 data class Account (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "balance")
+    @SerialName(value = "balance")
     val balance: kotlin.Long,
 
     /* unix timestamp */
-    @Json(name = "last_activity")
+    @SerialName(value = "last_activity")
     val lastActivity: kotlin.Long,
 
-    @Json(name = "status")
+    @Contextual @SerialName(value = "status")
     val status: AccountStatus,
 
-    @Json(name = "get_methods")
+    @SerialName(value = "get_methods")
     val getMethods: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "is_wallet")
+    @SerialName(value = "is_wallet")
     val isWallet: kotlin.Boolean,
 
     /* {'USD': 1, 'IDR': 1000} */
-    @Json(name = "currencies_balance")
-    val currenciesBalance: kotlin.collections.Map<kotlin.String, kotlin.Any>? = null,
+    @Contextual @SerialName(value = "currencies_balance")
+    val currenciesBalance: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
 
-    @Json(name = "interfaces")
+    @SerialName(value = "interfaces")
     val interfaces: kotlin.collections.List<kotlin.String>? = null,
 
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String? = null,
 
-    @Json(name = "is_scam")
+    @SerialName(value = "is_scam")
     val isScam: kotlin.Boolean? = null,
 
-    @Json(name = "icon")
+    @SerialName(value = "icon")
     val icon: kotlin.String? = null,
 
-    @Json(name = "memo_required")
+    @SerialName(value = "memo_required")
     val memoRequired: kotlin.Boolean? = null,
 
-    @Json(name = "is_suspended")
+    @SerialName(value = "is_suspended")
     val isSuspended: kotlin.Boolean? = null
 
 )

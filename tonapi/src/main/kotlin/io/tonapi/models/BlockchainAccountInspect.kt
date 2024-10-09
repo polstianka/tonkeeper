@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockchainAccountInspectMethodsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,20 +29,20 @@ import com.squareup.moshi.JsonClass
  * @param methods 
  * @param compiler 
  */
-
+@Serializable
 
 data class BlockchainAccountInspect (
 
-    @Json(name = "code")
+    @SerialName(value = "code")
     val code: kotlin.String,
 
-    @Json(name = "code_hash")
+    @SerialName(value = "code_hash")
     val codeHash: kotlin.String,
 
-    @Json(name = "methods")
+    @SerialName(value = "methods")
     val methods: kotlin.collections.List<BlockchainAccountInspectMethodsInner>,
 
-    @Json(name = "compiler")
+    @SerialName(value = "compiler")
     val compiler: BlockchainAccountInspect.Compiler? = null
 
 ) {
@@ -51,9 +52,9 @@ data class BlockchainAccountInspect (
      *
      * Values: func
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Compiler(val value: kotlin.String) {
-        @Json(name = "func") func("func");
+        @SerialName(value = "func") func("func");
     }
 }
 

@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,19 +26,16 @@ import com.squareup.moshi.JsonClass
  * @param userPurchaseId 
  * @param purchaseId 
  */
-
+@Serializable
 
 data class RequestRefundRequest (
 
-    @Json(name = "user_purchase_id")
+    @SerialName(value = "user_purchase_id")
     @Deprecated(message = "This property is deprecated.")
     val userPurchaseId: kotlin.Int? = null,
 
-    @Json(name = "purchase_id")
+    @SerialName(value = "purchase_id")
     val purchaseId: kotlin.Int? = null
 
-) {
-
-
-}
+)
 

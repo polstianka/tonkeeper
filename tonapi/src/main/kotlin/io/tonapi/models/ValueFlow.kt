@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.ValueFlowJettonsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,20 +30,20 @@ import com.squareup.moshi.JsonClass
  * @param fees 
  * @param jettons 
  */
-
+@Serializable
 
 data class ValueFlow (
 
-    @Json(name = "account")
+    @SerialName(value = "account")
     val account: AccountAddress,
 
-    @Json(name = "ton")
+    @SerialName(value = "ton")
     val ton: kotlin.Long,
 
-    @Json(name = "fees")
+    @SerialName(value = "fees")
     val fees: kotlin.Long,
 
-    @Json(name = "jettons")
+    @SerialName(value = "jettons")
     val jettons: kotlin.collections.List<ValueFlowJettonsInner>? = null
 
 )

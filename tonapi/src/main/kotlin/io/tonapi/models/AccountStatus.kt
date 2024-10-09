@@ -16,28 +16,27 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: nonexist,uninit,active,frozen
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class AccountStatus(val value: kotlin.String) {
 
-    @Json(name = "nonexist")
+    @SerialName(value = "nonexist")
     nonexist("nonexist"),
 
-    @Json(name = "uninit")
+    @SerialName(value = "uninit")
     uninit("uninit"),
 
-    @Json(name = "active")
+    @SerialName(value = "active")
     active("active"),
 
-    @Json(name = "frozen")
+    @SerialName(value = "frozen")
     frozen("frozen");
 
     /**

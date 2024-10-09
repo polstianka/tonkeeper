@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,21 +27,18 @@ import com.squareup.moshi.JsonClass
  * @param productId 
  * @param promo 
  */
-
+@Serializable
 
 data class AndroidBatteryPurchaseRequestPurchasesInner (
 
-    @Json(name = "token")
+    @SerialName(value = "token")
     val token: kotlin.String,
 
-    @Json(name = "product_id")
+    @SerialName(value = "product_id")
     val productId: kotlin.String,
 
-    @Json(name = "promo")
+    @SerialName(value = "promo")
     val promo: kotlin.String? = null
 
-) {
-
-
-}
+)
 

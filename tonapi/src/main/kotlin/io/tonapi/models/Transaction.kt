@@ -25,8 +25,9 @@ import io.tonapi.models.Message
 import io.tonapi.models.StoragePhase
 import io.tonapi.models.TransactionType
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -57,84 +58,84 @@ import com.squareup.moshi.JsonClass
  * @param actionPhase 
  * @param bouncePhase 
  */
-
+@Serializable
 
 data class Transaction (
 
-    @Json(name = "hash")
-    val hash: kotlin.String? = null,
+    @SerialName(value = "hash")
+    val hash: kotlin.String,
 
-    @Json(name = "lt")
+    @SerialName(value = "lt")
     val lt: kotlin.Long,
 
-    @Json(name = "account")
+    @SerialName(value = "account")
     val account: AccountAddress,
 
-    @Json(name = "success")
+    @SerialName(value = "success")
     val success: kotlin.Boolean,
 
-    @Json(name = "utime")
+    @SerialName(value = "utime")
     val utime: kotlin.Long,
 
-    @Json(name = "orig_status")
+    @Contextual @SerialName(value = "orig_status")
     val origStatus: AccountStatus,
 
-    @Json(name = "end_status")
+    @Contextual @SerialName(value = "end_status")
     val endStatus: AccountStatus,
 
-    @Json(name = "total_fees")
+    @SerialName(value = "total_fees")
     val totalFees: kotlin.Long,
 
-    @Json(name = "end_balance")
+    @SerialName(value = "end_balance")
     val endBalance: kotlin.Long,
 
-    @Json(name = "transaction_type")
+    @Contextual @SerialName(value = "transaction_type")
     val transactionType: TransactionType,
 
-    @Json(name = "state_update_old")
+    @SerialName(value = "state_update_old")
     val stateUpdateOld: kotlin.String,
 
-    @Json(name = "state_update_new")
+    @SerialName(value = "state_update_new")
     val stateUpdateNew: kotlin.String,
 
-    @Json(name = "out_msgs")
+    @SerialName(value = "out_msgs")
     val outMsgs: kotlin.collections.List<Message>,
 
-    @Json(name = "block")
+    @SerialName(value = "block")
     val block: kotlin.String,
 
-    @Json(name = "aborted")
+    @SerialName(value = "aborted")
     val aborted: kotlin.Boolean,
 
-    @Json(name = "destroyed")
+    @SerialName(value = "destroyed")
     val destroyed: kotlin.Boolean,
 
     /* hex encoded boc with raw transaction */
-    @Json(name = "raw")
-    val raw: kotlin.String? = null,
+    @SerialName(value = "raw")
+    val raw: kotlin.String,
 
-    @Json(name = "in_msg")
+    @SerialName(value = "in_msg")
     val inMsg: Message? = null,
 
-    @Json(name = "prev_trans_hash")
+    @SerialName(value = "prev_trans_hash")
     val prevTransHash: kotlin.String? = null,
 
-    @Json(name = "prev_trans_lt")
+    @SerialName(value = "prev_trans_lt")
     val prevTransLt: kotlin.Long? = null,
 
-    @Json(name = "compute_phase")
+    @SerialName(value = "compute_phase")
     val computePhase: ComputePhase? = null,
 
-    @Json(name = "storage_phase")
+    @SerialName(value = "storage_phase")
     val storagePhase: StoragePhase? = null,
 
-    @Json(name = "credit_phase")
+    @SerialName(value = "credit_phase")
     val creditPhase: CreditPhase? = null,
 
-    @Json(name = "action_phase")
+    @SerialName(value = "action_phase")
     val actionPhase: ActionPhase? = null,
 
-    @Json(name = "bounce_phase")
+    @Contextual @SerialName(value = "bounce_phase")
     val bouncePhase: BouncePhaseType? = null
 
 )

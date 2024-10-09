@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockRaw
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,14 +27,14 @@ import com.squareup.moshi.JsonClass
  * @param ids 
  * @param transactions 
  */
-
+@Serializable
 
 data class GetRawTransactions200Response (
 
-    @Json(name = "ids")
+    @SerialName(value = "ids")
     val ids: kotlin.collections.List<BlockRaw>,
 
-    @Json(name = "transactions")
+    @SerialName(value = "transactions")
     val transactions: kotlin.String
 
 )

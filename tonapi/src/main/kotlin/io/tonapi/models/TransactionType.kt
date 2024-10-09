@@ -16,37 +16,36 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: transOrd,transTickTock,transSplitPrepare,transSplitInstall,transMergePrepare,transMergeInstall,transStorage
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class TransactionType(val value: kotlin.String) {
 
-    @Json(name = "TransOrd")
+    @SerialName(value = "TransOrd")
     transOrd("TransOrd"),
 
-    @Json(name = "TransTickTock")
+    @SerialName(value = "TransTickTock")
     transTickTock("TransTickTock"),
 
-    @Json(name = "TransSplitPrepare")
+    @SerialName(value = "TransSplitPrepare")
     transSplitPrepare("TransSplitPrepare"),
 
-    @Json(name = "TransSplitInstall")
+    @SerialName(value = "TransSplitInstall")
     transSplitInstall("TransSplitInstall"),
 
-    @Json(name = "TransMergePrepare")
+    @SerialName(value = "TransMergePrepare")
     transMergePrepare("TransMergePrepare"),
 
-    @Json(name = "TransMergeInstall")
+    @SerialName(value = "TransMergeInstall")
     transMergeInstall("TransMergeInstall"),
 
-    @Json(name = "TransStorage")
+    @SerialName(value = "TransStorage")
     transStorage("TransStorage");
 
     /**

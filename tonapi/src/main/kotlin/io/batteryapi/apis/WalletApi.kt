@@ -23,7 +23,8 @@ import io.batteryapi.models.GetTonConnectPayloadDefaultResponse
 import io.batteryapi.models.TonConnectProof200Response
 import io.batteryapi.models.TonConnectProofRequest
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.batteryapi.infrastructure.ApiClient
 import io.batteryapi.infrastructure.ApiResponse

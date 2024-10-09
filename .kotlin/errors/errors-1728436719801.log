@@ -1,0 +1,349 @@
+kotlin version: 2.0.20
+error message: org.jetbrains.kotlin.backend.common.CompilationException: Back-end: Please report this problem https://kotl.in/issue
+/Users/polstianka/StudioProjects/TonkeeperX/tonapi/src/main/kotlin/io/tonapi/models/Account.kt:41:1
+Problem with `@Serializable
+data class Account {
+  constructor(address: String, balance: Long, lastActivity: Long, status: AccountStatus, getMethods: List<String>, isWallet: Boolean, currenciesBalance: Map<String, Any>? = null, interfaces: List<String>? = null, name: String? = null, isScam: Boolean? = null, icon: String? = null, memoRequired: Boolean? = null, isSuspended: Boolean? = null) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  @SerialName(value = "address")
+  val address: String
+    field = address
+    get
+
+  @SerialName(value = "balance")
+  val balance: Long
+    field = balance
+    get
+
+  @SerialName(value = "last_activity")
+  val lastActivity: Long
+    field = lastActivity
+    get
+
+  @Contextual
+  @SerialName(value = "status")
+  val status: AccountStatus
+    field = status
+    get
+
+  @SerialName(value = "get_methods")
+  val getMethods: List<String>
+    field = getMethods
+    get
+
+  @SerialName(value = "is_wallet")
+  val isWallet: Boolean
+    field = isWallet
+    get
+
+  @Contextual
+  @SerialName(value = "currencies_balance")
+  val currenciesBalance: Map<String, Any>?
+    field = currenciesBalance
+    get
+
+  @SerialName(value = "interfaces")
+  val interfaces: List<String>?
+    field = interfaces
+    get
+
+  @SerialName(value = "name")
+  val name: String?
+    field = name
+    get
+
+  @SerialName(value = "is_scam")
+  val isScam: Boolean?
+    field = isScam
+    get
+
+  @SerialName(value = "icon")
+  val icon: String?
+    field = icon
+    get
+
+  @SerialName(value = "memo_required")
+  val memoRequired: Boolean?
+    field = memoRequired
+    get
+
+  @SerialName(value = "is_suspended")
+  val isSuspended: Boolean?
+    field = isSuspended
+    get
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    fun serializer(): KSerializer<Account>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  object $serializer : GeneratedSerializer<Account> {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun serialize(encoder: Encoder, value: Account)
+
+    override fun deserialize(decoder: Decoder): Account
+
+    override val descriptor: SerialDescriptor
+      override get
+
+    override fun childSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override fun typeParametersSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+  }
+
+  operator fun component1(): String {
+    return <this>.#address
+  }
+
+  operator fun component2(): Long {
+    return <this>.#balance
+  }
+
+  operator fun component3(): Long {
+    return <this>.#lastActivity
+  }
+
+  operator fun component4(): AccountStatus {
+    return <this>.#status
+  }
+
+  operator fun component5(): List<String> {
+    return <this>.#getMethods
+  }
+
+  operator fun component6(): Boolean {
+    return <this>.#isWallet
+  }
+
+  operator fun component7(): Map<String, Any>? {
+    return <this>.#currenciesBalance
+  }
+
+  operator fun component8(): List<String>? {
+    return <this>.#interfaces
+  }
+
+  operator fun component9(): String? {
+    return <this>.#name
+  }
+
+  operator fun component10(): Boolean? {
+    return <this>.#isScam
+  }
+
+  operator fun component11(): String? {
+    return <this>.#icon
+  }
+
+  operator fun component12(): Boolean? {
+    return <this>.#memoRequired
+  }
+
+  operator fun component13(): Boolean? {
+    return <this>.#isSuspended
+  }
+
+  fun copy(address: String = <this>.#address, balance: Long = <this>.#balance, lastActivity: Long = <this>.#lastActivity, status: AccountStatus = <this>.#status, getMethods: List<String> = <this>.#getMethods, isWallet: Boolean = <this>.#isWallet, currenciesBalance: Map<String, Any>? = <this>.#currenciesBalance, interfaces: List<String>? = <this>.#interfaces, name: String? = <this>.#name, isScam: Boolean? = <this>.#isScam, icon: String? = <this>.#icon, memoRequired: Boolean? = <this>.#memoRequired, isSuspended: Boolean? = <this>.#isSuspended): Account {
+    return Account(address = address, balance = balance, lastActivity = lastActivity, status = status, getMethods = getMethods, isWallet = isWallet, currenciesBalance = currenciesBalance, interfaces = interfaces, name = name, isScam = isScam, icon = icon, memoRequired = memoRequired, isSuspended = isSuspended)
+  }
+
+  override fun toString(): String {
+    return "Account(" + "address=" + <this>.#address + ", " + "balance=" + <this>.#balance + ", " + "lastActivity=" + <this>.#lastActivity + ", " + "status=" + <this>.#status + ", " + "getMethods=" + <this>.#getMethods + ", " + "isWallet=" + <this>.#isWallet + ", " + "currenciesBalance=" + <this>.#currenciesBalance + ", " + "interfaces=" + <this>.#interfaces + ", " + "name=" + <this>.#name + ", " + "isScam=" + <this>.#isScam + ", " + "icon=" + <this>.#icon + ", " + "memoRequired=" + <this>.#memoRequired + ", " + "isSuspended=" + <this>.#isSuspended + ")"
+  }
+
+  override fun hashCode(): Int {
+    var result: Int = <this>.#address.hashCode()
+    result = result.times(other = 31).plus(other = <this>.#balance.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#lastActivity.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#status.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#getMethods.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#isWallet.hashCode())
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#currenciesBalance, arg1 = null) -> 0
+      else -> <this>.#currenciesBalance.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#interfaces, arg1 = null) -> 0
+      else -> <this>.#interfaces.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#name, arg1 = null) -> 0
+      else -> <this>.#name.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#isScam, arg1 = null) -> 0
+      else -> <this>.#isScam.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#icon, arg1 = null) -> 0
+      else -> <this>.#icon.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#memoRequired, arg1 = null) -> 0
+      else -> <this>.#memoRequired.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#isSuspended, arg1 = null) -> 0
+      else -> <this>.#isSuspended.hashCode()
+    })
+    return result
+  }
+
+  override operator fun equals(other: Any?): Boolean {
+    when {
+      EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+    }
+    when {
+      other !is Account -> return false
+    }
+    val tmp0_other_with_cast: Account = other as Account
+    when {
+      EQEQ(arg0 = <this>.#address, arg1 = tmp0_other_with_cast.#address).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#balance, arg1 = tmp0_other_with_cast.#balance).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#lastActivity, arg1 = tmp0_other_with_cast.#lastActivity).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#status, arg1 = tmp0_other_with_cast.#status).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#getMethods, arg1 = tmp0_other_with_cast.#getMethods).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#isWallet, arg1 = tmp0_other_with_cast.#isWallet).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#currenciesBalance, arg1 = tmp0_other_with_cast.#currenciesBalance).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#interfaces, arg1 = tmp0_other_with_cast.#interfaces).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#name, arg1 = tmp0_other_with_cast.#name).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#isScam, arg1 = tmp0_other_with_cast.#isScam).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#icon, arg1 = tmp0_other_with_cast.#icon).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#memoRequired, arg1 = tmp0_other_with_cast.#memoRequired).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#isSuspended, arg1 = tmp0_other_with_cast.#isSuspended).not() -> return false
+    }
+    return true
+  }
+
+  @JvmStatic
+  internal fun write$Self(self: Account, output: CompositeEncoder, serialDesc: SerialDescriptor)
+
+  internal constructor(seen0: Int, address: String?, balance: Long, lastActivity: Long, status: AccountStatus?, getMethods: List<String>?, isWallet: Boolean, currenciesBalance: Map<String, Any>?, interfaces: List<String>?, name: String?, isScam: Boolean?, icon: String?, memoRequired: Boolean?, isSuspended: Boolean?, serializationConstructorMarker: SerializationConstructorMarker?)
+
+}
+
+`
+Details: kotlinx.serialization compiler plugin internal error: unable to transform declaration, see cause
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:230)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:46)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitClass(IrElementVisitorVoid.kt:44)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrClass.accept(IrClass.kt:72)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.acceptChildren(IrFile.kt:34)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptChildrenVoid(IrVisitors.kt:15)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitElement(SerializationLoweringExtension.kt:42)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitPackageFragment(IrElementVisitorVoid.kt:168)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitPackageFragment(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:184)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:180)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.accept(IrFile.kt:28)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptVoid(IrVisitors.kt:11)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt.runOnFileInOrder(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtension.generate(SerializationLoweringExtension.kt:194)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.applyIrGenerationExtensions(convertToIr.kt:437)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.runActualizationPipeline(convertToIr.kt:246)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.convertToIrAndActualize(convertToIr.kt:130)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize(convertToIr.kt:99)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize$default(convertToIr.kt:72)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertToIrAndActualizeForJvm(jvmCompilerPipeline.kt:196)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertAnalyzedFirToIr(jvmCompilerPipeline.kt:169)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:140)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.IllegalStateException: Serializer for element of type kotlin.Any has not been found
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializerSearchUtilKt.findTypeSerializerOrContext(SerializerSearchUtil.kt:84)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance(BaseIrGenerator.kt:722)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance$instantiate(BaseIrGenerator.kt:555)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.serializerInstance(BaseIrGenerator.kt:598)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.cacheableChildSerializerInstance(BaseIrGenerator.kt:496)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.BaseIrGenerator.createCachedChildSerializers(BaseIrGenerator.kt:468)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.<init>(SerializableIrGenerator.kt:59)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator$Companion.generate(SerializableIrGenerator.kt:398)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:146)
+	... 56 more
+
+

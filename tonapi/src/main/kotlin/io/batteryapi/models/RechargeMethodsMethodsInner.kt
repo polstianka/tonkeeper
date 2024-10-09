@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,35 +33,35 @@ import com.squareup.moshi.JsonClass
  * @param jettonMaster 
  * @param minBootstrapValue 
  */
-
+@Serializable
 
 data class RechargeMethodsMethodsInner (
 
-    @Json(name = "type")
+    @SerialName(value = "type")
     val type: RechargeMethodsMethodsInner.Type,
 
-    @Json(name = "rate")
+    @SerialName(value = "rate")
     val rate: kotlin.String,
 
-    @Json(name = "symbol")
+    @SerialName(value = "symbol")
     val symbol: kotlin.String,
 
-    @Json(name = "decimals")
+    @SerialName(value = "decimals")
     val decimals: kotlin.Int,
 
-    @Json(name = "support_gasless")
+    @SerialName(value = "support_gasless")
     val supportGasless: kotlin.Boolean,
 
-    @Json(name = "support_recharge")
+    @SerialName(value = "support_recharge")
     val supportRecharge: kotlin.Boolean,
 
-    @Json(name = "image")
+    @SerialName(value = "image")
     val image: kotlin.String? = null,
 
-    @Json(name = "jetton_master")
+    @SerialName(value = "jetton_master")
     val jettonMaster: kotlin.String? = null,
 
-    @Json(name = "min_bootstrap_value")
+    @SerialName(value = "min_bootstrap_value")
     val minBootstrapValue: kotlin.String? = null
 
 ) {
@@ -70,11 +71,10 @@ data class RechargeMethodsMethodsInner (
      *
      * Values: jetton,ton
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Type(val value: kotlin.String) {
-        @Json(name = "jetton") jetton("jetton"),
-        @Json(name = "ton") ton("ton");
+        @SerialName(value = "jetton") jetton("jetton"),
+        @SerialName(value = "ton") ton("ton");
     }
-
 }
 

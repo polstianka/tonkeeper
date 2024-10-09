@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,35 +33,35 @@ import com.squareup.moshi.JsonClass
  * @param flatGasLimit 
  * @param flatGasPrice 
  */
-
+@Serializable
 
 data class GasLimitPrices (
 
-    @Json(name = "gas_price")
+    @SerialName(value = "gas_price")
     val gasPrice: kotlin.Long,
 
-    @Json(name = "gas_limit")
+    @SerialName(value = "gas_limit")
     val gasLimit: kotlin.Long,
 
-    @Json(name = "gas_credit")
+    @SerialName(value = "gas_credit")
     val gasCredit: kotlin.Long,
 
-    @Json(name = "block_gas_limit")
+    @SerialName(value = "block_gas_limit")
     val blockGasLimit: kotlin.Long,
 
-    @Json(name = "freeze_due_limit")
+    @SerialName(value = "freeze_due_limit")
     val freezeDueLimit: kotlin.Long,
 
-    @Json(name = "delete_due_limit")
+    @SerialName(value = "delete_due_limit")
     val deleteDueLimit: kotlin.Long,
 
-    @Json(name = "special_gas_limit")
+    @SerialName(value = "special_gas_limit")
     val specialGasLimit: kotlin.Long? = null,
 
-    @Json(name = "flat_gas_limit")
+    @SerialName(value = "flat_gas_limit")
     val flatGasLimit: kotlin.Long? = null,
 
-    @Json(name = "flat_gas_price")
+    @SerialName(value = "flat_gas_price")
     val flatGasPrice: kotlin.Long? = null
 
 )

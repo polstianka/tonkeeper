@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * List of mandatory parameters of the blockchain config.
  *
  * @param mandatoryParams 
  */
-
+@Serializable
 
 data class BlockchainConfig9 (
 
-    @Json(name = "mandatory_params")
+    @SerialName(value = "mandatory_params")
     val mandatoryParams: kotlin.collections.List<kotlin.Int>
 
 )

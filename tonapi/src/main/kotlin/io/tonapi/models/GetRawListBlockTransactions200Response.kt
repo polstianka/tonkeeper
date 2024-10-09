@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.BlockRaw
 import io.tonapi.models.GetRawListBlockTransactions200ResponseIdsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,23 +31,23 @@ import com.squareup.moshi.JsonClass
  * @param ids 
  * @param proof 
  */
-
+@Serializable
 
 data class GetRawListBlockTransactions200Response (
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: BlockRaw,
 
-    @Json(name = "req_count")
+    @SerialName(value = "req_count")
     val reqCount: kotlin.Int,
 
-    @Json(name = "incomplete")
+    @SerialName(value = "incomplete")
     val incomplete: kotlin.Boolean,
 
-    @Json(name = "ids")
+    @SerialName(value = "ids")
     val ids: kotlin.collections.List<GetRawListBlockTransactions200ResponseIdsInner>,
 
-    @Json(name = "proof")
+    @SerialName(value = "proof")
     val proof: kotlin.String
 
 )

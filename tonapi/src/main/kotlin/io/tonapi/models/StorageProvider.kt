@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,26 +30,26 @@ import com.squareup.moshi.JsonClass
  * @param minimalFileSize 
  * @param maximalFileSize 
  */
-
+@Serializable
 
 data class StorageProvider (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "accept_new_contracts")
+    @SerialName(value = "accept_new_contracts")
     val acceptNewContracts: kotlin.Boolean,
 
-    @Json(name = "rate_per_mb_day")
+    @SerialName(value = "rate_per_mb_day")
     val ratePerMbDay: kotlin.Long,
 
-    @Json(name = "max_span")
+    @SerialName(value = "max_span")
     val maxSpan: kotlin.Long,
 
-    @Json(name = "minimal_file_size")
+    @SerialName(value = "minimal_file_size")
     val minimalFileSize: kotlin.Long,
 
-    @Json(name = "maximal_file_size")
+    @SerialName(value = "maximal_file_size")
     val maximalFileSize: kotlin.Long
 
 )

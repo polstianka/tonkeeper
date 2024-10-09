@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,25 +29,25 @@ import com.squareup.moshi.JsonClass
  * @param name Display name. Data collected from different sources like moderation lists, dns, collections names and over.
  * @param icon 
  */
-
+@Serializable
 
 data class AccountAddress (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
     /* Is this account was marked as part of scammers activity */
-    @Json(name = "is_scam")
+    @SerialName(value = "is_scam")
     val isScam: kotlin.Boolean,
 
-    @Json(name = "is_wallet")
+    @SerialName(value = "is_wallet")
     val isWallet: kotlin.Boolean,
 
     /* Display name. Data collected from different sources like moderation lists, dns, collections names and over. */
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String? = null,
 
-    @Json(name = "icon")
+    @SerialName(value = "icon")
     val icon: kotlin.String? = null
 
 )

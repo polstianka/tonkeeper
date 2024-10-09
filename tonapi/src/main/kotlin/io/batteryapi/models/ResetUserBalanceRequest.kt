@@ -16,23 +16,21 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param reason 
  */
-
+@Serializable
 
 data class ResetUserBalanceRequest (
 
-    @Json(name = "reason")
+    @SerialName(value = "reason")
     val reason: kotlin.String
 
-) {
-
-
-}
+)
 

@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.JettonBridgeParams
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * Bridge parameters for wrapping tokens from other networks into tokens on the TON network.
  *
  * @param jettonBridgeParams 
  */
-
+@Serializable
 
 data class BlockchainConfig79 (
 
-    @Json(name = "jetton_bridge_params")
+    @SerialName(value = "jetton_bridge_params")
     val jettonBridgeParams: JettonBridgeParams
 
 )

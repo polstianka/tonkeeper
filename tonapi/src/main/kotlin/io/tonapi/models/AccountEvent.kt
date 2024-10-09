@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.Action
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * An event is built on top of a trace which is a series of transactions caused by one inbound message. TonAPI looks for known patterns inside the trace and splits the trace into actions, where a single action represents a meaningful high-level operation like a Jetton Transfer or an NFT Purchase. Actions are expected to be shown to users. It is advised not to build any logic on top of actions because actions can be changed at any time.
@@ -33,35 +34,35 @@ import com.squareup.moshi.JsonClass
  * @param inProgress Event is not finished yet. Transactions still happening
  * @param extra TODO
  */
-
+@Serializable
 
 data class AccountEvent (
 
-    @Json(name = "event_id")
+    @SerialName(value = "event_id")
     val eventId: kotlin.String,
 
-    @Json(name = "account")
+    @SerialName(value = "account")
     val account: AccountAddress,
 
-    @Json(name = "timestamp")
+    @SerialName(value = "timestamp")
     val timestamp: kotlin.Long,
 
-    @Json(name = "actions")
+    @SerialName(value = "actions")
     val actions: kotlin.collections.List<Action>,
 
     /* scam */
-    @Json(name = "is_scam")
+    @SerialName(value = "is_scam")
     val isScam: kotlin.Boolean,
 
-    @Json(name = "lt")
+    @SerialName(value = "lt")
     val lt: kotlin.Long,
 
     /* Event is not finished yet. Transactions still happening */
-    @Json(name = "in_progress")
+    @SerialName(value = "in_progress")
     val inProgress: kotlin.Boolean,
 
     /* TODO */
-    @Json(name = "extra")
+    @SerialName(value = "extra")
     val extra: kotlin.Long
 
 )

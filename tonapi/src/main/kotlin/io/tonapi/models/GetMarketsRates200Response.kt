@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.MarketTonRates
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param markets 
  */
-
+@Serializable
 
 data class GetMarketsRates200Response (
 
-    @Json(name = "markets")
+    @SerialName(value = "markets")
     val markets: kotlin.collections.List<MarketTonRates>
 
 )

@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockRaw
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,26 +31,26 @@ import com.squareup.moshi.JsonClass
  * @param proof 
  * @param stateProof 
  */
-
+@Serializable
 
 data class GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkBack (
 
-    @Json(name = "to_key_block")
+    @SerialName(value = "to_key_block")
     val toKeyBlock: kotlin.Boolean,
 
-    @Json(name = "from")
+    @SerialName(value = "from")
     val from: BlockRaw,
 
-    @Json(name = "to")
+    @SerialName(value = "to")
     val to: BlockRaw,
 
-    @Json(name = "dest_proof")
+    @SerialName(value = "dest_proof")
     val destProof: kotlin.String,
 
-    @Json(name = "proof")
+    @SerialName(value = "proof")
     val proof: kotlin.String,
 
-    @Json(name = "state_proof")
+    @SerialName(value = "state_proof")
     val stateProof: kotlin.String
 
 )

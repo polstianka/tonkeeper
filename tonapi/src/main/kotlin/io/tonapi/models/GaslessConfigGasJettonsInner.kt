@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param masterId 
  */
-
+@Serializable
 
 data class GaslessConfigGasJettonsInner (
 
-    @Json(name = "master_id")
+    @SerialName(value = "master_id")
     val masterId: kotlin.String
 
 )

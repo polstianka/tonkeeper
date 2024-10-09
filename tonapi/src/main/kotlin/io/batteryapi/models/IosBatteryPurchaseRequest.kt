@@ -17,23 +17,21 @@ package io.batteryapi.models
 
 import io.batteryapi.models.IosBatteryPurchaseRequestTransactionsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param transactions 
  */
-
+@Serializable
 
 data class IosBatteryPurchaseRequest (
 
-    @Json(name = "transactions")
+    @SerialName(value = "transactions")
     val transactions: kotlin.collections.List<IosBatteryPurchaseRequestTransactionsInner>
 
-) {
-
-
-}
+)
 

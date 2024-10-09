@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.Validator
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,23 +30,23 @@ import com.squareup.moshi.JsonClass
  * @param totalStake 
  * @param validators 
  */
-
+@Serializable
 
 data class Validators (
 
-    @Json(name = "elect_at")
+    @SerialName(value = "elect_at")
     val electAt: kotlin.Long,
 
-    @Json(name = "elect_close")
+    @SerialName(value = "elect_close")
     val electClose: kotlin.Long,
 
-    @Json(name = "min_stake")
+    @SerialName(value = "min_stake")
     val minStake: kotlin.Long,
 
-    @Json(name = "total_stake")
+    @SerialName(value = "total_stake")
     val totalStake: kotlin.Long,
 
-    @Json(name = "validators")
+    @SerialName(value = "validators")
     val validators: kotlin.collections.List<Validator>
 
 )

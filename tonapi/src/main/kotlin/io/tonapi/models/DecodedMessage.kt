@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.DecodedMessageExtInMsgDecoded
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -28,17 +29,17 @@ import com.squareup.moshi.JsonClass
  * @param destinationWalletVersion 
  * @param extInMsgDecoded 
  */
-
+@Serializable
 
 data class DecodedMessage (
 
-    @Json(name = "destination")
+    @SerialName(value = "destination")
     val destination: AccountAddress,
 
-    @Json(name = "destination_wallet_version")
+    @SerialName(value = "destination_wallet_version")
     val destinationWalletVersion: kotlin.String,
 
-    @Json(name = "ext_in_msg_decoded")
+    @SerialName(value = "ext_in_msg_decoded")
     val extInMsgDecoded: DecodedMessageExtInMsgDecoded? = null
 
 )

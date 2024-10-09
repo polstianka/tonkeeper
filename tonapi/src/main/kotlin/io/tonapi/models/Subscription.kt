@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -34,41 +35,41 @@ import com.squareup.moshi.JsonClass
  * @param subscriptionId 
  * @param failedAttempts 
  */
-
+@Serializable
 
 data class Subscription (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "wallet_address")
+    @SerialName(value = "wallet_address")
     val walletAddress: kotlin.String,
 
-    @Json(name = "beneficiary_address")
+    @SerialName(value = "beneficiary_address")
     val beneficiaryAddress: kotlin.String,
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.Long,
 
-    @Json(name = "period")
+    @SerialName(value = "period")
     val period: kotlin.Long,
 
-    @Json(name = "start_time")
+    @SerialName(value = "start_time")
     val startTime: kotlin.Long,
 
-    @Json(name = "timeout")
+    @SerialName(value = "timeout")
     val timeout: kotlin.Long,
 
-    @Json(name = "last_payment_time")
+    @SerialName(value = "last_payment_time")
     val lastPaymentTime: kotlin.Long,
 
-    @Json(name = "last_request_time")
+    @SerialName(value = "last_request_time")
     val lastRequestTime: kotlin.Long,
 
-    @Json(name = "subscription_id")
+    @SerialName(value = "subscription_id")
     val subscriptionId: kotlin.Long,
 
-    @Json(name = "failed_attempts")
+    @SerialName(value = "failed_attempts")
     val failedAttempts: kotlin.Int
 
 )

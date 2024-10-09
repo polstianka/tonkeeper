@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.Account
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param accounts 
  */
-
+@Serializable
 
 data class Accounts (
 
-    @Json(name = "accounts")
+    @SerialName(value = "accounts")
     val accounts: kotlin.collections.List<Account>
 
 )

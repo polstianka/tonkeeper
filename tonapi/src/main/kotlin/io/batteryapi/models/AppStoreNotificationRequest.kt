@@ -16,23 +16,21 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param signedPayload 
  */
-
+@Serializable
 
 data class AppStoreNotificationRequest (
 
-    @Json(name = "signedPayload")
+    @SerialName(value = "signedPayload")
     val signedPayload: kotlin.String
 
-) {
-
-
-}
+)
 

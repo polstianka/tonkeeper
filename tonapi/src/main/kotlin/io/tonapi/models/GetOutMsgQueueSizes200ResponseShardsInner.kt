@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockRaw
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,14 +27,14 @@ import com.squareup.moshi.JsonClass
  * @param id 
  * @param propertySize 
  */
-
+@Serializable
 
 data class GetOutMsgQueueSizes200ResponseShardsInner (
 
-    @Json(name = "id")
+    @SerialName(value = "id")
     val id: BlockRaw,
 
-    @Json(name = "size")
+    @SerialName(value = "size")
     val propertySize: kotlin.Int
 
 )

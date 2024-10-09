@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.GasLimitPrices
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The cost of computations in the masterchain. The complexity of any computation is estimated in gas units.
  *
  * @param gasLimitsPrices 
  */
-
+@Serializable
 
 data class BlockchainConfig20 (
 
-    @Json(name = "gas_limits_prices")
+    @SerialName(value = "gas_limits_prices")
     val gasLimitsPrices: GasLimitPrices
 
 )

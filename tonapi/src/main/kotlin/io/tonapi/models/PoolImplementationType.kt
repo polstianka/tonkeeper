@@ -16,25 +16,24 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: whales,tf,liquidTF
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class PoolImplementationType(val value: kotlin.String) {
 
-    @Json(name = "whales")
+    @SerialName(value = "whales")
     whales("whales"),
 
-    @Json(name = "tf")
+    @SerialName(value = "tf")
     tf("tf"),
 
-    @Json(name = "liquidTF")
+    @SerialName(value = "liquidTF")
     liquidTF("liquidTF");
 
     /**

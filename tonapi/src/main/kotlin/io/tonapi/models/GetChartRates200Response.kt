@@ -16,20 +16,21 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param points 
  */
-
+@Serializable
 
 data class GetChartRates200Response (
 
-    @Json(name = "points")
-    val points: kotlin.collections.Map<kotlin.String, kotlin.Any>
+    @Contextual @SerialName(value = "points")
+    val points: kotlin.collections.Map<kotlin.String, kotlin.String>
 
 )
 

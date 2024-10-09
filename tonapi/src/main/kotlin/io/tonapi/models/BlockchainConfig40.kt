@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.MisbehaviourPunishmentConfig
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The configuration for punishment for improper behavior (non-validation). In the absence of the parameter, the default fine size is 101 TON
  *
  * @param misbehaviourPunishmentConfig 
  */
-
+@Serializable
 
 data class BlockchainConfig40 (
 
-    @Json(name = "misbehaviour_punishment_config")
+    @SerialName(value = "misbehaviour_punishment_config")
     val misbehaviourPunishmentConfig: MisbehaviourPunishmentConfig
 
 )

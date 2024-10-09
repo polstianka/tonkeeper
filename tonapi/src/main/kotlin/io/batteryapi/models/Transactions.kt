@@ -17,8 +17,9 @@ package io.batteryapi.models
 
 import io.batteryapi.models.TransactionsTransactionsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,22 +28,19 @@ import com.squareup.moshi.JsonClass
  * @param transactions 
  * @param nextOffset if set, then there are more transactions to be loaded. Use this value as offset parameter in the next request.
  */
-
+@Serializable
 
 data class Transactions (
 
-    @Json(name = "total_transactions")
+    @SerialName(value = "total_transactions")
     val totalTransactions: kotlin.Int,
 
-    @Json(name = "transactions")
+    @SerialName(value = "transactions")
     val transactions: kotlin.collections.List<TransactionsTransactionsInner>,
 
     /* if set, then there are more transactions to be loaded. Use this value as offset parameter in the next request. */
-    @Json(name = "next_offset")
+    @SerialName(value = "next_offset")
     val nextOffset: kotlin.Int? = null
 
-) {
-
-
-}
+)
 

@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param nodeIdShort 
  * @param signature 
  */
-
+@Serializable
 
 data class GetRawBlockProof200ResponseStepsInnerLiteServerBlockLinkForwardSignaturesSignaturesInner (
 
-    @Json(name = "node_id_short")
+    @SerialName(value = "node_id_short")
     val nodeIdShort: kotlin.String,
 
-    @Json(name = "signature")
+    @SerialName(value = "signature")
     val signature: kotlin.String
 
 )

@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -25,14 +26,14 @@ import com.squareup.moshi.JsonClass
  * @param `value` 
  * @param tokenName 
  */
-
+@Serializable
 
 data class Price (
 
-    @Json(name = "value")
+    @SerialName(value = "value")
     val `value`: kotlin.String,
 
-    @Json(name = "token_name")
+    @SerialName(value = "token_name")
     val tokenName: kotlin.String
 
 )

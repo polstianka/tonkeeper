@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockLimits
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The limits on the block in the basechains, upon reaching which the block is finalized and the callback of the remaining messages (if any) is carried over to the next block.
  *
  * @param blockLimits 
  */
-
+@Serializable
 
 data class BlockchainConfig23 (
 
-    @Json(name = "block_limits")
+    @SerialName(value = "block_limits")
     val blockLimits: BlockLimits
 
 )

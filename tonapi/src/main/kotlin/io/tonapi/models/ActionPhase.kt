@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,29 +31,29 @@ import com.squareup.moshi.JsonClass
  * @param totalFees 
  * @param resultCodeDescription 
  */
-
+@Serializable
 
 data class ActionPhase (
 
-    @Json(name = "success")
+    @SerialName(value = "success")
     val success: kotlin.Boolean,
 
-    @Json(name = "result_code")
+    @SerialName(value = "result_code")
     val resultCode: kotlin.Int,
 
-    @Json(name = "total_actions")
+    @SerialName(value = "total_actions")
     val totalActions: kotlin.Int,
 
-    @Json(name = "skipped_actions")
+    @SerialName(value = "skipped_actions")
     val skippedActions: kotlin.Int,
 
-    @Json(name = "fwd_fees")
+    @SerialName(value = "fwd_fees")
     val fwdFees: kotlin.Long,
 
-    @Json(name = "total_fees")
+    @SerialName(value = "total_fees")
     val totalFees: kotlin.Long,
 
-    @Json(name = "result_code_description")
+    @SerialName(value = "result_code_description")
     val resultCodeDescription: kotlin.String? = null
 
 )

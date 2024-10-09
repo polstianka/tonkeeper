@@ -15,10 +15,11 @@
 
 package io.tonapi.models
 
-import io.tonapi.models.DecodeMessageRequest
+import io.tonapi.models.GaslessEstimateRequestMessagesInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,18 +28,18 @@ import com.squareup.moshi.JsonClass
  * @param walletPublicKey 
  * @param messages 
  */
-
+@Serializable
 
 data class GaslessEstimateRequest (
 
-    @Json(name = "wallet_address")
+    @SerialName(value = "wallet_address")
     val walletAddress: kotlin.String,
 
-    @Json(name = "wallet_public_key")
+    @SerialName(value = "wallet_public_key")
     val walletPublicKey: kotlin.String,
 
-    @Json(name = "messages")
-    val messages: kotlin.collections.List<DecodeMessageRequest>
+    @SerialName(value = "messages")
+    val messages: kotlin.collections.List<GaslessEstimateRequestMessagesInner>
 
 )
 

@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.JettonHoldersAddressesInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,15 +27,15 @@ import com.squareup.moshi.JsonClass
  * @param addresses 
  * @param total total number of holders
  */
-
+@Serializable
 
 data class JettonHolders (
 
-    @Json(name = "addresses")
+    @SerialName(value = "addresses")
     val addresses: kotlin.collections.List<JettonHoldersAddressesInner>,
 
     /* total number of holders */
-    @Json(name = "total")
+    @SerialName(value = "total")
     val total: kotlin.Long
 
 )

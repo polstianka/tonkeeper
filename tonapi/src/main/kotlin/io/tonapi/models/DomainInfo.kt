@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.NftItem
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,18 +28,18 @@ import com.squareup.moshi.JsonClass
  * @param expiringAt date of expiring. optional. not all domain in ton has expiration date
  * @param item 
  */
-
+@Serializable
 
 data class DomainInfo (
 
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String,
 
     /* date of expiring. optional. not all domain in ton has expiration date */
-    @Json(name = "expiring_at")
+    @SerialName(value = "expiring_at")
     val expiringAt: kotlin.Long? = null,
 
-    @Json(name = "item")
+    @SerialName(value = "item")
     val item: NftItem? = null
 
 )

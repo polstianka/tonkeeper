@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.BlockRaw
 import io.tonapi.models.GetRawBlockProof200ResponseStepsInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,20 +30,20 @@ import com.squareup.moshi.JsonClass
  * @param to 
  * @param steps 
  */
-
+@Serializable
 
 data class GetRawBlockProof200Response (
 
-    @Json(name = "complete")
+    @SerialName(value = "complete")
     val complete: kotlin.Boolean,
 
-    @Json(name = "from")
+    @SerialName(value = "from")
     val from: BlockRaw,
 
-    @Json(name = "to")
+    @SerialName(value = "to")
     val to: BlockRaw,
 
-    @Json(name = "steps")
+    @SerialName(value = "steps")
     val steps: kotlin.collections.List<GetRawBlockProof200ResponseStepsInner>
 
 )

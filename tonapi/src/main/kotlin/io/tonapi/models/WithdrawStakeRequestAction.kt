@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.PoolImplementationType
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * validator's participation in elections
@@ -29,20 +30,20 @@ import com.squareup.moshi.JsonClass
  * @param implementation 
  * @param amount 
  */
-
+@Serializable
 
 data class WithdrawStakeRequestAction (
 
-    @Json(name = "staker")
+    @SerialName(value = "staker")
     val staker: AccountAddress,
 
-    @Json(name = "pool")
+    @SerialName(value = "pool")
     val pool: AccountAddress,
 
-    @Json(name = "implementation")
+    @Contextual @SerialName(value = "implementation")
     val implementation: PoolImplementationType,
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.Long? = null
 
 )

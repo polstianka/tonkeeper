@@ -12,7 +12,7 @@ import com.tonapps.extensions.short12
 import com.tonapps.extensions.short6
 import com.tonapps.extensions.short8
 import com.tonapps.tonkeeperx.R
-import io.tonapi.infrastructure.Serializer
+import io.infrastructure.Serializer
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.Action

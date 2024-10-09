@@ -16,25 +16,24 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * 
  *
  * Values: whitelist,blacklist,none
  */
-
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class JettonVerificationType(val value: kotlin.String) {
 
-    @Json(name = "whitelist")
+    @SerialName(value = "whitelist")
     whitelist("whitelist"),
 
-    @Json(name = "blacklist")
+    @SerialName(value = "blacklist")
     blacklist("blacklist"),
 
-    @Json(name = "none")
+    @SerialName(value = "none")
     none("none");
 
     /**

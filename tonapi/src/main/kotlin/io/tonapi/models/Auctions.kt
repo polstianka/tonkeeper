@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.Auction
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,14 +27,14 @@ import com.squareup.moshi.JsonClass
  * @param `data` 
  * @param total 
  */
-
+@Serializable
 
 data class Auctions (
 
-    @Json(name = "data")
+    @SerialName(value = "data")
     val `data`: kotlin.collections.List<Auction>,
 
-    @Json(name = "total")
+    @SerialName(value = "total")
     val total: kotlin.Long
 
 )

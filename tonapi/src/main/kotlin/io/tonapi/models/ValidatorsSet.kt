@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.ValidatorsSetListInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -30,26 +31,26 @@ import com.squareup.moshi.JsonClass
  * @param list 
  * @param totalWeight 
  */
-
+@Serializable
 
 data class ValidatorsSet (
 
-    @Json(name = "utime_since")
+    @SerialName(value = "utime_since")
     val utimeSince: kotlin.Int,
 
-    @Json(name = "utime_until")
+    @SerialName(value = "utime_until")
     val utimeUntil: kotlin.Int,
 
-    @Json(name = "total")
+    @SerialName(value = "total")
     val total: kotlin.Int,
 
-    @Json(name = "main")
+    @SerialName(value = "main")
     val main: kotlin.Int,
 
-    @Json(name = "list")
+    @SerialName(value = "list")
     val list: kotlin.collections.List<ValidatorsSetListInner>,
 
-    @Json(name = "total_weight")
+    @SerialName(value = "total_weight")
     val totalWeight: kotlin.String? = null
 
 )

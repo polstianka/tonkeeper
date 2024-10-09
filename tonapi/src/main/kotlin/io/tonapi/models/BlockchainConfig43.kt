@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.SizeLimitsConfig
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * The size limits and some other characteristics of accounts and messages.
  *
  * @param sizeLimitsConfig 
  */
-
+@Serializable
 
 data class BlockchainConfig43 (
 
-    @Json(name = "size_limits_config")
+    @SerialName(value = "size_limits_config")
     val sizeLimitsConfig: SizeLimitsConfig
 
 )

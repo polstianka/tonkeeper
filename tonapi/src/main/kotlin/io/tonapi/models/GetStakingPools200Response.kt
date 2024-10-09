@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.PoolImplementation
 import io.tonapi.models.PoolInfo
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,14 +28,14 @@ import com.squareup.moshi.JsonClass
  * @param pools 
  * @param implementations 
  */
-
+@Serializable
 
 data class GetStakingPools200Response (
 
-    @Json(name = "pools")
+    @SerialName(value = "pools")
     val pools: kotlin.collections.List<PoolInfo>,
 
-    @Json(name = "implementations")
+    @Contextual @SerialName(value = "implementations")
     val implementations: kotlin.collections.Map<kotlin.String, PoolImplementation>
 
 )

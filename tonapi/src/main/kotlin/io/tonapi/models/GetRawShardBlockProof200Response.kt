@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.BlockRaw
 import io.tonapi.models.GetRawShardBlockProof200ResponseLinksInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,14 +28,14 @@ import com.squareup.moshi.JsonClass
  * @param masterchainId 
  * @param links 
  */
-
+@Serializable
 
 data class GetRawShardBlockProof200Response (
 
-    @Json(name = "masterchain_id")
+    @SerialName(value = "masterchain_id")
     val masterchainId: BlockRaw,
 
-    @Json(name = "links")
+    @SerialName(value = "links")
     val links: kotlin.collections.List<GetRawShardBlockProof200ResponseLinksInner>
 
 )

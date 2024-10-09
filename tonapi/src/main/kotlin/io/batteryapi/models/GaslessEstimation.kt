@@ -16,23 +16,21 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param commission 
  */
-
+@Serializable
 
 data class GaslessEstimation (
 
-    @Json(name = "commission")
+    @SerialName(value = "commission")
     val commission: kotlin.String
 
-) {
-
-
-}
+)
 

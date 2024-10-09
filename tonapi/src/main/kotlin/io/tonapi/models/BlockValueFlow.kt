@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.BlockCurrencyCollection
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -34,38 +35,38 @@ import com.squareup.moshi.JsonClass
  * @param minted 
  * @param burned 
  */
-
+@Serializable
 
 data class BlockValueFlow (
 
-    @Json(name = "from_prev_blk")
+    @SerialName(value = "from_prev_blk")
     val fromPrevBlk: BlockCurrencyCollection,
 
-    @Json(name = "to_next_blk")
+    @SerialName(value = "to_next_blk")
     val toNextBlk: BlockCurrencyCollection,
 
-    @Json(name = "imported")
+    @SerialName(value = "imported")
     val imported: BlockCurrencyCollection,
 
-    @Json(name = "exported")
+    @SerialName(value = "exported")
     val exported: BlockCurrencyCollection,
 
-    @Json(name = "fees_collected")
+    @SerialName(value = "fees_collected")
     val feesCollected: BlockCurrencyCollection,
 
-    @Json(name = "fees_imported")
+    @SerialName(value = "fees_imported")
     val feesImported: BlockCurrencyCollection,
 
-    @Json(name = "recovered")
+    @SerialName(value = "recovered")
     val recovered: BlockCurrencyCollection,
 
-    @Json(name = "created")
+    @SerialName(value = "created")
     val created: BlockCurrencyCollection,
 
-    @Json(name = "minted")
+    @SerialName(value = "minted")
     val minted: BlockCurrencyCollection,
 
-    @Json(name = "burned")
+    @SerialName(value = "burned")
     val burned: BlockCurrencyCollection? = null
 
 )

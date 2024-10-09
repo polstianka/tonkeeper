@@ -18,8 +18,9 @@ package io.tonapi.models
 import io.tonapi.models.AccountAddress
 import io.tonapi.models.ImagePreview
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -32,29 +33,29 @@ import com.squareup.moshi.JsonClass
  * @param metadata 
  * @param previews 
  */
-
+@Serializable
 
 data class NftCollection (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "next_item_index")
+    @SerialName(value = "next_item_index")
     val nextItemIndex: kotlin.Long,
 
-    @Json(name = "raw_collection_content")
+    @SerialName(value = "raw_collection_content")
     val rawCollectionContent: kotlin.String,
 
-    @Json(name = "approved_by")
+    @SerialName(value = "approved_by")
     val approvedBy: kotlin.collections.List<NftCollection.ApprovedBy>,
 
-    @Json(name = "owner")
+    @SerialName(value = "owner")
     val owner: AccountAddress? = null,
 
-    @Json(name = "metadata")
-    val metadata: kotlin.collections.Map<kotlin.String, kotlin.Any>? = null,
+    @Contextual @SerialName(value = "metadata")
+    val metadata: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
 
-    @Json(name = "previews")
+    @SerialName(value = "previews")
     val previews: kotlin.collections.List<ImagePreview>? = null
 
 ) {
@@ -64,11 +65,11 @@ data class NftCollection (
      *
      * Values: getgems,tonkeeper,tonPeriodDiamonds
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class ApprovedBy(val value: kotlin.String) {
-        @Json(name = "getgems") getgems("getgems"),
-        @Json(name = "tonkeeper") tonkeeper("tonkeeper"),
-        @Json(name = "ton.diamonds") tonPeriodDiamonds("ton.diamonds");
+        @SerialName(value = "getgems") getgems("getgems"),
+        @SerialName(value = "tonkeeper") tonkeeper("tonkeeper"),
+        @SerialName(value = "ton.diamonds") tonPeriodDiamonds("ton.diamonds");
     }
 }
 

@@ -16,23 +16,21 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param token 
  */
-
+@Serializable
 
 data class TonConnectProof200Response (
 
-    @Json(name = "token")
+    @SerialName(value = "token")
     val token: kotlin.String
 
-) {
-
-
-}
+)
 

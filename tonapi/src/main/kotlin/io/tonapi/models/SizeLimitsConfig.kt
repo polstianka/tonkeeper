@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -31,32 +32,32 @@ import com.squareup.moshi.JsonClass
  * @param maxAccStateCells 
  * @param maxAccStateBits 
  */
-
+@Serializable
 
 data class SizeLimitsConfig (
 
-    @Json(name = "max_msg_bits")
+    @SerialName(value = "max_msg_bits")
     val maxMsgBits: kotlin.Long,
 
-    @Json(name = "max_msg_cells")
+    @SerialName(value = "max_msg_cells")
     val maxMsgCells: kotlin.Long,
 
-    @Json(name = "max_library_cells")
+    @SerialName(value = "max_library_cells")
     val maxLibraryCells: kotlin.Long,
 
-    @Json(name = "max_vm_data_depth")
+    @SerialName(value = "max_vm_data_depth")
     val maxVmDataDepth: kotlin.Int,
 
-    @Json(name = "max_ext_msg_size")
+    @SerialName(value = "max_ext_msg_size")
     val maxExtMsgSize: kotlin.Long,
 
-    @Json(name = "max_ext_msg_depth")
+    @SerialName(value = "max_ext_msg_depth")
     val maxExtMsgDepth: kotlin.Int,
 
-    @Json(name = "max_acc_state_cells")
+    @SerialName(value = "max_acc_state_cells")
     val maxAccStateCells: kotlin.Long? = null,
 
-    @Json(name = "max_acc_state_bits")
+    @SerialName(value = "max_acc_state_bits")
     val maxAccStateBits: kotlin.Long? = null
 
 )

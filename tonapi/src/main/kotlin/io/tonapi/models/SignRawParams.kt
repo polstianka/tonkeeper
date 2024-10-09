@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.SignRawMessage
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,24 +30,24 @@ import com.squareup.moshi.JsonClass
  * @param validUntil 
  * @param messages 
  */
-
+@Serializable
 
 data class SignRawParams (
 
-    @Json(name = "relay_address")
+    @SerialName(value = "relay_address")
     val relayAddress: kotlin.String,
 
     /* Commission for the transaction. In nanocoins. */
-    @Json(name = "commission")
+    @SerialName(value = "commission")
     val commission: kotlin.String,
 
-    @Json(name = "from")
+    @SerialName(value = "from")
     val from: kotlin.String,
 
-    @Json(name = "valid_until")
+    @SerialName(value = "valid_until")
     val validUntil: kotlin.Long,
 
-    @Json(name = "messages")
+    @SerialName(value = "messages")
     val messages: kotlin.collections.List<SignRawMessage>
 
 )

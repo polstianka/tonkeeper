@@ -19,8 +19,9 @@ import io.tonapi.models.AccountStatus
 import io.tonapi.models.AccountStorageInfo
 import io.tonapi.models.BlockchainRawAccountLibrariesInner
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -37,41 +38,41 @@ import com.squareup.moshi.JsonClass
  * @param frozenHash 
  * @param libraries 
  */
-
+@Serializable
 
 data class BlockchainRawAccount (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "balance")
+    @SerialName(value = "balance")
     val balance: kotlin.Long,
 
-    @Json(name = "last_transaction_lt")
+    @SerialName(value = "last_transaction_lt")
     val lastTransactionLt: kotlin.Long,
 
-    @Json(name = "status")
+    @Contextual @SerialName(value = "status")
     val status: AccountStatus,
 
-    @Json(name = "storage")
+    @SerialName(value = "storage")
     val storage: AccountStorageInfo,
 
-    @Json(name = "extra_balance")
+    @SerialName(value = "extra_balance")
     val extraBalance: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
 
-    @Json(name = "code")
+    @SerialName(value = "code")
     val code: kotlin.String? = null,
 
-    @Json(name = "data")
+    @SerialName(value = "data")
     val `data`: kotlin.String? = null,
 
-    @Json(name = "last_transaction_hash")
+    @SerialName(value = "last_transaction_hash")
     val lastTransactionHash: kotlin.String? = null,
 
-    @Json(name = "frozen_hash")
+    @SerialName(value = "frozen_hash")
     val frozenHash: kotlin.String? = null,
 
-    @Json(name = "libraries")
+    @SerialName(value = "libraries")
     val libraries: kotlin.collections.List<BlockchainRawAccountLibrariesInner>? = null
 
 )

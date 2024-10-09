@@ -15,9 +15,11 @@
 
 package io.tonapi.models
 
+import io.tonapi.models.Risk
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,31 +31,43 @@ import com.squareup.moshi.JsonClass
  * @param signers 
  * @param approvalsNum 
  * @param expirationDate 
+ * @param risk 
+ * @param creationDate 
+ * @param signedBy 
  */
-
+@Serializable
 
 data class MultisigOrder (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "order_seqno")
+    @SerialName(value = "order_seqno")
     val orderSeqno: kotlin.Long,
 
-    @Json(name = "threshold")
+    @SerialName(value = "threshold")
     val threshold: kotlin.Int,
 
-    @Json(name = "sent_for_execution")
+    @SerialName(value = "sent_for_execution")
     val sentForExecution: kotlin.Boolean,
 
-    @Json(name = "signers")
+    @SerialName(value = "signers")
     val signers: kotlin.collections.List<kotlin.String>,
 
-    @Json(name = "approvals_num")
+    @SerialName(value = "approvals_num")
     val approvalsNum: kotlin.Int,
 
-    @Json(name = "expiration_date")
-    val expirationDate: kotlin.Long
+    @SerialName(value = "expiration_date")
+    val expirationDate: kotlin.Long,
+
+    @SerialName(value = "risk")
+    val risk: Risk,
+
+    @SerialName(value = "creation_date")
+    val creationDate: kotlin.Long,
+
+    @SerialName(value = "signed_by")
+    val signedBy: kotlin.collections.List<kotlin.String>
 
 )
 

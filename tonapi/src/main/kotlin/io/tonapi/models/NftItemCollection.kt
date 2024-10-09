@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -26,17 +27,17 @@ import com.squareup.moshi.JsonClass
  * @param name 
  * @param description 
  */
-
+@Serializable
 
 data class NftItemCollection (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String,
 
-    @Json(name = "description")
+    @SerialName(value = "description")
     val description: kotlin.String
 
 )

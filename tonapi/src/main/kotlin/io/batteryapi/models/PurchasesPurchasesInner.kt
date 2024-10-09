@@ -17,8 +17,9 @@ package io.batteryapi.models
 
 import io.batteryapi.models.PurchasesPurchasesInnerRefundInformation
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -34,41 +35,41 @@ import com.squareup.moshi.JsonClass
  * @param currency Currency is set when we know it. For crypto purchases it is always set.
  * @param refundInformation 
  */
-
+@Serializable
 
 data class PurchasesPurchasesInner (
 
-    @Json(name = "user_purchase_id")
+    @SerialName(value = "user_purchase_id")
     @Deprecated(message = "This property is deprecated.")
     val userPurchaseId: kotlin.Int,
 
-    @Json(name = "purchase_id")
+    @SerialName(value = "purchase_id")
     val purchaseId: kotlin.Int,
 
-    @Json(name = "type")
+    @SerialName(value = "type")
     val type: PurchasesPurchasesInner.Type,
 
-    @Json(name = "charges")
+    @SerialName(value = "charges")
     val charges: kotlin.Int,
 
-    @Json(name = "datetime")
+    @SerialName(value = "datetime")
     val datetime: kotlin.String,
 
-    @Json(name = "promo")
+    @SerialName(value = "promo")
     val promo: kotlin.String? = null,
 
-    @Json(name = "for_account_id")
+    @SerialName(value = "for_account_id")
     val forAccountId: kotlin.String? = null,
 
     /* Amount describes the amount paid by the user for this purchase when we know it. For crypto purchases it is always set. */
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String? = null,
 
     /* Currency is set when we know it. For crypto purchases it is always set. */
-    @Json(name = "currency")
+    @SerialName(value = "currency")
     val currency: kotlin.String? = null,
 
-    @Json(name = "refund_information")
+    @SerialName(value = "refund_information")
     val refundInformation: PurchasesPurchasesInnerRefundInformation? = null
 
 ) {
@@ -78,15 +79,14 @@ data class PurchasesPurchasesInner (
      *
      * Values: android,ios,promoMinusCode,crypto,gift,onMinusTheMinusWayMinusGift
      */
-    @JsonClass(generateAdapter = false)
+    @Serializable
     enum class Type(val value: kotlin.String) {
-        @Json(name = "android") android("android"),
-        @Json(name = "ios") ios("ios"),
-        @Json(name = "promo-code") promoMinusCode("promo-code"),
-        @Json(name = "crypto") crypto("crypto"),
-        @Json(name = "gift") gift("gift"),
-        @Json(name = "on-the-way-gift") onMinusTheMinusWayMinusGift("on-the-way-gift");
+        @SerialName(value = "android") android("android"),
+        @SerialName(value = "ios") ios("ios"),
+        @SerialName(value = "promo-code") promoMinusCode("promo-code"),
+        @SerialName(value = "crypto") crypto("crypto"),
+        @SerialName(value = "gift") gift("gift"),
+        @SerialName(value = "on-the-way-gift") onMinusTheMinusWayMinusGift("on-the-way-gift");
     }
-
 }
 

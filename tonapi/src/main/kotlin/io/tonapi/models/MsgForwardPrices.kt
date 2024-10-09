@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,26 +30,26 @@ import com.squareup.moshi.JsonClass
  * @param firstFrac 
  * @param nextFrac 
  */
-
+@Serializable
 
 data class MsgForwardPrices (
 
-    @Json(name = "lump_price")
+    @SerialName(value = "lump_price")
     val lumpPrice: kotlin.Long,
 
-    @Json(name = "bit_price")
+    @SerialName(value = "bit_price")
     val bitPrice: kotlin.Long,
 
-    @Json(name = "cell_price")
+    @SerialName(value = "cell_price")
     val cellPrice: kotlin.Long,
 
-    @Json(name = "ihr_price_factor")
+    @SerialName(value = "ihr_price_factor")
     val ihrPriceFactor: kotlin.Long,
 
-    @Json(name = "first_frac")
+    @SerialName(value = "first_frac")
     val firstFrac: kotlin.Long,
 
-    @Json(name = "next_frac")
+    @SerialName(value = "next_frac")
     val nextFrac: kotlin.Long
 
 )

@@ -16,8 +16,9 @@
 package io.batteryapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -29,30 +30,27 @@ import com.squareup.moshi.JsonClass
  * @param destination 
  * @param relayerEventId 
  */
-
+@Serializable
 
 data class CreateCustomRefundRequest (
 
-    @Json(name = "amount")
+    @SerialName(value = "amount")
     val amount: kotlin.String,
 
-    @Json(name = "currency")
+    @SerialName(value = "currency")
     val currency: kotlin.String,
 
-    @Json(name = "comment")
+    @SerialName(value = "comment")
     val comment: kotlin.String,
 
-    @Json(name = "reason")
+    @SerialName(value = "reason")
     val reason: kotlin.String,
 
-    @Json(name = "destination")
+    @SerialName(value = "destination")
     val destination: kotlin.String,
 
-    @Json(name = "relayer_event_id")
+    @SerialName(value = "relayer_event_id")
     val relayerEventId: kotlin.Int? = null
 
-) {
-
-
-}
+)
 

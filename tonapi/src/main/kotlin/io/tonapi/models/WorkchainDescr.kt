@@ -16,8 +16,9 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -35,44 +36,44 @@ import com.squareup.moshi.JsonClass
  * @param zerostateFileHash 
  * @param version 
  */
-
+@Serializable
 
 data class WorkchainDescr (
 
-    @Json(name = "workchain")
+    @SerialName(value = "workchain")
     val workchain: kotlin.Int,
 
-    @Json(name = "enabled_since")
+    @SerialName(value = "enabled_since")
     val enabledSince: kotlin.Long,
 
-    @Json(name = "actual_min_split")
+    @SerialName(value = "actual_min_split")
     val actualMinSplit: kotlin.Int,
 
-    @Json(name = "min_split")
+    @SerialName(value = "min_split")
     val minSplit: kotlin.Int,
 
-    @Json(name = "max_split")
+    @SerialName(value = "max_split")
     val maxSplit: kotlin.Int,
 
-    @Json(name = "basic")
+    @SerialName(value = "basic")
     val basic: kotlin.Int,
 
-    @Json(name = "active")
+    @SerialName(value = "active")
     val active: kotlin.Boolean,
 
-    @Json(name = "accept_msgs")
+    @SerialName(value = "accept_msgs")
     val acceptMsgs: kotlin.Boolean,
 
-    @Json(name = "flags")
+    @SerialName(value = "flags")
     val flags: kotlin.Int,
 
-    @Json(name = "zerostate_root_hash")
+    @SerialName(value = "zerostate_root_hash")
     val zerostateRootHash: kotlin.String,
 
-    @Json(name = "zerostate_file_hash")
+    @SerialName(value = "zerostate_file_hash")
     val zerostateFileHash: kotlin.String,
 
-    @Json(name = "version")
+    @SerialName(value = "version")
     val version: kotlin.Long
 
 )

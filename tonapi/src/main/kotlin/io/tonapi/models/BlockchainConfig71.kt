@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.OracleBridgeParams
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * Bridge parameters for wrapping TON in other networks.
  *
  * @param oracleBridgeParams 
  */
-
+@Serializable
 
 data class BlockchainConfig71 (
 
-    @Json(name = "oracle_bridge_params")
+    @SerialName(value = "oracle_bridge_params")
     val oracleBridgeParams: OracleBridgeParams
 
 )

@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.InscriptionBalance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param inscriptions 
  */
-
+@Serializable
 
 data class InscriptionBalances (
 
-    @Json(name = "inscriptions")
+    @SerialName(value = "inscriptions")
     val inscriptions: kotlin.collections.List<InscriptionBalance>
 
 )

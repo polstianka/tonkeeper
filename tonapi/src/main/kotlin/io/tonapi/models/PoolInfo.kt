@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.PoolImplementationType
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -39,62 +40,62 @@ import com.squareup.moshi.JsonClass
  * @param liquidJettonMaster for liquid staking master account of jetton
  * @param cycleLength 
  */
-
+@Serializable
 
 data class PoolInfo (
 
-    @Json(name = "address")
+    @SerialName(value = "address")
     val address: kotlin.String,
 
-    @Json(name = "name")
+    @SerialName(value = "name")
     val name: kotlin.String,
 
-    @Json(name = "total_amount")
+    @SerialName(value = "total_amount")
     val totalAmount: kotlin.Long,
 
-    @Json(name = "implementation")
+    @Contextual @SerialName(value = "implementation")
     val implementation: PoolImplementationType,
 
     /* APY in percent */
-    @Json(name = "apy")
+    @Contextual @SerialName(value = "apy")
     val apy: java.math.BigDecimal,
 
-    @Json(name = "min_stake")
+    @SerialName(value = "min_stake")
     val minStake: kotlin.Long,
 
     /* current nomination cycle beginning timestamp */
-    @Json(name = "cycle_start")
+    @SerialName(value = "cycle_start")
     val cycleStart: kotlin.Long,
 
     /* current nomination cycle ending timestamp */
-    @Json(name = "cycle_end")
+    @SerialName(value = "cycle_end")
     val cycleEnd: kotlin.Long,
 
     /* this pool has verified source code or managed by trusted company */
-    @Json(name = "verified")
+    @SerialName(value = "verified")
     val verified: kotlin.Boolean,
 
     /* current number of nominators */
-    @Json(name = "current_nominators")
+    @SerialName(value = "current_nominators")
     val currentNominators: kotlin.Int,
 
     /* maximum number of nominators */
-    @Json(name = "max_nominators")
+    @SerialName(value = "max_nominators")
     val maxNominators: kotlin.Int,
 
     /* total stake of all nominators */
-    @Json(name = "nominators_stake")
+    @SerialName(value = "nominators_stake")
     val nominatorsStake: kotlin.Long,
 
     /* stake of validator */
-    @Json(name = "validator_stake")
+    @SerialName(value = "validator_stake")
     val validatorStake: kotlin.Long,
 
     /* for liquid staking master account of jetton */
-    @Json(name = "liquid_jetton_master")
+    @SerialName(value = "liquid_jetton_master")
     val liquidJettonMaster: kotlin.String? = null,
 
-    @Json(name = "cycle_length")
+    @SerialName(value = "cycle_length")
     val cycleLength: kotlin.Long? = null
 
 )

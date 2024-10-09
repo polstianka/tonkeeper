@@ -17,8 +17,9 @@ package io.tonapi.models
 
 import io.tonapi.models.DecodedRawMessage
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
@@ -27,17 +28,17 @@ import com.squareup.moshi.JsonClass
  * @param boundedQueryId 
  * @param rawMessages 
  */
-
+@Serializable
 
 data class DecodedMessageExtInMsgDecodedWalletHighloadV2 (
 
-    @Json(name = "subwallet_id")
+    @SerialName(value = "subwallet_id")
     val subwalletId: kotlin.Long,
 
-    @Json(name = "bounded_query_id")
+    @SerialName(value = "bounded_query_id")
     val boundedQueryId: kotlin.String,
 
-    @Json(name = "raw_messages")
+    @SerialName(value = "raw_messages")
     val rawMessages: kotlin.collections.List<DecodedRawMessage>
 
 )

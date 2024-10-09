@@ -20,13 +20,15 @@ import okhttp3.OkHttpClient
 import okhttp3.HttpUrl
 
 import io.tonapi.models.Event
+import io.tonapi.models.GetAccountsRequest
 import io.tonapi.models.JettonHolders
 import io.tonapi.models.JettonInfo
 import io.tonapi.models.JettonTransferPayload
 import io.tonapi.models.Jettons
 import io.tonapi.models.StatusDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -199,6 +201,78 @@ class JettonsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/v2/jettons/{account_id}".replace("{"+"account_id"+"}", encodeURIComponent(accountId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * 
+     * Get jetton metadata items by jetton master addresses
+     * @param getAccountsRequest a list of account ids (optional)
+     * @return Jettons
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getJettonInfosByAddresses(getAccountsRequest: GetAccountsRequest? = null) : Jettons {
+        val localVarResponse = getJettonInfosByAddressesWithHttpInfo(getAccountsRequest = getAccountsRequest)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as Jettons
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * 
+     * Get jetton metadata items by jetton master addresses
+     * @param getAccountsRequest a list of account ids (optional)
+     * @return ApiResponse<Jettons?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getJettonInfosByAddressesWithHttpInfo(getAccountsRequest: GetAccountsRequest?) : ApiResponse<Jettons?> {
+        val localVariableConfig = getJettonInfosByAddressesRequestConfig(getAccountsRequest = getAccountsRequest)
+
+        return request<GetAccountsRequest, Jettons>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getJettonInfosByAddresses
+     *
+     * @param getAccountsRequest a list of account ids (optional)
+     * @return RequestConfig
+     */
+    fun getJettonInfosByAddressesRequestConfig(getAccountsRequest: GetAccountsRequest?) : RequestConfig<GetAccountsRequest> {
+        val localVariableBody = getAccountsRequest
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.POST,
+            path = "/v2/jettons/_bulk",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,

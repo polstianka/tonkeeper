@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param publicKey 
  */
-
+@Serializable
 
 data class GetAccountPublicKey200Response (
 
-    @Json(name = "public_key")
+    @SerialName(value = "public_key")
     val publicKey: kotlin.String
 
 )

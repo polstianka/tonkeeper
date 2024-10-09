@@ -25,7 +25,8 @@ import io.tonapi.models.GaslessSendRequest
 import io.tonapi.models.SignRawParams
 import io.tonapi.models.StatusDefaultResponse
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -119,7 +120,7 @@ class GaslessApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
     /**
      * 
-     * Estimates the cost of the given messages and returns a payload to sign.
+     * Estimates the cost of the given messages and returns a payload to sign
      * @param masterId jetton to pay commission
      * @param gaslessEstimateRequest bag-of-cells serialized to hex
      * @return SignRawParams
@@ -151,7 +152,7 @@ class GaslessApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
     /**
      * 
-     * Estimates the cost of the given messages and returns a payload to sign.
+     * Estimates the cost of the given messages and returns a payload to sign
      * @param masterId jetton to pay commission
      * @param gaslessEstimateRequest bag-of-cells serialized to hex
      * @return ApiResponse<SignRawParams?>
@@ -194,7 +195,7 @@ class GaslessApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
     /**
      * 
-     * 
+     * Submits the signed gasless transaction message to the network
      * @param gaslessSendRequest bag-of-cells serialized to hex
      * @return void
      * @throws IllegalStateException If the request is not correctly configured
@@ -224,7 +225,7 @@ class GaslessApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
     /**
      * 
-     * 
+     * Submits the signed gasless transaction message to the network
      * @param gaslessSendRequest bag-of-cells serialized to hex
      * @return ApiResponse<Unit?>
      * @throws IllegalStateException If the request is not correctly configured

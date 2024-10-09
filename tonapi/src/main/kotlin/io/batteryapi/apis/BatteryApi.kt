@@ -40,7 +40,8 @@ import io.batteryapi.models.ResetUserBalanceRequest
 import io.batteryapi.models.Status
 import io.batteryapi.models.Transactions
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.batteryapi.infrastructure.ApiClient
 import io.batteryapi.infrastructure.ApiResponse
@@ -464,8 +465,8 @@ class BatteryApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      * enum for parameter units
      */
      enum class UnitsGetBalance(val value: kotlin.String) {
-         @Json(name = "usd") usd("usd"),
-         @Json(name = "ton") ton("ton")
+         @SerialName(value = "usd") usd("usd"),
+         @SerialName(value = "ton") ton("ton")
      }
 
     /**

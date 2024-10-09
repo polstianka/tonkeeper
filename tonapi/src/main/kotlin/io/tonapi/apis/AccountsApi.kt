@@ -23,10 +23,10 @@ import io.tonapi.models.Account
 import io.tonapi.models.AccountEvent
 import io.tonapi.models.AccountEvents
 import io.tonapi.models.Accounts
-import io.tonapi.models.AddressParse200Response
 import io.tonapi.models.DnsExpiring
 import io.tonapi.models.DomainNames
 import io.tonapi.models.FoundAccounts
+import io.tonapi.models.GaslessEstimateRequestMessagesInner
 import io.tonapi.models.GetAccountDiff200Response
 import io.tonapi.models.GetAccountPublicKey200Response
 import io.tonapi.models.GetAccountsRequest
@@ -38,7 +38,8 @@ import io.tonapi.models.StatusDefaultResponse
 import io.tonapi.models.Subscriptions
 import io.tonapi.models.TraceIDs
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import io.tonapi.infrastructure.ApiClient
 import io.tonapi.infrastructure.ApiResponse
@@ -135,9 +136,12 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
 
     /**
      * 
-     * parse address and display in all formats
+     * Emulate sending message to blockchain
      * @param accountId account ID
-     * @return AddressParse200Response
+     * @param gaslessEstimateRequestMessagesInner bag-of-cells serialized to hex
+     * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
+     * @return AccountEvent
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      * @throws UnsupportedOperationException If the API returns an informational or redirection response
@@ -146,11 +150,11 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addressParse(accountId: kotlin.String) : AddressParse200Response {
-        val localVarResponse = addressParseWithHttpInfo(accountId = accountId)
+    fun emulateMessageToAccountEvent(accountId: kotlin.String, gaslessEstimateRequestMessagesInner: GaslessEstimateRequestMessagesInner, acceptLanguage: kotlin.String? = "en", ignoreSignatureCheck: kotlin.Boolean? = null) : AccountEvent {
+        val localVarResponse = emulateMessageToAccountEventWithHttpInfo(accountId = accountId, gaslessEstimateRequestMessagesInner = gaslessEstimateRequestMessagesInner, acceptLanguage = acceptLanguage, ignoreSignatureCheck = ignoreSignatureCheck)
 
         return when (localVarResponse.responseType) {
-            ResponseType.Success -> (localVarResponse as Success<*>).data as AddressParse200Response
+            ResponseType.Success -> (localVarResponse as Success<*>).data as AccountEvent
             ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
             ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
             ResponseType.ClientError -> {
@@ -166,37 +170,50 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
 
     /**
      * 
-     * parse address and display in all formats
+     * Emulate sending message to blockchain
      * @param accountId account ID
-     * @return ApiResponse<AddressParse200Response?>
+     * @param gaslessEstimateRequestMessagesInner bag-of-cells serialized to hex
+     * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
+     * @return ApiResponse<AccountEvent?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun addressParseWithHttpInfo(accountId: kotlin.String) : ApiResponse<AddressParse200Response?> {
-        val localVariableConfig = addressParseRequestConfig(accountId = accountId)
+    fun emulateMessageToAccountEventWithHttpInfo(accountId: kotlin.String, gaslessEstimateRequestMessagesInner: GaslessEstimateRequestMessagesInner, acceptLanguage: kotlin.String?, ignoreSignatureCheck: kotlin.Boolean?) : ApiResponse<AccountEvent?> {
+        val localVariableConfig = emulateMessageToAccountEventRequestConfig(accountId = accountId, gaslessEstimateRequestMessagesInner = gaslessEstimateRequestMessagesInner, acceptLanguage = acceptLanguage, ignoreSignatureCheck = ignoreSignatureCheck)
 
-        return request<Unit, AddressParse200Response>(
+        return request<GaslessEstimateRequestMessagesInner, AccountEvent>(
             localVariableConfig
         )
     }
 
     /**
-     * To obtain the request config of the operation addressParse
+     * To obtain the request config of the operation emulateMessageToAccountEvent
      *
      * @param accountId account ID
+     * @param gaslessEstimateRequestMessagesInner bag-of-cells serialized to hex
+     * @param acceptLanguage  (optional, default to "en")
+     * @param ignoreSignatureCheck  (optional)
      * @return RequestConfig
      */
-    fun addressParseRequestConfig(accountId: kotlin.String) : RequestConfig<Unit> {
-        val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf()
+    fun emulateMessageToAccountEventRequestConfig(accountId: kotlin.String, gaslessEstimateRequestMessagesInner: GaslessEstimateRequestMessagesInner, acceptLanguage: kotlin.String?, ignoreSignatureCheck: kotlin.Boolean?) : RequestConfig<GaslessEstimateRequestMessagesInner> {
+        val localVariableBody = gaslessEstimateRequestMessagesInner
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (ignoreSignatureCheck != null) {
+                    put("ignore_signature_check", listOf(ignoreSignatureCheck.toString()))
+                }
+            }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        acceptLanguage?.apply { localVariableHeaders["Accept-Language"] = this.toString() }
+        localVariableHeaders["Content-Type"] = "application/json"
         localVariableHeaders["Accept"] = "application/json"
 
         return RequestConfig(
-            method = RequestMethod.GET,
-            path = "/v2/address/{account_id}/parse".replace("{"+"account_id"+"}", encodeURIComponent(accountId.toString())),
+            method = RequestMethod.POST,
+            path = "/v2/accounts/{account_id}/events/emulate".replace("{"+"account_id"+"}", encodeURIComponent(accountId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -638,6 +655,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * @param accountId account ID
      * @param jettonId jetton ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return JettonBalance
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -647,8 +665,8 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getAccountJettonBalance(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>? = null) : JettonBalance {
-        val localVarResponse = getAccountJettonBalanceWithHttpInfo(accountId = accountId, jettonId = jettonId, currencies = currencies)
+    fun getAccountJettonBalance(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>? = null, supportedExtensions: kotlin.collections.List<kotlin.String>? = null) : JettonBalance {
+        val localVarResponse = getAccountJettonBalanceWithHttpInfo(accountId = accountId, jettonId = jettonId, currencies = currencies, supportedExtensions = supportedExtensions)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as JettonBalance
@@ -671,14 +689,15 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * @param accountId account ID
      * @param jettonId jetton ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return ApiResponse<JettonBalance?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getAccountJettonBalanceWithHttpInfo(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?) : ApiResponse<JettonBalance?> {
-        val localVariableConfig = getAccountJettonBalanceRequestConfig(accountId = accountId, jettonId = jettonId, currencies = currencies)
+    fun getAccountJettonBalanceWithHttpInfo(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, supportedExtensions: kotlin.collections.List<kotlin.String>?) : ApiResponse<JettonBalance?> {
+        val localVariableConfig = getAccountJettonBalanceRequestConfig(accountId = accountId, jettonId = jettonId, currencies = currencies, supportedExtensions = supportedExtensions)
 
         return request<Unit, JettonBalance>(
             localVariableConfig
@@ -691,14 +710,18 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * @param accountId account ID
      * @param jettonId jetton ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return RequestConfig
      */
-    fun getAccountJettonBalanceRequestConfig(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?) : RequestConfig<Unit> {
+    fun getAccountJettonBalanceRequestConfig(accountId: kotlin.String, jettonId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, supportedExtensions: kotlin.collections.List<kotlin.String>?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
                 if (currencies != null) {
                     put("currencies", toMultiValue(currencies.toList(), "csv"))
+                }
+                if (supportedExtensions != null) {
+                    put("supported_extensions", toMultiValue(supportedExtensions.toList(), "csv"))
                 }
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -821,6 +844,7 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * Get all Jettons balances by owner address
      * @param accountId account ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return JettonsBalances
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -830,8 +854,8 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getAccountJettonsBalances(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>? = null, extensions: List<String>? = null) : JettonsBalances {
-        val localVarResponse = getAccountJettonsBalancesWithHttpInfo(accountId = accountId, currencies = currencies, extensions = extensions)
+    fun getAccountJettonsBalances(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>? = null, supportedExtensions: kotlin.collections.List<kotlin.String>? = null) : JettonsBalances {
+        val localVarResponse = getAccountJettonsBalancesWithHttpInfo(accountId = accountId, currencies = currencies, supportedExtensions = supportedExtensions)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as JettonsBalances
@@ -853,14 +877,15 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      * Get all Jettons balances by owner address
      * @param accountId account ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return ApiResponse<JettonsBalances?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getAccountJettonsBalancesWithHttpInfo(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, extensions: List<String>?) : ApiResponse<JettonsBalances?> {
-        val localVariableConfig = getAccountJettonsBalancesRequestConfig(accountId = accountId, currencies = currencies, extensions = extensions)
+    fun getAccountJettonsBalancesWithHttpInfo(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, supportedExtensions: kotlin.collections.List<kotlin.String>?) : ApiResponse<JettonsBalances?> {
+        val localVariableConfig = getAccountJettonsBalancesRequestConfig(accountId = accountId, currencies = currencies, supportedExtensions = supportedExtensions)
 
         return request<Unit, JettonsBalances>(
             localVariableConfig
@@ -872,17 +897,18 @@ class AccountsApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClien
      *
      * @param accountId account ID
      * @param currencies accept ton and all possible fiat currencies, separated by commas (optional)
+     * @param supportedExtensions comma separated list supported extensions (optional)
      * @return RequestConfig
      */
-    fun getAccountJettonsBalancesRequestConfig(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, extensions: List<String>?) : RequestConfig<Unit> {
+    fun getAccountJettonsBalancesRequestConfig(accountId: kotlin.String, currencies: kotlin.collections.List<kotlin.String>?, supportedExtensions: kotlin.collections.List<kotlin.String>?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
                 if (currencies != null) {
                     put("currencies", toMultiValue(currencies.toList(), "csv"))
                 }
-                if (extensions != null) {
-                    put("supported_extensions", toMultiValue(extensions.toList(), "csv"))
+                if (supportedExtensions != null) {
+                    put("supported_extensions", toMultiValue(supportedExtensions.toList(), "csv"))
                 }
             }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

@@ -16,19 +16,20 @@
 package io.tonapi.models
 
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param domains 
  */
-
+@Serializable
 
 data class DomainNames (
 
-    @Json(name = "domains")
+    @SerialName(value = "domains")
     val domains: kotlin.collections.List<kotlin.String>
 
 )

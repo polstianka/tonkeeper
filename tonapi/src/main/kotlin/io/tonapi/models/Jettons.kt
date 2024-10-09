@@ -17,19 +17,20 @@ package io.tonapi.models
 
 import io.tonapi.models.JettonInfo
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 
 /**
  * 
  *
  * @param jettons 
  */
-
+@Serializable
 
 data class Jettons (
 
-    @Json(name = "jettons")
+    @SerialName(value = "jettons")
     val jettons: kotlin.collections.List<JettonInfo>
 
 )
