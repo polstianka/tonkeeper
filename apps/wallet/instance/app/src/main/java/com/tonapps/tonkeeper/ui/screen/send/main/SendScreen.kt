@@ -102,6 +102,7 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
     private lateinit var commentEncryptView: AppCompatTextView
     private lateinit var commentDecryptView: AppCompatTextView
     private lateinit var commentRequiredView: AppCompatTextView
+    private lateinit var commentErrorView: AppCompatTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,6 +171,7 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
         applyCommentDecryptView()
 
         commentRequiredView = view.findViewById(R.id.comment_required)
+        commentErrorView = view.findViewById(R.id.comment_error)
 
         commentInput.doOnTextChange = { text ->
             if (text.isEmpty()) {
@@ -223,6 +225,16 @@ class SendScreen(wallet: WalletEntity) : WalletContextScreen(R.layout.fragment_s
         collectFlow(viewModel.uiInputAddressErrorFlow) {
             addressInput.error = it
             addressInput.loading = false
+        }
+
+        collectFlow(viewModel.uiInputCommentErrorFlow) { errorResId ->
+            commentInput.error = errorResId != null
+            if (errorResId != null) {
+                commentErrorView.setText(errorResId)
+                commentErrorView.visibility = View.VISIBLE
+            } else {
+                commentErrorView.visibility = View.GONE
+            }
         }
 
         collectFlow(viewModel.uiEventFlow, ::onEvent)

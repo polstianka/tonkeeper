@@ -8,6 +8,7 @@ sealed class TransportStatusException(message: String) : Exception(message) {
     class InvalidDataReceived : TransportStatusException("Invalid data received")
     class InvalidParameterReceived : TransportStatusException("Invalid parameter received")
     class LockedDevice : TransportStatusException("Locked device")
+    class BlindSigningDisabled : TransportStatusException("Blind signing is disabled")
     class InternalError : TransportStatusException("Internal error, please report")
     class UnknownError(code: Int) : TransportStatusException("Unknown error with status code: $code")
 
@@ -21,6 +22,7 @@ sealed class TransportStatusException(message: String) : Exception(message) {
                 0x6a80 -> InvalidDataReceived()
                 0x6b00 -> InvalidParameterReceived()
                 0x5515 -> LockedDevice()
+                0xBD00 -> BlindSigningDisabled()
                 in 0x6f00..0x6fff -> InternalError()
                 else -> UnknownError(statusCode)
             }

@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
@@ -17,8 +16,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.tonapps.tonkeeper.ui.screen.ledger.steps.list.Adapter
@@ -27,7 +24,6 @@ import com.tonapps.wallet.localization.Localization
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.dialog.alert.AlertDialog
 import uikit.extensions.collectFlow
-import uikit.extensions.context
 import uikit.extensions.dp
 import uikit.extensions.hasPermission
 
@@ -63,6 +59,10 @@ class LedgerConnectionFragment : Fragment(R.layout.fragment_ledger_steps) {
     private lateinit var ledgerView: RelativeLayout
     private lateinit var ledgerDisplayView: LinearLayout
     private lateinit var ledgerDisplayText: TextView
+
+    private var blFadeAnim: ObjectAnimator? = null
+    private var displayFadeAnim: ObjectAnimator? = null
+    private var translationX: ObjectAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,10 +132,14 @@ class LedgerConnectionFragment : Fragment(R.layout.fragment_ledger_steps) {
     }
 
     private fun promptEnableBluetooth() {
-        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            enableBluetoothLauncher.launch(enableBtIntent)
+        if (isPermissionGranted()) {
+            val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+            if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                enableBluetoothLauncher.launch(enableBtIntent)
+            }
+        } else {
+            requestPermissionLauncher.launch(blePermissions)
         }
     }
 
@@ -151,54 +155,73 @@ class LedgerConnectionFragment : Fragment(R.layout.fragment_ledger_steps) {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             hasPermission(Manifest.permission.BLUETOOTH_SCAN) && hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
         } else {
-            hasPermission(Manifest.permission.BLUETOOTH) && hasPermission(Manifest.permission.BLUETOOTH_ADMIN) && hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            hasPermission(Manifest.permission.BLUETOOTH) && hasPermission(Manifest.permission.BLUETOOTH_ADMIN) && hasPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         }
     }
 
     private fun animateView(currentStep: LedgerStep) {
-        val interpolator = AccelerateDecelerateInterpolator()
+        val animInterpolator = AccelerateDecelerateInterpolator()
+
+        blFadeAnim?.cancel()
+        displayFadeAnim?.cancel()
+        translationX?.cancel()
 
         if (currentStep == LedgerStep.CONNECT) {
-            val blFadeAnim =
+            blFadeAnim =
                 ObjectAnimator.ofFloat(bluetoothIconView, "alpha", bluetoothIconView.alpha, 1f)
-            blFadeAnim.duration = 300
-            blFadeAnim.startDelay = 200
-            blFadeAnim.interpolator = interpolator
-            blFadeAnim.start()
+                    .apply {
+                        duration = 300
+                        startDelay = 200
+                        interpolator = animInterpolator
+                        start()
+                    }
 
-            val displayFadeAnim =
+            displayFadeAnim =
                 ObjectAnimator.ofFloat(ledgerDisplayView, "alpha", ledgerDisplayView.alpha, 0f)
-            displayFadeAnim.duration = 300
-            displayFadeAnim.interpolator = interpolator
-            displayFadeAnim.start()
+                    .apply {
+                        duration = 300
+                        interpolator = animInterpolator
+                        start()
+                    }
 
-            val translationX = ObjectAnimator.ofFloat(
-                ledgerView, "translationX", ledgerView.translationX, 24f.dp
-            )
-            translationX.duration = 300
-            translationX.startDelay = 200
-            translationX.interpolator = interpolator
-            translationX.start()
+            translationX =
+                ObjectAnimator.ofFloat(ledgerView, "translationX", ledgerView.translationX, 24f.dp)
+                    .apply {
+                        duration = 300
+                        startDelay = 200
+                        interpolator = animInterpolator
+                        start()
+                    }
         } else {
-            val blFadeAnim =
+            blFadeAnim =
                 ObjectAnimator.ofFloat(bluetoothIconView, "alpha", bluetoothIconView.alpha, 0f)
-            blFadeAnim.duration = 300
-            blFadeAnim.interpolator = interpolator
-            blFadeAnim.start()
+                    .apply {
+                        duration = 300
+                        interpolator = animInterpolator
+                        start()
+                    }
 
-            val displayFadeAnim =
+            displayFadeAnim =
                 ObjectAnimator.ofFloat(ledgerDisplayView, "alpha", ledgerDisplayView.alpha, 1f)
-            displayFadeAnim.duration = 300
-            displayFadeAnim.startDelay = 150
-            displayFadeAnim.interpolator = interpolator
-            displayFadeAnim.start()
+                    .apply {
+                        duration = 300
+                        startDelay = 150
+                        interpolator = animInterpolator
+                        start()
+                    }
 
-            val translationX = ObjectAnimator.ofFloat(
-                ledgerView, "translationX", ledgerView.translationX, (-42f).dp
-            )
-            translationX.duration = 350
-            translationX.interpolator = interpolator
-            translationX.start()
+            translationX = ObjectAnimator.ofFloat(
+                ledgerView,
+                "translationX",
+                ledgerView.translationX,
+                (-42f).dp
+            ).apply {
+                duration = 350
+                interpolator = animInterpolator
+                start()
+            }
         }
     }
 

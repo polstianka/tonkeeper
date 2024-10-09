@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.cell.Cell
 import uikit.base.BaseFragment
+import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.collectFlow
+import uikit.extensions.getDimensionPixelSize
 import uikit.navigation.Navigation.Companion.navigation
 
 class LedgerSignScreen: BaseFragment(R.layout.fragment_ledger_sign), BaseFragment.Modal {
@@ -39,6 +41,8 @@ class LedgerSignScreen: BaseFragment(R.layout.fragment_ledger_sign), BaseFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<View>(R.id.container)
+            .applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
 
         view.findViewById<View>(R.id.close).setOnClickListener { finish() }
         view.findViewById<View>(R.id.cancel).setOnClickListener { finish() }

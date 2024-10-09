@@ -2,7 +2,6 @@ package com.tonapps.tonkeeper.ui.screen.ledger.pair
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeper.ui.screen.ledger.steps.LedgerConnectionFragment
@@ -15,7 +14,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uikit.base.BaseFragment
+import uikit.extensions.applyNavBottomPadding
 import uikit.extensions.collectFlow
+import uikit.extensions.getDimensionPixelSize
 import uikit.navigation.Navigation.Companion.navigation
 import uikit.widget.LoadableButton
 
@@ -34,10 +35,14 @@ class PairLedgerScreen : BaseFragment(R.layout.fragment_ledger_pair), BaseFragme
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<View>(R.id.container)
+            .applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
+
         continueButton = view.findViewById(R.id.continue_button)
 
         view.findViewById<View>(R.id.close).setOnClickListener { finish() }
         view.findViewById<View>(R.id.cancel).setOnClickListener { finish() }
+        continueButton.isEnabled = false
         continueButton.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) { connectionViewModel.getConnectData() }
         }
@@ -51,21 +56,25 @@ class PairLedgerScreen : BaseFragment(R.layout.fragment_ledger_pair), BaseFragme
     }
 
     private fun onEvent(event: LedgerEvent) {
-        when(event) {
+        when (event) {
             is LedgerEvent.Ready -> {
                 continueButton.isEnabled = event.isReady
             }
+
             is LedgerEvent.Loading -> {
                 continueButton.isLoading = event.loading
             }
+
             is LedgerEvent.Error -> {
                 navigation?.toast(event.message)
             }
+
             is LedgerEvent.Next -> {
                 rootViewModel.connectLedger(event.connectData, event.accounts)
                 finish()
             }
-            else -> { }
+
+            else -> {}
         }
     }
 

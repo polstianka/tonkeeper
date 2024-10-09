@@ -37,6 +37,7 @@ class PushScreen: BaseFragment(R.layout.fragment_notifications_enable) {
         button.setOnClickListener { requestPermission() }
 
         val offsetMedium = requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium)
+        val offsetLarge = requireContext().getDimensionPixelSize(uikit.R.dimen.offsetLarge)
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
             val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() + WindowInsetsCompat.Type.navigationBars())
@@ -45,7 +46,7 @@ class PushScreen: BaseFragment(R.layout.fragment_notifications_enable) {
             }
 
             button.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = systemBarInsets.bottom + offsetMedium
+                bottomMargin = systemBarInsets.bottom + offsetLarge
             }
             insets
         }

@@ -14,6 +14,7 @@ import com.tonapps.tonkeeper.core.AnalyticsHelper
 import com.tonapps.tonkeeper.core.SendBlockchainException
 import com.tonapps.tonkeeper.core.entities.SendMetadataEntity
 import com.tonapps.tonkeeper.core.entities.TransferEntity
+import com.tonapps.tonkeeper.extensions.isPrintableAscii
 import com.tonapps.tonkeeper.extensions.with
 import com.tonapps.tonkeeper.manager.tx.TransactionManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
@@ -183,6 +184,18 @@ class SendViewModel(
 
     private val inputAmountFlow = userInputFlow.map { it.amount }.distinctUntilChanged()
 
+    val uiInputCommentErrorFlow = uiInputComment.map { comment ->
+        if (!comment.isNullOrEmpty()) {
+            if (wallet.isLedger && !comment.isPrintableAscii()) {
+                Localization.ledger_comment_error
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+    }
+
     private val _uiEventFlow = MutableEffectFlow<SendEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
 
@@ -238,10 +251,13 @@ class SendViewModel(
         uiBalanceFlow,
         inputAmountFlow,
         uiInputComment,
-    ) { recipient, balance, amount, comment ->
+        uiInputCommentErrorFlow,
+    ) { recipient, balance, amount, comment, commentError ->
         if (recipient !is SendDestination.Account) {
             false
         } else if (recipient.memoRequired && comment.isNullOrEmpty()) {
+            false
+        }else if (commentError != null) {
             false
         } else if (isNft || (!balance.insufficientBalance && amount.isPositive)) {
             true

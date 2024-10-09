@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.extensions.context
+import java.math.BigDecimal
 import java.math.BigInteger
 
 data class ProofData(
@@ -262,7 +263,7 @@ class LedgerConnectionViewModel(
                 val requiredVersion = "2.1.0"
 
                 if (version.isVersionLowerThan(requiredVersion)) {
-                    _eventFlow.tryEmit(LedgerEvent.WrongVersion(version))
+                    _eventFlow.tryEmit(LedgerEvent.WrongVersion(requiredVersion))
                     return@launch
                 }
 
@@ -304,7 +305,7 @@ class LedgerConnectionViewModel(
                 val requiredVersion = getRequiredVersion(_transaction!!)
 
                 if (version.isVersionLowerThan(requiredVersion)) {
-                    _eventFlow.tryEmit(LedgerEvent.WrongVersion(version))
+                    _eventFlow.tryEmit(LedgerEvent.WrongVersion(requiredVersion))
                     return@launch
                 }
 
@@ -321,11 +322,13 @@ class LedgerConnectionViewModel(
                 Log.d("LEDGER", "Error signing transaction", e)
                 if (e.instanceOf(TransportStatusException.DeniedByUser::class)) {
                     _eventFlow.tryEmit(LedgerEvent.Rejected)
+                } else if (e.instanceOf(TransportStatusException.BlindSigningDisabled::class)) {
+                    _eventFlow.tryEmit(
+                        LedgerEvent.Error(context.getString(Localization.ledger_blind_signing_error))
+                    )
                 } else {
                     _eventFlow.tryEmit(
-                        LedgerEvent.Error(
-                            e.message ?: context.getString(Localization.error)
-                        )
+                        LedgerEvent.Error(e.message ?: context.getString(Localization.error))
                     )
                 }
 
@@ -340,13 +343,15 @@ class LedgerConnectionViewModel(
             return defaultVersion
         }
 
-        return when(transaction.payload!!::class) {
+        return when (transaction.payload!!::class) {
             TonPayloadFormat.JettonTransfer::class -> {
                 defaultVersion
             }
+
             TonPayloadFormat.Comment::class -> {
                 defaultVersion
             }
+
             else -> {
                 "2.1.0"
             }
@@ -399,7 +404,9 @@ class LedgerConnectionViewModel(
             for ((index, ledgerAccount) in ledgerData.accounts.withIndex()) {
                 val account = deferredAccounts[index].await()
                 val balance = Coins.of(account.let { it?.balance } ?: 0)
-                val hasTokens = deferredTokens[index].await().size > 2
+                val tokens = deferredTokens[index].await()
+                    .filter { it.balance.value.value > BigDecimal.ZERO }
+                val hasTokens = tokens.isNotEmpty()
                 val hasCollectibles = deferredCollectibles[index].await().isNotEmpty()
                 val alreadyAdded = addedDeviceAccountIndexes.contains(ledgerAccount.path.index)
                 val item = AccountItem(
@@ -409,7 +416,7 @@ class LedgerConnectionViewModel(
                     balanceFormat = CurrencyFormatter.format("TON", balance),
                     tokens = hasTokens,
                     collectibles = hasCollectibles,
-                    selected = !alreadyAdded && (!balance.isZero || hasTokens || hasCollectibles),
+                    selected = false,
                     position = ListCell.getPosition(ledgerData.accounts.size, index),
                     ledgerIndex = ledgerAccount.path.index,
                     ledgerAdded = alreadyAdded
@@ -421,6 +428,7 @@ class LedgerConnectionViewModel(
         }
 
     private fun waitForTonAppOpen() {
+        setTonTransport(null)
         pollTonAppJob?.cancel()
         pollTonAppJob = viewModelScope.launch {
             val tonTransport = TonTransport(BleTransport(bleManager))
@@ -464,7 +472,9 @@ class LedgerConnectionViewModel(
         if (_walletId != null) {
             uiItems.add(
                 Item.Step(
-                    if (_proofData !== null) context.getString(Localization.ledger_confirm_proof) else context.getString(Localization.ledger_confirm_tx),
+                    if (_proofData !== null) context.getString(Localization.ledger_confirm_proof) else context.getString(
+                        Localization.ledger_confirm_tx
+                    ),
                     currentStep == LedgerStep.DONE,
                     currentStep == LedgerStep.CONFIRM_TX
                 )

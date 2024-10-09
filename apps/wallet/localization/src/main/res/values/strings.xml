@@ -422,7 +422,7 @@
     <string name="signer_about">About Signer</string>
     <string name="signer_open">Open Signer on this device</string>
     <string name="signer" translatable="false">Signer</string>
-    <string name="choose_wallet_title">Choose wallet</string>
+    <string name="choose_wallet_title">Choose wallets</string>
     <string name="choose_wallet_subtitle">Choose wallets you want to add.</string>
     <string name="choose_wallet_already_added">Already added</string>
     <string name="hide">Hide</string>
@@ -454,6 +454,8 @@
     <string name="ledger_update_title">Update TON app in Ledger to the %1$s version</string>
     <string name="ledger_update_text">This type of transaction is not supported in your current application version.</string>
     <string name="ledger_update_button">OK</string>
+    <string name="ledger_blind_signing_error">Blind Signing must be enabled in Ledger Settings</string>
+    <string name="ledger_comment_error">Use only ASCII characters: digits, latin alphabet letters and punctuation marks.</string>
 
     <string name="bluetooth_permissions_alert_title">Bluetooth Permissions</string>
     <string name="bluetooth_permissions_alert_message">Please enable Bluetooth permissions in your settings to use this feature</string>

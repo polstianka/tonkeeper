@@ -422,7 +422,7 @@
 
 
 
-    <string name="choose_wallet_title">Выбери кошелек</string>
+    <string name="choose_wallet_title">Выберите кошельки</string>
     <string name="choose_wallet_subtitle">Выберите кошельки, которые хотите добавить.</string>
     <string name="choose_wallet_already_added">Уже добавлен</string>
 
@@ -442,6 +442,8 @@
     <string name="ledger_update_title">Обновите TON приложение в Ledger до версии %1$s</string>
     <string name="ledger_update_text">Этот тип транзакции не поддерживается в вашей текущей версии приложения.</string>
     <string name="ledger_update_button">Хорошо</string>
+    <string name="ledger_blind_signing_error">Необходимо включить слепую подпись в настройках Ledger</string>
+    <string name="ledger_comment_error">Используйте только ASCII символы: цифры, буквы латинского алфавита и знаки пунктуации.</string>
 
     <string name="bluetooth_permissions_alert_title">Разрешения Bluetooth</string>
     <string name="bluetooth_permissions_alert_message">Пожалуйста, включите разрешения Bluetooth в настройках, чтобы использовать эту функцию</string>

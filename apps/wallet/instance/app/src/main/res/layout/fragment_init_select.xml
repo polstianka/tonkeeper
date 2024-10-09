@@ -3,36 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <uikit.widget.ColumnLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/offsetLarge">
+        android:layout_height="match_parent">
 
-        <uikit.widget.TextHeaderView
+        <uikit.widget.ColumnLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/offsetLarge"
-            android:layout_marginTop="@dimen/offsetLarge"
-            android:title="@string/choose_wallet_title"
-            android:description="@string/choose_wallet_subtitle"/>
+            android:layout_marginHorizontal="@dimen/offsetLarge">
 
-        <uikit.widget.SimpleRecyclerView
-            android:id="@+id/accounts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/offsetLarge"/>
+            <uikit.widget.TextHeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offsetLarge"
+                android:layout_marginTop="24dp"
+                android:description="@string/choose_wallet_subtitle"
+                android:title="@string/choose_wallet_title" />
 
-    </uikit.widget.ColumnLayout>
+            <uikit.widget.SimpleRecyclerView
+                android:id="@+id/accounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offsetLarge"
+                android:layout_marginBottom="72dp" />
 
-    <Button
-        style="@style/Widget.App.Button"
-        android:id="@+id/button"
+        </uikit.widget.ColumnLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/offsetLarge"
         android:layout_gravity="bottom"
-        android:enabled="false"
-        android:textAppearance="@style/TextAppearance.Label1"
-        android:text="@string/continue_action"/>
+        android:background="@drawable/bg_gradient"
+        android:paddingHorizontal="@dimen/offsetLarge"
+        android:paddingTop="@dimen/offsetMedium">
+
+        <Button
+            android:id="@+id/button"
+            style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:enabled="false"
+            android:text="@string/continue_action"
+            android:textAppearance="@style/TextAppearance.Label1" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </FrameLayout>

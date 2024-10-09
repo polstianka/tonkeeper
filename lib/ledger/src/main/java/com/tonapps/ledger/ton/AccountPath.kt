@@ -1,13 +1,9 @@
 package com.tonapps.ledger.ton
 
 import android.os.Parcelable
-import com.tonapps.blockchain.ton.contract.WalletV4R1Contract
-import io.ktor.util.decodeBase64Bytes
+import com.tonapps.blockchain.ton.contract.WalletV4R2Contract
 import kotlinx.parcelize.Parcelize
 import org.ton.api.pub.PublicKeyEd25519
-import org.ton.block.StateInit
-import org.ton.boc.BagOfCells
-import org.ton.cell.CellBuilder
 import java.nio.ByteBuffer
 
 @Parcelize
@@ -30,7 +26,7 @@ data class AccountPath(
         }.array()
     }
 
-    fun contract(publicKey: PublicKeyEd25519): WalletV4R1Contract {
-        return WalletV4R1Contract(workchain, publicKey)
+    fun contract(publicKey: PublicKeyEd25519): WalletV4R2Contract {
+        return WalletV4R2Contract(workchain, publicKey)
     }
 }

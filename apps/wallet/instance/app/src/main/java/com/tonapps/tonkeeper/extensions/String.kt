@@ -72,3 +72,7 @@ fun String.withVerificationIcon(context: Context): CharSequence {
     builder.setSpan(ImageSpanCompat(drawable), builder.length - 1, builder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     return builder
 }
+
+fun String.isPrintableAscii(): Boolean {
+    return this.all { it.code in 32..126 }
+}

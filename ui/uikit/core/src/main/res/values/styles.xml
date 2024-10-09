@@ -17,6 +17,7 @@
         <item name="android:stateListAnimator">@null</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:layout_height">@dimen/itemHeight</item>
+        <item name="android:minHeight">@dimen/itemHeight</item>
     </style>
 
     <style name="Widget.App.Button" parent="Base.Widget.App.Button">
@@ -42,6 +43,7 @@
     <style name="Widget.App.Button.Small" parent="Base.Widget.App.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/tertiaryHeight</item>
+        <item name="android:minHeight">@dimen/tertiaryHeight</item>
         <item name="android:background">@drawable/bg_small_button_primary</item>
         <item name="android:textColor">@color/button_primary_foreground_selector</item>
         <item name="android:textAllCaps">false</item>
