@@ -2,12 +2,20 @@ package com.tonapps.tonkeeper.billing
 
 import android.app.Activity
 import android.content.Context
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClient.ProductType
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.consumePurchase
 import com.tonapps.extensions.MutableEffectFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +27,10 @@ import kotlin.coroutines.suspendCoroutine
 class BillingManager(
     context: Context,
     scope: CoroutineScope,
-) {
+) : PurchasesUpdatedListener {
 
     private var billingClient: BillingClient = BillingClient.newBuilder(context)
+        .setListener(this)
         .enablePendingPurchases()
         .build()
 
@@ -34,6 +43,8 @@ class BillingManager(
     init {
         notifyPurchase()
     }
+
+    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {}
 
     private fun notifyPurchase() {
         _madePurchaseFlow.tryEmit(Unit)
