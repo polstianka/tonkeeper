@@ -5,13 +5,11 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
-import com.tonapps.extensions.filterList
 import com.tonapps.icu.Coins
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.Environment
 import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.billing.priceFormatted
-import com.tonapps.tonkeeper.extensions.showToast
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
 import com.tonapps.tonkeeper.ui.screen.battery.refill.entity.PromoState
 import com.tonapps.tonkeeper.ui.screen.battery.refill.list.Item
@@ -43,9 +41,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal

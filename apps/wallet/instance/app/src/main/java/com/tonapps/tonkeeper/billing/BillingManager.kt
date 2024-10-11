@@ -14,10 +14,8 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.android.billingclient.api.consumePurchase
-import com.tonapps.extensions.MutableEffectFlow
 import com.tonapps.extensions.filterList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +28,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.time.Duration.Companion.seconds
@@ -50,15 +47,9 @@ class BillingManager(
         it.isNotEmpty()
     }
 
-    private val _madePurchaseFlow = MutableEffectFlow<Unit>()
-    val madePurchaseFlow = _madePurchaseFlow.shareIn(scope, SharingStarted.Lazily, 1)
-
     private val _purchasesUpdatedFlow = MutableSharedFlow<PurchasesUpdated>()
     val purchasesUpdatedFlow = _purchasesUpdatedFlow.shareIn(scope, SharingStarted.Lazily, 0)
 
-    init {
-        notifyPurchase()
-    }
 
     override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
         _purchasesUpdatedFlow.tryEmit(PurchasesUpdated(result, purchases ?: mutableListOf()))
@@ -67,14 +58,9 @@ class BillingManager(
         }
     }
 
-    private fun notifyPurchase() {
-        _madePurchaseFlow.tryEmit(Unit)
-    }
-
     suspend fun consumeProduct(purchaseToken: String) = billingClient.ready { client ->
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build()
         client.consumePurchase(params)
-        notifyPurchase()
     }
 
     suspend fun getProducts(
