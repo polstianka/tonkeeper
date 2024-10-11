@@ -109,7 +109,7 @@ class BillingManager(
         val params = QueryPurchasesParams.newBuilder()
             .setProductType(ProductType.INAPP)
 
-        return queryPurchases(client, params.build())
+        return queryPurchases(client, params.build()).filter { it.purchaseState == Purchase.PurchaseState.PENDING }
     }
 
     private suspend fun queryPurchases(client: BillingClient, params: QueryPurchasesParams): List<Purchase> = suspendCancellableCoroutine { continuation ->
