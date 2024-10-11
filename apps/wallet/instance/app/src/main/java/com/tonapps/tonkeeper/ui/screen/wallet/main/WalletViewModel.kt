@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.tonapps.icu.Coins
 import com.tonapps.network.NetworkMonitor
-import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
 import com.tonapps.tonkeeper.extensions.hasPushPermission
 import com.tonapps.tonkeeper.helper.DateHelper
@@ -41,7 +40,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uikit.extensions.collectFlow
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 class WalletViewModel(
     app: Application,
@@ -54,7 +52,6 @@ class WalletViewModel(
     private val backupRepository: BackupRepository,
     private val ratesRepository: RatesRepository,
     private val batteryRepository: BatteryRepository,
-    private val billingManager: BillingManager,
     private val transactionManager: TransactionManager,
     private val assetsManager: AssetsManager,
 ): BaseWalletVM(app) {
@@ -96,7 +93,7 @@ class WalletViewModel(
         }
     }.map { !it }
 
-    private val _streamFlow = combine(updateWalletSettings, billingManager.madePurchaseFlow, _lastLtFlow) { _, _, lastLt -> lastLt }
+    private val _streamFlow = combine(updateWalletSettings, batteryRepository.balanceUpdatedFlow, _lastLtFlow) { _, _, lastLt -> lastLt }
 
     init {
         viewModelScope.launch {
