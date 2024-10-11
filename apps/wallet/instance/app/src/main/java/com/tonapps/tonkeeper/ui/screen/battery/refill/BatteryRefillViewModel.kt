@@ -10,7 +10,6 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.Environment
 import com.tonapps.tonkeeper.billing.BillingManager
 import com.tonapps.tonkeeper.billing.priceFormatted
-import com.tonapps.tonkeeper.extensions.loading
 import com.tonapps.tonkeeper.extensions.showToast
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
 import com.tonapps.tonkeeper.ui.screen.battery.refill.entity.PromoState
@@ -300,7 +299,6 @@ class BatteryRefillViewModel(
             purchaseInProgress.tryEmit(true)
             val tonProofToken = accountRepository.requestTonProofToken(wallet)
                 ?: throw IllegalStateException("proof token is null")
-            context.loading()
             for (purchase in purchases) {
                 val request = AndroidBatteryPurchaseRequest(
                     purchases = listOf(
@@ -329,14 +327,15 @@ class BatteryRefillViewModel(
         viewModelScope.launch {
             val product = billingManager.productsFlow.value!!.find { it.productId == productId }!!
             val purchases = billingManager.requestPurchase(activity, product)
-            handlePurchases(purchases)
+            if (purchases.isNotEmpty()) {
+                handlePurchases(purchases)
+            }
         }
     }
 
     fun restorePurchases() {
         viewModelScope.launch {
             try {
-                context.loading()
                 val pendingPurchases = billingManager.restorePurchases()
                 if (pendingPurchases.isNotEmpty()) {
                     handlePurchases(pendingPurchases)

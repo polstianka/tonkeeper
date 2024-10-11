@@ -16,17 +16,19 @@ import com.android.billingclient.api.consumePurchase
 import com.tonapps.extensions.MutableEffectFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class BillingManager(
     context: Context,
-    scope: CoroutineScope,
+    private var scope: CoroutineScope,
 ) : PurchasesUpdatedListener {
 
     private var billingClient: BillingClient = BillingClient.newBuilder(context)
@@ -40,11 +42,23 @@ class BillingManager(
     private val _madePurchaseFlow = MutableEffectFlow<Unit>()
     val madePurchaseFlow = _madePurchaseFlow.shareIn(scope, SharingStarted.Lazily, 1)
 
+    private var purchasesChannel: Channel<List<Purchase>>? = null
+
     init {
         notifyPurchase()
     }
 
-    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {}
+    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+        scope.launch {
+            purchasesChannel?.send(
+                if (result.responseCode == BillingClient.BillingResponseCode.OK && !purchases.isNullOrEmpty()) {
+                    purchases
+                } else {
+                    emptyList()
+                }
+            )
+        }
+    }
 
     private fun notifyPurchase() {
         _madePurchaseFlow.tryEmit(Unit)
@@ -56,12 +70,12 @@ class BillingManager(
         notifyPurchase()
     }
 
-    fun getProducts(
+    suspend fun getProducts(
         productIds: List<String>,
         productType: String = ProductType.INAPP
-    ) {
+    ) = billingClient.ready {
         if (productIds.isEmpty()) {
-            return
+            return@ready
         }
 
         val productList = productIds.map { productId ->
@@ -103,7 +117,6 @@ class BillingManager(
         }
     }
 
-    // Method to request a purchase
     suspend fun requestPurchase(
         activity: Activity,
         productDetails: ProductDetails
@@ -118,11 +131,25 @@ class BillingManager(
 
         val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
 
-        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            getPendingPurchase()
-        }
+        when (billingResult.responseCode) {
+            BillingClient.BillingResponseCode.OK -> {
+                purchasesChannel = Channel()
 
-        emptyList()
+                try {
+                    val purchases = purchasesChannel!!.receive()
+                    purchases
+                } catch (_: Exception) {
+                    emptyList()
+                } finally {
+                    purchasesChannel?.close()
+                    purchasesChannel = null
+                }
+            }
+
+            else -> {
+                emptyList()
+            }
+        }
     }
 
     suspend fun restorePurchases(): List<Purchase> = billingClient.ready {
