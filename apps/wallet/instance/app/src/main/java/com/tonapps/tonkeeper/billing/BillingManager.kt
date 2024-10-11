@@ -91,11 +91,11 @@ class BillingManager(
         }
     }
 
-    private suspend fun getPurchases(client: BillingClient): List<Purchase> {
+    private suspend fun getPendingPurchases(client: BillingClient): List<Purchase> {
         val params = QueryPurchasesParams.newBuilder()
             .setProductType(ProductType.INAPP)
 
-        return queryPurchases(client, params.build())
+        return queryPurchases(client, params.build()).filter { !it.isAcknowledged }
     }
 
     private suspend fun queryPurchases(client: BillingClient, params: QueryPurchasesParams): List<Purchase> = suspendCancellableCoroutine { continuation ->
@@ -130,6 +130,6 @@ class BillingManager(
     }.mapNotNull { it.firstOrNull() }.timeout(5.seconds)
 
     suspend fun restorePurchases(): List<Purchase> = billingClient.ready {
-        getPurchases(it)
+        getPendingPurchases(it)
     }
 }
