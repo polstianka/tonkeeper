@@ -52,7 +52,7 @@ internal class LocalDataSource(
         return prefs.getString(promoKey(testnet), null)
     }
 
-    fun setAppliedPromo(testnet: Boolean, promo: String) {
+    fun setAppliedPromo(testnet: Boolean, promo: String?) {
         prefs.edit {
             putString(promoKey(testnet), promo)
         }

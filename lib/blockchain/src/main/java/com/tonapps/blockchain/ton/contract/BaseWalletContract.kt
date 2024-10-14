@@ -1,6 +1,7 @@
 package com.tonapps.blockchain.ton.contract
 
 import com.tonapps.blockchain.ton.extensions.equalsAddress
+import com.tonapps.blockchain.ton.extensions.storeStringTail
 import com.tonapps.blockchain.ton.extensions.toAccountId
 import com.tonapps.blockchain.ton.tlb.CellStringTlbConstructor
 import kotlinx.io.bytestring.ByteString
@@ -264,7 +265,7 @@ abstract class BaseWalletContract(
             }
             storeBit(appliedPromo.isNullOrEmpty())
             if (!appliedPromo.isNullOrEmpty()) {
-                storeTlb(CellStringTlbConstructor, ByteString(*appliedPromo.encodeToByteArray()))
+               storeStringTail(appliedPromo)
             }
         }
         return cell

@@ -166,7 +166,7 @@ class BatteryRechargeViewModel(
 
         uiItems.addAll(uiItemsPacks(packs, selectedPackType, customAmount))
 
-        if (!api.config.batteryPromoDisabled) {
+        if (api.config.batteryPromoEnabled) {
             uiItems.add(Item.Space)
             uiItems.add(Item.Promo(promoState))
         }
@@ -502,6 +502,7 @@ class BatteryRechargeViewModel(
     fun applyPromo(promo: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (promo.isEmpty()) {
+                batteryRepository.setAppliedPromo(wallet.testnet, null)
                 promoStateFlow.tryEmit(PromoState.Default)
                 return@launch
             }
@@ -511,6 +512,7 @@ class BatteryRechargeViewModel(
                 batteryRepository.setAppliedPromo(wallet.testnet, promo)
                 promoStateFlow.tryEmit(PromoState.Applied(promo))
             } catch (_: Exception) {
+                batteryRepository.setAppliedPromo(wallet.testnet, null)
                 promoStateFlow.tryEmit(PromoState.Error)
             }
         }

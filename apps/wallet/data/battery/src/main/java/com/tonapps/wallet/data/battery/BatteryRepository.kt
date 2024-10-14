@@ -117,7 +117,7 @@ class BatteryRepository(
 
     suspend fun setAppliedPromo(
         testnet: Boolean,
-        promo: String,
+        promo: String?,
     ) = withContext(Dispatchers.IO) {
         localDataSource.setAppliedPromo(testnet, promo)
     }
