@@ -9,7 +9,6 @@ import com.tonapps.extensions.filterList
 import com.tonapps.extensions.state
 import com.tonapps.icu.Coins
 import com.tonapps.icu.CurrencyFormatter
-import com.tonapps.tonkeeper.api.fee
 import com.tonapps.tonkeeper.core.AnalyticsHelper
 import com.tonapps.tonkeeper.core.SendBlockchainException
 import com.tonapps.tonkeeper.core.entities.SendMetadataEntity
@@ -18,7 +17,6 @@ import com.tonapps.tonkeeper.extensions.isPrintableAscii
 import com.tonapps.tonkeeper.extensions.with
 import com.tonapps.tonkeeper.manager.tx.TransactionManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
-import com.tonapps.tonkeeper.ui.screen.send.main.helper.SendNftHelper
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendAmountState
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendDestination
 import com.tonapps.tonkeeper.ui.screen.send.main.state.SendTransaction
@@ -115,6 +113,7 @@ class SendViewModel(
 
     private var lastTransferEntity: TransferEntity? = null
     private val lastFee: AtomicLong = AtomicLong(0)
+    private val lastRawExtra: AtomicLong = AtomicLong(0)
     private var sendTransferType: SendTransferType = SendTransferType.Default
     private var tokenCustomPayload: TokenEntity.TransferPayload? = null
 
@@ -258,7 +257,7 @@ class SendViewModel(
             false
         } else if (recipient.memoRequired && comment.isNullOrEmpty()) {
             false
-        }else if (commentError != null) {
+        } else if (commentError != null) {
             false
         } else if (isNft || (!balance.insufficientBalance && amount.isPositive)) {
             true
@@ -399,15 +398,9 @@ class SendViewModel(
         builder.setComment(comment, encryptedComment)
         builder.setValidUntil(sendMetadata.validUntil)
         if (isNft) {
-            val amount = getNftTotalAmount(
-                wallet = wallet,
-                sendMetadata = sendMetadata,
-                destination = transaction.destination.address,
-                comment = comment
-            )
             builder.setNftAddress(nftAddress)
             builder.setBounceable(true)
-            builder.setAmount(amount)
+            builder.setAmount(Coins.ZERO)
             builder.setMax(false)
         } else {
             builder.setMax(transaction.isRealMax(token.balance.value))
@@ -439,23 +432,6 @@ class SendViewModel(
         userInputTokenByAddress(tokenAddress)
     }
 
-    private suspend fun getNftTotalAmount(
-        wallet: WalletEntity,
-        sendMetadata: SendMetadataEntity,
-        destination: AddrStd,
-        comment: String?
-    ): Coins = withContext(Dispatchers.IO) {
-        SendNftHelper.totalAmount(
-            nftAddress = AddrStd.parse(nftAddress),
-            api = api,
-            wallet = wallet,
-            seqno = sendMetadata.seqno,
-            destination = destination,
-            validUntil = sendMetadata.validUntil,
-            comment = comment,
-        )
-    }
-
     private suspend fun getDestinationAccount(
         address: String,
         testnet: Boolean
@@ -469,11 +445,11 @@ class SendViewModel(
         SendDestination.Account(address, publicKey, account)
     }
 
+    private fun getRawExtra(): Coins {
+        return Coins.of(lastFee.get())
+    }
+
     private fun getFee(): Coins {
-        val fee = lastFee.get()
-        if (0 >= fee) {
-            return Coins.of("0.01")
-        }
         return Coins.of(lastFee.get())
     }
 
@@ -505,7 +481,11 @@ class SendViewModel(
                     onContinue()
                 }
             } else {
-                val totalAmount = fee + TransferEntity.BASE_FORWARD_AMOUNT
+                val totalAmount = if (getRawExtra().multiply(BigDecimal(-1)).isNegative) {
+                    TransferEntity.BASE_FORWARD_AMOUNT
+                } else {
+                    fee + TransferEntity.BASE_FORWARD_AMOUNT
+                }
                 if (!withRelayer && totalAmount.value > tonBalance.value) {
                     showInsufficientBalance(tonBalance, totalAmount)
                 } else {
@@ -639,8 +619,15 @@ class SendViewModel(
                 val tonBalance = getTONBalance()
                 if (totalAmount > tonBalance) {
                     try {
-                        return@withContext calculateFeeGasless(transfer, excessesAddress, tonProofToken, tokenAddress, forceGasless = true)
-                    } catch (_: Throwable) {}
+                        return@withContext calculateFeeGasless(
+                            transfer,
+                            excessesAddress,
+                            tonProofToken,
+                            tokenAddress,
+                            forceGasless = true
+                        )
+                    } catch (_: Throwable) {
+                    }
                 }
             }
 
@@ -658,23 +645,31 @@ class SendViewModel(
             return calculateFeeDefault(transfer, isSupportsGasless)
         }
 
-        val message = transfer.toSignedMessage(
+        val message = transfer.signForEstimation(
             internalMessage = true,
-            excessesAddress = excessesAddress
+            excessesAddress = excessesAddress,
+            jettonTransferAmount = TransferEntity.ONE_TON,
         )
 
-        val (consequences, _) = batteryRepository.emulate(
+        val (consequences, withBattery) = batteryRepository.emulate(
             tonProofToken = tonProofToken,
             publicKey = wallet.publicKey,
             testnet = wallet.testnet,
             boc = message
         ) ?: return calculateFeeDefault(transfer, isSupportsGasless)
 
-        sendTransferType = SendTransferType.Battery(excessesAddress)
+        sendTransferType = if (withBattery) {
+            SendTransferType.Battery(excessesAddress)
+        } else {
+            SendTransferType.Default
+        }
 
-        val fee = consequences.event.fee
+        val extra = consequences.event.extra
 
-        return Pair(Coins.of(fee), isSupportsGasless)
+        lastRawExtra.set(extra)
+        lastFee.set(if (0 > extra) abs(extra) else 0)
+
+        return Pair(getFee(), isSupportsGasless)
     }
 
     private suspend fun calculateFeeGasless(
@@ -684,7 +679,7 @@ class SendViewModel(
         tokenAddress: String,
         forceGasless: Boolean = false
     ): Pair<Coins, Boolean> {
-        val message = transfer.toSignedMessage(
+        val message = transfer.signForEstimation(
             internalMessage = true,
             jettonAmount = if (transfer.max) {
                 Coins.of(1, transfer.token.decimals)
@@ -698,6 +693,7 @@ class SendViewModel(
                 )
             ),
             excessesAddress = excessesAddress,
+            jettonTransferAmount = TransferEntity.POINT_ONE_TON
         )
 
         val commission = api.estimateGaslessCost(
@@ -727,12 +723,15 @@ class SendViewModel(
         transfer: TransferEntity,
         isSupportsGasless: Boolean,
     ): Pair<Coins, Boolean> {
-        val message = transfer.toSignedMessage(
-            internalMessage = false
+        val message = transfer.signForEstimation(
+            internalMessage = false,
+            jettonTransferAmount = TransferEntity.ONE_TON
         )
-        val emulated = api.emulate(message, transfer.wallet.testnet)
+        // Emulate with higher balance to calculate fair amount to send
+        val emulated = api.emulate(message, transfer.wallet.testnet, balance = Coins.of(2).toLong())
         val extra = emulated?.event?.extra ?: 0
 
+        lastRawExtra.set(extra)
         lastFee.set(if (0 > extra) abs(extra) else 0)
 
         sendTransferType = SendTransferType.Default
@@ -912,6 +911,15 @@ class SendViewModel(
 
         val internalMessage = excessesAddress != null
 
+        val extra = getRawExtra()
+        val fee = getFee()
+
+        val jettonTransferAmount = when {
+            sendTransferType is SendTransferType.Gasless || extra.isNegative -> TransferEntity.BASE_FORWARD_AMOUNT
+            fee.isZero -> TransferEntity.POINT_ONE_TON
+            else -> fee + TransferEntity.BASE_FORWARD_AMOUNT
+        }
+
         val boc = signUseCase(
             context = context,
             wallet = wallet,
@@ -924,10 +932,11 @@ class SendViewModel(
                     transfer.amount - (sendTransferType as SendTransferType.Gasless).gaslessFee
                 } else {
                     null
-                }
+                },
+                jettonTransferAmount = jettonTransferAmount,
             ),
             seqNo = transfer.seqno,
-            ledgerTransaction = transfer.getLedgerTransaction()
+            ledgerTransaction = transfer.getLedgerTransaction(jettonTransferAmount)
         )
         _uiEventFlow.tryEmit(SendEvent.Loading)
         Triple(boc, transfer.wallet, internalMessage)
