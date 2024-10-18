@@ -446,7 +446,7 @@ class SendViewModel(
     }
 
     private fun getRawExtra(): Coins {
-        return Coins.of(lastFee.get())
+        return Coins.of(lastRawExtra.get())
     }
 
     private fun getFee(): Coins {
