@@ -1,0 +1,14 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml:1:1-13
+INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml:1:1-13
+	package
+		INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml
+uses-sdk
+INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml
+INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/polstianka/StudioProjects/TonkeeperX/apps/wallet/data/contacts/src/main/AndroidManifest.xml

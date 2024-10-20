@@ -3,7 +3,7 @@ name: Android APK build CD
 on:
   push:
     branches:
-      - dev
+      - fixBase64Bug
 
 jobs:
   android-build:

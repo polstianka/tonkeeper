@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.util.Log
 import com.tonapps.blockchain.ton.TONOpCode
 import com.tonapps.blockchain.ton.extensions.loadOpCode
+import com.tonapps.blockchain.ton.extensions.parseCell
 import com.tonapps.blockchain.ton.extensions.safeParseCell
 import com.tonapps.blockchain.ton.extensions.storeOpCode
 import com.tonapps.blockchain.ton.extensions.toTlb
@@ -46,7 +47,7 @@ data class RawMessageEntity(
 
     @IgnoredOnParcel
     val payload: Cell by lazy {
-        payloadValue.safeParseCell() ?: Cell()
+        payloadValue.parseCell()
     }
 
     constructor(json: JSONObject) : this(
