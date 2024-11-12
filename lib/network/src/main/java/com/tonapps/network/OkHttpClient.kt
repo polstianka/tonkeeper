@@ -25,7 +25,9 @@ import org.json.JSONObject
 
 private fun requestBuilder(url: String): Request.Builder {
     val builder = Request.Builder()
+    val versionName = BuildConfig.VERSION_NAME // Get the version dynamically
     builder.url(url)
+    builder.header("User-Agent", "Tonkeeper Android/$versionName") // Add custom User-Agent with version
     return builder
 }
 
