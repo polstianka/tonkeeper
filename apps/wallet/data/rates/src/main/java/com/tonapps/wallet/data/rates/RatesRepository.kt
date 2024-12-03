@@ -1,7 +1,6 @@
 package com.tonapps.wallet.data.rates
 
 import android.content.Context
-import android.util.Log
 import com.tonapps.icu.Coins
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.TokenEntity
@@ -26,19 +25,25 @@ class RatesRepository(
         return localDataSource.get(currency).filter(tokens)
     }
 
-    fun load(currency: WalletCurrency, token: String) {
-        load(currency, mutableListOf(token))
-    }
-
-    fun load(currency: WalletCurrency, tokens: MutableList<String>) {
+    private fun load(currencies: List<WalletCurrency>, tokens: MutableList<String>) {
         if (!tokens.contains(TokenEntity.TON.address)) {
             tokens.add(TokenEntity.TON.address)
         }
         if (!tokens.contains(TokenEntity.USDT.address)) {
             tokens.add(TokenEntity.USDT.address)
         }
-        val rates = api.getRates(currency.code, tokens) ?: return
-        insertRates(currency, rates)
+        val rates = api.getRates(currencies.map { it.code }, tokens) ?: return
+        currencies.forEach { currency ->
+            insertRates(currency, rates)
+        }
+    }
+
+    fun load(currency: WalletCurrency, token: String) {
+        load(currency, mutableListOf(token))
+    }
+
+    fun load(currency: WalletCurrency, tokens: MutableList<String>) {
+        load(listOf(currency), tokens)
     }
 
     fun insertRates(currency: WalletCurrency, rates: Map<String, TokenRates>) {
@@ -50,12 +55,14 @@ class RatesRepository(
             val value = rate.value
             val bigDecimal = value.prices?.get(currency.code) ?: BigDecimal.ZERO
 
-            entities.add(RateEntity(
-                tokenCode = rate.key,
-                currency = currency,
-                value = Coins.of(bigDecimal, currency.decimals),
-                diff = RateDiffEntity(currency, value),
-            ))
+            entities.add(
+                RateEntity(
+                    tokenCode = rate.key,
+                    currency = currency,
+                    value = Coins.of(bigDecimal, currency.decimals),
+                    diff = RateDiffEntity(currency, value),
+                )
+            )
         }
         localDataSource.add(currency, entities)
     }
@@ -70,6 +77,28 @@ class RatesRepository(
 
     suspend fun getTONRates(currency: WalletCurrency): RatesEntity {
         return getRates(currency, TokenEntity.TON.address)
+    }
+
+
+    suspend fun getRates(
+        currencies: List<WalletCurrency>,
+        tokens: List<String>
+    ): Map<String, RatesEntity> = withContext(Dispatchers.IO) {
+        val cachedRates = currencies.associateWith { getCachedRates(it, tokens) }
+
+        val missingCurrencies = cachedRates.filter { (_, rates) -> !rates.hasTokens(tokens) }.keys
+
+        if (missingCurrencies.isNotEmpty()) {
+            load(missingCurrencies.toList(), tokens.toMutableList())
+        }
+
+        val result = cachedRates.mapKeys { it.key.code }.toMutableMap()
+
+        missingCurrencies.forEach { currency ->
+            result[currency.code] = getCachedRates(currency, tokens)
+        }
+
+        result
     }
 
     suspend fun getRates(

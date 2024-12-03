@@ -101,11 +101,6 @@ class DevScreen: BaseWalletScreen<ScreenContext.None>(R.layout.fragment_dev, Scr
             valuesFromLegacy()
         }
 
-        view.findViewById<View>(R.id.card).setOnLongClickListener {
-            viewModel.openCard()
-            true
-        }
-
         logCopy = view.findViewById(R.id.log_copy)
     }
 

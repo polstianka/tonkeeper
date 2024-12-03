@@ -609,4 +609,11 @@
     <string name="connected_apps_empty">No connected apps</string>
     <string name="send_all_balance">Are you sure you want to send all your balance?</string>
     <string name="wrong_promocode">The entered code is not valid</string>
+    <string name="bank_card">Card * %1$s</string>
+    <string name="bank_card_virtual">Virtual</string>
+    <string name="bank_card_physical">Physical</string>
+    <string name="bank_card_prepaid">Prepaid card</string>
+    <string name="bank_card_title">Bank Card</string>
+    <string name="bank_card_subtitle">Pay in TON, convert to USD without commission.</string>
+    <string name="back_card_details">More Details</string>
 </resources>

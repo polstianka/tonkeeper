@@ -3,10 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/shimmer_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/shimmer_account"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include layout="@layout/shimmer_holders_account" />
+        </uikit.widget.SkeletonLayout>
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/shimmer_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include layout="@layout/shimmer_holders_main" />
+        </uikit.widget.SkeletonLayout>
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/shimmer_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include layout="@layout/shimmer_holders_card" />
+        </uikit.widget.SkeletonLayout>
+
+        <uikit.widget.SkeletonLayout
+            android:id="@+id/shimmer_create"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include layout="@layout/shimmer_holders_create" />
+        </uikit.widget.SkeletonLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.tonapps.tonkeeper.ui.component.TonConnectWebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:alpha="0" />
 
 </FrameLayout>

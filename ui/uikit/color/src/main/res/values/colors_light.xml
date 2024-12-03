@@ -8,6 +8,7 @@
     <color name="backgroundPageLight">#EFEEF3</color>
     <color name="backgroundTransparentLight">#F5FFFFFF</color>
     <color name="backgroundContentLight">#FFFFFF</color>
+    <color name="backgroundContentAlphaLight">#FFFFFF3D</color>
     <color name="backgroundContentTintLight">#E7E6EB</color>
     <color name="backgroundContentAttentionLight">#F0F0F0</color>
     <color name="backgroundHighlightedLight">#14818C99</color>

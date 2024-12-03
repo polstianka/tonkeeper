@@ -18,6 +18,7 @@ import com.tonapps.extensions.writeCharSequenceCompat
 import com.tonapps.extensions.writeEnum
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.tonkeeper.manager.apk.APKManager
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardScreenPath
 import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.uikit.list.BaseListItem
 import com.tonapps.uikit.list.ListCell
@@ -25,13 +26,13 @@ import com.tonapps.wallet.api.entity.NotificationEntity
 import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.Wallet
 import com.tonapps.wallet.data.account.entities.WalletEntity
-import com.tonapps.wallet.data.dapps.entities.AppEntity
+import com.tonapps.wallet.data.cards.entity.CardEntity
 import com.tonapps.wallet.data.dapps.entities.AppPushEntity
 import com.tonapps.wallet.data.staking.StakingPool
 import com.tonapps.wallet.data.token.entities.AccountTokenEntity
 import java.math.RoundingMode
 
-sealed class Item(type: Int): BaseListItem(type), Parcelable {
+sealed class Item(type: Int) : BaseListItem(type), Parcelable {
 
     companion object {
         const val TYPE_BALANCE = 0
@@ -48,6 +49,10 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         const val TYPE_SETUP_LINK = 11
         const val TYPE_STAKED = 12
         const val TYPE_APK_STATUS = 13
+        const val TYPE_CARDS_BANNER = 14
+        const val TYPE_CARDS = 15
+        const val TYPE_CARD = 16
+        const val TYPE_ADD_CARD = 17
 
         fun createFromParcel(parcel: Parcel): Item {
             return when (parcel.readInt()) {
@@ -63,6 +68,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
                 TYPE_SETUP_LINK -> SetupLink(parcel)
                 TYPE_STAKED -> Stake(parcel)
                 TYPE_APK_STATUS -> ApkStatus(parcel)
+                TYPE_CARDS_BANNER -> CardsBanner(parcel)
                 else -> throw IllegalArgumentException("Unknown type")
             }
         }
@@ -94,7 +100,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val message: String,
         val buttonTitle: String?,
         val buttonUrl: String?,
-    ): Item(TYPE_ALERT) {
+    ) : Item(TYPE_ALERT) {
 
         constructor(entity: NotificationEntity) : this(
             title = entity.title,
@@ -137,7 +143,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val showBattery: Boolean,
         val batteryEmptyState: BatteryView.EmptyState,
         val prefixYourAddress: Boolean
-    ): Item(TYPE_BALANCE) {
+    ) : Item(TYPE_BALANCE) {
 
         val address: String
             get() = wallet.address
@@ -188,7 +194,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val token: TokenEntity,
         val swapUri: Uri,
         val disableSwap: Boolean
-    ): Item(TYPE_ACTIONS) {
+    ) : Item(TYPE_ACTIONS) {
 
         val address: String
             get() = wallet.address
@@ -236,7 +242,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val pendingWithdraw: Coins,
         val pendingWithdrawFormat: CharSequence,
         val cycleEnd: Long,
-    ): Item(TYPE_STAKED) {
+    ) : Item(TYPE_STAKED) {
 
         val iconUri: Uri
             get() = UriUtil.getUriForResourceId(StakingPool.getIcon(poolImplementation))
@@ -307,7 +313,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val hiddenBalance: Boolean,
         val blacklist: Boolean,
         val wallet: WalletEntity,
-    ): Item(TYPE_TOKEN) {
+    ) : Item(TYPE_TOKEN) {
 
         val isTON = symbol == TokenEntity.TON.symbol
 
@@ -393,14 +399,16 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         }
     }
 
-    data class Space(val value: Boolean = true): Item(TYPE_SPACE) {
+    data class Space(val value: Boolean = true, val large: Boolean = false) : Item(TYPE_SPACE) {
 
         constructor(parcel: Parcel) : this(
+            parcel.readBooleanCompat(),
             parcel.readBooleanCompat()
         )
 
         override fun marshall(dest: Parcel, flags: Int) {
             dest.writeBooleanCompat(value)
+            dest.writeBooleanCompat(large)
         }
 
         companion object CREATOR : Parcelable.Creator<Space> {
@@ -410,7 +418,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         }
     }
 
-    data class Skeleton(val value: Boolean = true): Item(TYPE_SKELETON) {
+    data class Skeleton(val value: Boolean = true) : Item(TYPE_SKELETON) {
 
         constructor(parcel: Parcel) : this(
             parcel.readBooleanCompat()
@@ -430,7 +438,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
     data class Push(
         val textLine: String,
         val iconUris: List<Uri>,
-    ): Item(TYPE_PUSH) {
+    ) : Item(TYPE_PUSH) {
 
         constructor(pushes: List<AppPushEntity>) : this(
             pushes.map { it.body.message }.first(),
@@ -456,7 +464,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
 
     data class Title(
         val title: CharSequence
-    ): Item(TYPE_TITLE) {
+    ) : Item(TYPE_TITLE) {
 
         constructor(context: Context, resId: Int) : this(
             context.getText(resId)
@@ -479,7 +487,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
 
     data class Manage(
         val wallet: WalletEntity
-    ): Item(TYPE_MANAGE) {
+    ) : Item(TYPE_MANAGE) {
 
         constructor(parcel: Parcel) : this(
             parcel.readParcelableCompat<WalletEntity>()!!
@@ -499,7 +507,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
     data class SetupTitle(
         val walletId: String,
         val showDone: Boolean
-    ): Item(TYPE_SETUP_TITLE) {
+    ) : Item(TYPE_SETUP_TITLE) {
 
         constructor(parcel: Parcel) : this(
             parcel.readString()!!,
@@ -525,7 +533,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val enabled: Boolean,
         val wallet: WalletEntity,
         val settingsType: Int
-    ): Item(TYPE_SETUP_SWITCH) {
+    ) : Item(TYPE_SETUP_SWITCH) {
 
         companion object {
             const val TYPE_BIOMETRIC = 1
@@ -566,7 +574,7 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
         val link: String,
         val blue: Boolean,
         val settingsType: Int
-    ): Item(TYPE_SETUP_LINK) {
+    ) : Item(TYPE_SETUP_LINK) {
 
         companion object {
             const val TYPE_NONE = 1
@@ -623,5 +631,100 @@ sealed class Item(type: Int): BaseListItem(type), Parcelable {
 
         }
 
+    }
+
+    data class CardsBanner(
+        val withFinishSetup: Boolean
+    ) : Item(TYPE_CARDS_BANNER) {
+
+        constructor(parcel: Parcel) : this(
+            parcel.readBooleanCompat()
+        )
+
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeBooleanCompat(withFinishSetup)
+        }
+
+        companion object CREATOR : Parcelable.Creator<Manage> {
+            override fun createFromParcel(parcel: Parcel) = Manage(parcel)
+
+            override fun newArray(size: Int): Array<Manage?> = arrayOfNulls(size)
+        }
+    }
+
+    data class Cards(
+        val list: List<Item>
+    ) : Item(TYPE_CARDS) {
+
+        constructor(parcel: Parcel) : this(
+            parcel.readArrayCompat(Item::class.java)?.toList() ?: emptyList()
+        )
+
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeArrayCompat(list.toTypedArray())
+        }
+
+        companion object CREATOR : Parcelable.Creator<Manage> {
+            override fun createFromParcel(parcel: Parcel) = Manage(parcel)
+
+            override fun newArray(size: Int): Array<Manage?> = arrayOfNulls(size)
+        }
+    }
+
+    data class Card(
+        val lastFourDigits: String,
+        val title: CharSequence,
+        val subtitle: CharSequence,
+        val path: CardScreenPath,
+        val hiddenBalance: Boolean,
+        val testnet: Boolean,
+        val isSingle: Boolean = false,
+        val kindResId: Int,
+    ) : Item(TYPE_CARD) {
+
+        constructor(parcel: Parcel) : this(
+            parcel.readString()!!,
+            parcel.readCharSequenceCompat()!!,
+            parcel.readCharSequenceCompat()!!,
+            parcel.readParcelableCompat(CardScreenPath::class.java)!!,
+            parcel.readBooleanCompat(),
+            parcel.readBooleanCompat(),
+            parcel.readBooleanCompat(),
+            parcel.readInt()
+        )
+
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeString(lastFourDigits)
+            dest.writeCharSequenceCompat(title)
+            dest.writeCharSequenceCompat(subtitle)
+            dest.writeParcelable(path, flags)
+            dest.writeBooleanCompat(hiddenBalance)
+            dest.writeBooleanCompat(testnet)
+            dest.writeBooleanCompat(isSingle)
+            dest.writeInt(kindResId)
+        }
+
+        companion object CREATOR : Parcelable.Creator<Manage> {
+            override fun createFromParcel(parcel: Parcel) = Manage(parcel)
+
+            override fun newArray(size: Int): Array<Manage?> = arrayOfNulls(size)
+        }
+    }
+
+    data class AddCard(val value: Boolean = true) : Item(TYPE_ADD_CARD) {
+
+        constructor(parcel: Parcel) : this(
+            parcel.readBooleanCompat(),
+        )
+
+        override fun marshall(dest: Parcel, flags: Int) {
+            dest.writeBooleanCompat(value)
+        }
+
+        companion object CREATOR : Parcelable.Creator<Space> {
+            override fun createFromParcel(parcel: Parcel) = Space(parcel)
+
+            override fun newArray(size: Int): Array<Space?> = arrayOfNulls(size)
+        }
     }
 }
