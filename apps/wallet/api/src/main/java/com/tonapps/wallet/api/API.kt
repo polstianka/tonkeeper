@@ -2,7 +2,6 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
-import android.util.Log
 import com.squareup.moshi.JsonAdapter
 import com.tonapps.blockchain.ton.contract.BaseWalletContract
 import com.tonapps.blockchain.ton.contract.WalletVersion
@@ -25,6 +24,7 @@ import com.tonapps.wallet.api.entity.BalanceEntity
 import com.tonapps.wallet.api.entity.ChartEntity
 import com.tonapps.wallet.api.entity.ConfigEntity
 import com.tonapps.wallet.api.entity.TokenEntity
+import com.tonapps.wallet.api.holders.HoldersApi
 import com.tonapps.wallet.api.internal.ConfigRepository
 import com.tonapps.wallet.api.internal.InternalApi
 import io.batteryapi.apis.BatteryApi
@@ -73,8 +73,12 @@ class API(
     private val internalApi = InternalApi(context, defaultHttpClient)
     private val configRepository = ConfigRepository(context, scope, internalApi)
 
+
     val config: ConfigEntity
         get() = configRepository.configEntity
+
+    val configTestnet: ConfigEntity
+        get() = configRepository.configTestnetEntity
 
     val configFlow: Flow<ConfigEntity>
         get() = configRepository.stream
@@ -83,8 +87,14 @@ class API(
         tonAPIHttpClient { config }
     }
 
+    val holdersApi = HoldersApi(defaultHttpClient, ::getConfig)
+
     @Volatile
     private var cachedCountry: String? = null
+
+    fun getConfig(testnet: Boolean): ConfigEntity {
+        return if (testnet) configTestnet else config
+    }
 
     suspend fun tonapiFetch(
         url: String,
@@ -394,14 +404,17 @@ class API(
         }
     }
 
-    fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates>? {
-        val currencies = listOf(currency, "TON")
+    fun getRates(currencies: List<String>, tokens: List<String>): Map<String, TokenRates>? {
         return withRetry {
             rates().getRates(
                 tokens = tokens,
                 currencies = currencies
             ).rates
         }
+    }
+
+    fun getRates(currency: String, tokens: List<String>): Map<String, TokenRates>? {
+        return getRates(listOf(currency, "TON"), tokens)
     }
 
     fun getNft(address: String, testnet: Boolean): NftItem? {

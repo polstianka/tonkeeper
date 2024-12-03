@@ -2,7 +2,9 @@ package com.tonapps.tonkeeper.ui.screen.wallet.main
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.tonapps.extensions.toUriOrNull
 import com.tonapps.icu.Coins
+import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
 import com.tonapps.tonkeeper.extensions.hasPushPermission
@@ -13,29 +15,39 @@ import com.tonapps.tonkeeper.manager.apk.APKManager
 import com.tonapps.tonkeeper.manager.assets.AssetsManager
 import com.tonapps.tonkeeper.manager.tx.TransactionManager
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardScreenPath
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardsStateEntity
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item.Status
+import com.tonapps.tonkeeper.usecase.sign.SignUseCase
 import com.tonapps.wallet.api.API
 import com.tonapps.wallet.api.entity.NotificationEntity
-import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.account.Wallet
+import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.backup.BackupRepository
 import com.tonapps.wallet.data.battery.BatteryRepository
+import com.tonapps.wallet.data.cards.CardsRepository
+import com.tonapps.wallet.data.cards.entity.CardEntity
+import com.tonapps.wallet.data.cards.entity.CardKind
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.dapps.DAppsRepository
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
+import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
@@ -59,7 +71,9 @@ class WalletViewModel(
     private val assetsManager: AssetsManager,
     private val dAppsRepository: DAppsRepository,
     private val apkManager: APKManager,
-): BaseWalletVM(app) {
+    private val cardsRepository: CardsRepository,
+    private val signUseCase: SignUseCase
+) : BaseWalletVM(app) {
 
     private var autoRefreshJob: Job? = null
     private val alertNotificationsFlow = MutableStateFlow<List<NotificationEntity>>(emptyList())
@@ -83,7 +97,8 @@ class WalletViewModel(
         settingsRepository.tokenPrefsChangedFlow,
         settingsRepository.walletPrefsChangedFlow,
         settingsRepository.safeModeStateFlow,
-    ) { _, _, _ -> }
+        settingsRepository.cardsDismissedFlow,
+    ) { _, _, _, _ -> }
 
     private val _stateSettingsFlow = combine(
         settingsRepository.hiddenBalancesFlow,
@@ -104,7 +119,12 @@ class WalletViewModel(
         }
     }.map { !it }
 
-    private val _streamFlow = combine(updateWalletSettings, batteryRepository.balanceUpdatedFlow, _lastLtFlow) { _, _, lastLt -> lastLt }
+    private val _streamFlow = combine(
+        updateWalletSettings,
+        batteryRepository.balanceUpdatedFlow,
+        cardsRepository.cardsUpdatedFlow,
+        _lastLtFlow
+    ) { _, _, _, lastLt -> lastLt }
 
     init {
         viewModelScope.launch {
@@ -141,7 +161,8 @@ class WalletViewModel(
             val lastLt = _stateMainFlow.value?.lt ?: 0
             val lastIsOnline = _stateMainFlow.value?.isOnline
 
-            val isRequestUpdate = _stateMainFlow.value == null || lastLt != currentLt || lastIsOnline != currentIsOnline
+            val isRequestUpdate =
+                _stateMainFlow.value == null || lastLt != currentLt || lastIsOnline != currentIsOnline
 
             if (isRequestUpdate) {
                 setStatus(Status.Updating)
@@ -160,6 +181,7 @@ class WalletViewModel(
             val localAssets = getAssets(walletCurrency, false)
             if (localAssets != null) {
                 val batteryBalance = getBatteryBalance(wallet)
+                val cards = getCards(walletCurrency, wallet)
                 val state = State.Main(
                     wallet = wallet,
                     assets = localAssets,
@@ -170,17 +192,24 @@ class WalletViewModel(
                         disabled = api.config.batteryDisabled,
                         viewed = settingsRepository.batteryViewed,
                     ),
+                    cards = cards,
                     lt = currentLt,
                     isOnline = currentIsOnline,
                     apkStatus = apkStatus,
                 )
-                assetsManager.setCachedTotalBalance(wallet, walletCurrency, true, state.totalBalanceFiat)
+                assetsManager.setCachedTotalBalance(
+                    wallet,
+                    walletCurrency,
+                    true,
+                    state.totalBalanceFiat
+                )
                 _stateMainFlow.value = state
             }
 
             if (isRequestUpdate) {
                 val remoteAssets = getAssets(walletCurrency, true)
                 val batteryBalance = getBatteryBalance(wallet, true)
+                val cards = getCards(walletCurrency, wallet, true)
                 if (remoteAssets != null) {
                     val state = State.Main(
                         wallet,
@@ -192,12 +221,18 @@ class WalletViewModel(
                             disabled = api.config.batteryDisabled,
                             viewed = settingsRepository.batteryViewed,
                         ),
+                        cards = cards,
                         lt = currentLt,
                         isOnline = currentIsOnline,
                         apkStatus = apkStatus,
                     )
                     _stateMainFlow.value = state
-                    assetsManager.setCachedTotalBalance(wallet, walletCurrency, true, state.totalBalanceFiat)
+                    assetsManager.setCachedTotalBalance(
+                        wallet,
+                        walletCurrency,
+                        true,
+                        state.totalBalanceFiat
+                    )
                     settingsRepository.setWalletLastUpdated(wallet.id)
                     setStatus(Status.Default)
                 }
@@ -242,7 +277,10 @@ class WalletViewModel(
                 alerts = alerts,
                 dAppNotifications = State.DAppNotifications(pushes.notifications),
                 setup = uiSetup,
-                lastUpdatedFormat = DateHelper.formattedDate(lastUpdated, settingsRepository.getLocale()),
+                lastUpdatedFormat = DateHelper.formattedDate(
+                    lastUpdated,
+                    settingsRepository.getLocale()
+                ),
                 prefixYourAddress = 3 > settingsRepository.addressCopyCount
             )
             if (uiItems.isNotEmpty()) {
@@ -317,8 +355,9 @@ class WalletViewModel(
         wallet: WalletEntity,
         ignoreCache: Boolean = false
     ): Coins = withContext(Dispatchers.IO) {
-        if (wallet.hasPrivateKey) {
-            val tonProofToken = accountRepository.requestTonProofToken(wallet) ?: return@withContext Coins.ZERO
+        if (wallet.isTonConnectSupported) {
+            val tonProofToken =
+                accountRepository.requestTonProofToken(wallet) ?: return@withContext Coins.ZERO
             val battery = batteryRepository.getBalance(
                 tonProofToken = tonProofToken,
                 publicKey = wallet.publicKey,
@@ -328,6 +367,83 @@ class WalletViewModel(
             battery.balance
         } else {
             Coins.ZERO
+        }
+    }
+
+    private val cardsTokenFlow = flow {
+        if (!wallet.isTonConnectSupported) {
+            emit(null)
+            return@flow
+        }
+
+        val storedToken = cardsRepository.getAccountToken(wallet.address, wallet.testnet)
+        if (storedToken != null) {
+            emit(storedToken)
+        } else {
+            // force prod endpoint
+            val uri = api.getConfig(false).holdersAppEndpoint.toUriOrNull()
+                ?: throw Exception("Invalid URL")
+            val tonProof = signUseCase(context, wallet, uri.host!!, "ton-proof-any")
+            val token = cardsRepository.fetchAccountToken(wallet.contract, tonProof, wallet.testnet)
+            emit(token)
+        }
+    }.catch {
+        emit(null)
+    }.flowOn(Dispatchers.IO)
+
+    val cardsStateFlow = cardsTokenFlow.map { token ->
+        if (token != null) {
+            CardsStateEntity(
+                token = token,
+                data = cardsRepository.getCachedData(wallet.address, wallet.testnet)
+            )
+        } else {
+            null
+        }
+    }.catch {
+        emit(null)
+    }.flowOn(Dispatchers.IO)
+
+    private suspend fun getCards(
+        currency: WalletCurrency,
+        wallet: WalletEntity,
+        ignoreCache: Boolean = false
+    ): State.Cards? = withContext(Dispatchers.IO) {
+        if (wallet.isTonConnectSupported) {
+            val (cards, totalFiat) = cardsRepository.getCards(
+                currency = currency,
+                address = wallet.address,
+                testnet = wallet.testnet,
+                ignoreCache = ignoreCache
+            )
+
+            val list = cards.map { card ->
+                State.CardListItem(
+                    path = when (card.type) {
+                        CardEntity.Type.PREPAID -> CardScreenPath.Prepaid(card.id)
+                        CardEntity.Type.ACCOUNT -> CardScreenPath.Account(card.accountId)
+                    },
+                    lastFourDigits = card.lastFourDigits,
+                    title = when (card.type) {
+                        CardEntity.Type.PREPAID -> CurrencyFormatter.formatFiat(card.prepaidCurrency!!, card.prepaidBalance!!)
+                        CardEntity.Type.ACCOUNT -> CurrencyFormatter.formatFiat(currency.code, card.fiat)
+                    },
+                    subtitle = CurrencyFormatter.format(card.currency, card.balance, replaceSymbol = false),
+                    kindResId = when {
+                        card.kind == CardKind.VIRTIAL -> Localization.bank_card_virtual
+                        card.type == CardEntity.Type.PREPAID -> Localization.bank_card_prepaid
+                        else -> Localization.bank_card_physical
+                    },
+                )
+            }
+
+            State.Cards(
+                list = list,
+                totalFiat = totalFiat,
+                dismissed = settingsRepository.cardsDismissed || !wallet.isTonConnectSupported,
+            )
+        } else {
+            null
         }
     }
 

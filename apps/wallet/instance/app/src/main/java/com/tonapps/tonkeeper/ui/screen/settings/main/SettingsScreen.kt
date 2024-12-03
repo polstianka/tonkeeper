@@ -7,6 +7,7 @@ import androidx.core.net.toUri
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.tonapps.tonkeeper.extensions.showToast
 import com.tonapps.tonkeeper.extensions.toastLoading
 import com.tonapps.tonkeeper.koin.walletViewModel
 import com.tonapps.tonkeeper.manager.widget.WidgetManager
@@ -15,11 +16,12 @@ import com.tonapps.tonkeeper.ui.base.BaseListWalletScreen
 import com.tonapps.tonkeeper.ui.base.ScreenContext
 import com.tonapps.tonkeeper.ui.screen.backup.main.BackupScreen
 import com.tonapps.tonkeeper.ui.screen.battery.BatteryScreen
-import com.tonapps.tonkeeper.ui.screen.settings.currency.CurrencyScreen
-import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageScreen
+import com.tonapps.tonkeeper.ui.screen.card.CardScreen
 import com.tonapps.tonkeeper.ui.screen.name.edit.EditNameScreen
 import com.tonapps.tonkeeper.ui.screen.notifications.NotificationsManageScreen
 import com.tonapps.tonkeeper.ui.screen.settings.apps.AppsScreen
+import com.tonapps.tonkeeper.ui.screen.settings.currency.CurrencyScreen
+import com.tonapps.tonkeeper.ui.screen.settings.language.LanguageScreen
 import com.tonapps.tonkeeper.ui.screen.settings.legal.LegalScreen
 import com.tonapps.tonkeeper.ui.screen.settings.main.list.Adapter
 import com.tonapps.tonkeeper.ui.screen.settings.main.list.Item
@@ -36,7 +38,7 @@ import uikit.extensions.collectFlow
 import uikit.widget.item.ItemTextView
 
 class SettingsScreen(
-    wallet: WalletEntity
+    private val wallet: WalletEntity
 ): BaseListWalletScreen<ScreenContext.Wallet>(ScreenContext.Wallet(wallet)), BaseFragment.SwipeBack {
 
     override val viewModel: SettingsViewModel by walletViewModel()
@@ -75,6 +77,7 @@ class SettingsScreen(
             is Item.Tester -> navigation?.openURL(item.url)
             is Item.W5 -> navigation?.add(W5StoriesScreen.newInstance(!screenContext.wallet.isW5))
             is Item.Battery -> navigation?.add(BatteryScreen.newInstance(screenContext.wallet))
+            is Item.Cards -> openCards()
             is Item.Logout -> if (item.delete) deleteAccount() else showSignOutDialog()
             is Item.ConnectedApps -> navigation?.add(AppsScreen.newInstance(screenContext.wallet))
             is Item.SearchEngine -> searchPicker(item)
@@ -84,6 +87,16 @@ class SettingsScreen(
             is Item.Notifications -> navigation?.add(NotificationsManageScreen.newInstance(screenContext.wallet))
             is Item.FAQ -> navigation?.openURL(item.url)
             else -> return
+        }
+    }
+
+    private fun openCards() {
+        collectFlow(viewModel.cardsStateFlow) { cardsState ->
+            if (cardsState != null) {
+                navigation?.add(CardScreen.newInstance(wallet = wallet, cardsState = cardsState))
+            } else {
+                context?.showToast(Localization.error)
+            }
         }
     }
 

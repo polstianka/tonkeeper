@@ -10,6 +10,7 @@ import com.tonapps.extensions.isDebug
 import com.tonapps.extensions.locale
 import com.tonapps.network.get
 import com.tonapps.wallet.api.entity.ConfigEntity
+import com.tonapps.wallet.api.entity.ConfigResponseEntity
 import com.tonapps.wallet.api.entity.NotificationEntity
 import com.tonapps.wallet.api.entity.StoryEntity
 import com.tonapps.wallet.api.withRetry
@@ -98,10 +99,10 @@ internal class InternalApi(
         return data.getJSONObject("data")
     }
 
-    fun downloadConfig(testnet: Boolean): ConfigEntity? {
+    fun downloadConfig(): ConfigResponseEntity? {
         return try {
-            val json = request("keys", testnet, locale = context.locale, boot = true)
-            ConfigEntity(json, context.isDebug)
+            val json = request("keys/all", testnet = false, locale = context.locale, boot = true)
+            ConfigResponseEntity(json, context.isDebug)
         } catch (e: Throwable) {
             FirebaseCrashlytics.getInstance().recordException(e)
             null
