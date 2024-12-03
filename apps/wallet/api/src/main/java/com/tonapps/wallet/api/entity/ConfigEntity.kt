@@ -56,6 +56,8 @@ data class ConfigEntity(
     val stories: List<String>,
     val apkDownloadUrl: String?,
     val apkName: AppVersion?,
+    val holdersAppEndpoint: String,
+    val holdersServiceEndpoint: String,
 ): Parcelable {
 
     @IgnoredOnParcel
@@ -129,7 +131,9 @@ data class ConfigEntity(
         reportAmount = Coins.of(json.optString("reportAmount") ?: "0.03"),
         stories = json.getJSONArray("stories").toStringList(),
         apkDownloadUrl = json.optString("apk_download_url"),
-        apkName = json.optString("apk_name")?.let { AppVersion(it) }
+        apkName = json.optString("apk_name")?.let { AppVersion(it) },
+        holdersAppEndpoint = json.optString("holdersAppEndpoint", "https://app.holders.io"),
+        holdersServiceEndpoint = json.optString("holdersServiceEndpoint", "https://card-prod.whales-api.com")
     )
 
     constructor() : this(
@@ -177,7 +181,9 @@ data class ConfigEntity(
         reportAmount = Coins.of("0.03"),
         stories = emptyList(),
         apkDownloadUrl = null,
-        apkName = null
+        apkName = null,
+        holdersAppEndpoint = "https://app.holders.io",
+        holdersServiceEndpoint = "https://card-prod.whales-api.com"
     )
 
     companion object {

@@ -58,6 +58,7 @@ class SettingsRepository(
         private const val SHOW_SAFE_MODE_SETUP_KEY = "show_safe_mode_setup"
         private const val ADDRESS_COPY_COUNT_KEY = "address_copy_count"
         private const val STORIES_VIEWED_PREFIX = "stories_viewed_"
+        private const val CARDS_DISMISSED_KEY = "cards_dismissed"
     }
 
     private val _currencyFlow = MutableEffectFlow<WalletCurrency>()
@@ -89,6 +90,9 @@ class SettingsRepository(
 
     private val _isMigratedFlow = MutableStateFlow<Boolean?>(null)
     val isMigratedFlow = _isMigratedFlow.asStateFlow().filterNotNull()
+
+    private val _cardsDismissedFlow = MutableStateFlow<Boolean?>(null)
+    val cardsDismissedFlow = _cardsDismissedFlow.asStateFlow().filterNotNull()
 
     fun notifyWalletPush() {
         _walletPush.tryEmit(Unit)
@@ -230,6 +234,15 @@ class SettingsRepository(
             if (value != field) {
                 prefs.edit().putBoolean(BATTERY_VIEWED_KEY, value).apply()
                 field = value
+            }
+        }
+
+    var cardsDismissed: Boolean = prefs.getBoolean(CARDS_DISMISSED_KEY, false)
+        set(value) {
+            if (value != field) {
+                prefs.edit().putBoolean(CARDS_DISMISSED_KEY, value).apply()
+                field = value
+                _cardsDismissedFlow.tryEmit(value)
             }
         }
 
@@ -450,6 +463,7 @@ class SettingsRepository(
             _lockscreenFlow.tryEmit(lockScreen)
             _safeModeStateFlow.tryEmit(getSafeModeState())
             _walletPush.tryEmit(Unit)
+            _cardsDismissedFlow.tryEmit(cardsDismissed)
         }
     }
 

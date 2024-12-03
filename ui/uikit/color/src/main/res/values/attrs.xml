@@ -9,6 +9,7 @@
     <attr name="backgroundPageColor" format="reference"/>
     <attr name="backgroundTransparentColor" format="reference"/>
     <attr name="backgroundContentColor" format="reference"/>
+    <attr name="backgroundContentAlphaColor" format="reference"/>
     <attr name="backgroundContentTintColor" format="reference"/>
     <attr name="backgroundContentAttentionColor" format="reference"/>
     <attr name="backgroundHighlightedColor" format="reference"/>

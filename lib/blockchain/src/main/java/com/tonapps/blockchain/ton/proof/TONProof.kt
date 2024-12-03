@@ -70,7 +70,7 @@ object TONProof {
 
     data class Domain(val value: String): Serializable {
 
-        private val lengthBytes: Int = value.toByteArray().size
+        val lengthBytes: Int = value.toByteArray().size
 
         override fun toByteArray(): ByteArray {
             return lengthBytes.toByteArray() + value.toByteArray()

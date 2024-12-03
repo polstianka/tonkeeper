@@ -595,5 +595,12 @@
     <string name="theme_dark">Тёмная</string>
     <string name="words12">12 слов</string>
 
+    <string name="bank_card">Карта * %1$s</string>
+    <string name="bank_card_virtual">Виртуальная</string>
+    <string name="bank_card_physical">Физическая</string>
+    <string name="bank_card_prepaid">Предоплаченная карта</string>
+    <string name="bank_card_title">Банковская карта</string>
+    <string name="bank_card_subtitle">Оплачивайте в TON, конвертируйте в USD без комиссии.</string>
+    <string name="back_card_details">Подробнее</string>
 
 </resources>

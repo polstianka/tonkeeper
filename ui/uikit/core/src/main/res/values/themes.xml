@@ -47,6 +47,7 @@
         <item name="backgroundPageColor">@color/backgroundPageBlue</item>
         <item name="backgroundTransparentColor">@color/backgroundTransparentBlue</item>
         <item name="backgroundContentColor">@color/backgroundContentBlue</item>
+        <item name="backgroundContentAlphaColor">@color/backgroundContentAlphaBlue</item>
         <item name="backgroundContentTintColor">@color/backgroundContentTintBlue</item>
         <item name="backgroundContentAttentionColor">@color/backgroundContentAttentionBlue</item>
         <item name="backgroundHighlightedColor">@color/backgroundHighlightedBlue</item>
@@ -113,6 +114,7 @@
         <item name="backgroundPageColor">@color/backgroundPageDark</item>
         <item name="backgroundTransparentColor">@color/backgroundTransparentDark</item>
         <item name="backgroundContentColor">@color/backgroundContentDark</item>
+        <item name="backgroundContentAlphaColor">@color/backgroundContentAlphaDark</item>
         <item name="backgroundContentTintColor">@color/backgroundContentTintDark</item>
         <item name="backgroundContentAttentionColor">@color/backgroundContentAttentionDark</item>
         <item name="backgroundHighlightedColor">@color/backgroundHighlightedDark</item>
@@ -178,7 +180,7 @@
 
         <item name="backgroundPageColor">@color/backgroundPageLight</item>
         <item name="backgroundTransparentColor">@color/backgroundTransparentLight</item>
-        <item name="backgroundContentColor">@color/backgroundContentLight</item>
+        <item name="backgroundContentAlphaColor">@color/backgroundContentAlphaLight</item>
         <item name="backgroundContentTintColor">@color/backgroundContentTintLight</item>
         <item name="backgroundContentAttentionColor">@color/backgroundContentAttentionLight</item>
         <item name="backgroundHighlightedColor">@color/backgroundHighlightedLight</item>

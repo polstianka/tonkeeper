@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/apps/wallet/data/backup" />
             <option value="$PROJECT_DIR$/apps/wallet/data/battery" />
             <option value="$PROJECT_DIR$/apps/wallet/data/browser" />
+            <option value="$PROJECT_DIR$/apps/wallet/data/cards" />
             <option value="$PROJECT_DIR$/apps/wallet/data/collectibles" />
             <option value="$PROJECT_DIR$/apps/wallet/data/contacts" />
             <option value="$PROJECT_DIR$/apps/wallet/data/core" />

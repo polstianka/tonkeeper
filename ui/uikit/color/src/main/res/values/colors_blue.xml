@@ -9,6 +9,7 @@
     <color name="backgroundPageBlue">#10161F</color>
     <color name="backgroundTransparentBlue">#F510161F</color>
     <color name="backgroundContentBlue">#1D2633</color>
+    <color name="backgroundContentAlphaBlue">#1D26333D</color>
     <color name="backgroundContentTintBlue">#2E3847</color>
     <color name="backgroundContentAttentionBlue">#424C5C</color>
     <color name="backgroundHighlightedBlue">#14C2DAFF</color>
