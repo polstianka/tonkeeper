@@ -490,9 +490,9 @@ class SendViewModel(
                 }
             } else {
                 val totalAmount = if (getRawExtra().multiply(BigDecimal(-1)).isNegative) {
-                    TransferEntity.POINT_ONE_TON
+                    TransferEntity.BASE_FORWARD_AMOUNT
                 } else {
-                    fee + TransferEntity.POINT_ONE_TON
+                    fee + TransferEntity.BASE_FORWARD_AMOUNT
                 }
                 if (!withRelayer && totalAmount.value > tonBalance.value) {
                     showInsufficientBalance(tonBalance, totalAmount)
@@ -934,14 +934,11 @@ class SendViewModel(
 
         val token = selectedTokenFlow.value
 
-        var jettonTransferAmount = when {
-            sendTransferType is SendTransferType.Gasless || extra.isNegative -> TransferEntity.BASE_FORWARD_AMOUNT
-            fee.isZero -> TransferEntity.POINT_ONE_TON
+        val jettonTransferAmount = when {
+            sendTransferType is SendTransferType.Gasless || extra.multiply(BigDecimal(-1)).isNegative -> TransferEntity.BASE_FORWARD_AMOUNT
+            fee.isZero -> TransferEntity.BASE_FORWARD_AMOUNT
+            token.isRequestMinting || token.customPayloadApiUri != null -> TransferEntity.POINT_ONE_TON
             else -> fee + TransferEntity.BASE_FORWARD_AMOUNT
-        }
-
-        if (token.isRequestMinting || token.customPayloadApiUri != null) {
-            jettonTransferAmount = Coins.of(0.1)
         }
 
         val boc = signUseCase(
