@@ -86,7 +86,6 @@ class SwapScreen(wallet: WalletEntity): WalletContextScreen(R.layout.fragment_sw
         webView = view.findViewById(R.id.web)
         webView.addCallback(webViewCallback)
         webView.clipToPadding = false
-        webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         webView.applyNavBottomPadding(requireContext().getDimensionPixelSize(uikit.R.dimen.offsetMedium))
         webView.loadUrl(getUri().toString())
         webView.jsBridge = StonfiBridge2(
