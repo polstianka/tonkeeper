@@ -21,7 +21,7 @@ data class SwapArgs(
     }
 
     constructor(bundle: Bundle) : this(
-        uri = bundle.getParcelableCompat(ARG_URI)!!,
+        uri = "https://swap-widget.tonkeeper.com".toUri(), // bundle.getParcelableCompat(ARG_URI)!!,
         address = bundle.getString(ARG_ADDRESS)!!,
         fromToken = bundle.getString(FROM_TOKEN)!!,
         toToken = bundle.getString(TO_TOKEN)

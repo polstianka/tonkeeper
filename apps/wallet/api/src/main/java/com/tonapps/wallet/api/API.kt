@@ -734,7 +734,7 @@ class API(
         json.put("firebase_token", firebaseToken)
         sessionId?.let { json.put("session_id", it) }
         json.put("commercial", commercial)
-        json.put("silent", silent)
+        json.put("silent", !silent)
         val data = json.toString().replace("\\/", "/").trim()
 
         val headers = ArrayMap<String, String>().apply {

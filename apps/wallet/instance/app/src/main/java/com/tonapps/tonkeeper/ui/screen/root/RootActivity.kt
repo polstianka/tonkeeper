@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.extensions.currentTimeSeconds
+import com.tonapps.extensions.getStringValue
 import com.tonapps.extensions.toUriOrNull
 import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.AnalyticsHelper
@@ -399,9 +400,9 @@ class RootActivity: BaseWalletActivity() {
     }
 
     private fun handleIntent(intent: Intent) {
-        val uri = intent.data
+        val uri = intent.data ?: intent.getStringExtra("link")?.toUriOrNull()
         val extras = intent.extras
-        val dappDeepLink = extras?.getString("dapp_deeplink")?.toUriOrNull()
+        val dappDeepLink = extras?.getStringValue("dapp_deeplink")?.toUriOrNull()
         if (dappDeepLink != null) {
             viewModel.openDApp(dappDeepLink)
         } else if (uri != null) {
