@@ -2,6 +2,7 @@ package com.tonapps.wallet.api
 
 import android.content.Context
 import android.util.ArrayMap
+import android.util.Log
 import com.squareup.moshi.JsonAdapter
 import com.tonapps.blockchain.ton.contract.BaseWalletContract
 import com.tonapps.blockchain.ton.contract.WalletVersion
@@ -745,6 +746,8 @@ class API(
         val response = withRetry {
             tonAPIHttpClient.postJSON(url, data, headers)
         }
+
+        Log.d("API", "pushTonconnectSubscribe: $data")
 
         return response?.isSuccessful ?: false
     }
