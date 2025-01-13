@@ -601,6 +601,6 @@
     <string name="bank_card_prepaid">Предоплаченная карта</string>
     <string name="bank_card_title">Банковская карта</string>
     <string name="bank_card_subtitle">Оплачивайте в TON, конвертируйте в USD без комиссии.</string>
-    <string name="back_card_details">Подробнее</string>
+    <string name="back_card_details">Открыть карту</string>
 
 </resources>

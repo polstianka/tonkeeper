@@ -615,5 +615,5 @@
     <string name="bank_card_prepaid">Prepaid card</string>
     <string name="bank_card_title">Bank Card</string>
     <string name="bank_card_subtitle">Pay in TON, convert to USD without commission.</string>
-    <string name="back_card_details">More Details</string>
+    <string name="back_card_details">Get Card</string>
 </resources>

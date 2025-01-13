@@ -1,21 +1,17 @@
 package com.tonapps.network
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.ArrayMap
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.retry
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -23,12 +19,13 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okhttp3.internal.http2.ErrorCode
 import okhttp3.internal.http2.StreamResetException
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
-import org.json.JSONObject
 import java.io.IOException
 
 fun requestBuilder(url: String): Request.Builder {
@@ -159,3 +156,59 @@ fun OkHttpClient.sse(
         }
     }
 }.cancellable()
+
+fun OkHttpClient.webSocket(
+    url: String,
+    onFailure: ((Throwable) -> Unit)? = null,
+    onOpen: ((WebSocket) -> Unit)? = null
+): Pair<Flow<WebSocketEvent>, Channel<String>> {
+    val sendChannel = Channel<String>(Channel.UNLIMITED)
+
+    val request = Request.Builder()
+        .url(url)
+        .build()
+    val flow = callbackFlow {
+        val listener = object : WebSocketListener() {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                Log.d("WebSocket", "$url opened")
+                onOpen?.invoke(webSocket)
+                launch {
+                    for (message in sendChannel) {
+                        webSocket.send(message)
+                    }
+                }
+            }
+
+            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                Log.d("WebSocket", "$url closed")
+            }
+
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                this@callbackFlow.trySend(WebSocketEvent(data = text))
+            }
+
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                Log.d("WebSocket", "$url failed", t)
+                this@callbackFlow.close(t)
+            }
+        }
+
+        val webSocket = newWebSocket(request, listener)
+        awaitClose {
+            Log.d("WebSocket", "$url closing")
+            webSocket.close(1000, "Flow closed")
+            sendChannel.close()
+        }
+    }.retry { cause ->
+        when (cause) {
+            is CancellationException -> false
+            else -> {
+                onFailure?.invoke(cause)
+                delay(1000) // Retry delay
+                true
+            }
+        }
+    }.cancellable()
+
+    return flow to sendChannel
+}

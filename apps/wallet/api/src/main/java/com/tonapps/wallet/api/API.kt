@@ -90,7 +90,7 @@ class API(
         tonAPIHttpClient { config }
     }
 
-    val holdersApi = HoldersApi(defaultHttpClient, ::getConfig)
+    val holdersApi = HoldersApi(wsHttpClient, ::getConfig)
 
     @Volatile
     private var cachedCountry: String? = null
