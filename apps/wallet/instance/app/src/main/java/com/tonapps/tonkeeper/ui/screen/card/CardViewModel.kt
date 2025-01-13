@@ -30,6 +30,7 @@ class CardViewModel(
             is CardScreenPath.Prepaid -> "/card-prepaid/${path.cardId}"
             is CardScreenPath.Create -> "/create"
             is CardScreenPath.Main -> "/accounts"
+            is CardScreenPath.Support -> "/support"
         }
 
         builder.appendEncodedPath(path)

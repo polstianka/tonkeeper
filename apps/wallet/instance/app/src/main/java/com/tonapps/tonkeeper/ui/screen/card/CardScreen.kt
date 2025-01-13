@@ -104,7 +104,7 @@ class CardScreen(
                 view.findViewById<SkeletonLayout>(R.id.shimmer_create).visibility = View.VISIBLE
             }
 
-            is CardScreenPath.Main -> {
+            else -> {
                 view.findViewById<SkeletonLayout>(R.id.shimmer_main).visibility = View.VISIBLE
             }
         }

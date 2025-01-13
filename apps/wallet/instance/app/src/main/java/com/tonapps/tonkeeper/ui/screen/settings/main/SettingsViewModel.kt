@@ -233,6 +233,10 @@ class SettingsViewModel(
         return builder.toString()
     }
 
+    val hasCardsTokenFlow = flow {
+        emit(cardsRepository.getAccountToken(wallet.address, wallet.testnet) != null)
+    }
+
     private val cardsTokenFlow = flow {
         if (!wallet.isTonConnectSupported) {
             emit(null)

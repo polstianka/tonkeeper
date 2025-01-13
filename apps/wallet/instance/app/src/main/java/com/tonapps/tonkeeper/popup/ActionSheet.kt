@@ -85,13 +85,14 @@ open class ActionSheet(
     fun show(
         target: View,
         offsetX: Int = 0,
+        offsetY: Int = 8.dp,
         gravity: Int = Gravity.TOP or Gravity.START
     ) {
         if (isShowing) {
             dismiss()
         } else {
             buildView()
-            showAsDropDown(target, offsetX, 8.dp, gravity)
+            showAsDropDown(target, offsetX, offsetY, gravity)
         }
     }
 
