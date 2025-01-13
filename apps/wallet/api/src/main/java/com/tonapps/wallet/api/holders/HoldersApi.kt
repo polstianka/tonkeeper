@@ -8,13 +8,17 @@ import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.blockchain.ton.extensions.hex
 import com.tonapps.blockchain.ton.extensions.toAccountId
 import com.tonapps.blockchain.ton.proof.TONProof
+import com.tonapps.network.WebSocketEvent
+import com.tonapps.network.webSocket
 import com.tonapps.wallet.api.entity.ConfigEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class HoldersApi(
     private val okHttpClient: OkHttpClient,
@@ -25,6 +29,10 @@ class HoldersApi(
         val host =
             if (testnet) "https://card-staging.whales-api.com" else getConfig(false).holdersServiceEndpoint
         return host + path
+    }
+
+    private fun wsEndpoint(testnet: Boolean): String {
+        return endpoint("/v2/updates", testnet).replace("https", "wss")
     }
 
     private suspend inline fun <reified T> post(
@@ -65,6 +73,21 @@ class HoldersApi(
 
     private fun getNetwork(testnet: Boolean): String {
         return if (testnet) "ton-testnet" else "ton-mainnet"
+    }
+
+    fun wsEvents(token: String, testnet: Boolean, onFailure: ((Throwable) -> Unit)?): Flow<WebSocketEvent> {
+        val (flow) = okHttpClient.webSocket(wsEndpoint(testnet), onFailure = onFailure, onOpen = {
+            it.send(
+                JSONObject(
+                    mapOf(
+                        "type" to "connect",
+                        "token" to token
+                    )
+                ).toString()
+            )
+        })
+
+        return flow
     }
 
     suspend fun fetchAccountsPublic(

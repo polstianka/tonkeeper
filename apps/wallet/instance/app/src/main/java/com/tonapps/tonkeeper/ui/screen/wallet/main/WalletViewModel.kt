@@ -8,8 +8,6 @@ import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.network.NetworkMonitor
 import com.tonapps.tonkeeper.core.entities.AssetsEntity.Companion.sort
 import com.tonapps.tonkeeper.extensions.hasPushPermission
-import com.tonapps.tonkeeper.extensions.notificationsFlow
-import com.tonapps.tonkeeper.extensions.refreshNotifications
 import com.tonapps.tonkeeper.helper.DateHelper
 import com.tonapps.tonkeeper.manager.apk.APKManager
 import com.tonapps.tonkeeper.manager.assets.AssetsManager
@@ -32,7 +30,6 @@ import com.tonapps.wallet.data.cards.entity.CardEntity
 import com.tonapps.wallet.data.cards.entity.CardKind
 import com.tonapps.wallet.data.core.ScreenCacheSource
 import com.tonapps.wallet.data.core.WalletCurrency
-import com.tonapps.wallet.data.dapps.DAppsRepository
 import com.tonapps.wallet.data.rates.RatesRepository
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
@@ -44,12 +41,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -124,6 +123,8 @@ class WalletViewModel(
             val cached = screenCacheSource.getWalletScreen(wallet) ?: listOf(Item.Skeleton(true))
             _uiItemsFlow.value = cached
         }
+
+        observeCards()
 
         collectFlow(transactionManager.eventsFlow(wallet)) { event ->
             if (event.pending) {
@@ -430,6 +431,31 @@ class WalletViewModel(
         } else {
             null
         }
+    }
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private fun observeCards() {
+        cardsRepository.cardsUpdatedFlow
+            .mapNotNull { cardsRepository.getAccountToken(wallet.address, wallet.testnet) }
+            .distinctUntilChanged()
+            .flatMapLatest { token ->
+                api.holdersApi.wsEvents(token, wallet.testnet, null)
+            }
+            .onEach { event ->
+                val type = event.json.optString("type")
+                val updateTypes = listOf(
+                    "state_change",
+                    "accounts_changed",
+                    "balance_change",
+                    "limits_change",
+                    "prepaid_transaction"
+                )
+                if (type in updateTypes) {
+                    getCards(settingsRepository.currency, wallet, true)
+                }
+            }
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 
     private suspend fun getAssets(
