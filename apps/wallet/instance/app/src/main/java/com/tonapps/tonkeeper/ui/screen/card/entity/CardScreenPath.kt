@@ -12,4 +12,6 @@ sealed class CardScreenPath: Parcelable {
     data object Create : CardScreenPath()
     @Parcelize
     data object Main : CardScreenPath()
+    @Parcelize
+    data object Support : CardScreenPath()
 }
