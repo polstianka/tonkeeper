@@ -5,4 +5,5 @@
     <color name="constantBlue">#0077FF</color>
     <color name="constantRed">#FF3B30</color>
     <color name="constantTon">#0098E9</color>
+    <color name="constantWhite24">#FFFFFF3D</color>
 </resources>

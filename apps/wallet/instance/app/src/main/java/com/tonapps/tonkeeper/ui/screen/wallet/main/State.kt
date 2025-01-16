@@ -7,6 +7,7 @@ import com.tonapps.tonkeeper.App
 import com.tonapps.tonkeeper.core.BalanceType
 import com.tonapps.tonkeeper.core.entities.AssetsEntity
 import com.tonapps.tonkeeper.manager.apk.APKManager
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardScreenPath
 import com.tonapps.tonkeeper.ui.screen.wallet.main.list.Item
 import com.tonapps.tonkeeper.view.BatteryView
 import com.tonapps.uikit.icon.UIKitIcon
@@ -17,7 +18,6 @@ import com.tonapps.wallet.api.entity.TokenEntity
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.core.WalletCurrency
 import com.tonapps.wallet.data.core.isAvailableBiometric
-import com.tonapps.wallet.data.dapps.entities.AppEntity
 import com.tonapps.wallet.data.dapps.entities.AppPushEntity
 import com.tonapps.wallet.data.rates.entity.RatesEntity
 import com.tonapps.wallet.localization.Localization
@@ -37,7 +37,21 @@ sealed class State {
         val beta: Boolean,
         val disabled: Boolean,
         val viewed: Boolean,
-    ): State()
+    ) : State()
+
+    data class Cards(
+        val list: List<CardListItem>,
+        val totalFiat: Coins,
+        val dismissed: Boolean,
+    ) : State()
+
+    data class CardListItem(
+        val lastFourDigits: String,
+        val title: CharSequence,
+        val subtitle: CharSequence,
+        val path: CardScreenPath,
+        val kindResId: Int,
+    ) : State()
 
     data class Setup(
         val pushEnabled: Boolean,
@@ -45,14 +59,14 @@ sealed class State {
         val hasBackup: Boolean,
         val showTelegramChannel: Boolean,
         val safeModeBlock: Boolean
-    ): State()
+    ) : State()
 
     data class Assets(
         val currency: WalletCurrency,
         val list: List<AssetsEntity>,
         val fromCache: Boolean,
         val rates: RatesEntity,
-    ): State() {
+    ) : State() {
 
         val size: Int
             get() = list.size
@@ -70,13 +84,6 @@ sealed class State {
             val balanceTON = rates.convertFromFiat(TokenEntity.TON.address, balanceFiat)
             return BalanceType.getBalanceType(balanceTON)
         }
-
-        fun getTotalBalanceFormat(
-            wallet: WalletEntity,
-        ): CharSequence {
-            val total = getTotalBalanceFiat(wallet)
-            return CurrencyFormatter.formatFiat(currency.code, total)
-        }
     }
 
     data class Main(
@@ -84,16 +91,17 @@ sealed class State {
         val assets: Assets,
         val hasBackup: Boolean,
         val battery: Battery,
+        val cards: Cards?,
         val lt: Long?,
         val isOnline: Boolean,
         val apkStatus: APKManager.Status,
-    ): State() {
+    ) : State() {
 
         val totalBalanceFiat: Coins
-            get() = assets.getTotalBalanceFiat(wallet)
+            get() = assets.getTotalBalanceFiat(wallet) + (cards?.totalFiat ?: Coins.ZERO)
 
         private val totalBalanceFormat: CharSequence
-            get() = assets.getTotalBalanceFormat(wallet)
+            get() = CurrencyFormatter.formatFiat(assets.currency.code, totalBalanceFiat)
 
         private val balanceType: Int
             get() = assets.getBalanceType(wallet)
@@ -120,11 +128,20 @@ sealed class State {
                         hiddenBalance = hiddenBalance,
                         wallet = wallet,
                         readyWithdraw = staked.readyWithdraw,
-                        readyWithdrawFormat = CurrencyFormatter.formatFiat("TON", staked.readyWithdraw),
+                        readyWithdrawFormat = CurrencyFormatter.formatFiat(
+                            "TON",
+                            staked.readyWithdraw
+                        ),
                         pendingDeposit = staked.pendingDeposit,
-                        pendingDepositFormat = CurrencyFormatter.formatFiat("TON", staked.pendingDeposit),
+                        pendingDepositFormat = CurrencyFormatter.formatFiat(
+                            "TON",
+                            staked.pendingDeposit
+                        ),
                         pendingWithdraw = staked.pendingWithdraw,
-                        pendingWithdrawFormat = CurrencyFormatter.formatFiat("TON", staked.pendingWithdraw),
+                        pendingWithdrawFormat = CurrencyFormatter.formatFiat(
+                            "TON",
+                            staked.pendingWithdraw
+                        ),
                         cycleEnd = staked.cycleEnd,
                     )
                     uiItems.add(item)
@@ -183,10 +200,12 @@ sealed class State {
             setupTypes: List<SetupType>
         ): List<Item> {
             val uiItems = mutableListOf<Item>()
-            uiItems.add(Item.SetupTitle(
-                walletId = walletId,
-                showDone = !setupTypes.contains(SetupType.Backup)
-            ))
+            uiItems.add(
+                Item.SetupTitle(
+                    walletId = walletId,
+                    showDone = !setupTypes.contains(SetupType.Backup)
+                )
+            )
             for ((index, setupType) in setupTypes.withIndex()) {
                 val position = ListCell.getPosition(setupTypes.size, index)
                 val item = when (setupType) {
@@ -199,6 +218,7 @@ sealed class State {
                         walletId = wallet.id,
                         settingsType = Item.SetupLink.TYPE_NONE
                     )
+
                     SetupType.Telegram -> Item.SetupLink(
                         position = position,
                         iconRes = UIKitIcon.ic_telegram_28,
@@ -208,6 +228,7 @@ sealed class State {
                         walletId = wallet.id,
                         settingsType = Item.SetupLink.TYPE_TELEGRAM_CHANNEL
                     )
+
                     SetupType.Biometry -> Item.SetupSwitch(
                         position = position,
                         iconRes = UIKitIcon.ic_faceid_28,
@@ -216,6 +237,7 @@ sealed class State {
                         wallet = wallet,
                         settingsType = Item.SetupSwitch.TYPE_BIOMETRIC
                     )
+
                     SetupType.Push -> Item.SetupSwitch(
                         position = ListCell.Position.FIRST,
                         iconRes = UIKitIcon.ic_bell_28,
@@ -224,6 +246,7 @@ sealed class State {
                         wallet = wallet,
                         settingsType = Item.SetupSwitch.TYPE_PUSH
                     )
+
                     SetupType.SafeMode -> Item.SetupLink(
                         position = position,
                         iconRes = UIKitIcon.ic_control_28,
@@ -236,6 +259,28 @@ sealed class State {
                 }
                 uiItems.add(item)
             }
+            return uiItems.toList()
+        }
+
+        private fun uiItemsCards(hiddenBalance: Boolean): List<Item> {
+            if (cards == null) {
+                return emptyList()
+            }
+
+            val uiItems = mutableListOf<Item>()
+            uiItems.addAll(cards.list.map { item ->
+                Item.Card(
+                    lastFourDigits = item.lastFourDigits,
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    path = item.path,
+                    hiddenBalance = hiddenBalance,
+                    testnet = wallet.testnet,
+                    isSingle = cards.list.size == 1,
+                    kindResId = item.kindResId
+                )
+            })
+            uiItems.add(Item.AddCard())
             return uiItems.toList()
         }
 
@@ -295,6 +340,16 @@ sealed class State {
                 }
             }
 
+            if (cards !== null) {
+                if (cards.list.isNotEmpty()) {
+                    uiItems.add(Item.Space(large = setup == null && dAppNotifications.isEmpty))
+                    uiItems.add(Item.Cards(uiItemsCards(hiddenBalance)))
+                } else if (!cards.dismissed) {
+                    uiItems.add(Item.Space(large = setup == null && dAppNotifications.isEmpty))
+                    uiItems.add(Item.CardsBanner(setup != null))
+                }
+            }
+
             uiItems.addAll(uiItemsTokens(hiddenBalance))
             return uiItems.toList()
         }
@@ -302,7 +357,7 @@ sealed class State {
 
     data class DAppNotifications(
         val pushes: List<AppPushEntity> = emptyList(),
-    ): State() {
+    ) : State() {
 
         val isEmpty: Boolean
             get() = pushes.isEmpty()
@@ -312,5 +367,5 @@ sealed class State {
         val hiddenBalance: Boolean,
         val config: ConfigEntity,
         val status: Item.Status
-    ): State()
+    ) : State()
 }

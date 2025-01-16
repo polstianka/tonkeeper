@@ -256,4 +256,13 @@ sealed class Item(type: Int): BaseListItem(type) {
         position = position,
         secondaryIcon = false
     )
+
+    data class Cards(
+        override val position: ListCell.Position
+    ): Icon(
+        titleRes = Localization.bank_card_title,
+        iconRes = UIKitIcon.ic_creditcard_28,
+        position = position,
+        secondaryIcon = false
+    )
 }

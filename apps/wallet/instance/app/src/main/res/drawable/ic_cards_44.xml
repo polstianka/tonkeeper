@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="44dp"
+    android:height="44dp"
+    android:viewportWidth="44"
+    android:viewportHeight="44">
+  <group>
+    <clip-path
+        android:pathData="M0,0h44v44h-44z"/>
+    <group>
+      <clip-path
+          android:pathData="M4,13L21,13A4,4 0,0 1,25 17L25,40A4,4 0,0 1,21 44L4,44A4,4 0,0 1,0 40L0,17A4,4 0,0 1,4 13z"/>
+      <path
+          android:pathData="M0,13h25v31h-25z"
+          android:fillColor="?attr/accentOrangeColor"/>
+    </group>
+    <group>
+      <clip-path
+          android:pathData="M10,6L27,6A4,4 0,0 1,31 10L31,40A4,4 0,0 1,27 44L10,44A4,4 0,0 1,6 40L6,10A4,4 0,0 1,10 6z"/>
+      <path
+          android:pathData="M6,6h25v38h-25z"
+          android:fillColor="?attr/accentPurpleColor"/>
+      <path
+          android:pathData="M6,6h25v7h-25z"
+          android:strokeAlpha="0.32"
+          android:fillColor="?attr/accentPurpleColor"
+          android:fillAlpha="0.32"/>
+    </group>
+    <group>
+      <clip-path
+          android:pathData="M18,0L40,0A4,4 0,0 1,44 4L44,40A4,4 0,0 1,40 44L18,44A4,4 0,0 1,14 40L14,4A4,4 0,0 1,18 0z"/>
+      <path
+          android:pathData="M14,0h30v44h-30z"
+          android:fillColor="?attr/buttonPrimaryBackgroundColor"/>
+      <path
+          android:pathData="M23,34L26,34A1,1 0,0 1,27 35L27,39A1,1 0,0 1,26 40L23,40A1,1 0,0 1,22 39L22,35A1,1 0,0 1,23 34z"
+          android:strokeAlpha="0.44"
+          android:fillColor="@color/constantWhite"
+          android:fillAlpha="0.44"/>
+    </group>
+  </group>
+</vector>
