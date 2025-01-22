@@ -22,6 +22,7 @@ import org.json.JSONObject
 
 class HoldersApi(
     private val okHttpClient: OkHttpClient,
+    private val wsHttpClient: OkHttpClient,
     private val getConfig: (testnet: Boolean) -> ConfigEntity
 ) {
 
@@ -76,7 +77,7 @@ class HoldersApi(
     }
 
     fun wsEvents(token: String, testnet: Boolean, onFailure: ((Throwable) -> Unit)?): Flow<WebSocketEvent> {
-        val (flow) = okHttpClient.webSocket(wsEndpoint(testnet), onFailure = onFailure, onOpen = {
+        val (flow) = wsHttpClient.webSocket(wsEndpoint(testnet), onFailure = onFailure, onOpen = {
             it.send(
                 JSONObject(
                     mapOf(
