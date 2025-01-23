@@ -1,5 +1,6 @@
 package com.tonapps.ledger.ton
 
+import android.util.Log
 import com.tonapps.blockchain.ton.TONOpCode
 import com.tonapps.blockchain.ton.extensions.storeAddress
 import com.tonapps.blockchain.ton.extensions.storeCoins
@@ -83,6 +84,7 @@ class TonTransport(private val transport: Transport) {
 
     suspend fun isAppOpen(): Boolean {
         val (appName, version) = getCurrentApp()
+        Log.d("LedgerBLEScan", "Current app: $appName, version: $version")
         val isOpened = appName == "TON"
 
         if (isOpened) {

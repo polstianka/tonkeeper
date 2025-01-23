@@ -17,10 +17,18 @@ class BleTransport(private val bleManager: BleManager) : Transport {
     }
 
     private suspend fun send(apdu: ByteArray) = suspendCancellableCoroutine { continuation ->
-        bleManager.send(apduHex = hex(apdu), onSuccess = { response ->
-            continuation.resume(hex(response))
-        }, onError = { error ->
-            continuation.resumeWithException(IllegalStateException(error))
-        })
+        try {
+            bleManager.send(
+                apduHex = hex(apdu),
+                onSuccess = { response ->
+                    continuation.resume(hex(response))
+                },
+                onError = { error ->
+                    continuation.resumeWithException(IllegalStateException(error))
+                }
+            )
+        } catch (e: Exception) {
+            continuation.resumeWithException(e)
+        }
     }
 }
