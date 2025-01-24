@@ -3,24 +3,24 @@
 3    package="com.tonapps.main.baselineprofile" >
 4
 5    <uses-sdk
-5-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:5:5-7:41
+5-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:5:5-7:41
 6        android:minSdkVersion="28"
-6-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:6:9-35
+6-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:6:9-35
 7        android:targetSdkVersion="35" />
-7-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:7:9-38
+7-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:7:9-38
 8
 9    <instrumentation
-9-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:9:5-14:68
+9-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:9:5-14:68
 10        android:name="androidx.test.runner.AndroidJUnitRunner"
-10-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:10:9-63
+10-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:10:9-63
 11        android:functionalTest="false"
-11-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:11:9-39
+11-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:11:9-39
 12        android:handleProfiling="false"
-12-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:12:9-40
+12-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:12:9-40
 13        android:label="Tests for com.tonapps.main.baselineprofile"
-13-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:13:9-67
+13-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:13:9-67
 14        android:targetPackage="com.tonapps.main.baselineprofile" />
-14-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:14:9-65
+14-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:14:9-65
 15
 16    <!--
 17    This is needed to write benchmark report data to an external directory during instrumented
@@ -28,213 +28,213 @@
 19     machine after the tests are done running.
 20    -->
 21    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-21-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:27:5-81
-21-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:27:22-78
+21-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:27:5-81
+21-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:27:22-78
 22    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 23    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-23-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/4c24dc591f764f67c24f114f4bba65d0/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:23:5-25:53
-23-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/4c24dc591f764f67c24f114f4bba65d0/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:24:9-61
+23-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/bbd3023f5d3b56de473fed6efe16979d/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:23:5-25:53
+23-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/bbd3023f5d3b56de473fed6efe16979d/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:24:9-61
 24    <!--
 25         Internet permission is required for perfetto trace shell processor http server but
 26        it's used to reach localhost only
 27    -->
 28    <uses-permission android:name="android.permission.INTERNET" />
-28-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/4c24dc591f764f67c24f114f4bba65d0/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:31:5-67
-28-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/4c24dc591f764f67c24f114f4bba65d0/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:31:22-64
+28-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/bbd3023f5d3b56de473fed6efe16979d/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:31:5-67
+28-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/bbd3023f5d3b56de473fed6efe16979d/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:31:22-64
 29    <uses-permission android:name="android.permission.REORDER_TASKS" />
-29-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:24:5-72
-29-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:24:22-69
+29-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:24:5-72
+29-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:24:22-69
 30
 31    <queries>
-31-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:24:5-28:15
+31-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:24:5-28:15
 32        <package android:name="androidx.test.orchestrator" />
-32-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:25:9-62
-32-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:25:18-59
+32-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:25:9-62
+32-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:25:18-59
 33        <package android:name="androidx.test.services" />
-33-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:26:9-58
-33-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:26:18-55
+33-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:26:9-58
+33-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:26:18-55
 34        <package android:name="com.google.android.apps.common.testing.services" />
-34-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:27:9-83
-34-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/bc26b91655d6b5332c2035c2960225d8/transformed/runner-1.6.1/AndroidManifest.xml:27:18-80
+34-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:27:9-83
+34-->[androidx.test:runner:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/e2f4c125f4e8306e9120917d0a213f43/transformed/runner-1.6.1/AndroidManifest.xml:27:18-80
 35    </queries>
 36
 37    <permission
-37-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+37-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
 38        android:name="com.tonapps.main.baselineprofile.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-38-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+38-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
 39        android:protectionLevel="signature" />
-39-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+39-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
 40
 41    <uses-permission android:name="com.tonapps.main.baselineprofile.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-41-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
-41-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+41-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+41-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
 42
 43    <application
-43-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:16:5-18:19
+43-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:16:5-18:19
 44        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-44-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.9/transforms/5919ca63a346f69f39bfa1fb45a7053f/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+44-->[androidx.core:core:1.9.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/e525df51c284be1bd9216c56040ab9e9/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 45        android:debuggable="true"
 46        android:extractNativeLibs="false"
 47        android:networkSecurityConfig="@xml/network_security_config" >
-47-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/4c24dc591f764f67c24f114f4bba65d0/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:42:18-78
+47-->[androidx.benchmark:benchmark-macro:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/bbd3023f5d3b56de473fed6efe16979d/transformed/benchmark-macro-1.3.3/AndroidManifest.xml:42:18-78
 48        <uses-library android:name="android.test.runner" />
-48-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:17:9-60
-48-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest6100063160398503539.xml:17:23-57
+48-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:17:9-60
+48-->/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/intermediates/tmp/manifest/nonMinifiedRelease/tempFile2ProcessTestManifest1859698831292258433.xml:17:23-57
 49        <!-- Activity used to block background content while benchmarks are running -->
 50        <activity
-50-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:32:9-36:20
+50-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:32:9-36:20
 51            android:name="androidx.benchmark.IsolationActivity"
-51-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:33:13-64
+51-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:33:13-64
 52            android:exported="true"
-52-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:34:13-36
+52-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:34:13-36
 53            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
-53-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.9/transforms/43da4bc08f48b399185a8543a85cb9a9/transformed/benchmark-common-1.3.3/AndroidManifest.xml:35:13-77
+53-->[androidx.benchmark:benchmark-common:1.3.3] /Users/polstianka/.gradle/caches/8.10.2/transforms/e5a8c7ca7c4ac590dc9be79659cace80/transformed/benchmark-common-1.3.3/AndroidManifest.xml:35:13-77
 54        </activity>
 55        <activity
-55-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:27:9-34:20
+55-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:27:9-34:20
 56            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
-56-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:28:13-99
+56-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:28:13-99
 57            android:exported="true"
-57-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:29:13-36
+57-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:29:13-36
 58            android:theme="@style/WhiteBackgroundTheme" >
-58-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:30:13-56
+58-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:30:13-56
 59            <intent-filter android:priority="-100" >
-59-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
-59-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+59-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+59-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
 60                <category android:name="android.intent.category.LAUNCHER" />
-60-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
-60-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
+60-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
+60-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
 61            </intent-filter>
 62        </activity>
 63        <activity
-63-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:35:9-42:20
+63-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:35:9-42:20
 64            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
-64-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:36:13-95
+64-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:36:13-95
 65            android:exported="true"
-65-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:37:13-36
+65-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:37:13-36
 66            android:theme="@style/WhiteBackgroundTheme" >
-66-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:38:13-56
+66-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:38:13-56
 67            <intent-filter android:priority="-100" >
-67-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
-67-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+67-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+67-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
 68                <category android:name="android.intent.category.LAUNCHER" />
-68-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
-68-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
+68-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
+68-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
 69            </intent-filter>
 70        </activity>
 71        <activity
-71-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:43:9-50:20
+71-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:43:9-50:20
 72            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
-72-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:44:13-103
+72-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:44:13-103
 73            android:exported="true"
-73-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:45:13-36
+73-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:45:13-36
 74            android:theme="@style/WhiteBackgroundDialogTheme" >
-74-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:46:13-62
+74-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:46:13-62
 75            <intent-filter android:priority="-100" >
-75-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
-75-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+75-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+75-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
 76                <category android:name="android.intent.category.LAUNCHER" />
-76-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
-76-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.9/transforms/2e5e94f2266d88e24bdad522f10cdcdf/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
+76-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:17-77
+76-->[androidx.test:core:1.6.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/abca3ac106d73f72881660e859566141/transformed/core-1.6.1/AndroidManifest.xml:32:27-74
 77            </intent-filter>
 78        </activity>
 79
 80        <receiver
-80-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:24:9-37:20
+80-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:24:9-37:20
 81            android:name="androidx.tracing.perfetto.TracingReceiver"
-81-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:25:13-69
+81-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:25:13-69
 82            android:directBootAware="false"
-82-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:26:13-44
+82-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:26:13-44
 83            android:enabled="true"
-83-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:27:13-35
+83-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:27:13-35
 84            android:exported="true"
-84-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:28:13-36
+84-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:28:13-36
 85            android:permission="android.permission.DUMP" >
-85-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:29:13-57
+85-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:29:13-57
 86
 87            <!-- Note: DUMP above highly limits who can call the receiver; Shell has DUMP perm. -->
 88            <intent-filter>
-88-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:32:13-36:29
+88-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:32:13-36:29
 89                <action android:name="androidx.tracing.perfetto.action.ENABLE_TRACING" />
-89-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:33:17-90
-89-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:33:25-87
+89-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:33:17-90
+89-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:33:25-87
 90                <action android:name="androidx.tracing.perfetto.action.ENABLE_TRACING_COLD_START" />
-90-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:34:17-101
-90-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:34:25-98
+90-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:34:17-101
+90-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:34:25-98
 91                <action android:name="androidx.tracing.perfetto.action.DISABLE_TRACING_COLD_START" />
-91-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:35:17-102
-91-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:35:25-99
+91-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:35:17-102
+91-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:35:25-99
 92            </intent-filter>
 93        </receiver>
 94
 95        <provider
-95-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:39:9-47:20
+95-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:39:9-47:20
 96            android:name="androidx.startup.InitializationProvider"
-96-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:40:13-67
+96-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:40:13-67
 97            android:authorities="com.tonapps.main.baselineprofile.androidx-startup"
-97-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:41:13-68
+97-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:41:13-68
 98            android:exported="false" >
-98-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:42:13-37
+98-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:42:13-37
 99            <meta-data
-99-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:44:13-46:52
+99-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:44:13-46:52
 100                android:name="androidx.tracing.perfetto.StartupTracingInitializer"
-100-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:45:17-83
+100-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:45:17-83
 101                android:value="androidx.startup" />
-101-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:46:17-49
+101-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:46:17-49
 102            <meta-data
-102-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
 103                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
 104                android:value="androidx.startup" />
-104-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+104-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
 105        </provider>
 106
 107        <receiver
-107-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:49:9-55:20
+107-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:49:9-55:20
 108            android:name="androidx.tracing.perfetto.StartupTracingConfigStoreIsEnabledGate"
-108-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:50:13-92
+108-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:50:13-92
 109            android:directBootAware="false"
-109-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:51:13-44
+109-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:51:13-44
 110            android:enabled="false"
-110-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:52:13-36
+110-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:52:13-36
 111            android:exported="false" >
-111-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.9/transforms/11a8658851dbf4b85a2448cba74b5cef/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:53:13-37
+111-->[androidx.tracing:tracing-perfetto:1.0.0] /Users/polstianka/.gradle/caches/8.10.2/transforms/064e4ae91f9ad2bd6c7ae204d89f95c7/transformed/tracing-perfetto-1.0.0/AndroidManifest.xml:53:13-37
 112        </receiver>
 113        <receiver
-113-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+113-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
 114            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-114-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+114-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
 115            android:directBootAware="false"
-115-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+115-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
 116            android:enabled="true"
-116-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+116-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
 117            android:exported="true"
-117-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+117-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
 118            android:permission="android.permission.DUMP" >
-118-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
 119            <intent-filter>
-119-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+119-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
 120                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-120-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
-120-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
 121            </intent-filter>
 122            <intent-filter>
-122-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+122-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
 123                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-123-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
-123-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+123-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+123-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
 124            </intent-filter>
 125            <intent-filter>
-125-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
 126                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-126-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
-126-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+126-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+126-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
 127            </intent-filter>
 128            <intent-filter>
-128-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
 129                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-129-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
-129-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.9/transforms/9b35a1dabf18cb33d9b392d70596db67/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+129-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+129-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/polstianka/.gradle/caches/8.10.2/transforms/f38f1b3184c9151933913569f1a30394/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
 130            </intent-filter>
 131        </receiver>
 132    </application>

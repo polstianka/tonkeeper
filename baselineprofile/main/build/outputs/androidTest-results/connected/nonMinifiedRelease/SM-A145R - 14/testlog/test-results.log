@@ -1,50 +1,50 @@
 INSTRUMENTATION_STATUS: class=com.baselineprofile.BaselineProfileGenerator
 INSTRUMENTATION_STATUS: current=1
 INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: numtests=2
 INSTRUMENTATION_STATUS: stream=
 com.baselineprofile.BaselineProfileGenerator:
 INSTRUMENTATION_STATUS: test=generate
 INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof.txt=/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt
+INSTRUMENTATION_STATUS: additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt=/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt
 INSTRUMENTATION_STATUS_CODE: 2
-INSTRUMENTATION_STATUS: additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt=/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt
+INSTRUMENTATION_STATUS: additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt=/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt
 INSTRUMENTATION_STATUS_CODE: 2
 INSTRUMENTATION_STATUS: android.studio.display.benchmark=BaselineProfileGenerator_generate
-Total run time Ns: 143602368547.
-Baseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)
+Total run time Ns: 908913809361.
+Baseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)
 
 To copy the profile use:
-adb -s R83WA0LPT5Z pull "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt" .
+adb -s R83WA0LPT5Z pull "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt" .
 
 INSTRUMENTATION_STATUS: android.studio.v2display.benchmark=BaselineProfileGenerator_generate
-Total run time Ns: 143602368547.
-Baseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)
+Total run time Ns: 908913809361.
+Baseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)
 
 To copy the profile use:
-adb -s R83WA0LPT5Z pull "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt" .
+adb -s R83WA0LPT5Z pull "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt" .
 
 INSTRUMENTATION_STATUS: android.studio.v2display.benchmark.outputDirPath=/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output
 INSTRUMENTATION_STATUS_CODE: 2
 INSTRUMENTATION_STATUS: class=com.baselineprofile.BaselineProfileGenerator
 INSTRUMENTATION_STATUS: current=1
 INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: numtests=2
 INSTRUMENTATION_STATUS: stream=.
 INSTRUMENTATION_STATUS: test=generate
 INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmarks
+INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmark
 INSTRUMENTATION_STATUS: current=2
 INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: numtests=2
 INSTRUMENTATION_STATUS: stream=
-com.baselineprofile.StartupBenchmarks:
-INSTRUMENTATION_STATUS: test=startupCompilationBaselineProfiles
+com.baselineprofile.StartupBenchmark:
+INSTRUMENTATION_STATUS: test=startup
 INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmarks
+INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmark
 INSTRUMENTATION_STATUS: current=2
 INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: numtests=2
 INSTRUMENTATION_STATUS: stack=org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
 at org.junit.Assume.assumeThat(Assume.java:106)
 at org.junit.Assume.assumeTrue(Assume.java:50)
@@ -81,63 +81,14 @@ at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
 at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)
 
 INSTRUMENTATION_STATUS: stream=
-com.baselineprofile.StartupBenchmarks:
-INSTRUMENTATION_STATUS: test=startupCompilationBaselineProfiles
-INSTRUMENTATION_STATUS_CODE: -4
-INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmarks
-INSTRUMENTATION_STATUS: current=3
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
-INSTRUMENTATION_STATUS: stream=
-INSTRUMENTATION_STATUS: test=startupCompilationNone
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.baselineprofile.StartupBenchmarks
-INSTRUMENTATION_STATUS: current=3
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=3
-INSTRUMENTATION_STATUS: stack=org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
-at org.junit.Assume.assumeThat(Assume.java:106)
-at org.junit.Assume.assumeTrue(Assume.java:50)
-at androidx.benchmark.macro.junit4.MacrobenchmarkRule$applyInternal$1.evaluate(MacrobenchmarkRule.kt:205)
-at androidx.test.rule.GrantPermissionRule$RequestPermissionStatement.evaluate(GrantPermissionRule.java:136)
-at org.junit.rules.RunRules.evaluate(RunRules.java:20)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
-at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
-at org.junit.runners.Suite.runChild(Suite.java:128)
-at org.junit.runners.Suite.runChild(Suite.java:27)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
-at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
-at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)
-
-INSTRUMENTATION_STATUS: stream=
-INSTRUMENTATION_STATUS: test=startupCompilationNone
+com.baselineprofile.StartupBenchmark:
+INSTRUMENTATION_STATUS: test=startup
 INSTRUMENTATION_STATUS_CODE: -4
 INSTRUMENTATION_RESULT: stream=
 
-Time: 144.154
+Time: 909.38
 
-OK (3 tests)
+OK (2 tests)
 
 
 INSTRUMENTATION_CODE: -1

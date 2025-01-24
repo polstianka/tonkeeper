@@ -1,6 +1,6 @@
-# 2024-09-08T10:44:35.399268Z:
+# 2025-01-24T00:11:46.284314Z:
 test_suite_meta_data {
-  scheduled_test_case_count: 3
+  scheduled_test_case_count: 2
 }
 test_status: PASSED
 test_result {
@@ -9,12 +9,12 @@ test_result {
     test_package: "com.baselineprofile"
     test_method: "generate"
     start_time {
-      seconds: 1725792127
-      nanos: 698000000
+      seconds: 1737676584
+      nanos: 64000000
     }
     end_time {
-      seconds: 1725792271
-      nanos: 767000000
+      seconds: 1737677493
+      nanos: 424000000
     }
   }
   test_status: PASSED
@@ -33,7 +33,7 @@ test_result {
       namespace: "android"
     }
     source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
+      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
     }
   }
   output_artifact {
@@ -73,80 +73,80 @@ test_result {
     }
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
     value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
     value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
     value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
-    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
+    value: "/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 143602368547.\nBaseline profile [results](file://BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 908913809361.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt)\n\nTo copy the profile use:\nadb -s R83WA0LPT5Z pull \"/sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
@@ -155,16 +155,16 @@ test_result {
 }
 test_result {
   test_case {
-    test_class: "StartupBenchmarks"
+    test_class: "StartupBenchmark"
     test_package: "com.baselineprofile"
-    test_method: "startupCompilationBaselineProfiles"
+    test_method: "startup"
     start_time {
-      seconds: 1725792271
-      nanos: 983000000
+      seconds: 1737677493
+      nanos: 998000000
     }
     end_time {
-      seconds: 1725792271
-      nanos: 990000000
+      seconds: 1737677494
+      nanos: 5000000
     }
   }
   test_status: IGNORED
@@ -179,64 +179,7 @@ test_result {
       namespace: "android"
     }
     source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/logcat-com.baselineprofile.StartupBenchmarks-startupCompilationBaselineProfiles.txt"
-    }
-  }
-  output_artifact {
-    label {
-      label: "device-info"
-      namespace: "android"
-    }
-    source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/device-info.pb"
-    }
-  }
-  output_artifact {
-    label {
-      label: "device-info.meminfo"
-      namespace: "android"
-    }
-    source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/meminfo"
-    }
-  }
-  output_artifact {
-    label {
-      label: "device-info.cpuinfo"
-      namespace: "android"
-    }
-    source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/cpuinfo"
-    }
-  }
-}
-test_result {
-  test_case {
-    test_class: "StartupBenchmarks"
-    test_package: "com.baselineprofile"
-    test_method: "startupCompilationNone"
-    start_time {
-      seconds: 1725792271
-      nanos: 994000000
-    }
-    end_time {
-      seconds: 1725792271
-      nanos: 997000000
-    }
-  }
-  test_status: IGNORED
-  error {
-    error_message: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$applyInternal$1.evaluate(MacrobenchmarkRule.kt:205)\nat androidx.test.rule.GrantPermissionRule$RequestPermissionStatement.evaluate(GrantPermissionRule.java:136)\nat org.junit.rules.RunRules.evaluate(RunRules.java:20)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)\n"
-    error_type: "org.junit.AssumptionViolatedException"
-    stack_trace: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$applyInternal$1.evaluate(MacrobenchmarkRule.kt:205)\nat androidx.test.rule.GrantPermissionRule$RequestPermissionStatement.evaluate(GrantPermissionRule.java:136)\nat org.junit.rules.RunRules.evaluate(RunRules.java:20)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)\n"
-  }
-  output_artifact {
-    label {
-      label: "logcat"
-      namespace: "android"
-    }
-    source_path {
-      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/logcat-com.baselineprofile.StartupBenchmarks-startupCompilationNone.txt"
+      path: "/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/androidTest-results/connected/nonMinifiedRelease/SM-A145R - 14/logcat-com.baselineprofile.StartupBenchmark-startup.txt"
     }
   }
   output_artifact {

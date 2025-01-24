@@ -34,6 +34,7 @@ import com.tonapps.tonkeeper.ui.screen.tonconnect.TonConnectSafeModeDialog
 import com.tonapps.tonkeeper.ui.screen.tonconnect.TonConnectScreen
 import com.tonapps.tonkeeper.worker.DAppPushToggleWorker
 import com.tonapps.wallet.api.API
+import com.tonapps.wallet.data.account.AccountRepository
 import com.tonapps.wallet.data.account.entities.WalletEntity
 import com.tonapps.wallet.data.dapps.DAppsRepository
 import com.tonapps.wallet.data.dapps.entities.AppConnectEntity
@@ -66,6 +67,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class TonConnectManager(
     private val scope: CoroutineScope,
     private val api: API,
+    private val accountRepository: AccountRepository,
     private val dAppsRepository: DAppsRepository,
     private val pushManager: PushManager,
     private val safeModeClient: SafeModeClient,
@@ -157,6 +159,10 @@ class TonConnectManager(
             sendBridgeError(connection, BridgeError.unknownApp("App not found. Request user to reconnect wallet for access restoration."), messageId)
         } else {
             bridge.sendDisconnectResponseSuccess(connection, messageId)
+        }
+
+        accountRepository.getWalletByAccountId(connection.accountId, connection.testnet)?.let {
+            pushManager.dAppUnsubscribe(it, listOf(connection))
         }
     }
 

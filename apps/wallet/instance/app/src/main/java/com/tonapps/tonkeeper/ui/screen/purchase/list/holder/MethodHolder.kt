@@ -1,5 +1,6 @@
 package com.tonapps.tonkeeper.ui.screen.purchase.list.holder
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import com.tonapps.tonkeeper.ui.screen.purchase.list.Item
@@ -21,7 +22,7 @@ class MethodHolder(
     override fun onBind(item: Item.Method) {
         itemView.setOnClickListener { onClick(item.entity, item.categoryType) }
         itemView.background = item.position.drawable(context)
-        iconView.setImageURI(item.iconUri)
+        iconView.setImageURI(item.iconUri, this)
         titleView.text = item.title
         descriptionView.text = item.description
     }

@@ -49,83 +49,17 @@ INFO: Installing [/Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/ma
 INFO: Start logcat streaming.
 INFO: Running Android Instrumentation driver.
 INFO: Copying files from device to host: /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14
-INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-baseline-prof-2024-09-08-10-44-31.txt
-INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-baseline-prof.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-baseline-prof.txt
+INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt
+INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-startup-prof.txt
+INFO: Copying files from device to host: /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14
+INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-startup-prof-2025-01-24-00-11-33.txt
+INFO: Copying /sdcard/Android/media/com.tonapps.main.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt to /Users/polstianka/StudioProjects/TonkeeperX/baselineprofile/main/build/outputs/connected_android_test_additional_output/nonMinifiedRelease/connected/SM-A145R - 14/BaselineProfileGenerator_generate-startup-prof.txt
+WARNING: Failed to retrieve logcat for some test cases. We retrieved logcat for 0 test cases out of 2 tests.
 INFO: Stop logcat streaming.
 INFO: Uninstalling com.ton_keeper for device R83WA0LPT5Z.
 INFO: Uninstalling com.tonapps.main.baselineprofile for device R83WA0LPT5Z.
 INFO: Execute com.baselineprofile.BaselineProfileGenerator.generate: PASSED
-INFO: Execute com.baselineprofile.StartupBenchmarks.startupCompilationBaselineProfiles: IGNORED
-org.junit.AssumptionViolatedException: org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
-at org.junit.Assume.assumeThat(Assume.java:106)
-at org.junit.Assume.assumeTrue(Assume.java:50)
-at androidx.benchmark.macro.junit4.MacrobenchmarkRule$applyInternal$1.evaluate(MacrobenchmarkRule.kt:205)
-at androidx.test.rule.GrantPermissionRule$RequestPermissionStatement.evaluate(GrantPermissionRule.java:136)
-at org.junit.rules.RunRules.evaluate(RunRules.java:20)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
-at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
-at org.junit.runners.Suite.runChild(Suite.java:128)
-at org.junit.runners.Suite.runChild(Suite.java:27)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
-at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
-at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)
-
-org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
-at org.junit.Assume.assumeThat(Assume.java:106)
-at org.junit.Assume.assumeTrue(Assume.java:50)
-at androidx.benchmark.macro.junit4.MacrobenchmarkRule$applyInternal$1.evaluate(MacrobenchmarkRule.kt:205)
-at androidx.test.rule.GrantPermissionRule$RequestPermissionStatement.evaluate(GrantPermissionRule.java:136)
-at org.junit.rules.RunRules.evaluate(RunRules.java:20)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
-at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
-at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
-at org.junit.runners.Suite.runChild(Suite.java:128)
-at org.junit.runners.Suite.runChild(Suite.java:27)
-at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
-at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
-at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
-at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2415)
-INFO: Execute com.baselineprofile.StartupBenchmarks.startupCompilationNone: IGNORED
+INFO: Execute com.baselineprofile.StartupBenchmark.startup: IGNORED
 org.junit.AssumptionViolatedException: org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
 at org.junit.Assume.assumeThat(Assume.java:106)
 at org.junit.Assume.assumeTrue(Assume.java:50)

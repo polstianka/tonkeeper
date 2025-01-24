@@ -56,7 +56,7 @@ abstract class BaseWalletVM(
     private val navigation: Navigation?
         get() = Navigation.from(context)
 
-    fun attachHolder(holder: Holder) {
+    open fun attachHolder(holder: Holder) {
         holderRef = WeakReference(holder)
     }
 
