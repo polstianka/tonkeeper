@@ -1,8 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.card
 
-import com.tonapps.tonkeeper.manager.tonconnect.ConnectRequest
-import okhttp3.Headers
-import okhttp3.Response
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardBridgeEvent
+import com.tonapps.tonkeeper.ui.screen.card.entity.CardsStateEntity
 import org.json.JSONArray
 import org.json.JSONObject
 import uikit.widget.webview.bridge.JsBridge
@@ -10,63 +9,27 @@ import uikit.widget.webview.bridge.message.BridgeMessage
 
 class CardBridge(
     val deviceInfo: String,
-    val isWalletBrowser: Boolean = true,
-    val protocolVersion: Int = 2,
+    private val cardsState: CardsStateEntity,
     val send: suspend (array: JSONArray) -> JSONObject,
-    val connect: suspend (protocolVersion: Int, request: ConnectRequest) -> JSONObject,
     val restoreConnection: suspend () -> JSONObject,
-    val disconnect: suspend () -> Unit,
-    val tonapiFetch: suspend (url: String, options: String) -> Response
+    val onEvent: (event: CardBridgeEvent) -> Unit,
 ): JsBridge("tonkeeper") {
 
-    override val availableFunctions = arrayOf("send", "connect", "restoreConnection", "disconnect")
+    override val availableFunctions = arrayOf("send", "restoreConnection")
 
     init {
         keys["deviceInfo"] = deviceInfo
-        keys["protocolVersion"] = protocolVersion
-        keys["isWalletBrowser"] = isWalletBrowser
+        keys["protocolVersion"] = 2
+        keys["isWalletBrowser"] = true
     }
 
     override suspend fun invokeFunction(name: String, args: JSONArray): Any? {
         return when (name) {
-            "connect" -> connect(protocolVersion, ConnectRequest.parse(args.getJSONObject(1))).toString()
             "send" -> send(args).toString()
             "restoreConnection" -> restoreConnection().toString()
-            "disconnect" -> disconnect()
-            "tonapi.fetch" -> {
-                val response = tonapiFetch(args.getString(0), args.optString(1) ?: "")
-                webAPIResponse(response).toString()
-            }
+            "closeApp" -> onEvent(CardBridgeEvent.CloseApp)
+            "openUrl" -> onEvent(CardBridgeEvent.OpenUrl(args.getString(0)))
             else -> null
-        }
-    }
-
-    private fun webAPIResponse(response: Response): JSONObject {
-        val body = response.body?.string() ?: ""
-        val json = JSONObject()
-        json.put("body", body)
-        json.put("ok", response.isSuccessful)
-        json.put("status", response.code)
-        json.put("statusText", response.message)
-        json.put("type", webAPIResponseType(response.code))
-        json.put("headers", webAPIResponseHeaders(response.headers))
-        json.put("redirected", response.isRedirect)
-        json.put("url", response.request.url.toString())
-        return json
-    }
-
-    private fun webAPIResponseHeaders(headers: Headers): JSONObject {
-        val json = JSONObject()
-        for (i in 0 until headers.size) {
-            json.put(headers.name(i), headers.value(i))
-        }
-        return json
-    }
-
-    private fun webAPIResponseType(code: Int): String {
-        return when (code) {
-            0 -> "error"
-            else -> "cors"
         }
     }
 
@@ -76,6 +39,9 @@ class CardBridge(
                 return new Promise((resolve, reject) => window.invokeRnFunc('${it}', args, resolve, reject))
             }
         """}.replace("\n", "").replace("  ", "")
+
+        val accountsList = cardsState.data.accounts.joinToString(",") { it.toJSON() }
+        val prepaidCards = cardsState.data.prepaidCards.joinToString(",") { it.toJSON() }
 
         return """
             (() => {
@@ -139,25 +105,27 @@ class CardBridge(
                 window.${windowKey} = {
                     tonconnect: Object.assign(${JSONObject(keys)},{ $funcs },{ listen })
                 };
+            
+                if (!window.initialState) {
+                    window.initialState = {
+                        user: {
+                            token: "${cardsState.token}",
+                            status: JSON.parse('${cardsState.data.state}')
+                        },
+                        accountsList: JSON.parse('[$accountsList]'),
+                        prepaidCards: JSON.parse('[$prepaidCards]'),
+                    };
+                };
                 
-                window.tonapi = {
-                    fetch: async (url, options) => {
-                        return new Promise((resolve, reject) => {
-                            window.invokeRnFunc('tonapi.fetch', [url, options], (result) => {
-                                try {
-                                    const headers = new Headers(result.headers);
-                                    const response = new Response(result.body, {
-                                        status: result.status,
-                                        statusText: result.statusText,
-                                        headers: headers
-                                    });
-                                    resolve(response);
-                                } catch (e) {
-                                    reject(e);
-                                }
-                            }, reject)
-                        });
-                    }
+                if (!window["dapp-client"]) {
+                    window["dapp-client"] = {
+                        closeApp: (...args) => {
+                            return new Promise((resolve, reject) => window.invokeRnFunc("closeApp", args, resolve, reject))
+                        },
+                        openUrl: (...args) => {
+                            return new Promise((resolve, reject) => window.invokeRnFunc("openUrl", args, resolve, reject))
+                        }
+                    };
                 };
             })();
         """

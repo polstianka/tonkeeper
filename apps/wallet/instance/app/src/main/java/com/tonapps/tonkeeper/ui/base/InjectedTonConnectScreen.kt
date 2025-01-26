@@ -178,7 +178,7 @@ abstract class InjectedTonConnectScreen(@LayoutRes layoutId: Int, wallet: Wallet
             tonConnectManager.disconnect(wallet, url, AppConnectEntity.Type.Internal)
         }
 
-        suspend fun restoreConnection(currentUri: Uri?): JSONObject {
+        open suspend fun restoreConnection(currentUri: Uri?): JSONObject {
             val connection = loadConnection(currentUri = currentUri)
             return if (connection == null) {
                 JsonBuilder.connectEventError(BridgeError.unknownApp())
@@ -187,7 +187,7 @@ abstract class InjectedTonConnectScreen(@LayoutRes layoutId: Int, wallet: Wallet
             }
         }
 
-        private suspend fun loadConnection(attempt: Int = 0, currentUri: Uri?): AppConnectEntity? {
+        protected suspend fun loadConnection(attempt: Int = 0, currentUri: Uri?): AppConnectEntity? {
             if (attempt > 3) {
                 val firstApp = tonConnectManager.getConnection(wallet.accountId, wallet.testnet, url, AppConnectEntity.Type.Internal)
                 if (firstApp != null) {

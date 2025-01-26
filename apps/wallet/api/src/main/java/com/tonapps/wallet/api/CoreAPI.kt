@@ -40,6 +40,14 @@ abstract class CoreAPI(private val context: Context) {
         )
     ).build()
 
+    val wsHttpClient = baseOkHttpClientBuilder(
+        cronetEngine = { null },
+        timeoutSeconds = 30,
+        interceptors = listOf(
+            UserAgentInterceptor(userAgent),
+        )
+    ).build()
+
     init {
         if (!BuildConfig.DEBUG) {
             requestCronet(context, userAgent) {

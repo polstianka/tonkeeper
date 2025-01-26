@@ -35,13 +35,6 @@ class DevViewModel(
         }*/
     }
 
-    fun openCard() {
-        accountRepository.selectedWalletFlow.take(1).onEach {
-            openScreen(CardScreen.newInstance(it))
-            finish()
-        }.launch()
-    }
-
     fun importApps(callback: (result: String) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val lines = mutableListOf<String>()

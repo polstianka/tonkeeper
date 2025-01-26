@@ -474,6 +474,8 @@
     <string name="widget_updated">Updated at %1$s</string>
     <string name="set_up_wallet">Set up wallet</string>
     <string name="support">Support</string>
+    <string name="tonkeeper_support">Tonkeeper Support</string>
+    <string name="holders_support">Holders Support</string>
     <string name="tonkeeper_news">Tonkeeper news</string>
     <string name="testers_chat">Report bug (chat in Telegram)</string>
     <string name="contact_us">Contact us</string>
@@ -610,4 +612,11 @@
     <string name="connected_apps_empty">No connected apps</string>
     <string name="send_all_balance">Are you sure you want to send all your balance?</string>
     <string name="wrong_promocode">The entered code is not valid</string>
+    <string name="bank_card">Card * %1$s</string>
+    <string name="bank_card_virtual">Virtual</string>
+    <string name="bank_card_physical">Physical</string>
+    <string name="bank_card_prepaid">Prepaid card</string>
+    <string name="bank_card_title">Bank Card</string>
+    <string name="bank_card_subtitle">Pay in TON, convert to USD without commission.</string>
+    <string name="back_card_details">Get Card</string>
 </resources>

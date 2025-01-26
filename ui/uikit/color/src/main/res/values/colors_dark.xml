@@ -9,6 +9,7 @@
     <color name="backgroundPageDark">#000000</color>
     <color name="backgroundTransparentDark">#F5000000</color>
     <color name="backgroundContentDark">#17171A</color>
+    <color name="backgroundContentAlphaDark">#17171A3D</color>
     <color name="backgroundContentTintDark">#222224</color>
     <color name="backgroundContentAttentionDark">#2F2F33</color>
     <color name="backgroundHighlightedDark">#0AFFFFFF</color>

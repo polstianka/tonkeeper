@@ -155,6 +155,8 @@
     <string name="signer_step_2">Подтвердите транзакцию в Signer</string>
     <string name="signer_step_3">Отсканируйте QR-код подписанной транзакции Signer</string>
     <string name="support">Поддержка</string>
+    <string name="tonkeeper_support">Поддержка Tonkeeper</string>
+    <string name="holders_support">Поддержка Holders</string>
     <string name="tonkeeper_news">Новости Tonkeeper</string>
     <string name="contact_us">Написать команде</string>
     <string name="confirm_and_send">Подтвердить и отправить</string>
@@ -597,5 +599,12 @@
     <string name="theme_dark">Тёмная</string>
     <string name="words12">12 слов</string>
 
+    <string name="bank_card">Карта * %1$s</string>
+    <string name="bank_card_virtual">Виртуальная</string>
+    <string name="bank_card_physical">Физическая</string>
+    <string name="bank_card_prepaid">Предоплаченная карта</string>
+    <string name="bank_card_title">Банковская карта</string>
+    <string name="bank_card_subtitle">Оплачивайте в TON, конвертируйте в USD без комиссии.</string>
+    <string name="back_card_details">Открыть карту</string>
 
 </resources>
