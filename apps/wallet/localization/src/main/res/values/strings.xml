@@ -7,6 +7,8 @@
     <string name="fake" translatable="false">FAKE</string>
     <string name="beta" translatable="false">Beta</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="usb" translatable="false">USB</string>
+    <string name="bluetooth" translatable="false">Bluetooth</string>
     <string name="keystone" translatable="false">Keystone</string>
     <string name="w5" translatable="false">W5</string>
     <string name="select_from_gallery">Select from Gallery</string>
@@ -243,6 +245,8 @@
     <string name="nft_transfer">NFT Transfer</string>
     <string name="nft_disabled_transfer">NFT is on sale at the marketplace now. For transfer, you should remove it from sale first.</string>
 
+    <string name="ledger_usb_connect">Connect Ledger to your device via USB</string>
+    <string name="ledger_usb_open_app">Unlock it and open TON App Install TON App<annotation colorAttr="textAccentColor">Install TON App</annotation></string>
     <string name="continue_action">Continue</string>
     <string name="get_started">Get started</string>
     <string name="updating">Updating</string>

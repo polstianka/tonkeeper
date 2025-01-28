@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/dot_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:foreground="@drawable/ic_dot_16"
+        android:foregroundTint="?attr/iconTertiaryColor" />
+
+    <uikit.widget.LoaderView
+        android:id="@+id/loader"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:color="?attr/iconTertiaryColor"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/done_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:foreground="@drawable/ic_done_16"
+        android:foregroundTint="?attr/accentGreenColor"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/offsetExtraSmall"
+        android:textAppearance="@style/TextAppearance.Body2"
+        android:textColor="?attr/textPrimaryColor" />
+
+</merge>

@@ -19,6 +19,7 @@ import com.tonapps.extensions.MutableEffectFlow
 import com.tonapps.icu.Coins
 import com.tonapps.icu.CurrencyFormatter
 import com.tonapps.ledger.ble.BleTransport
+import com.tonapps.ledger.ble.ConnectedDevice
 import com.tonapps.ledger.devices.Devices
 import com.tonapps.ledger.ton.AccountPath
 import com.tonapps.ledger.ton.LedgerAccount
@@ -439,10 +440,10 @@ class LedgerConnectionViewModel(
         setTonTransport(null)
         pollTonAppJob?.cancel()
         pollTonAppJob = viewModelScope.launch {
-            val tonTransport = TonTransport(BleTransport(bleManager))
+            /*val tonTransport = TonTransport(BleTransport(bleManager))
 
             suspend fun isAppOpen() = try {
-                tonTransport.isAppOpen()
+                tonTransport.isTONAppOpen()
             } catch (_: Exception) {
                 false
             }
@@ -453,7 +454,7 @@ class LedgerConnectionViewModel(
             }
 
             _connectionState.tryEmit(ConnectionState.TonAppOpened)
-            setTonTransport(tonTransport)
+            setTonTransport(tonTransport)*/
         }
     }
 

@@ -64,17 +64,24 @@
                 android:background="@drawable/bg_content"
                 android:orientation="vertical">
 
-                <uikit.widget.FrescoView
-                    android:id="@+id/image"
+                <FrameLayout
+                    android:id="@+id/preview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:actualImageScaleType="centerCrop"
-                    app:roundedCornerRadius="@dimen/offsetMedium"
-                    app:roundTopLeft="true"
-                    app:roundTopRight="true"
-                    app:roundBottomLeft="false"
-                    app:roundBottomRight="false"
-                    app:viewAspectRatio="1"/>
+                    android:layout_height="wrap_content">
+
+                    <uikit.widget.FrescoView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:actualImageScaleType="centerCrop"
+                        app:roundedCornerRadius="@dimen/offsetMedium"
+                        app:roundTopLeft="true"
+                        app:roundTopRight="true"
+                        app:roundBottomLeft="false"
+                        app:roundBottomRight="false"
+                        app:viewAspectRatio="1"/>
+
+                </FrameLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/name"

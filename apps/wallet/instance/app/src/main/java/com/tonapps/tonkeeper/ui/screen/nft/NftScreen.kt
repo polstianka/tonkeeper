@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.net.toUri
@@ -24,6 +25,7 @@ import com.tonapps.tonkeeper.koin.remoteConfig
 import com.tonapps.tonkeeper.koin.walletViewModel
 import com.tonapps.tonkeeper.popup.ActionSheet
 import com.tonapps.tonkeeper.ui.base.WalletContextScreen
+import com.tonapps.tonkeeper.ui.component.LottieView
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppArgs
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppScreen
 import com.tonapps.tonkeeper.ui.screen.root.RootViewModel
@@ -48,6 +50,7 @@ import uikit.extensions.dp
 import uikit.extensions.drawable
 import uikit.extensions.getDimensionPixelSize
 import uikit.extensions.inflate
+import uikit.extensions.roundTop
 import uikit.extensions.setRightDrawable
 import uikit.extensions.topScrolled
 import uikit.widget.ColumnLayout
@@ -73,6 +76,9 @@ class NftScreen(wallet: WalletEntity): WalletContextScreen(R.layout.fragment_nft
 
     private lateinit var headerView: HeaderView
     private lateinit var spamView: View
+    private lateinit var previewView: FrameLayout
+
+    private var lottieView: LottieView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,6 +91,8 @@ class NftScreen(wallet: WalletEntity): WalletContextScreen(R.layout.fragment_nft
         collectFlow(contentView.topScrolled, headerView::setDivider)
 
         spamView = view.findViewById(R.id.spam)
+
+        previewView = view.findViewById(R.id.preview)
 
         view.findViewById<Button>(R.id.report_spam).setOnClickListener { reportSpam(true) }
         view.findViewById<Button>(R.id.not_spam).setOnClickListener { reportSpam(false) }
@@ -191,6 +199,17 @@ class NftScreen(wallet: WalletEntity): WalletContextScreen(R.layout.fragment_nft
             domainLinkButton.visibility = View.GONE
             domainRenewButton.visibility = View.GONE
             transferButton.visibility = View.GONE
+        }
+
+        if (nftEntity.lottieUri != null) {
+            lottieView = LottieView(requireContext()).apply {
+                roundTop(16.dp)
+                setUri(nftEntity.lottieUri!!)
+            }
+            previewView.addView(lottieView, FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ))
         }
     }
 
@@ -320,6 +339,12 @@ class NftScreen(wallet: WalletEntity): WalletContextScreen(R.layout.fragment_nft
             setTextColor(color)
             setRightDrawable(icon)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        lottieView?.destroy()
+        lottieView = null
     }
 
     private fun showTrustState() {

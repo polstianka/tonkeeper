@@ -5,6 +5,7 @@ object Dependence {
     const val zxing = "com.google.zxing:core:3.5.3"
     const val j2objc = "com.google.j2objc:j2objc-annotations:3.0.0"
     const val cbor = "co.nstant.in:cbor:0.9"
+    const val ble = "no.nordicsemi.android:ble-ktx:2.9.0"
 
     object Analytics {
         const val aptabase = "com.github.aptabase:aptabase-kotlin:0.0.8"

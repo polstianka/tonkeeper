@@ -27,6 +27,9 @@ data class NftMetadataEntity(
     val description: String?
         get() = strings["description"]
 
+    val lottie: String?
+        get() = strings["lottie"]
+
     constructor(map: Map<String, Any>) : this(
         strings = map.filter { it.value is String }.mapValues { it.value as String } as HashMap<String, String>,
         buttons = map["buttons"]?.let { buttons ->

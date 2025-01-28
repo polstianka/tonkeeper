@@ -4,6 +4,11 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 interface Transport {
+
+    open fun close() {
+
+    }
+
     suspend fun exchange(
         apdu: ByteArray,
     ): ByteArray

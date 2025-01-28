@@ -1,12 +1,17 @@
 package com.tonapps.ledger.ton
 
+import android.util.Log
 import com.tonapps.blockchain.ton.TONOpCode
 import com.tonapps.blockchain.ton.extensions.storeAddress
 import com.tonapps.blockchain.ton.extensions.storeCoins
 import com.tonapps.blockchain.ton.extensions.storeOpCode
+import com.tonapps.ledger.transport.LedgerAppName
 import com.tonapps.ledger.transport.Transport
+import com.tonapps.ledger.transport.TransportStatusException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import org.ton.api.pub.PublicKeyEd25519
 import org.ton.block.Coins
 import org.ton.block.MsgAddressInt
@@ -31,10 +36,13 @@ class TonTransport(private val transport: Transport) {
         const val LEDGER_SYSTEM = 0xB0
         const val LEDGER_CLA = 0xE0
         const val INS_VERSION = 0x03
+        const val INS_OPEN_APP = 0xd8
         const val INS_ADDRESS = 0x05
         const val INS_SIGN_TX = 0x06
         const val INS_PROOF = 0x08
         const val INS_SIGN_DATA = 0x09
+
+        const val REQUIRED_VERSION = "2.1.0"
     }
 
     private var _currentVersion: String? = null
@@ -52,6 +60,10 @@ class TonTransport(private val transport: Transport) {
 
     private val lock = Mutex()
 
+    fun close() {
+        transport.close()
+    }
+
     private suspend fun doRequest(ins: Int, p1: Int, p2: Int, data: ByteArray): ByteArray {
         return lock.withLock {
             val r = transport.send(
@@ -61,8 +73,8 @@ class TonTransport(private val transport: Transport) {
         }
     }
 
-    private suspend fun getCurrentApp(): Pair<String, String> {
-        return lock.withLock {
+    suspend fun getCurrentApp(): LedgerAppName {
+        lock.withLock {
             val r = transport.send(
                 LEDGER_SYSTEM, 0x01, 0x00, 0x00, ByteArray(0)
             )
@@ -77,26 +89,47 @@ class TonTransport(private val transport: Transport) {
             val versionLength = data[2 + nameLength].toInt()
             val version = data.sliceArray(3 + nameLength until 3 + nameLength + versionLength)
                 .toString(Charsets.UTF_8)
-            Pair(name, version)
+
+            return LedgerAppName(
+                name = name,
+                version = version
+            )
         }
     }
 
-    suspend fun isAppOpen(): Boolean {
-        val (appName, version) = getCurrentApp()
-        val isOpened = appName == "TON"
+    suspend fun requestOpenTONApp() {
+        doRequest(
+            INS_OPEN_APP, 0x00, 0x00, "TON".toByteArray()
+        )
+    }
 
-        if (isOpened) {
-            _currentVersion = version
+    suspend fun isLocked(): Boolean {
+        try {
+            getCurrentApp()
+            return false
+        } catch (e: TransportStatusException.LockedDevice) {
+            return true
         }
+    }
 
+    suspend fun isTONAppOpen(): Boolean {
+        val app = getCurrentApp()
+        val isOpened = app.name == "TON"
+        if (isOpened) {
+            _currentVersion = app.version
+        }
         return isOpened
     }
 
-    suspend fun getVersion(): String {
-        if (_currentVersion != null) {
-            return _currentVersion!!
-        }
+    suspend fun getTonAppVersion() = getVersion()
 
+    suspend fun getVersion(): String {
+        return _currentVersion ?: requestVersion().also {
+            _currentVersion = it
+        }
+    }
+
+    private suspend fun requestVersion(): String {
         val loaded = doRequest(INS_VERSION, 0x00, 0x00, ByteArray(0))
         if (loaded.size < 3) {
             throw Exception("Invalid response")

@@ -1,21 +1,18 @@
 package com.tonapps.tonkeeper.ui.screen.root
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.net.Uri
-import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Browser
-import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import com.tonapps.blockchain.ton.extensions.base64
 import com.tonapps.extensions.currentTimeSeconds
 import com.tonapps.extensions.getStringValue
@@ -31,6 +28,7 @@ import com.tonapps.tonkeeper.ui.base.BaseWalletActivity
 import com.tonapps.tonkeeper.ui.base.QRCameraScreen
 import com.tonapps.tonkeeper.ui.base.WalletFragmentFactory
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppScreen
+import com.tonapps.tonkeeper.ui.screen.external.ledger.LedgerConnectScreen
 import com.tonapps.tonkeeper.ui.screen.init.InitArgs
 import com.tonapps.tonkeeper.ui.screen.init.InitScreen
 import com.tonapps.tonkeeper.ui.screen.ledger.sign.LedgerSignScreen
@@ -52,6 +50,8 @@ import com.tonapps.wallet.data.passcode.ui.PasscodeView
 import com.tonapps.wallet.data.rn.RNLegacy
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.ton.cell.Cell
@@ -125,6 +125,11 @@ class RootActivity: BaseWalletActivity() {
         if (0L >= DevSettings.firstLaunchDate) {
             AnalyticsHelper.firstLaunch(settingsRepository.installId)
             DevSettings.firstLaunchDate = currentTimeSeconds()
+        }
+
+        lifecycleScope.launch {
+            delay(2000)
+            add(LedgerConnectScreen())
         }
     }
 
