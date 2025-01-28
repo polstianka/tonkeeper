@@ -2,9 +2,8 @@ package com.tonapps.ledger.usb
 
 import android.hardware.usb.UsbDeviceConnection
 import android.hardware.usb.UsbEndpoint
-import android.util.Log
+import com.tonapps.ledger.LedgerException
 import com.tonapps.ledger.transport.Transport
-import org.ton.crypto.hex
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 
@@ -32,7 +31,7 @@ class UsbTransport(
             responseBuffer.clear()
             if (!readRequest.queueCompat(responseBuffer, HID_PACKET_SIZE)) {
                 readRequest.close()
-                throw Exception("I/O error #2")
+                throw LedgerException.USBReadException
             }
             connection.requestWait()
             responseBuffer.rewind()
@@ -40,8 +39,7 @@ class UsbTransport(
             response.write(transferBuffer, 0, HID_PACKET_SIZE)
         }
         readRequest.close()
-        Log.d("LedgerConnectLog", "Response: ${hex(responseData ?: ByteArray(0))}")
-        return responseData ?: throw Exception("I/O error #3")
+        return responseData ?: ByteArray(0)
     }
 
     override suspend fun exchange(apdu: ByteArray): ByteArray {

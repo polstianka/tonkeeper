@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ledger.live.ble.model.BleDeviceModel
 import com.tonapps.extensions.bestMessage
+import com.tonapps.ledger.LedgerException
 import com.tonapps.ledger.ble.LedgerBle
 import com.tonapps.ledger.ton.TonTransport
 import com.tonapps.ledger.usb.LedgerUsb
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -72,6 +74,9 @@ class LedgerConnectViewModel(
             .map(ledgerUsb::connectDevice)
             .map(ledgerUsb::createTonTransport)
             .map(::setTonTransport)
+            .retry { cause ->
+                cause is LedgerException.USBWriteException || cause is LedgerException.USBReadException
+            }
             .catch { setFailed(it) }
             .launchIn(viewModelScope)
     }
@@ -109,18 +114,14 @@ class LedgerConnectViewModel(
 
         if (currentApp.name != "TON") {
             delay(2000)
-            try {
-                while (!transport.isTONAppOpen()) {
-                    delay(1000)
-                }
-            } catch (e: Throwable) {
-                Log.e(LOG_TAG, "TON app not open", e)
+            while (!transport.isTONAppOpen()) {
+                delay(1000)
             }
         }
 
-        /*if (!transport.isValidVersion()) {
+        if (!transport.isValidVersion()) {
             throw Throwable("Invalid version")
-        }*/
+        }
 
         Log.d(LOG_TAG, "ready to use")
         currentTransport = transport
