@@ -2,11 +2,13 @@ package com.tonapps.wallet.data.collectibles.entities
 
 import android.net.Uri
 import android.os.Parcelable
+import androidx.core.net.toUri
 import com.tonapps.blockchain.ton.extensions.equalsAddress
 import com.tonapps.blockchain.ton.extensions.toUserFriendly
 import com.tonapps.wallet.api.entity.AccountEntity
 import com.tonapps.wallet.data.core.Trust
 import io.tonapi.models.NftItem
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -56,16 +58,24 @@ data class NftEntity(
     val ownerAddress: String
         get() = owner?.address ?: address
 
+    @IgnoredOnParcel
     val thumbUri: Uri by lazy {
         getImageUri(64, 320) ?: previews.first().url.let { Uri.parse(it) }
     }
 
+    @IgnoredOnParcel
     val mediumUri: Uri by lazy {
         getImageUri(256, 512) ?: previews.first().url.let { Uri.parse(it) }
     }
 
+    @IgnoredOnParcel
     val bigUri: Uri by lazy {
         getImageUri(512, 1024) ?: previews.last().url.let { Uri.parse(it) }
+    }
+
+    @IgnoredOnParcel
+    val lottieUri: Uri? by lazy {
+        metadata.lottie?.toUri()
     }
 
     val isTrusted: Boolean

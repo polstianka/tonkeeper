@@ -1,16 +1,12 @@
 package com.tonapps.tonkeeper.ui.screen.root
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.net.Uri
-import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Browser
-import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -28,13 +24,11 @@ import com.tonapps.tonkeeper.deeplink.DeepLink
 import com.tonapps.tonkeeper.extensions.isDarkMode
 import com.tonapps.tonkeeper.extensions.toast
 import com.tonapps.tonkeeper.helper.BrowserHelper
-import com.tonapps.tonkeeper.manager.ledger.scan.LedgerBLEScan
-import com.tonapps.tonkeeper.manager.ledger.scan.LedgerUSBScan
 import com.tonapps.tonkeeper.ui.base.BaseWalletActivity
 import com.tonapps.tonkeeper.ui.base.QRCameraScreen
 import com.tonapps.tonkeeper.ui.base.WalletFragmentFactory
 import com.tonapps.tonkeeper.ui.screen.browser.dapp.DAppScreen
-import com.tonapps.tonkeeper.ui.screen.external.ledger.NewLedgerScreen
+import com.tonapps.tonkeeper.ui.screen.external.ledger.LedgerConnectScreen
 import com.tonapps.tonkeeper.ui.screen.init.InitArgs
 import com.tonapps.tonkeeper.ui.screen.init.InitScreen
 import com.tonapps.tonkeeper.ui.screen.ledger.sign.LedgerSignScreen
@@ -57,8 +51,6 @@ import com.tonapps.wallet.data.rn.RNLegacy
 import com.tonapps.wallet.data.settings.SettingsRepository
 import com.tonapps.wallet.localization.Localization
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -137,7 +129,7 @@ class RootActivity: BaseWalletActivity() {
 
         lifecycleScope.launch {
             delay(2000)
-            add(NewLedgerScreen())
+            add(LedgerConnectScreen())
         }
     }
 
