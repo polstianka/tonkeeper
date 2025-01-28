@@ -11,6 +11,7 @@ import com.tonapps.ledger.usb.LedgerUsb
 import com.tonapps.tonkeeper.extensions.isVersionLowerThan
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LedgerConnectViewModel(
     app: Application
@@ -54,6 +56,7 @@ class LedgerConnectViewModel(
     }
 
     private fun startBLEDeviceListener() {
+        Log.d(LOG_TAG, "startBLEDeviceListener")
         currentTransport = null
         _stateFlow.value = Ledger.State.WaitingForConnection
         ledgerBle.deviceListener { device ->
@@ -62,6 +65,7 @@ class LedgerConnectViewModel(
     }
 
     private fun startUSBDeviceListener() {
+        Log.d(LOG_TAG, "startUSBDeviceListener")
         currentTransport = null
         _stateFlow.value = Ledger.State.WaitingForConnection
         deviceFlowJob = ledgerUsb.deviceFlow()
@@ -93,7 +97,7 @@ class LedgerConnectViewModel(
         }
     }
 
-    private suspend fun setTonTransport(transport: TonTransport) {
+    private suspend fun setTonTransport(transport: TonTransport) = withContext(Dispatchers.IO) {
         Log.d(LOG_TAG, "setTonTransport: $transport")
         _stateFlow.value = Ledger.State.WaitingAppTON
         val currentApp = transport.getCurrentApp()
@@ -105,8 +109,12 @@ class LedgerConnectViewModel(
 
         if (currentApp.name != "TON") {
             delay(2000)
-            while (!transport.isTONAppOpen()) {
-                delay(1000)
+            try {
+                while (!transport.isTONAppOpen()) {
+                    delay(1000)
+                }
+            } catch (e: Throwable) {
+                Log.e(LOG_TAG, "TON app not open", e)
             }
         }
 
