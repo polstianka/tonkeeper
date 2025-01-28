@@ -1,6 +1,7 @@
 package com.tonapps.tonkeeper.ui.screen.external.ledger
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ledger.live.ble.model.BleDeviceModel
 import com.tonapps.extensions.bestMessage
@@ -9,6 +10,7 @@ import com.tonapps.ledger.ton.TonTransport
 import com.tonapps.ledger.usb.LedgerUsb
 import com.tonapps.tonkeeper.extensions.isVersionLowerThan
 import com.tonapps.tonkeeper.ui.base.BaseWalletVM
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,10 +68,17 @@ class LedgerConnectViewModel(
             .map(ledgerUsb::connectDevice)
             .map(ledgerUsb::createTonTransport)
             .map(::setTonTransport)
-            .catch {
-                toast(it.bestMessage)
-                _stateFlow.value = Ledger.State.Idle
-            }.launchIn(viewModelScope)
+            .catch { setFailed(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private suspend fun setFailed(e: Throwable) {
+        Log.d(LOG_TAG, "failed", e)
+        if (e !is CancellationException) {
+            toast(e.bestMessage)
+            _stateFlow.value = Ledger.State.Idle
+            finish()
+        }
     }
 
     private fun setBleDevice(device: BleDeviceModel) {
@@ -79,16 +88,18 @@ class LedgerConnectViewModel(
                 val tonTransport = ledgerBle.createTonTransfer(connected)
                 setTonTransport(tonTransport)
             } catch (e: Throwable) {
-                toast(e.bestMessage)
-                _stateFlow.value = Ledger.State.Idle
+                setFailed(e)
             }
         }
     }
 
     private suspend fun setTonTransport(transport: TonTransport) {
+        Log.d(LOG_TAG, "setTonTransport: $transport")
         _stateFlow.value = Ledger.State.WaitingAppTON
         val currentApp = transport.getCurrentApp()
+        Log.d(LOG_TAG, "currentApp: $currentApp")
         if (currentApp.name == "BOLOS") {
+            Log.d(LOG_TAG, "requestOpenTONApp")
             transport.requestOpenTONApp()
         }
 
@@ -102,6 +113,8 @@ class LedgerConnectViewModel(
         /*if (!transport.isValidVersion()) {
             throw Throwable("Invalid version")
         }*/
+
+        Log.d(LOG_TAG, "ready to use")
         currentTransport = transport
         _stateFlow.value = Ledger.State.ReadyToUse
     }
@@ -113,6 +126,8 @@ class LedgerConnectViewModel(
     }
 
     private companion object {
+
+        const val LOG_TAG = "LedgerConnectLog"
 
         private val baseUsbTasks = arrayOf(
             Ledger.Task.ConnectUSB,
